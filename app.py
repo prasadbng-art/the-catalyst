@@ -8,192 +8,11 @@ import altair as alt
 # ============================================================
 st.set_page_config(
     page_title="The Catalyst",
-    layout="wide"
+    layout="wide",
 )
 
 # ============================================================
-# GLOBAL KPI RUNTIME VALUES (single source of truth – sandbox)
-# ============================================================
-sentiment_score = -8
-cost_of_attrition_usd = 12_400_000
-manager_effectiveness_index = 62
-
-# ============================================================
-# SENTIMENT TREND (shared by visual + narrative)
-# ============================================================
-dates = pd.date_range(end=pd.Timestamp.today(), periods=12, freq="M")
-sentiment_trend = np.array([-3, -4, -5, -6, -7, -8, -8, -7, -6, -5, -4, -3])
-
-df_sentiment = pd.DataFrame(
-    {"Date": dates, "Sentiment Score": sentiment_trend}
-).set_index("Date")
-
-trend_delta = sentiment_trend[-1] - sentiment_trend[0]
-if trend_delta > 0:
-    trend_direction = "improving"
-elif trend_delta < 0:
-    trend_direction = "declining"
-else:
-    trend_direction = "stable"
-
-# ============================================================
-# PERSONA NARRATIVES
-# ============================================================
-PERSONA_NARRATIVES = {
-    "CEO": {
-        "negative": (
-            "Employee sentiment represents a growing business risk. "
-            "Left unaddressed, it will continue to drive avoidable attrition costs "
-            "and leadership distraction."
-        ),
-        "stable": (
-            "Sentiment is not currently a material business risk. "
-            "Leadership attention can remain focused on growth and execution."
-        )
-    },
-    "CHRO": {
-        "negative": (
-            "Sustained sentiment decline signals weakening engagement drivers, "
-            "particularly around manager capability and career mobility."
-        ),
-        "stable": (
-            "Sentiment stability suggests existing engagement mechanisms are holding, "
-            "creating space for longer-term workforce capability building."
-        )
-    },
-    "HRBP": {
-        "negative": (
-            "Sentiment decline is likely concentrated within specific teams. "
-            "Immediate manager-level intervention is required."
-        ),
-        "stable": (
-            "Teams appear broadly stable. Proactive reinforcement can prevent "
-            "future disengagement."
-        )
-    }
-}
-
-PERSONA_ACTIONS = {
-    "CEO": {
-        "negative": [
-            "Treat sentiment decline as an enterprise risk, not an HR issue",
-            "Focus executive attention on the top two cost-heavy locations",
-            "Fund targeted interventions with measurable ROI expectations"
-        ],
-        "stable": [
-            "Maintain current engagement investment levels",
-            "Monitor sentiment as an early warning signal",
-            "Shift focus toward productivity and growth levers"
-        ]
-    },
-    "CHRO": {
-        "negative": [
-            "Diagnose manager capability gaps in high-risk teams",
-            "Accelerate internal mobility and career progression pilots",
-            "Redirect engagement spend from broad programs to focused actions"
-        ],
-        "stable": [
-            "Strengthen leadership capability pipelines",
-            "Refine career architecture to sustain engagement",
-            "Use stability as a baseline for workforce planning"
-        ]
-    },
-    "HRBP": {
-        "negative": [
-            "Initiate coaching conversations with at-risk managers",
-            "Address workload and role clarity issues",
-            "Track sentiment monthly at team level"
-        ],
-        "stable": [
-            "Reinforce strong manager behaviors",
-            "Engage teams showing early warning signals",
-            "Maintain regular sentiment check-ins"
-        ]
-    }
-}
-
-def persona_state():
-    return "negative" if sentiment_score < 0 else "stable"
-
-# ============================================================
-# SENTIMENT HEALTH — STRUCTURED ACTION PLANS
-# ============================================================
-SENTIMENT_ACTION_PLANS = {
-    "CEO": [
-        {
-            "priority": "🔴 High",
-            "action": "Treat sentiment decline as an enterprise risk, not an HR metric",
-            "owner": "Executive Committee",
-            "timeline": "30 days",
-            "success": "Sentiment decline halted at enterprise level"
-        },
-        {
-            "priority": "🟠 Medium",
-            "action": "Focus leadership attention on the top two cost-heavy locations",
-            "owner": "CEO / COO",
-            "timeline": "60–90 days",
-            "success": "Reduced attrition risk in priority locations"
-        },
-        {
-            "priority": "🟢 Low",
-            "action": "Monitor sentiment monthly as a leading risk indicator",
-            "owner": "CHRO",
-            "timeline": "Ongoing",
-            "success": "Early detection of engagement erosion"
-        }
-    ],
-
-    "CHRO": [
-        {
-            "priority": "🔴 High",
-            "action": "Diagnose manager capability gaps in high-risk teams",
-            "owner": "HR Leadership",
-            "timeline": "30 days",
-            "success": "Clear root-cause diagnosis completed"
-        },
-        {
-            "priority": "🟠 Medium",
-            "action": "Launch targeted internal mobility pilots",
-            "owner": "Talent COE",
-            "timeline": "90 days",
-            "success": "Improved career movement in stagnant roles"
-        },
-        {
-            "priority": "🟢 Low",
-            "action": "Refine engagement architecture and pulse cadence",
-            "owner": "HR Ops",
-            "timeline": "Ongoing",
-            "success": "Sustained sentiment stability"
-        }
-    ],
-
-    "HRBP": [
-        {
-            "priority": "🔴 High",
-            "action": "Initiate coaching conversations with managers in at-risk teams",
-            "owner": "HRBP",
-            "timeline": "30 days",
-            "success": "Improved team-level sentiment scores"
-        },
-        {
-            "priority": "🟠 Medium",
-            "action": "Address workload balance and role clarity issues",
-            "owner": "Line Managers",
-            "timeline": "60 days",
-            "success": "Reduced burnout indicators"
-        },
-        {
-            "priority": "🟢 Low",
-            "action": "Track sentiment monthly at team level",
-            "owner": "HRBP",
-            "timeline": "Ongoing",
-            "success": "Early identification of disengagement trends"
-        }
-    ]
-}
-
-# ============================================================
-# SIDEBAR NAVIGATION
+# SIDEBAR: PERSONA + NAVIGATION
 # ============================================================
 st.sidebar.title("The Catalyst")
 
@@ -204,118 +23,211 @@ persona = st.sidebar.selectbox(
 
 page = st.sidebar.radio(
     "Navigate",
-    [
-        "Overview",
-        "Sentiment Health",
-        "Attrition Economics",
-        "Manager Effectiveness"
-    ]
+    ["Overview", "Sentiment Health", "Attrition Economics", "Manager Effectiveness"]
 )
+
+# ============================================================
+# MOCK KPI VALUES (SANDBOX)
+# ============================================================
+sentiment_score = -8
+attrition_cost_usd = 12_400_000
+manager_effectiveness_index = 62
+
+# ============================================================
+# SENTIMENT TREND DATA
+# ============================================================
+dates = pd.date_range(end=pd.Timestamp.today(), periods=12, freq="M")
+sentiment_trend = np.array([-3, -4, -5, -6, -7, -8, -8, -7, -6, -5, -4, -3])
+
+df_trend = pd.DataFrame({
+    "Date": dates,
+    "Sentiment Score": sentiment_trend
+}).set_index("Date")
+
+trend_delta = df_trend["Sentiment Score"].iloc[-1] - df_trend["Sentiment Score"].iloc[0]
+trend_direction = "declining" if trend_delta < 0 else "improving"
+
+# ============================================================
+# ACTION PLANS — SENTIMENT HEALTH
+# ============================================================
+SENTIMENT_ACTION_PLANS = {
+    "CEO": [
+        {
+            "initiative": "Leadership Intervention",
+            "rationale": "Sustained sentiment decline represents an enterprise execution risk.",
+            "30_day": "Mandate leadership capability review for high-risk locations.",
+            "60_day": "Fund and launch targeted leadership intervention programs.",
+            "owner": "Executive Committee"
+        },
+        {
+            "initiative": "Geographic Focus",
+            "rationale": "Sentiment erosion is concentrated, not systemic.",
+            "30_day": "Identify top two cost-heavy locations by sentiment impact.",
+            "60_day": "Tie executive reviews to sentiment recovery milestones.",
+            "owner": "CEO / COO"
+        }
+    ],
+    "CHRO": [
+        {
+            "initiative": "Manager Capability Reset",
+            "rationale": "Manager effectiveness is the dominant driver of sentiment decline.",
+            "30_day": "Run manager diagnostics in high-risk teams.",
+            "60_day": "Deploy coaching and feedback loops linked to engagement KPIs.",
+            "owner": "HR Leadership"
+        }
+    ],
+    "HRBP": [
+        {
+            "initiative": "Team-Level Intervention",
+            "rationale": "Sentiment erosion is visible at team and manager level.",
+            "30_day": "Conduct listening sessions and skip-level check-ins.",
+            "60_day": "Track sentiment monthly post-intervention.",
+            "owner": "HRBP"
+        }
+    ]
+}
+
+# ============================================================
+# ACTION PLANS — ATTRITION ECONOMICS
+# ============================================================
+ATTRITION_ACTION_PLANS = {
+    "CEO": [
+        {
+            "initiative": "Cost Containment",
+            "rationale": "Attrition costs are financially material and unevenly distributed.",
+            "30_day": "Identify top attrition cost centers.",
+            "60_day": "Approve targeted retention investments.",
+            "owner": "Executive Committee"
+        }
+    ],
+    "CHRO": [
+        {
+            "initiative": "Retention Strategy",
+            "rationale": "Preventable attrition is eroding workforce ROI.",
+            "30_day": "Segment attrition by role and tenure.",
+            "60_day": "Deploy differentiated retention levers.",
+            "owner": "CHRO"
+        }
+    ],
+    "HRBP": [
+        {
+            "initiative": "Flight Risk Management",
+            "rationale": "Attrition risk is visible at team level.",
+            "30_day": "Identify high-risk employees.",
+            "60_day": "Run stay interviews and career conversations.",
+            "owner": "HRBP"
+        }
+    ]
+}
+
+# ============================================================
+# ACTION PLANS — MANAGER EFFECTIVENESS
+# ============================================================
+MANAGER_ACTION_PLANS = {
+    "CEO": [
+        {
+            "initiative": "Leadership Accountability",
+            "rationale": "Manager effectiveness directly impacts execution quality.",
+            "30_day": "Review manager performance distribution.",
+            "60_day": "Link leadership incentives to people outcomes.",
+            "owner": "CEO"
+        }
+    ],
+    "CHRO": [
+        {
+            "initiative": "Capability Uplift",
+            "rationale": "Manager skill gaps are systemic.",
+            "30_day": "Launch capability assessment.",
+            "60_day": "Roll out leadership development tracks.",
+            "owner": "CHRO"
+        }
+    ],
+    "HRBP": [
+        {
+            "initiative": "Coaching & Enablement",
+            "rationale": "Manager behavior drives team experience.",
+            "30_day": "Shadow manager interactions.",
+            "60_day": "Provide targeted coaching.",
+            "owner": "HRBP"
+        }
+    ]
+}
+
+# ============================================================
+# SHARED RENDER FUNCTION
+# ============================================================
+def render_action_plan(title, plans):
+    st.markdown("### 🎯 Recommended Action Plan")
+    for plan in plans:
+        with st.expander(f"Initiative: {plan['initiative']}", expanded=True):
+            st.markdown(f"**Why this matters**  \n{plan['rationale']}")
+            st.markdown("**30-Day Goal**")
+            st.write(plan["30_day"])
+            st.markdown("**60-Day Goal**")
+            st.write(plan["60_day"])
+            st.markdown(f"**Owner:** {plan['owner']}")
 
 # ============================================================
 # OVERVIEW PAGE
 # ============================================================
-def render_overview():
+if page == "Overview":
     st.title("The Catalyst")
     st.caption("A people decision engine for leaders")
 
-    st.markdown("""
-    **The Catalyst** translates workforce signals into  
-    **financial impact, strategic clarity, and action plans**.
+    st.markdown(
+        """
+        **The Catalyst** translates workforce signals into  
+        **financial impact, strategic clarity, and prescriptive action.**
 
-    Use the navigation to explore decisions by metric.
-    """)
+        Use the navigation to explore decisions by metric.
+        """
+    )
 
 # ============================================================
 # SENTIMENT HEALTH PAGE
 # ============================================================
-def render_sentiment_page():
-    st.title("Sentiment Health")
+elif page == "Sentiment Health":
+    st.subheader("📈 Sentiment Health")
 
-    # 1️⃣ Signal
-    st.subheader("📈 Executive Signal")
-    st.line_chart(df_sentiment, height=260)
+    st.metric("Current Sentiment Score", sentiment_score)
 
-    signal_text = (
-        "Sentiment is improving, but remains below neutral."
-        if trend_direction == "improving" and sentiment_score < 0
-        else "Sentiment is declining, increasing near-term risk."
-    )
-    st.caption(signal_text)
+    st.line_chart(df_trend, height=260)
 
-    st.divider()
-
-    # 2️⃣ Persona Meaning
-    st.subheader("🧠 What this means for you")
-    st.write(PERSONA_NARRATIVES[persona][persona_state()])
-
-    st.divider()
-
-    # 3️⃣ What-If
-    st.subheader("💰 What if sentiment improves?")
-    delta = st.slider("Assume sentiment improves by:", 1, 20, 5)
-
-    savings_pct = delta * 0.015
-    savings = cost_of_attrition_usd * savings_pct
-
-    st.metric(
-        "Estimated Annual Savings",
-        f"${savings/1_000_000:.2f}M",
-        delta=f"{savings_pct*100:.1f}%"
+    st.caption(
+        f"Sentiment trend is **{trend_direction}**. "
+        "Sustained decline signals emerging engagement risk."
     )
 
-    st.divider()
-
-    # 4️⃣ Action Plan
-st.subheader("🎯 Recommended Action Plan")
-
-action_df = pd.DataFrame(
-    SENTIMENT_ACTION_PLANS[persona]
-)
-
-st.dataframe(
-    action_df,
-    use_container_width=True,
-    hide_index=True
-)
-
+    render_action_plan(
+        "Sentiment Health",
+        SENTIMENT_ACTION_PLANS[persona]
+    )
 
 # ============================================================
 # ATTRITION ECONOMICS PAGE
 # ============================================================
-def render_attrition_page():
-    st.title("Attrition Economics")
+elif page == "Attrition Economics":
+    st.subheader("💰 Attrition Economics")
 
-    st.subheader("🌍 Cost Concentration")
-
-    location_cost_data = pd.DataFrame({
-        "Location": ["United States", "India", "United Kingdom", "Poland", "Philippines"],
-        "Attrition Cost (USD)": [4_900_000, 3_200_000, 1_800_000, 1_400_000, 1_100_000]
-    })
-
-    chart = (
-        alt.Chart(location_cost_data)
-        .mark_bar()
-        .encode(
-            x=alt.X("Attrition Cost (USD):Q", axis=alt.Axis(format="$.2s")),
-            y=alt.Y("Location:N", sort="-x"),
-            tooltip=["Location", alt.Tooltip("Attrition Cost (USD):Q", format="$.2s")]
-        )
-        .properties(height=300)
+    st.metric(
+        "Annual Cost of Attrition",
+        f"${attrition_cost_usd/1_000_000:.1f}M"
     )
 
-    st.altair_chart(chart, use_container_width=True)
-
     st.caption(
-        "Attrition costs are geographically concentrated. "
-        "Targeting the highest-cost locations delivers outsized returns."
+        "Attrition costs are financially material and concentrated."
+    )
+
+    render_action_plan(
+        "Attrition Economics",
+        ATTRITION_ACTION_PLANS[persona]
     )
 
 # ============================================================
 # MANAGER EFFECTIVENESS PAGE
 # ============================================================
-def render_manager_page():
-    st.title("Manager Effectiveness")
+elif page == "Manager Effectiveness":
+    st.subheader("🧭 Manager Effectiveness")
 
     st.metric(
         "Manager Effectiveness Index",
@@ -323,23 +235,16 @@ def render_manager_page():
     )
 
     st.caption(
-        "Manager effectiveness is a leading indicator of sentiment and attrition risk."
+        "Manager capability is a leading indicator of sentiment and attrition."
+    )
+
+    render_action_plan(
+        "Manager Effectiveness",
+        MANAGER_ACTION_PLANS[persona]
     )
 
 # ============================================================
-# ROUTER
+# FOOTER
 # ============================================================
-if page == "Overview":
-    render_overview()
-
-elif page == "Sentiment Health":
-    render_sentiment_page()
-
-elif page == "Attrition Economics":
-    render_attrition_page()
-
-elif page == "Manager Effectiveness":
-    render_manager_page()
-
 st.markdown("---")
-st.caption("The Catalyst • Sandbox v1")
+st.caption("The Catalyst · Sandbox v1")
