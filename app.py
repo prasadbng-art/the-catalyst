@@ -7,7 +7,51 @@ import altair as alt
 # ============================================================
 # PAGE CONFIG
 # ============================================================
+
 st.set_page_config(page_title="The Catalyst", layout="wide")
+
+# ============================================================
+# INTRO SPLASH STATE
+# ============================================================
+if "show_app" not in st.session_state:
+    st.session_state.show_app = False
+
+# ============================================================
+# INTRO SPLASH SCREEN
+# ============================================================
+if not st.session_state.show_app:
+    st.markdown("<br><br><br>", unsafe_allow_html=True)
+
+    st.markdown(
+        "<h1 style='text-align:center;'>THE CATALYST</h1>",
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        "<h3 style='text-align:center; font-weight:400;'>"
+        "A people decision engine for leaders"
+        "</h3>",
+        unsafe_allow_html=True
+    )
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    st.markdown(
+        "<p style='text-align:center; font-size:18px;'>"
+        "Turn workforce signals into financial and strategic decisions."
+        "</p>",
+        unsafe_allow_html=True
+    )
+
+    st.markdown("<br><br>", unsafe_allow_html=True)
+
+    col1, col2, col3 = st.columns([3, 2, 3])
+    with col2:
+        if st.button("Enter The Catalyst"):
+            st.session_state.show_app = True
+            st.experimental_rerun()
+
+    st.stop()
 
 # ============================================================
 # KPI RUNTIME VALUES (single source of truth – demo)
