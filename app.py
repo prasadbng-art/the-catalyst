@@ -116,6 +116,83 @@ def persona_state():
     return "negative" if sentiment_score < 0 else "stable"
 
 # ============================================================
+# SENTIMENT HEALTH — STRUCTURED ACTION PLANS
+# ============================================================
+SENTIMENT_ACTION_PLANS = {
+    "CEO": [
+        {
+            "priority": "🔴 High",
+            "action": "Treat sentiment decline as an enterprise risk, not an HR metric",
+            "owner": "Executive Committee",
+            "timeline": "30 days",
+            "success": "Sentiment decline halted at enterprise level"
+        },
+        {
+            "priority": "🟠 Medium",
+            "action": "Focus leadership attention on the top two cost-heavy locations",
+            "owner": "CEO / COO",
+            "timeline": "60–90 days",
+            "success": "Reduced attrition risk in priority locations"
+        },
+        {
+            "priority": "🟢 Low",
+            "action": "Monitor sentiment monthly as a leading risk indicator",
+            "owner": "CHRO",
+            "timeline": "Ongoing",
+            "success": "Early detection of engagement erosion"
+        }
+    ],
+
+    "CHRO": [
+        {
+            "priority": "🔴 High",
+            "action": "Diagnose manager capability gaps in high-risk teams",
+            "owner": "HR Leadership",
+            "timeline": "30 days",
+            "success": "Clear root-cause diagnosis completed"
+        },
+        {
+            "priority": "🟠 Medium",
+            "action": "Launch targeted internal mobility pilots",
+            "owner": "Talent COE",
+            "timeline": "90 days",
+            "success": "Improved career movement in stagnant roles"
+        },
+        {
+            "priority": "🟢 Low",
+            "action": "Refine engagement architecture and pulse cadence",
+            "owner": "HR Ops",
+            "timeline": "Ongoing",
+            "success": "Sustained sentiment stability"
+        }
+    ],
+
+    "HRBP": [
+        {
+            "priority": "🔴 High",
+            "action": "Initiate coaching conversations with managers in at-risk teams",
+            "owner": "HRBP",
+            "timeline": "30 days",
+            "success": "Improved team-level sentiment scores"
+        },
+        {
+            "priority": "🟠 Medium",
+            "action": "Address workload balance and role clarity issues",
+            "owner": "Line Managers",
+            "timeline": "60 days",
+            "success": "Reduced burnout indicators"
+        },
+        {
+            "priority": "🟢 Low",
+            "action": "Track sentiment monthly at team level",
+            "owner": "HRBP",
+            "timeline": "Ongoing",
+            "success": "Early identification of disengagement trends"
+        }
+    ]
+}
+
+# ============================================================
 # SIDEBAR NAVIGATION
 # ============================================================
 st.sidebar.title("The Catalyst")
@@ -190,9 +267,18 @@ def render_sentiment_page():
     st.divider()
 
     # 4️⃣ Action Plan
-    st.subheader("🎯 Recommended Action Plan")
-    for i, action in enumerate(PERSONA_ACTIONS[persona][persona_state()], 1):
-        st.write(f"**{i}.** {action}")
+st.subheader("🎯 Recommended Action Plan")
+
+action_df = pd.DataFrame(
+    SENTIMENT_ACTION_PLANS[persona]
+)
+
+st.dataframe(
+    action_df,
+    use_container_width=True,
+    hide_index=True
+)
+
 
 # ============================================================
 # ATTRITION ECONOMICS PAGE
