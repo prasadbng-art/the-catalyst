@@ -10,7 +10,7 @@ venv/
 env/
 
 # Streamlit
-.streamlit/
+#.streamlit/
 
 # OS files
 .DS_Store
