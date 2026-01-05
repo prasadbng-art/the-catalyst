@@ -139,7 +139,7 @@ def executive_transition(metric, persona):
 
     if st.button(button_label):
         st.session_state.page = target
-        st.experimental_rerun()
+        st.rerun()
 
 # ============================================================
 # ACTION PLAN REGISTRY
