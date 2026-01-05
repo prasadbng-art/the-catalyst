@@ -1,5 +1,4 @@
 import streamlit as st
-from kpi_registry import KPI_REGISTRY
 import pandas as pd
 import numpy as np
 import altair as alt
@@ -7,91 +6,29 @@ import altair as alt
 # ============================================================
 # PAGE CONFIG
 # ============================================================
-
-st.set_page_config(page_title="The Catalyst", layout="wide")
-
-# ============================================================
-# INTRO SPLASH STATE
-# ============================================================
-if "show_app" not in st.session_state:
-    st.session_state.show_app = False
+st.set_page_config(
+    page_title="The Catalyst",
+    layout="wide"
+)
 
 # ============================================================
-# INTRO SPLASH SCREEN
+# GLOBAL KPI RUNTIME VALUES (single source of truth – sandbox)
 # ============================================================
-if not st.session_state.show_app:
-    st.markdown("<br><br><br>", unsafe_allow_html=True)
-
-    st.markdown(
-        "<h1 style='text-align:center;'>THE CATALYST</h1>",
-        unsafe_allow_html=True
-    )
-
-    st.markdown(
-        "<h3 style='text-align:center; font-weight:400;'>"
-        "A people decision engine for leaders"
-        "</h3>",
-        unsafe_allow_html=True
-    )
-
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    st.markdown(
-        "<p style='text-align:center; font-size:18px;'>"
-        "Turn workforce signals into financial and strategic decisions."
-        "</p>",
-        unsafe_allow_html=True
-    )
-
-    st.markdown("<br><br>", unsafe_allow_html=True)
-
-    col1, col2, col3 = st.columns([3, 2, 3])
-    with col2:
-        if st.button("Enter The Catalyst"):
-            st.session_state.show_app = True
-            st.rerun()
-
-    st.stop()
+sentiment_score = -8
+cost_of_attrition_usd = 12_400_000
+manager_effectiveness_index = 62
 
 # ============================================================
-# KPI RUNTIME VALUES (single source of truth – demo)
+# SENTIMENT TREND (shared by visual + narrative)
 # ============================================================
-sentiment_score = -8  # change to test scenarios
-
-kpi_values = {
-    "sentiment_score": sentiment_score
-}
-
-# ============================================================
-# DEMO DATA (shared across visuals)
-# ============================================================
-
-# --- Sentiment trend ---
 dates = pd.date_range(end=pd.Timestamp.today(), periods=12, freq="M")
 sentiment_trend = np.array([-3, -4, -5, -6, -7, -8, -8, -7, -6, -5, -4, -3])
 
-df_trend = pd.DataFrame({
-    "Date": dates,
-    "Sentiment Score": sentiment_trend
-}).set_index("Date")
+df_sentiment = pd.DataFrame(
+    {"Date": dates, "Sentiment Score": sentiment_trend}
+).set_index("Date")
 
-# --- Risk concentration ---
-risk_data = pd.DataFrame({
-    "Segment": ["Sales", "Engineering", "Support", "Operations", "HR"],
-    "Attrition Risk Index": [78, 64, 59, 42, 35]
-}).sort_values("Attrition Risk Index", ascending=False)
-
-# --- Attrition cost by location (US$) ---
-location_cost_data = pd.DataFrame({
-    "Location": ["United States", "India", "United Kingdom", "Poland", "Philippines"],
-    "Attrition Cost (USD)": [4_900_000, 3_200_000, 1_800_000, 1_400_000, 1_100_000]
-}).sort_values("Attrition Cost (USD)", ascending=False)
-
-# ============================================================
-# DERIVED INSIGHT (shared by visuals & narrative)
-# ============================================================
-trend_delta = df_trend["Sentiment Score"].iloc[-1] - df_trend["Sentiment Score"].iloc[0]
-
+trend_delta = sentiment_trend[-1] - sentiment_trend[0]
 if trend_delta > 0:
     trend_direction = "improving"
 elif trend_delta < 0:
@@ -99,300 +36,224 @@ elif trend_delta < 0:
 else:
     trend_direction = "stable"
 
-narrative_context = {
-    "sentiment_score": sentiment_score,
-    "trend_direction": trend_direction
-}
-
 # ============================================================
-# PERSONA-SPECIFIC NARRATIVES
+# PERSONA NARRATIVES
 # ============================================================
 PERSONA_NARRATIVES = {
     "CEO": {
         "negative": (
-            "Employee sentiment is deteriorating, creating a material business risk. "
-            "Attrition costs are significant and concentrated, requiring leadership attention."
-        ),
-        "recovering": (
-            "Employee sentiment is recovering from a recent low, indicating early traction. "
-            "However, sentiment remains below a healthy threshold and risk persists."
+            "Employee sentiment represents a growing business risk. "
+            "Left unaddressed, it will continue to drive avoidable attrition costs "
+            "and leadership distraction."
         ),
         "stable": (
-            "Employee sentiment remains broadly stable and does not pose a material business risk."
+            "Sentiment is not currently a material business risk. "
+            "Leadership attention can remain focused on growth and execution."
         )
     },
     "CHRO": {
         "negative": (
-            "Sustained sentiment decline points to weakening engagement drivers, "
-            "likely related to manager capability and internal mobility constraints."
-        ),
-        "recovering": (
-            "Sentiment improvements suggest interventions are gaining traction. "
-            "The focus now is sustaining momentum and embedding manager capability."
+            "Sustained sentiment decline signals weakening engagement drivers, "
+            "particularly around manager capability and career mobility."
         ),
         "stable": (
-            "Sentiment stability suggests engagement mechanisms are holding, "
-            "allowing focus on long-term workforce health."
+            "Sentiment stability suggests existing engagement mechanisms are holding, "
+            "creating space for longer-term workforce capability building."
         )
     },
     "HRBP": {
         "negative": (
-            "Sentiment decline is concentrated in specific teams, "
-            "indicating the need for immediate manager-level intervention."
-        ),
-        "recovering": (
-            "Sentiment is improving but remains fragile. "
-            "Consistency in manager behaviour will be critical."
+            "Sentiment decline is likely concentrated within specific teams. "
+            "Immediate manager-level intervention is required."
         ),
         "stable": (
-            "Sentiment remains steady across most teams, "
-            "providing an opportunity to reinforce effective practices."
+            "Teams appear broadly stable. Proactive reinforcement can prevent "
+            "future disengagement."
         )
     }
 }
 
-# ============================================================
-# PERSONA-SPECIFIC ACTION GUIDANCE
-# ============================================================
 PERSONA_ACTIONS = {
     "CEO": {
         "negative": [
-            "Treat sentiment decline as an enterprise risk.",
-            "Direct attention to the highest cost-exposure locations.",
-            "Authorize focused interventions with clear ROI."
-        ],
-        "recovering": [
-            "Sustain current interventions and monitor momentum.",
-            "Track sentiment monthly as a leading indicator.",
-            "Prepare contingencies if recovery stalls."
+            "Treat sentiment decline as an enterprise risk, not an HR issue",
+            "Focus executive attention on the top two cost-heavy locations",
+            "Fund targeted interventions with measurable ROI expectations"
         ],
         "stable": [
-            "Maintain current engagement investments.",
-            "Shift focus toward growth and productivity.",
-            "Monitor sentiment as an early warning signal."
+            "Maintain current engagement investment levels",
+            "Monitor sentiment as an early warning signal",
+            "Shift focus toward productivity and growth levers"
         ]
     },
     "CHRO": {
         "negative": [
-            "Diagnose manager capability gaps.",
-            "Accelerate internal mobility initiatives.",
-            "Reallocate engagement budgets toward targeted actions."
-        ],
-        "recovering": [
-            "Reinforce behaviours driving improvement.",
-            "Stabilize systems supporting workload and career flow.",
-            "Validate ROI of interventions."
+            "Diagnose manager capability gaps in high-risk teams",
+            "Accelerate internal mobility and career progression pilots",
+            "Redirect engagement spend from broad programs to focused actions"
         ],
         "stable": [
-            "Strengthen leadership capability proactively.",
-            "Plan for long-term workforce sustainability.",
-            "Use stability as a planning baseline."
+            "Strengthen leadership capability pipelines",
+            "Refine career architecture to sustain engagement",
+            "Use stability as a baseline for workforce planning"
         ]
     },
     "HRBP": {
         "negative": [
-            "Prioritize coaching with at-risk managers.",
-            "Address workload and role clarity issues.",
-            "Track team-level sentiment closely."
-        ],
-        "recovering": [
-            "Ensure follow-through on recent actions.",
-            "Support managers in maintaining consistency.",
-            "Watch for early regression signals."
+            "Initiate coaching conversations with at-risk managers",
+            "Address workload and role clarity issues",
+            "Track sentiment monthly at team level"
         ],
         "stable": [
-            "Reinforce strong manager behaviours.",
-            "Engage teams proactively.",
-            "Maintain regular check-ins."
+            "Reinforce strong manager behaviors",
+            "Engage teams showing early warning signals",
+            "Maintain regular sentiment check-ins"
         ]
     }
 }
 
-# ============================================================
-# PERSONA-AWARE ROUTERS
-# ============================================================
-def resolve_state(context):
-    sentiment = context["sentiment_score"]
-    trend = context["trend_direction"]
-
-    if sentiment < 0 and trend == "improving":
-        return "recovering"
-    elif sentiment < 0:
-        return "negative"
-    else:
-        return "stable"
-
-
-def generate_persona_narrative(context, persona):
-    return PERSONA_NARRATIVES[persona][resolve_state(context)]
-
-
-def generate_persona_actions(context, persona):
-    return PERSONA_ACTIONS[persona][resolve_state(context)]
+def persona_state():
+    return "negative" if sentiment_score < 0 else "stable"
 
 # ============================================================
-# SIDEBAR
+# SIDEBAR NAVIGATION
 # ============================================================
-st.sidebar.header("View As")
+st.sidebar.title("The Catalyst")
 
 persona = st.sidebar.selectbox(
-    "Persona",
+    "View as",
     ["CEO", "CHRO", "HRBP"]
 )
 
-st.sidebar.header("Select KPIs to explore")
-
-selected_kpis = []
-for kpi_key, meta in KPI_REGISTRY.items():
-    if st.sidebar.checkbox(meta["label"], value=False):
-        selected_kpis.append(kpi_key)
-
-# ============================================================
-# HEADER
-# ============================================================
-st.title("The Catalyst")
-st.caption("A people decision engine for leaders")
-
-# ============================================================
-# VISUAL 1: SENTIMENT TRAJECTORY
-# ============================================================
-st.subheader("Sentiment Trajectory — Direction of Risk")
-
-c1, c2, c3 = st.columns(3)
-c1.metric("Current Sentiment", sentiment_score)
-c2.metric("Lowest Point", df_trend["Sentiment Score"].min())
-c3.metric("Trend", trend_direction.capitalize())
-
-state = resolve_state(narrative_context)
-color_map = {
-    "negative": "#d62728",
-    "recovering": "#ff7f0e",
-    "stable": "#2ca02c"
-}
-
-base = alt.Chart(df_trend.reset_index()).encode(
-    x="Date:T",
-    y=alt.Y("Sentiment Score:Q", scale=alt.Scale(domain=[-10, 1]))
+page = st.sidebar.radio(
+    "Navigate",
+    [
+        "Overview",
+        "Sentiment Health",
+        "Attrition Economics",
+        "Manager Effectiveness"
+    ]
 )
 
-line = base.mark_line(strokeWidth=3, color=color_map[state])
+# ============================================================
+# OVERVIEW PAGE
+# ============================================================
+def render_overview():
+    st.title("The Catalyst")
+    st.caption("A people decision engine for leaders")
 
-threshold = alt.Chart(
-    pd.DataFrame({"y": [0]})
-).mark_rule(strokeDash=[4, 4], color="gray").encode(y="y:Q")
+    st.markdown("""
+    **The Catalyst** translates workforce signals into  
+    **financial impact, strategic clarity, and action plans**.
 
-st.altair_chart(line + threshold, use_container_width=True)
-
-st.divider()
+    Use the navigation to explore decisions by metric.
+    """)
 
 # ============================================================
-# VISUAL 2: RISK CONCENTRATION
+# SENTIMENT HEALTH PAGE
 # ============================================================
-st.subheader("Risk Concentration — Where Problems Cluster")
+def render_sentiment_page():
+    st.title("Sentiment Health")
 
-top_risk_segments = (risk_data["Attrition Risk Index"] >= 60).sum()
+    # 1️⃣ Signal
+    st.subheader("📈 Executive Signal")
+    st.line_chart(df_sentiment, height=260)
 
-c1, c2, c3 = st.columns(3)
-c1.metric("High-Risk Segments", f"{top_risk_segments} of {len(risk_data)}")
-c2.metric("Risk Shape", "Highly Concentrated")
-c3.metric("Primary Exposure", risk_data.iloc[0]["Segment"])
-
-risk_chart = (
-    alt.Chart(risk_data)
-    .mark_bar()
-    .encode(
-        x=alt.X("Attrition Risk Index:Q", scale=alt.Scale(domain=[0, 100])),
-        y=alt.Y("Segment:N", sort="-x"),
-        color=alt.condition(
-            alt.datum["Attrition Risk Index"] >= 60,
-            alt.value("#d62728"),
-            alt.value("#ffbf00")
-        )
+    signal_text = (
+        "Sentiment is improving, but remains below neutral."
+        if trend_direction == "improving" and sentiment_score < 0
+        else "Sentiment is declining, increasing near-term risk."
     )
-)
+    st.caption(signal_text)
 
-st.altair_chart(risk_chart, use_container_width=True)
+    st.divider()
 
-# ============================================================
-# VISUAL 3: COST OF ATTRITION BY LOCATION
-# ============================================================
-st.subheader("Cost of Attrition — Where Money Leaks (US$)")
+    # 2️⃣ Persona Meaning
+    st.subheader("🧠 What this means for you")
+    st.write(PERSONA_NARRATIVES[persona][persona_state()])
 
-total_cost = location_cost_data["Attrition Cost (USD)"].sum()
-top_location = location_cost_data.iloc[0]
+    st.divider()
 
-c1, c2, c3 = st.columns(3)
-c1.metric("Total Annual Cost", f"${total_cost/1_000_000:.1f}M")
-c2.metric("Top Location", top_location["Location"])
-c3.metric("Cost Concentration", f"{top_location['Attrition Cost (USD)']/total_cost:.0%}")
+    # 3️⃣ What-If
+    st.subheader("💰 What if sentiment improves?")
+    delta = st.slider("Assume sentiment improves by:", 1, 20, 5)
 
-cost_chart = (
-    alt.Chart(location_cost_data)
-    .mark_bar()
-    .encode(
-        x=alt.X("Attrition Cost (USD):Q", axis=alt.Axis(format="$.2s")),
-        y=alt.Y("Location:N", sort="-x"),
-        color=alt.condition(
-            alt.datum["Attrition Cost (USD)"] == top_location["Attrition Cost (USD)"],
-            alt.value("#d62728"),
-            alt.value("#cfcfcf")
-        )
+    savings_pct = delta * 0.015
+    savings = cost_of_attrition_usd * savings_pct
+
+    st.metric(
+        "Estimated Annual Savings",
+        f"${savings/1_000_000:.2f}M",
+        delta=f"{savings_pct*100:.1f}%"
     )
-)
 
-st.altair_chart(cost_chart, use_container_width=True)
+    st.divider()
 
-# ============================================================
-# VISUAL 4: FINANCIAL WHAT-IF
-# ============================================================
-st.subheader("Financial Impact — What Improvement Buys You")
-
-annual_attrition_cost = 12_400_000
-rate = 0.015
-
-c1, c2, c3 = st.columns(3)
-c1.metric("Annual Attrition Cost", "$12.4M")
-c2.metric("Cost Sensitivity", "1.5% per point")
-c3.metric("Decision Lens", "Preventable Loss")
-
-uplift = st.slider("", 1, 20, 5)
-savings = annual_attrition_cost * uplift * rate
-
-cA, cB = st.columns(2)
-cA.metric("Estimated Annual Savings", f"${savings/1_000_000:.2f}M")
-cB.metric("Residual Cost", f"${(annual_attrition_cost - savings)/1_000_000:.2f}M")
-
-st.divider()
+    # 4️⃣ Action Plan
+    st.subheader("🎯 Recommended Action Plan")
+    for i, action in enumerate(PERSONA_ACTIONS[persona][persona_state()], 1):
+        st.write(f"**{i}.** {action}")
 
 # ============================================================
-# KPI SNAPSHOT + INTERPRETATION
+# ATTRITION ECONOMICS PAGE
 # ============================================================
-left, right = st.columns([2, 3])
+def render_attrition_page():
+    st.title("Attrition Economics")
 
-with left:
-    st.subheader("KPI Snapshot")
-    for kpi in selected_kpis:
-        meta = KPI_REGISTRY[kpi]
-        if meta["type"] == "index":
-            st.metric(meta["label"], kpi_values.get(kpi, meta["default"]))
-        elif meta["type"] == "percentage":
-            st.metric(meta["label"], f"{meta['default']}%")
-        elif meta["type"] == "currency":
-            st.metric(meta["label"], f"${meta['default']/1_000_000:.1f}M")
-        elif meta["type"] == "number":
-            st.metric(meta["label"], meta["default"])
-        elif meta["type"] == "list":
-            st.write(meta["label"])
-            for item in meta["default"]:
-                st.write(f"• {item}")
+    st.subheader("🌍 Cost Concentration")
 
-with right:
-    st.subheader("Catalyst Interpretation")
+    location_cost_data = pd.DataFrame({
+        "Location": ["United States", "India", "United Kingdom", "Poland", "Philippines"],
+        "Attrition Cost (USD)": [4_900_000, 3_200_000, 1_800_000, 1_400_000, 1_100_000]
+    })
 
-    st.info(generate_persona_narrative(narrative_context, persona))
+    chart = (
+        alt.Chart(location_cost_data)
+        .mark_bar()
+        .encode(
+            x=alt.X("Attrition Cost (USD):Q", axis=alt.Axis(format="$.2s")),
+            y=alt.Y("Location:N", sort="-x"),
+            tooltip=["Location", alt.Tooltip("Attrition Cost (USD):Q", format="$.2s")]
+        )
+        .properties(height=300)
+    )
 
-    st.markdown("### Recommended Actions")
-    for action in generate_persona_actions(narrative_context, persona):
-        st.success(action)
+    st.altair_chart(chart, use_container_width=True)
 
-st.caption("The Catalyst © v1 — demo")
+    st.caption(
+        "Attrition costs are geographically concentrated. "
+        "Targeting the highest-cost locations delivers outsized returns."
+    )
+
+# ============================================================
+# MANAGER EFFECTIVENESS PAGE
+# ============================================================
+def render_manager_page():
+    st.title("Manager Effectiveness")
+
+    st.metric(
+        "Manager Effectiveness Index",
+        manager_effectiveness_index
+    )
+
+    st.caption(
+        "Manager effectiveness is a leading indicator of sentiment and attrition risk."
+    )
+
+# ============================================================
+# ROUTER
+# ============================================================
+if page == "Overview":
+    render_overview()
+
+elif page == "Sentiment Health":
+    render_sentiment_page()
+
+elif page == "Attrition Economics":
+    render_attrition_page()
+
+elif page == "Manager Effectiveness":
+    render_manager_page()
+
+st.markdown("---")
+st.caption("The Catalyst • Sandbox v1")
