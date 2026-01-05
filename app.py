@@ -49,7 +49,7 @@ if not st.session_state.show_app:
     with col2:
         if st.button("Enter The Catalyst"):
             st.session_state.show_app = True
-            st.experimental_rerun()
+            st.rerun()
 
     st.stop()
 
