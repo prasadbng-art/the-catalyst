@@ -8,7 +8,7 @@ import altair as alt
 # ============================================================
 st.set_page_config(
     page_title="The Catalyst",
-    layout="wide",
+    layout="wide"
 )
 
 # ============================================================
@@ -27,137 +27,80 @@ page = st.sidebar.radio(
 )
 
 # ============================================================
-# MOCK KPI VALUES (SANDBOX)
+# SANDBOX KPI VALUES
 # ============================================================
-sentiment_score = -8
-attrition_cost_usd = 12_400_000
-manager_effectiveness_index = 62
+attrition_cost_usd = 12_400_000  # Annual cost of attrition (US$)
 
 # ============================================================
-# SENTIMENT TREND DATA
+# ATTRITION COST DISTRIBUTION (MOCK DATA)
 # ============================================================
-dates = pd.date_range(end=pd.Timestamp.today(), periods=12, freq="M")
-sentiment_trend = np.array([-3, -4, -5, -6, -7, -8, -8, -7, -6, -5, -4, -3])
-
-df_trend = pd.DataFrame({
-    "Date": dates,
-    "Sentiment Score": sentiment_trend
-}).set_index("Date")
-
-trend_delta = df_trend["Sentiment Score"].iloc[-1] - df_trend["Sentiment Score"].iloc[0]
-trend_direction = "declining" if trend_delta < 0 else "improving"
+attrition_location_data = pd.DataFrame({
+    "Location": ["United States", "India", "United Kingdom", "Poland", "Philippines"],
+    "Attrition Cost (USD)": [4_900_000, 3_200_000, 1_800_000, 1_400_000, 1_100_000]
+}).sort_values("Attrition Cost (USD)", ascending=False)
 
 # ============================================================
-# ACTION PLANS — SENTIMENT HEALTH
-# ============================================================
-SENTIMENT_ACTION_PLANS = {
-    "CEO": [
-        {
-            "initiative": "Leadership Intervention",
-            "rationale": "Sustained sentiment decline represents an enterprise execution risk.",
-            "30_day": "Mandate leadership capability review for high-risk locations.",
-            "60_day": "Fund and launch targeted leadership intervention programs.",
-            "owner": "Executive Committee"
-        },
-        {
-            "initiative": "Geographic Focus",
-            "rationale": "Sentiment erosion is concentrated, not systemic.",
-            "30_day": "Identify top two cost-heavy locations by sentiment impact.",
-            "60_day": "Tie executive reviews to sentiment recovery milestones.",
-            "owner": "CEO / COO"
-        }
-    ],
-    "CHRO": [
-        {
-            "initiative": "Manager Capability Reset",
-            "rationale": "Manager effectiveness is the dominant driver of sentiment decline.",
-            "30_day": "Run manager diagnostics in high-risk teams.",
-            "60_day": "Deploy coaching and feedback loops linked to engagement KPIs.",
-            "owner": "HR Leadership"
-        }
-    ],
-    "HRBP": [
-        {
-            "initiative": "Team-Level Intervention",
-            "rationale": "Sentiment erosion is visible at team and manager level.",
-            "30_day": "Conduct listening sessions and skip-level check-ins.",
-            "60_day": "Track sentiment monthly post-intervention.",
-            "owner": "HRBP"
-        }
-    ]
-}
-
-# ============================================================
-# ACTION PLANS — ATTRITION ECONOMICS
+# ATTRITION ECONOMICS — ACTION PLANS
 # ============================================================
 ATTRITION_ACTION_PLANS = {
     "CEO": [
         {
-            "initiative": "Cost Containment",
-            "rationale": "Attrition costs are financially material and unevenly distributed.",
-            "30_day": "Identify top attrition cost centers.",
-            "60_day": "Approve targeted retention investments.",
+            "initiative": "Targeted Capital Allocation",
+            "rationale": "Attrition costs are financially material and highly concentrated.",
+            "30_day": "Mandate a focused retention strategy for the top two cost-heavy locations.",
+            "60_day": "Approve targeted funding tied to measurable attrition reduction.",
             "owner": "Executive Committee"
+        },
+        {
+            "initiative": "Governance & Oversight",
+            "rationale": "Attrition risk requires ongoing executive visibility.",
+            "30_day": "Establish a quarterly attrition cost review.",
+            "60_day": "Link attrition outcomes to leadership performance reviews.",
+            "owner": "CEO / COO"
         }
     ],
+
     "CHRO": [
         {
-            "initiative": "Retention Strategy",
+            "initiative": "Retention Strategy Reset",
             "rationale": "Preventable attrition is eroding workforce ROI.",
-            "30_day": "Segment attrition by role and tenure.",
-            "60_day": "Deploy differentiated retention levers.",
+            "30_day": "Segment attrition by role, tenure, and location.",
+            "60_day": "Deploy differentiated retention levers for high-risk segments.",
             "owner": "CHRO"
+        },
+        {
+            "initiative": "Career Architecture",
+            "rationale": "Limited internal mobility accelerates voluntary exits.",
+            "30_day": "Identify stagnant roles with high exit rates.",
+            "60_day": "Launch internal mobility and progression pilots.",
+            "owner": "Talent COE"
         }
     ],
+
     "HRBP": [
         {
-            "initiative": "Flight Risk Management",
-            "rationale": "Attrition risk is visible at team level.",
-            "30_day": "Identify high-risk employees.",
-            "60_day": "Run stay interviews and career conversations.",
+            "initiative": "Flight Risk Intervention",
+            "rationale": "Attrition risk is visible earliest at team level.",
+            "30_day": "Identify high-flight-risk employees and teams.",
+            "60_day": "Conduct stay interviews and manager-led retention conversations.",
+            "owner": "HRBP"
+        },
+        {
+            "initiative": "Manager Enablement",
+            "rationale": "Manager behavior strongly influences retention outcomes.",
+            "30_day": "Flag managers with abnormal attrition patterns.",
+            "60_day": "Provide targeted coaching and support.",
             "owner": "HRBP"
         }
     ]
 }
 
 # ============================================================
-# ACTION PLANS — MANAGER EFFECTIVENESS
+# SHARED ACTION PLAN RENDERER
 # ============================================================
-MANAGER_ACTION_PLANS = {
-    "CEO": [
-        {
-            "initiative": "Leadership Accountability",
-            "rationale": "Manager effectiveness directly impacts execution quality.",
-            "30_day": "Review manager performance distribution.",
-            "60_day": "Link leadership incentives to people outcomes.",
-            "owner": "CEO"
-        }
-    ],
-    "CHRO": [
-        {
-            "initiative": "Capability Uplift",
-            "rationale": "Manager skill gaps are systemic.",
-            "30_day": "Launch capability assessment.",
-            "60_day": "Roll out leadership development tracks.",
-            "owner": "CHRO"
-        }
-    ],
-    "HRBP": [
-        {
-            "initiative": "Coaching & Enablement",
-            "rationale": "Manager behavior drives team experience.",
-            "30_day": "Shadow manager interactions.",
-            "60_day": "Provide targeted coaching.",
-            "owner": "HRBP"
-        }
-    ]
-}
-
-# ============================================================
-# SHARED RENDER FUNCTION
-# ============================================================
-def render_action_plan(title, plans):
+def render_action_plan(plans):
     st.markdown("### 🎯 Recommended Action Plan")
+
     for plan in plans:
         with st.expander(f"Initiative: {plan['initiative']}", expanded=True):
             st.markdown(f"**Why this matters**  \n{plan['rationale']}")
@@ -174,74 +117,101 @@ if page == "Overview":
     st.title("The Catalyst")
     st.caption("A people decision engine for leaders")
 
-    st.markdown(
-        """
-        **The Catalyst** translates workforce signals into  
-        **financial impact, strategic clarity, and prescriptive action.**
+    st.markdown("""
+    **The Catalyst** converts workforce data into  
+    **financial clarity, strategic focus, and prescriptive action**.
 
-        Use the navigation to explore decisions by metric.
-        """
-    )
+    Use the navigation to explore decisions by metric.
+    """)
 
 # ============================================================
-# SENTIMENT HEALTH PAGE
-# ============================================================
-elif page == "Sentiment Health":
-    st.subheader("📈 Sentiment Health")
-
-    st.metric("Current Sentiment Score", sentiment_score)
-
-    st.line_chart(df_trend, height=260)
-
-    st.caption(
-        f"Sentiment trend is **{trend_direction}**. "
-        "Sustained decline signals emerging engagement risk."
-    )
-
-    render_action_plan(
-        "Sentiment Health",
-        SENTIMENT_ACTION_PLANS[persona]
-    )
-
-# ============================================================
-# ATTRITION ECONOMICS PAGE
+# ATTRITION ECONOMICS — DECISION PAGE
 # ============================================================
 elif page == "Attrition Economics":
     st.subheader("💰 Attrition Economics")
 
+    # 1️⃣ SIGNAL — FINANCIAL EXPOSURE
     st.metric(
         "Annual Cost of Attrition",
         f"${attrition_cost_usd/1_000_000:.1f}M"
     )
 
-    st.caption(
-        "Attrition costs are financially material and concentrated."
+    st.markdown("#### Where the money is leaking")
+
+    chart = (
+        alt.Chart(attrition_location_data)
+        .mark_bar()
+        .encode(
+            x=alt.X(
+                "Attrition Cost (USD):Q",
+                title="Attrition Cost (US$)",
+                axis=alt.Axis(format="$.2s")
+            ),
+            y=alt.Y(
+                "Location:N",
+                sort="-x",
+                title=None
+            ),
+            tooltip=[
+                "Location",
+                alt.Tooltip("Attrition Cost (USD):Q", format="$.2s")
+            ]
+        )
+        .properties(height=280)
     )
 
+    st.altair_chart(chart, use_container_width=True)
+
+    # 2️⃣ INTERPRETATION
+    st.caption(
+        "Attrition costs are highly concentrated. A small number of locations "
+        "account for a disproportionate share of financial loss, indicating that "
+        "targeted retention actions will deliver higher ROI than broad programs."
+    )
+
+    st.divider()
+
+    # 3️⃣ WHAT-IF SIMULATOR
+    st.subheader("🎛 What if we reduce attrition?")
+
+    reduction_pct = st.slider(
+        "Assume reduction in attrition (%)",
+        min_value=1,
+        max_value=5,
+        value=3
+    )
+
+    estimated_savings = attrition_cost_usd * (reduction_pct / 100)
+
+    col1, col2 = st.columns(2)
+    col1.metric(
+        "Estimated Annual Savings",
+        f"${estimated_savings/1_000_000:.2f}M"
+    )
+    col2.metric(
+        "Cost Reduction",
+        f"{reduction_pct:.1f}%"
+    )
+
+    st.caption(
+        "Even modest improvements in retention generate material financial returns."
+    )
+
+    st.divider()
+
+    # 4️⃣ PRESCRIPTION — PERSONA-AWARE ACTION PLAN
     render_action_plan(
-        "Attrition Economics",
         ATTRITION_ACTION_PLANS[persona]
     )
 
 # ============================================================
-# MANAGER EFFECTIVENESS PAGE
+# PLACEHOLDERS FOR OTHER PAGES
 # ============================================================
+elif page == "Sentiment Health":
+    st.info("Sentiment Health decision page already implemented separately.")
+
 elif page == "Manager Effectiveness":
-    st.subheader("🧭 Manager Effectiveness")
-
-    st.metric(
-        "Manager Effectiveness Index",
-        manager_effectiveness_index
-    )
-
-    st.caption(
-        "Manager capability is a leading indicator of sentiment and attrition."
-    )
-
-    render_action_plan(
-        "Manager Effectiveness",
-        MANAGER_ACTION_PLANS[persona]
-    )
+    st.info("Manager Effectiveness decision page to be completed next.")
 
 # ============================================================
 # FOOTER
