@@ -8,11 +8,18 @@ import altair as alt
 # ============================================================
 st.set_page_config(
     page_title="The Catalyst",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
 # ============================================================
-# SIDEBAR: PERSONA + NAVIGATION
+# SESSION STATE (FOR PROGRAMMATIC NAVIGATION)
+# ============================================================
+if "page" not in st.session_state:
+    st.session_state.page = "Overview"
+
+# ============================================================
+# SIDEBAR — PERSONA & NAVIGATION
 # ============================================================
 st.sidebar.title("The Catalyst")
 
@@ -23,198 +30,283 @@ persona = st.sidebar.selectbox(
 
 page = st.sidebar.radio(
     "Navigate",
-    ["Overview", "Sentiment Health", "Attrition Economics", "Manager Effectiveness"]
+    ["Overview", "Sentiment Health", "Manager Effectiveness", "Attrition Economics"],
+    index=["Overview", "Sentiment Health", "Manager Effectiveness", "Attrition Economics"]
+        .index(st.session_state.page)
 )
 
-# ============================================================
-# SANDBOX KPI VALUES
-# ============================================================
-attrition_cost_usd = 12_400_000  # Annual cost of attrition (US$)
+st.session_state.page = page
 
 # ============================================================
-# ATTRITION COST DISTRIBUTION (MOCK DATA)
+# SHARED MOCK DATA (SANDBOX)
 # ============================================================
-attrition_location_data = pd.DataFrame({
-    "Location": ["United States", "India", "United Kingdom", "Poland", "Philippines"],
-    "Attrition Cost (USD)": [4_900_000, 3_200_000, 1_800_000, 1_400_000, 1_100_000]
-}).sort_values("Attrition Cost (USD)", ascending=False)
+sentiment_score = -8
+attrition_cost = 12_400_000
+manager_effectiveness_index = 61
+
+dates = pd.date_range(end=pd.Timestamp.today(), periods=12, freq="M")
+sentiment_trend = np.array([-3, -4, -5, -6, -7, -8, -8, -7, -6, -5, -4, -3])
+
+df_sentiment = pd.DataFrame({
+    "Date": dates,
+    "Sentiment Score": sentiment_trend
+})
+
+trend_delta = sentiment_trend[-1] - sentiment_trend[0]
 
 # ============================================================
-# ATTRITION ECONOMICS — ACTION PLANS
+# EXECUTIVE STORYLINE STRIP
 # ============================================================
-ATTRITION_ACTION_PLANS = {
-    "CEO": [
-        {
-            "initiative": "Targeted Capital Allocation",
-            "rationale": "Attrition costs are financially material and highly concentrated.",
-            "30_day": "Mandate a focused retention strategy for the top two cost-heavy locations.",
-            "60_day": "Approve targeted funding tied to measurable attrition reduction.",
-            "owner": "Executive Committee"
+def render_executive_storyline(persona):
+    persona_message = {
+        "CEO": "This is a leadership and capital allocation issue.",
+        "CHRO": "This is a manager capability and system design issue.",
+        "HRBP": "This is a coaching and execution issue."
+    }
+
+    st.markdown(
+        """
+        **Executive Storyline**
+
+        Sentiment decline → Management effectiveness gaps → Rising attrition costs
+        """
+    )
+    st.info(persona_message[persona])
+
+# ============================================================
+# PERSONA-AWARE EXECUTIVE TRANSITIONS
+# ============================================================
+def executive_transition(metric, persona):
+    TRANSITIONS = {
+        "Sentiment Health": {
+            "CEO": (
+                "Sustained sentiment decline signals an execution risk rooted in leadership behavior.",
+                "Review Manager Effectiveness →",
+                "Manager Effectiveness"
+            ),
+            "CHRO": (
+                "Declining sentiment often reflects gaps in manager capability and system design.",
+                "Diagnose Manager Effectiveness →",
+                "Manager Effectiveness"
+            ),
+            "HRBP": (
+                "Team-level sentiment erosion is usually driven by manager behavior.",
+                "Identify Manager Gaps →",
+                "Manager Effectiveness"
+            )
         },
-        {
-            "initiative": "Governance & Oversight",
-            "rationale": "Attrition risk requires ongoing executive visibility.",
-            "30_day": "Establish a quarterly attrition cost review.",
-            "60_day": "Link attrition outcomes to leadership performance reviews.",
-            "owner": "CEO / COO"
-        }
-    ],
-
-    "CHRO": [
-        {
-            "initiative": "Retention Strategy Reset",
-            "rationale": "Preventable attrition is eroding workforce ROI.",
-            "30_day": "Segment attrition by role, tenure, and location.",
-            "60_day": "Deploy differentiated retention levers for high-risk segments.",
-            "owner": "CHRO"
+        "Manager Effectiveness": {
+            "CEO": (
+                "Weak management capability amplifies downstream attrition costs.",
+                "Quantify Attrition Cost →",
+                "Attrition Economics"
+            ),
+            "CHRO": (
+                "Manager gaps translate directly into preventable attrition.",
+                "Assess Attrition Economics →",
+                "Attrition Economics"
+            ),
+            "HRBP": (
+                "Unaddressed manager issues increase flight risk.",
+                "Review Attrition Impact →",
+                "Attrition Economics"
+            )
         },
-        {
-            "initiative": "Career Architecture",
-            "rationale": "Limited internal mobility accelerates voluntary exits.",
-            "30_day": "Identify stagnant roles with high exit rates.",
-            "60_day": "Launch internal mobility and progression pilots.",
-            "owner": "Talent COE"
+        "Attrition Economics": {
+            "CEO": (
+                "The financial impact is now clear. Targeted interventions will deliver the fastest ROI.",
+                "Revisit Sentiment Health →",
+                "Sentiment Health"
+            ),
+            "CHRO": (
+                "Attrition costs reinforce the need to address sentiment drivers.",
+                "Refocus on Sentiment Drivers →",
+                "Sentiment Health"
+            ),
+            "HRBP": (
+                "Attrition outcomes confirm the need for proactive engagement.",
+                "Return to Sentiment Signals →",
+                "Sentiment Health"
+            )
         }
-    ],
+    }
 
-    "HRBP": [
-        {
-            "initiative": "Flight Risk Intervention",
-            "rationale": "Attrition risk is visible earliest at team level.",
-            "30_day": "Identify high-flight-risk employees and teams.",
-            "60_day": "Conduct stay interviews and manager-led retention conversations.",
-            "owner": "HRBP"
-        },
-        {
-            "initiative": "Manager Enablement",
-            "rationale": "Manager behavior strongly influences retention outcomes.",
-            "30_day": "Flag managers with abnormal attrition patterns.",
-            "60_day": "Provide targeted coaching and support.",
-            "owner": "HRBP"
-        }
-    ]
+    message, button_label, target = TRANSITIONS[metric][persona]
+
+    st.markdown("---")
+    st.subheader("Next Decision")
+    st.write(message)
+
+    if st.button(button_label):
+        st.session_state.page = target
+        st.experimental_rerun()
+
+# ============================================================
+# ACTION PLAN REGISTRY
+# ============================================================
+ACTION_PLANS = {
+    "Sentiment Health": {
+        "CEO": [
+            ("High", "Declare sentiment decline an enterprise risk", "Executive Committee", "30 days", "Risk ownership assigned"),
+            ("Medium", "Focus on worst-affected locations", "CEO / COO", "60 days", "Stabilization observed"),
+            ("Low", "Track sentiment as early warning", "CHRO", "Ongoing", "Proactive response")
+        ],
+        "CHRO": [
+            ("High", "Diagnose manager capability gaps", "HR Leadership", "30 days", "Root causes identified"),
+            ("Medium", "Accelerate internal mobility pilots", "Talent COE", "60 days", "Engagement improves"),
+            ("Low", "Refresh listening cadence", "People Analytics", "Ongoing", "Trend clarity")
+        ],
+        "HRBP": [
+            ("High", "Immediate coaching interventions", "HRBP", "30 days", "Local sentiment improves"),
+            ("Medium", "Clarify roles & workload", "Business Leaders", "60 days", "Reduced friction"),
+            ("Low", "Reinforce effective managers", "HRBP", "Ongoing", "Stability maintained")
+        ]
+    },
+
+    "Manager Effectiveness": {
+        "CEO": [
+            ("High", "Treat weak management as a growth constraint", "Executive Committee", "30 days", "Ownership assigned"),
+            ("Medium", "Hold leaders accountable for team health", "CEO / COO", "60 days", "Productivity improves"),
+            ("Low", "Track manager quality at board level", "Strategy", "Ongoing", "Early detection")
+        ],
+        "CHRO": [
+            ("High", "Launch targeted capability uplift", "HR Leadership", "30 days", "Scores improve"),
+            ("Medium", "Redesign enablement programs", "L&D", "60 days", "Consistency achieved"),
+            ("Low", "Embed effectiveness in reviews", "HR Ops", "Ongoing", "Sustained gains")
+        ],
+        "HRBP": [
+            ("High", "Coach bottom-quartile managers", "HRBP", "30 days", "Behavior change"),
+            ("Medium", "Clarify expectations", "Business Leaders", "60 days", "Reduced friction"),
+            ("Low", "Scale best practices", "HRBP", "Ongoing", "Replication achieved")
+        ]
+    },
+
+    "Attrition Economics": {
+        "CEO": [
+            ("High", "Treat attrition cost as EBIT leakage", "Exec Team", "30 days", "Cost owned"),
+            ("Medium", "Prioritize top cost-heavy locations", "COO", "60 days", "Run-rate reduced"),
+            ("Low", "Integrate attrition into growth planning", "Strategy", "Ongoing", "Predictability")
+        ],
+        "CHRO": [
+            ("High", "Reallocate spend to high-ROI levers", "HR Leadership", "30 days", "Efficiency improves"),
+            ("Medium", "Align workforce plans to risk", "Workforce COE", "60 days", "Stability achieved"),
+            ("Low", "Embed economics in reviews", "HR Ops", "Ongoing", "Accountability")
+        ],
+        "HRBP": [
+            ("High", "Target flight-risk roles", "HRBP", "30 days", "Exits reduced"),
+            ("Medium", "Improve role mobility", "Talent Partners", "60 days", "Retention improves"),
+            ("Low", "Track exit drivers", "HRBP", "Ongoing", "Insights sharpened")
+        ]
+    }
 }
 
-# ============================================================
-# SHARED ACTION PLAN RENDERER
-# ============================================================
-def render_action_plan(plans):
-    st.markdown("### 🎯 Recommended Action Plan")
-
-    for plan in plans:
-        with st.expander(f"Initiative: {plan['initiative']}", expanded=True):
-            st.markdown(f"**Why this matters**  \n{plan['rationale']}")
-            st.markdown("**30-Day Goal**")
-            st.write(plan["30_day"])
-            st.markdown("**60-Day Goal**")
-            st.write(plan["60_day"])
-            st.markdown(f"**Owner:** {plan['owner']}")
+def render_action_plan(metric, persona):
+    df = pd.DataFrame(
+        ACTION_PLANS[metric][persona],
+        columns=["Priority", "Action", "Owner", "Timeline", "Success Metric"]
+    )
+    st.subheader("🎯 Recommended Action Plan")
+    st.dataframe(df, use_container_width=True)
 
 # ============================================================
-# OVERVIEW PAGE
+# OVERVIEW
 # ============================================================
 if page == "Overview":
     st.title("The Catalyst")
     st.caption("A people decision engine for leaders")
 
     st.markdown("""
-    **The Catalyst** converts workforce data into  
-    **financial clarity, strategic focus, and prescriptive action**.
+    Catalyst connects **workforce signals → root causes → financial impact → action**.
 
-    Use the navigation to explore decisions by metric.
+    Each metric is designed as a **decision page**, not a dashboard.
     """)
 
 # ============================================================
-# ATTRITION ECONOMICS — DECISION PAGE
-# ============================================================
-elif page == "Attrition Economics":
-    st.subheader("💰 Attrition Economics")
-
-    # 1️⃣ SIGNAL — FINANCIAL EXPOSURE
-    st.metric(
-        "Annual Cost of Attrition",
-        f"${attrition_cost_usd/1_000_000:.1f}M"
-    )
-
-    st.markdown("#### Where the money is leaking")
-
-    chart = (
-        alt.Chart(attrition_location_data)
-        .mark_bar()
-        .encode(
-            x=alt.X(
-                "Attrition Cost (USD):Q",
-                title="Attrition Cost (US$)",
-                axis=alt.Axis(format="$.2s")
-            ),
-            y=alt.Y(
-                "Location:N",
-                sort="-x",
-                title=None
-            ),
-            tooltip=[
-                "Location",
-                alt.Tooltip("Attrition Cost (USD):Q", format="$.2s")
-            ]
-        )
-        .properties(height=280)
-    )
-
-    st.altair_chart(chart, use_container_width=True)
-
-    # 2️⃣ INTERPRETATION
-    st.caption(
-        "Attrition costs are highly concentrated. A small number of locations "
-        "account for a disproportionate share of financial loss, indicating that "
-        "targeted retention actions will deliver higher ROI than broad programs."
-    )
-
-    st.divider()
-
-    # 3️⃣ WHAT-IF SIMULATOR
-    st.subheader("🎛 What if we reduce attrition?")
-
-    reduction_pct = st.slider(
-        "Assume reduction in attrition (%)",
-        min_value=1,
-        max_value=5,
-        value=3
-    )
-
-    estimated_savings = attrition_cost_usd * (reduction_pct / 100)
-
-    col1, col2 = st.columns(2)
-    col1.metric(
-        "Estimated Annual Savings",
-        f"${estimated_savings/1_000_000:.2f}M"
-    )
-    col2.metric(
-        "Cost Reduction",
-        f"{reduction_pct:.1f}%"
-    )
-
-    st.caption(
-        "Even modest improvements in retention generate material financial returns."
-    )
-
-    st.divider()
-
-    # 4️⃣ PRESCRIPTION — PERSONA-AWARE ACTION PLAN
-    render_action_plan(
-        ATTRITION_ACTION_PLANS[persona]
-    )
-
-# ============================================================
-# PLACEHOLDERS FOR OTHER PAGES
+# SENTIMENT HEALTH
 # ============================================================
 elif page == "Sentiment Health":
-    st.info("Sentiment Health decision page already implemented separately.")
+    st.title("Sentiment Health")
+    st.caption("Early warning signal for engagement and execution risk")
 
+    render_executive_storyline(persona)
+
+    col1, col2 = st.columns([2, 1])
+
+    with col1:
+        chart = alt.Chart(df_sentiment).mark_line(point=True).encode(
+            x="Date:T",
+            y=alt.Y("Sentiment Score:Q", scale=alt.Scale(domain=[-10, 0])),
+            tooltip=["Date", "Sentiment Score"]
+        ).properties(height=300)
+        st.altair_chart(chart, use_container_width=True)
+
+    with col2:
+        st.metric("Current Sentiment Score", sentiment_score, delta=trend_delta)
+        st.caption("Direction matters more than absolute value.")
+
+    render_action_plan("Sentiment Health", persona)
+    executive_transition("Sentiment Health", persona)
+
+# ============================================================
+# MANAGER EFFECTIVENESS
+# ============================================================
 elif page == "Manager Effectiveness":
-    st.info("Manager Effectiveness decision page to be completed next.")
+    st.title("Manager Effectiveness")
+    st.caption("Root cause of sentiment and attrition outcomes")
+
+    render_executive_storyline(persona)
+
+    col1, col2 = st.columns([2, 1])
+
+    with col1:
+        mgr_data = pd.DataFrame({
+            "Dimension": ["Coaching", "Clarity", "Trust", "Execution", "Feedback"],
+            "Score": [58, 62, 65, 59, 60]
+        })
+
+        chart = alt.Chart(mgr_data).mark_bar().encode(
+            x=alt.X("Score:Q", scale=alt.Scale(domain=[0, 100])),
+            y=alt.Y("Dimension:N", sort="-x"),
+            tooltip=["Dimension", "Score"]
+        ).properties(height=300)
+        st.altair_chart(chart, use_container_width=True)
+
+    with col2:
+        st.metric("Manager Effectiveness Index", manager_effectiveness_index, delta=-6)
+        st.caption("Below-threshold capability amplifies downstream risk.")
+
+    render_action_plan("Manager Effectiveness", persona)
+    executive_transition("Manager Effectiveness", persona)
 
 # ============================================================
-# FOOTER
+# ATTRITION ECONOMICS
 # ============================================================
-st.markdown("---")
-st.caption("The Catalyst · Sandbox v1")
+elif page == "Attrition Economics":
+    st.title("Attrition Economics")
+    st.caption("Financial impact of unmanaged people risk")
+
+    render_executive_storyline(persona)
+
+    col1, col2 = st.columns([2, 1])
+
+    with col1:
+        location_data = pd.DataFrame({
+            "Location": ["US", "India", "UK", "Poland", "Philippines"],
+            "Cost": [4.9, 3.2, 1.8, 1.4, 1.1]
+        })
+
+        chart = alt.Chart(location_data).mark_bar().encode(
+            x=alt.X("Cost:Q", title="Attrition Cost (US$ M)"),
+            y=alt.Y("Location:N", sort="-x"),
+            tooltip=["Location", "Cost"]
+        ).properties(height=300)
+        st.altair_chart(chart, use_container_width=True)
+
+    with col2:
+        st.metric("Annual Attrition Cost", f"${attrition_cost/1_000_000:.1f}M")
+        uplift = st.slider("Assume sentiment improvement (points)", 1, 10, 5)
+        savings = attrition_cost * uplift * 0.015
+        st.metric("Estimated Savings", f"${savings/1_000_000:.2f}M")
+
+    render_action_plan("Attrition Economics", persona)
+    executive_transition("Attrition Economics", persona)
