@@ -97,6 +97,9 @@ def classify_kpi(kpi_name, value, config, direction):
     kpi = config["kpis"][kpi_name]
     thresholds = kpi["thresholds"]
     labels = kpi["labels"]
+    
+    if value is None:
+        return "unknown", "Insufficient data"
 
     if direction == "lower_is_worse":
         ordered = sorted(thresholds.items(), key=lambda x: x[1])
