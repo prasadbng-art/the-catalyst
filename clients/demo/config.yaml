@@ -27,35 +27,78 @@ personas:
 # ============================================================
 
 kpis:
-
   sentiment_health:
+    enabled: true
+
     thresholds:
       critical: -10
       negative: -5
+      healthy: 0
+
     labels:
       critical: "Critical Sentiment Risk"
       negative: "Elevated Sentiment Risk"
       healthy: "Sentiment Within Control"
 
-  manager_effectiveness:
-    thresholds:
-      critical: 50
-      negative: 60
-    labels:
-      critical: "Severe Manager Capability Risk"
-      negative: "Manager Capability Gaps"
-      healthy: "Manager Effectiveness Acceptable"
+    action_plans:
+      critical:
+        CEO:
+          - priority: High
+            action: Escalate sentiment as enterprise risk
+            owner: Executive Committee
+            timeline: 30 days
+            success: Risk formally owned
 
-  attrition_economics:
-    thresholds:
-      critical: 25
-      high: 18
-      watch: 12
-    labels:
-      critical: "Severe Financial Exposure"
-      high: "High Financial Exposure"
-      watch: "Emerging Financial Risk"
-      healthy: "Controlled Attrition Cost"
+          - priority: High
+            action: Mandate leadership intervention in red zones
+            owner: CEO / COO
+            timeline: 45 days
+            success: Stabilization begins
+
+        CHRO:
+          - priority: High
+            action: Diagnose manager capability gaps
+            owner: HR Leadership
+            timeline: 30 days
+            success: Root causes identified
+
+        HRBP:
+          - priority: High
+            action: Immediate manager coaching
+            owner: HRBP
+            timeline: 30 days
+            success: Local sentiment improves
+
+      negative:
+        CEO:
+          - priority: Medium
+            action: Focus on worst-affected locations
+            owner: CEO / COO
+            timeline: 60 days
+            success: Trend reversal
+
+        CHRO:
+          - priority: Medium
+            action: Strengthen internal mobility pilots
+            owner: Talent COE
+            timeline: 60 days
+            success: Engagement lift
+
+        HRBP:
+          - priority: Medium
+            action: Target early-warning teams
+            owner: HRBP
+            timeline: 60 days
+            success: Stabilization
+
+      healthy:
+        CEO:
+          - priority: Low
+            action: Maintain listening cadence
+            owner: CHRO
+            timeline: Ongoing
+            success: No deterioration
+
 
 
 # ============================================================

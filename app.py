@@ -45,10 +45,11 @@ def classify_kpi(kpi_name, value, config, direction):
 # ACTION PLAN RENDERER (STATE-AWARE)
 # ============================================================
 
-def render_action_plan(metric, state, persona):
+def render_action_plan(metric, state, persona, config):
     plans = (
-        ACTION_PLANS
+        config["kpis"]
         .get(metric, {})
+        .get("action_plans", {})
         .get(state, {})
         .get(persona, [])
     )
@@ -57,14 +58,12 @@ def render_action_plan(metric, state, persona):
         st.info("No prescribed actions for this decision state.")
         return
 
-    df = pd.DataFrame(
-        plans,
-        columns=["Priority", "Action", "Owner", "Timeline", "Success Metric"]
-    )
+    df = pd.DataFrame(plans)
 
     st.subheader("🎯 Recommended Action Plan")
-    st.caption(f"Decision state: **{state.upper()}**")
+    st.caption(f"Decision state: {state.upper()}")
     st.dataframe(df, use_container_width=True)
+
 
 # ============================================================
 # PAGE CONFIG
@@ -140,7 +139,11 @@ if page == "Overview":
 
 elif page == "Sentiment Health":
     st.title("Sentiment Health")
+    st.caption("Early warning signal for engagement and execution risk")
 
+    render_executive_storyline(persona)
+
+    # ---- Classify sentiment via client config ----
     sentiment_state, sentiment_label = classify_kpi(
         "sentiment_health",
         sentiment_score,
@@ -153,16 +156,33 @@ elif page == "Sentiment Health":
     with col1:
         chart = alt.Chart(df_sentiment).mark_line(point=True).encode(
             x="Date:T",
-            y=alt.Y("Sentiment Score:Q", scale=alt.Scale(domain=[-10, 0]))
+            y=alt.Y(
+                "Sentiment Score:Q",
+                scale=alt.Scale(domain=[-10, 0])
+            ),
+            tooltip=["Date", "Sentiment Score"]
         ).properties(height=300)
 
         st.altair_chart(chart, use_container_width=True)
 
     with col2:
-        st.metric("Sentiment Status", sentiment_label)
+        st.metric(
+            "Sentiment Status",
+            sentiment_label,
+            delta=sentiment_score
+        )
         st.caption(f"Decision state: {sentiment_state.upper()}")
 
-    render_action_plan("sentiment_health", sentiment_state, persona)
+    # ---- State-aware, persona-aware action plan ----
+    render_action_plan(
+        metric="sentiment_health",
+        state=sentiment_state,
+        persona=persona,
+        config=CLIENT_CONFIG
+    )
+
+    executive_transition("Sentiment Health", persona)
+
 
 # ============================================================
 # MANAGER EFFECTIVENESS
