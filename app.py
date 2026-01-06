@@ -64,13 +64,19 @@ def validate_config(config):
 # ============================================================
 # DEMO TREND DATA (STATIC VISUAL ONLY)
 # ============================================================
-dates = pd.date_range(end=pd.Timestamp.today(), periods=12, freq="M")
-sentiment_trend = np.array([-3, -4, -5, -6, -7, -8, -8, -7, -6, -5, -4, -3])
+@st.cache_data(show_spinner=False)
+def get_sentiment_trend():
+    dates = pd.date_range(end=pd.Timestamp.today(), periods=12, freq="M")
+    sentiment_trend = np.array(
+        [-3, -4, -5, -6, -7, -8, -8, -7, -6, -5, -4, -3]
+    )
+    return pd.DataFrame({
+        "Date": dates,
+        "Sentiment Score": sentiment_trend
+    })
 
-df_sentiment = pd.DataFrame({
-    "Date": dates,
-    "Sentiment Score": sentiment_trend
-})
+df_sentiment = get_sentiment_trend()
+
 
 # ============================================================
 # CLIENT CONFIG LOADING
@@ -78,10 +84,15 @@ df_sentiment = pd.DataFrame({
 CLIENT_ID = "demo"
 CONFIG_PATH = Path(f"clients/{CLIENT_ID}/config.yaml")
 
-with open(CONFIG_PATH, "r") as f:
-    CLIENT_CONFIG = yaml.safe_load(f)
+@st.cache_data(show_spinner=False)
+def load_and_validate_config(path):
+    with open(path, "r") as f:
+        config = yaml.safe_load(f)
+    validate_config(config)
+    return config
 
-validate_config(CLIENT_CONFIG)
+CLIENT_CONFIG = load_and_validate_config(CONFIG_PATH)
+
 
 # ============================================================
 # KPI CLASSIFIER (CONFIG-DRIVEN)
