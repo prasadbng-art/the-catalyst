@@ -183,67 +183,94 @@ def executive_transition(metric, persona):
 # ============================================================
 ACTION_PLANS = {
     "sentiment_health": {
-        "CEO": [
-            ("High", "Declare sentiment decline an enterprise risk", "Executive Committee", "30 days", "Risk ownership assigned"),
-            ("Medium", "Focus on worst-affected locations", "CEO / COO", "60 days", "Stabilization observed"),
-            ("Low", "Track sentiment as early warning", "CHRO", "Ongoing", "Proactive response")
-        ],
-        "CHRO": [
-            ("High", "Diagnose manager capability gaps", "HR Leadership", "30 days", "Root causes identified"),
-            ("Medium", "Accelerate internal mobility pilots", "Talent COE", "60 days", "Engagement improves"),
-            ("Low", "Refresh listening cadence", "People Analytics", "Ongoing", "Trend clarity")
-        ],
-        "HRBP": [
-            ("High", "Immediate coaching interventions", "HRBP", "30 days", "Local sentiment improves"),
-            ("Medium", "Clarify roles & workload", "Business Leaders", "60 days", "Reduced friction"),
-            ("Low", "Reinforce effective managers", "HRBP", "Ongoing", "Stability maintained")
-        ]
+        "CEO": {
+            "critical": [
+                ("High", "Escalate sentiment as enterprise risk", "Executive Committee", "30 days", "Risk formally owned"),
+                ("High", "Mandate leadership intervention in red zones", "CEO / COO", "45 days", "Stabilization begins")
+            ],
+            "negative": [
+                ("Medium", "Focus on worst-affected locations", "CEO / COO", "60 days", "Sentiment trend reverses"),
+                ("Low", "Track sentiment monthly", "CHRO", "Ongoing", "Early warning maintained")
+            ],
+            "stable": [
+                ("Low", "Maintain listening cadence", "CHRO", "Ongoing", "No deterioration observed")
+            ]
+        },
+
+        "CHRO": {
+            "critical": [
+                ("High", "Run root-cause diagnostics on manager capability", "HR Leadership", "30 days", "Drivers identified"),
+                ("High", "Launch targeted intervention pods", "People COE", "45 days", "Hotspots addressed")
+            ],
+            "negative": [
+                ("Medium", "Strengthen internal mobility pilots", "Talent COE", "60 days", "Engagement lift"),
+                ("Low", "Refresh survey instruments", "People Analytics", "Ongoing", "Signal clarity")
+            ],
+            "stable": [
+                ("Low", "Embed sentiment into workforce planning", "HR Ops", "Ongoing", "Sustained stability")
+            ]
+        },
+
+        "HRBP": {
+            "critical": [
+                ("High", "Immediate manager coaching", "HRBP", "30 days", "Local sentiment improves"),
+                ("High", "Reset role clarity and workload", "Business Leaders", "45 days", "Friction reduced")
+            ],
+            "negative": [
+                ("Medium", "Target teams showing early decline", "HRBP", "60 days", "Stabilization achieved")
+            ],
+            "stable": [
+                ("Low", "Reinforce best practices", "HRBP", "Ongoing", "Consistency maintained")
+            ]
+        }
     },
 
     "manager_effectiveness": {
-        "CEO": [
-            ("High", "Treat weak management as a growth constraint", "Executive Committee", "30 days", "Ownership assigned"),
-            ("Medium", "Hold leaders accountable for team health", "CEO / COO", "60 days", "Productivity improves"),
-            ("Low", "Track manager quality at board level", "Strategy", "Ongoing", "Early detection")
-        ],
-        "CHRO": [
-            ("High", "Launch targeted capability uplift", "HR Leadership", "30 days", "Scores improve"),
-            ("Medium", "Redesign enablement programs", "L&D", "60 days", "Consistency achieved"),
-            ("Low", "Embed effectiveness in reviews", "HR Ops", "Ongoing", "Sustained gains")
-        ],
-        "HRBP": [
-            ("High", "Coach bottom-quartile managers", "HRBP", "30 days", "Behavior change"),
-            ("Medium", "Clarify expectations", "Business Leaders", "60 days", "Reduced friction"),
-            ("Low", "Scale best practices", "HRBP", "Ongoing", "Replication achieved")
-        ]
+        "CEO": {
+            "critical": [
+                ("High", "Treat management weakness as growth blocker", "Board / Exec", "30 days", "Ownership assigned")
+            ],
+            "negative": [
+                ("Medium", "Tie leader KPIs to team health", "CEO / COO", "60 days", "Accountability improves")
+            ],
+            "stable": [
+                ("Low", "Monitor leadership pipeline", "Strategy", "Ongoing", "Early detection")
+            ]
+        }
+        # (CHRO / HRBP can be added next)
     },
 
     "attrition_economics": {
-        "CEO": [
-            ("High", "Treat attrition cost as EBIT leakage", "Exec Team", "30 days", "Cost owned"),
-            ("Medium", "Prioritize top cost-heavy locations", "COO", "60 days", "Run-rate reduced"),
-            ("Low", "Integrate attrition into growth planning", "Strategy", "Ongoing", "Predictability")
-        ],
-        "CHRO": [
-            ("High", "Reallocate spend to high-ROI levers", "HR Leadership", "30 days", "Efficiency improves"),
-            ("Medium", "Align workforce plans to risk", "Workforce COE", "60 days", "Stability achieved"),
-            ("Low", "Embed economics in reviews", "HR Ops", "Ongoing", "Accountability")
-        ],
-        "HRBP": [
-            ("High", "Target flight-risk roles", "HRBP", "30 days", "Exits reduced"),
-            ("Medium", "Improve role mobility", "Talent Partners", "60 days", "Retention improves"),
-            ("Low", "Track exit drivers", "HRBP", "Ongoing", "Insights sharpened")
-        ]
+        "CEO": {
+            "critical": [
+                ("High", "Treat attrition as EBIT leakage", "Exec Team", "30 days", "Cost owned")
+            ],
+            "negative": [
+                ("Medium", "Prioritize high-cost locations", "COO", "60 days", "Run-rate reduced")
+            ],
+            "stable": [
+                ("Low", "Integrate attrition into planning", "Strategy", "Ongoing", "Predictability improved")
+            ]
+        }
     }
 }
 
+
 def render_action_plan(metric, persona, state):
+    plans = ACTION_PLANS.get(metric, {}).get(persona, {}).get(state, [])
+
+    if not plans:
+        st.info("No prescribed actions for this decision state.")
+        return
+
     df = pd.DataFrame(
-        ACTION_PLANS[metric][persona],
+        plans,
         columns=["Priority", "Action", "Owner", "Timeline", "Success Metric"]
     )
+
     st.subheader("🎯 Recommended Action Plan")
-    st.caption(f"Decision state: (state.upper())")
+    st.caption(f"Decision state: {state.upper()}")
+
     st.dataframe(df, use_container_width=True)
 
 # ============================================================
