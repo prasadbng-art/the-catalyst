@@ -15,6 +15,14 @@ CONFIG_PATH = Path(f"clients/{CLIENT_ID}/config.yaml")
 
 with open(CONFIG_PATH, "r") as f:
     CLIENT_CONFIG = yaml.safe_load(f)
+# ============================================================
+# CLIENT ACTION PLANS LOADING
+# ============================================================
+
+ACTIONS_PATH = Path(f"clients/{CLIENT_ID}/actions.yaml")
+
+with open(ACTIONS_PATH, "r") as f:
+    ACTION_PLANS = yaml.safe_load(f)
 
 # ============================================================
 # KPI CLASSIFIERS (CONFIG-DRIVEN)

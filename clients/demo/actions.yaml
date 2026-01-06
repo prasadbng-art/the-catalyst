@@ -1,0 +1,58 @@
+sentiment_health:
+  CEO:
+    critical:
+      - priority: High
+        action: Escalate sentiment as enterprise execution risk
+        owner: Executive Committee
+        timeline: 30 days
+        success: Risk formally owned at board level
+
+      - priority: High
+        action: Mandate leadership intervention in red zones
+        owner: CEO / COO
+        timeline: 45 days
+        success: Early stabilization observed
+
+    negative:
+      - priority: Medium
+        action: Focus on worst-affected locations
+        owner: CEO / COO
+        timeline: 60 days
+        success: Sentiment trend reverses
+
+    stable:
+      - priority: Low
+        action: Maintain listening cadence
+        owner: CHRO
+        timeline: Ongoing
+        success: No deterioration
+
+  CHRO:
+    critical:
+      - priority: High
+        action: Diagnose manager capability gaps
+        owner: HR Leadership
+        timeline: 30 days
+        success: Root causes identified
+
+    negative:
+      - priority: Medium
+        action: Accelerate internal mobility pilots
+        owner: Talent COE
+        timeline: 60 days
+        success: Engagement improves
+
+    stable:
+      - priority: Low
+        action: Embed sentiment into workforce planning
+        owner: HR Ops
+        timeline: Ongoing
+        success: Stability maintained
+
+  HRBP:
+    critical:
+      - priority: High
+        action: Immediate manager coaching
+        owner: HRBP
+        timeline: 30 days
+        success: Local sentiment improves
