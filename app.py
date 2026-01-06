@@ -61,6 +61,16 @@ def validate_config(config):
         raise ValueError(
             "CONFIG VALIDATION FAILED:\n" + "\n".join(errors)
         )
+# ============================================================
+# DEMO TREND DATA (STATIC VISUAL ONLY)
+# ============================================================
+dates = pd.date_range(end=pd.Timestamp.today(), periods=12, freq="M")
+sentiment_trend = np.array([-3, -4, -5, -6, -7, -8, -8, -7, -6, -5, -4, -3])
+
+df_sentiment = pd.DataFrame({
+    "Date": dates,
+    "Sentiment Score": sentiment_trend
+})
 
 # ============================================================
 # CLIENT CONFIG LOADING
@@ -72,21 +82,6 @@ with open(CONFIG_PATH, "r") as f:
     CLIENT_CONFIG = yaml.safe_load(f)
 
 validate_config(CLIENT_CONFIG)
-
-# ============================================================
-# MOCK DATA (SANDBOX)
-# ============================================================
-sentiment_score = -8
-manager_effectiveness_index = 61
-attrition_rate = 21.3
-
-dates = pd.date_range(end=pd.Timestamp.today(), periods=12, freq="M")
-sentiment_trend = np.array([-3, -4, -5, -6, -7, -8, -8, -7, -6, -5, -4, -3])
-
-df_sentiment = pd.DataFrame({
-    "Date": dates,
-    "Sentiment Score": sentiment_trend
-})
 
 # ============================================================
 # KPI CLASSIFIER (CONFIG-DRIVEN)
@@ -136,7 +131,32 @@ def render_action_plan(metric, state, persona, config):
 # SIDEBAR
 # ============================================================
 st.sidebar.title("The Catalyst")
+st.sidebar.markdown("### 🔧 Scenario Controls")
 
+sentiment_score = st.sidebar.slider(
+    "Employee Sentiment Score",
+    min_value=-10,
+    max_value=0,
+    value=-8,
+    step=1
+)
+
+manager_effectiveness_index = st.sidebar.slider(
+    "Manager Effectiveness Index",
+    min_value=40,
+    max_value=90,
+    value=61,
+    step=1
+)
+
+attrition_rate = st.sidebar.slider(
+    "Annual Attrition Rate (%)",
+    min_value=5.0,
+    max_value=40.0,
+    value=21.3,
+    step=0.5
+)
+st.sidebar.markdown("---")
 persona = st.sidebar.selectbox(
     "View as",
     ["CEO", "CHRO", "HRBP"]
