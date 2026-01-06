@@ -13,10 +13,10 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
-## ============================================================
+
+# ============================================================
 # CONFIG VALIDATOR (FAIL-FAST)
 # ============================================================
-
 def validate_config(config):
     errors = []
 
@@ -27,27 +27,29 @@ def validate_config(config):
         if not kpi.get("enabled", False):
             continue
 
-        # ---- required blocks
+        # Required blocks
         for required in ["thresholds", "labels", "action_plans"]:
             if required not in kpi:
-                errors.append(f"KPI '{kpi_name}' missing '{required}' block")
+                errors.append(
+                    f"KPI '{kpi_name}' missing required block '{required}'"
+                )
 
         thresholds = set(kpi.get("thresholds", {}).keys())
         labels = set(kpi.get("labels", {}).keys())
         action_states = set(kpi.get("action_plans", {}).keys())
 
-        # ---- state alignment
+        # State alignment
         for state in thresholds:
             if state not in labels:
                 errors.append(
-                    f"KPI '{kpi_name}' state '{state}' has no matching label"
+                    f"KPI '{kpi_name}' state '{state}' missing label"
                 )
             if state not in action_states:
                 errors.append(
-                    f"KPI '{kpi_name}' state '{state}' has no action_plans defined"
+                    f"KPI '{kpi_name}' state '{state}' missing action_plans"
                 )
 
-        # ---- persona validation
+        # Persona validation
         for state, persona_block in kpi.get("action_plans", {}).items():
             for persona in persona_block.keys():
                 if persona not in enabled_personas:
@@ -56,16 +58,19 @@ def validate_config(config):
                     )
 
     if errors:
-        raise ValueError("CONFIG VALIDATION FAILED:\n" + "\n".join(errors))
+        raise ValueError(
+            "CONFIG VALIDATION FAILED:\n" + "\n".join(errors)
+        )
 
- ============================================================
+# ============================================================
 # CLIENT CONFIG LOADING
 # ============================================================
 CLIENT_ID = "demo"
-
 CONFIG_PATH = Path(f"clients/{CLIENT_ID}/config.yaml")
+
 with open(CONFIG_PATH, "r") as f:
     CLIENT_CONFIG = yaml.safe_load(f)
+
 validate_config(CLIENT_CONFIG)
 
 # ============================================================
@@ -74,7 +79,6 @@ validate_config(CLIENT_CONFIG)
 sentiment_score = -8
 manager_effectiveness_index = 61
 attrition_rate = 21.3
-attrition_cost = 12_400_000
 
 dates = pd.date_range(end=pd.Timestamp.today(), periods=12, freq="M")
 sentiment_trend = np.array([-3, -4, -5, -6, -7, -8, -8, -7, -6, -5, -4, -3])
@@ -140,7 +144,12 @@ persona = st.sidebar.selectbox(
 
 page = st.sidebar.radio(
     "Navigate",
-    ["Overview", "Sentiment Health", "Manager Effectiveness", "Attrition Economics"]
+    [
+        "Overview",
+        "Sentiment Health",
+        "Manager Effectiveness",
+        "Attrition Economics"
+    ]
 )
 
 # ============================================================
@@ -150,14 +159,16 @@ if page == "Overview":
     st.title("The Catalyst")
     st.caption("A people decision engine for leaders")
 
-    st.markdown("""
-    **Catalyst connects workforce signals → root causes → financial impact → action.**
+    st.markdown(
+        """
+        **Catalyst connects workforce signals → root causes → financial impact → action.**
 
-    Each metric is designed as a **decision page**, not a dashboard.
-    """)
+        Each metric is designed as a **decision page**, not a dashboard.
+        """
+    )
 
 # ============================================================
-# SENTIMENT HEALTH (COMPLETE & STABLE)
+# SENTIMENT HEALTH (REFERENCE IMPLEMENTATION)
 # ============================================================
 elif page == "Sentiment Health":
     st.title("Sentiment Health")
@@ -175,7 +186,10 @@ elif page == "Sentiment Health":
     with col1:
         chart = alt.Chart(df_sentiment).mark_line(point=True).encode(
             x="Date:T",
-            y=alt.Y("Sentiment Score:Q", scale=alt.Scale(domain=[-10, 0])),
+            y=alt.Y(
+                "Sentiment Score:Q",
+                scale=alt.Scale(domain=[-10, 0])
+            ),
             tooltip=["Date", "Sentiment Score"]
         ).properties(height=300)
 
@@ -193,7 +207,7 @@ elif page == "Sentiment Health":
     )
 
 # ============================================================
-# MANAGER EFFECTIVENESS (SAFE SCAFFOLD)
+# MANAGER EFFECTIVENESS
 # ============================================================
 elif page == "Manager Effectiveness":
     st.title("Manager Effectiveness")
@@ -217,7 +231,7 @@ elif page == "Manager Effectiveness":
     )
 
 # ============================================================
-# ATTRITION ECONOMICS (SAFE SCAFFOLD)
+# ATTRITION ECONOMICS
 # ============================================================
 elif page == "Attrition Economics":
     st.title("Attrition Economics")
