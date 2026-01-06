@@ -239,10 +239,11 @@ ACTION_PLANS = {
 
 def render_action_plan(metric, persona, state):
     df = pd.DataFrame(
-        ACTION_PLANS[metric][persona][state],
+        ACTION_PLANS[metric][persona],
         columns=["Priority", "Action", "Owner", "Timeline", "Success Metric"]
     )
     st.subheader("🎯 Recommended Action Plan")
+    st.caption(f"Decision state: (state.upper())")
     st.dataframe(df, use_container_width=True)
 
 # ============================================================
