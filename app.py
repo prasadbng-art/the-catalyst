@@ -248,33 +248,23 @@ ACTION_PLANS = {
         # (CHRO / HRBP can be added next)
     },
 
-    "attrition_economics": {
-        "CEO": {
-            "critical": [
-                ("High", "Treat attrition as EBIT leakage", "Exec Team", "30 days", "Cost owned")
-            ],
-            "negative": [
-                ("Medium", "Prioritize high-cost locations", "COO", "60 days", "Run-rate reduced")
-            ],
-            "stable": [
-                ("Low", "Integrate attrition into planning", "Strategy", "Ongoing", "Predictability improved")
-            ]
-        }
-    }
-}
-
-
-def render_action_plan(metric, persona, state):
-    plans = ACTION_PLANS.get(metric, {}).get(persona, {}).get(state, [])
+   
+def render_action_plan(metric, state, persona, config):
+    plans = (
+        config["kpis"]
+        .get(metric, {})
+        .get("action_plans", {})
+        .get(state, {})
+        .get(persona, [])
+    )
 
     if not plans:
         st.info("No prescribed actions for this decision state.")
         return
 
-    df = pd.DataFrame(
-        plans,
-        columns=["Priority", "Action", "Owner", "Timeline", "Success Metric"]
-    )
+    df = pd.DataFrame(plans)
+    st.subheader("🎯 Recommended Action Plan")
+    st.dataframe(df, use_container_width=True)
 
     st.subheader("🎯 Recommended Action Plan")
     st.caption(f"Decision state: {state.upper()}")
@@ -344,6 +334,7 @@ elif page == "Manager Effectiveness":
 
     render_executive_storyline(persona)
 
+   # ---- Classify manager effectiveness using client config ----
     manager_state, manager_label = classify_kpi(
         "manager_effectiveness",
         manager_effectiveness_index,
@@ -437,6 +428,6 @@ elif page == "Attrition Economics":
             f"${savings/1_000_000:.2f}M"
         )
 
-    render_action_plan("attrition_economics", persona, attrition_state)
+    render_action_plan("attrition_economics", attrition_state, persona, ACTION_PLANS)
     executive_transition("Attrition Economics", persona)
 
