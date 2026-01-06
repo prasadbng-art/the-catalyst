@@ -2,6 +2,19 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import altair as alt
+import yaml
+from pathlib import Path
+
+# ============================================================
+# CLIENT CONFIG LOADING
+# ============================================================
+
+CLIENT_ID = "demo"  # later this will come from env / auth
+
+CONFIG_PATH = Path(f"clients/{CLIENT_ID}/config.yaml")
+
+with open(CONFIG_PATH, "r") as f:
+    CLIENT_CONFIG = yaml.safe_load(f)
 
 # ============================================================
 # PAGE CONFIG

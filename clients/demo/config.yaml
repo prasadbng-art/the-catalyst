@@ -1,0 +1,56 @@
+# ============================================================
+# CLIENT IDENTITY
+# ============================================================
+
+client:
+  id: demo
+  name: "Catalyst Demo Organization"
+  industry: "Technology"
+  geography: "Global"
+  currency: "USD"
+
+
+# ============================================================
+# PERSONAS ENABLED
+# ============================================================
+
+personas:
+  enabled:
+    - CEO
+    - CHRO
+    - HRBP
+
+
+# ============================================================
+# KPI CONFIGURATION
+# (Controls visibility, thresholds, narratives)
+# ============================================================
+
+kpis:
+
+  sentiment_health:
+    enabled: true
+    negative_threshold: -5
+    critical_threshold: -10
+    lookback_months: 12
+
+  attrition_economics:
+    enabled: true
+    high_risk_rate_pct: 18
+    cost_per_exit_multiplier: 1.2
+
+  manager_effectiveness:
+    enabled: true
+    low_effectiveness_threshold: 60
+    coaching_priority_threshold: 50
+
+
+# ============================================================
+# NARRATIVE & DECISION STYLE
+# ============================================================
+
+narrative:
+  tone: "executive"          # executive | operational | diagnostic
+  risk_language: "direct"    # direct | cautious
+  financial_emphasis: true
+
