@@ -17,6 +17,30 @@ with open(CONFIG_PATH, "r") as f:
     CLIENT_CONFIG = yaml.safe_load(f)
 
 # ============================================================
+# KPI CLASSIFIERS (CONFIG-DRIVEN)
+# ============================================================
+
+def classify_kpi(kpi_name, value, config, direction):
+    kpi = config["kpis"][kpi_name]
+    thresholds = kpi["thresholds"]
+    labels = kpi["labels"]
+
+    if direction == "higher_is_worse":
+        ordered = sorted(thresholds.items(), key=lambda x: -x[1])
+        for state, limit in ordered:
+            if value >= limit:
+                return state, labels[state]
+        return "healthy", labels["healthy"]
+
+    else:
+        ordered = sorted(thresholds.items(), key=lambda x: x[1])
+        for state, limit in ordered:
+            if value <= limit:
+                return state, labels[state]
+        return "healthy", labels["healthy"]
+
+
+# ============================================================
 # PAGE CONFIG
 # ============================================================
 st.set_page_config(
@@ -158,7 +182,7 @@ def executive_transition(metric, persona):
 # ACTION PLAN REGISTRY
 # ============================================================
 ACTION_PLANS = {
-    "Sentiment Health": {
+    "sentiment_health": {
         "CEO": [
             ("High", "Declare sentiment decline an enterprise risk", "Executive Committee", "30 days", "Risk ownership assigned"),
             ("Medium", "Focus on worst-affected locations", "CEO / COO", "60 days", "Stabilization observed"),
@@ -176,7 +200,7 @@ ACTION_PLANS = {
         ]
     },
 
-    "Manager Effectiveness": {
+    "manager_effectiveness": {
         "CEO": [
             ("High", "Treat weak management as a growth constraint", "Executive Committee", "30 days", "Ownership assigned"),
             ("Medium", "Hold leaders accountable for team health", "CEO / COO", "60 days", "Productivity improves"),
@@ -194,7 +218,7 @@ ACTION_PLANS = {
         ]
     },
 
-    "Attrition Economics": {
+    "attrition_economics": {
         "CEO": [
             ("High", "Treat attrition cost as EBIT leakage", "Exec Team", "30 days", "Cost owned"),
             ("Medium", "Prioritize top cost-heavy locations", "COO", "60 days", "Run-rate reduced"),
@@ -213,9 +237,9 @@ ACTION_PLANS = {
     }
 }
 
-def render_action_plan(metric, persona):
+def render_action_plan(metric, persona, state):
     df = pd.DataFrame(
-        ACTION_PLANS[metric][persona],
+        ACTION_PLANS[metric][persona][state],
         columns=["Priority", "Action", "Owner", "Timeline", "Success Metric"]
     )
     st.subheader("🎯 Recommended Action Plan")
@@ -243,21 +267,36 @@ elif page == "Sentiment Health":
 
     render_executive_storyline(persona)
 
+    # ---- Classify sentiment using client config ----
+    sentiment_state, sentiment_label = classify_kpi(
+        "sentiment_health",
+        sentiment_score,
+        CLIENT_CONFIG,
+        direction="lower_is_worse"
+    )
+
     col1, col2 = st.columns([2, 1])
 
     with col1:
         chart = alt.Chart(df_sentiment).mark_line(point=True).encode(
             x="Date:T",
-            y=alt.Y("Sentiment Score:Q", scale=alt.Scale(domain=[-10, 0])),
+            y=alt.Y(
+                "Sentiment Score:Q",
+                scale=alt.Scale(domain=[-10, 0])
+            ),
             tooltip=["Date", "Sentiment Score"]
         ).properties(height=300)
         st.altair_chart(chart, use_container_width=True)
 
     with col2:
-        st.metric("Current Sentiment Score", sentiment_score, delta=trend_delta)
-        st.caption("Direction matters more than absolute value.")
+        st.metric(
+            "Sentiment Status",
+            sentiment_label,
+            delta=sentiment_score
+        )
+        st.caption(f"Decision state: {sentiment_state.upper()}")
 
-    render_action_plan("Sentiment Health", persona)
+    render_action_plan("sentiment_health", persona, sentiment_state)
     executive_transition("Sentiment Health", persona)
 
 # ============================================================
@@ -268,6 +307,13 @@ elif page == "Manager Effectiveness":
     st.caption("Root cause of sentiment and attrition outcomes")
 
     render_executive_storyline(persona)
+
+    manager_state, manager_label = classify_kpi(
+        "manager_effectiveness",
+        manager_effectiveness_index,
+        CLIENT_CONFIG,
+        direction="lower_is_worse"
+    )
 
     col1, col2 = st.columns([2, 1])
 
@@ -282,14 +328,21 @@ elif page == "Manager Effectiveness":
             y=alt.Y("Dimension:N", sort="-x"),
             tooltip=["Dimension", "Score"]
         ).properties(height=300)
+
         st.altair_chart(chart, use_container_width=True)
 
     with col2:
-        st.metric("Manager Effectiveness Index", manager_effectiveness_index, delta=-6)
-        st.caption("Below-threshold capability amplifies downstream risk.")
+        st.metric(
+            "Manager Effectiveness Status",
+            manager_label,
+            delta=manager_effectiveness_index
+        )
 
-    render_action_plan("Manager Effectiveness", persona)
+        st.caption(f"Decision state: {manager_state.upper()}")
+
+    render_action_plan("manager_effectiveness", persona, manager_state)
     executive_transition("Manager Effectiveness", persona)
+
 
 # ============================================================
 # ATTRITION ECONOMICS
@@ -299,6 +352,15 @@ elif page == "Attrition Economics":
     st.caption("Financial impact of unmanaged people risk")
 
     render_executive_storyline(persona)
+
+    attrition_rate = 21.3  # % annualized (mock)
+
+    attrition_state, attrition_label = classify_kpi(
+        "attrition_economics",
+        attrition_rate,
+        CLIENT_CONFIG,
+        direction="higher_is_worse"
+    )
 
     col1, col2 = st.columns([2, 1])
 
@@ -313,13 +375,32 @@ elif page == "Attrition Economics":
             y=alt.Y("Location:N", sort="-x"),
             tooltip=["Location", "Cost"]
         ).properties(height=300)
+
         st.altair_chart(chart, use_container_width=True)
 
     with col2:
-        st.metric("Annual Attrition Cost", f"${attrition_cost/1_000_000:.1f}M")
-        uplift = st.slider("Assume sentiment improvement (points)", 1, 10, 5)
-        savings = attrition_cost * uplift * 0.015
-        st.metric("Estimated Savings", f"${savings/1_000_000:.2f}M")
+        st.metric(
+            "Attrition Risk Level",
+            attrition_label,
+            delta=f"{attrition_rate:.1f}%"
+        )
 
-    render_action_plan("Attrition Economics", persona)
+        st.caption(f"Decision state: {attrition_state.upper()}")
+
+        st.divider()
+
+        uplift = st.slider(
+            "Assume targeted intervention impact (sentiment points)",
+            1, 10, 5
+        )
+
+        savings = attrition_cost * uplift * 0.015
+
+        st.metric(
+            "Estimated Annual Savings",
+            f"${savings/1_000_000:.2f}M"
+        )
+
+    render_action_plan("attrition_economics", persona, attrition_state)
     executive_transition("Attrition Economics", persona)
+

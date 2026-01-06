@@ -30,19 +30,40 @@ kpis:
 
   sentiment_health:
     enabled: true
-    negative_threshold: -5
-    critical_threshold: -10
+    thresholds:
+      critical: -10
+      negative: -5
+      watch: 0
+    labels:
+      critical: "Critical Sentiment Risk"
+      negative: "Elevated Sentiment Risk"
+      watch: "Watch"
+      healthy: "Healthy"
     lookback_months: 12
 
   attrition_economics:
     enabled: true
-    high_risk_rate_pct: 18
-    cost_per_exit_multiplier: 1.2
+    thresholds:
+      critical: 25
+      high: 18
+      watch: 12
+    labels:
+      critical: "Severe Financial Exposure"
+      high: "High Financial Exposure"
+      watch: "Emerging Financial Risk"
+      healthy: "Controlled Attrition Cost"
+    assumptions:
+      cost_per_exit_multiplier: 1.2
 
   manager_effectiveness:
     enabled: true
-    low_effectiveness_threshold: 60
-    coaching_priority_threshold: 50
+    thresholds:
+      weak: 60
+      critical: 50
+    labels:
+      critical: "Severely Ineffective"
+      weak: "Below Expected Effectiveness"
+      healthy: "Effective Management"
 
 
 # ============================================================
