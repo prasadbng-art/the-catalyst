@@ -44,10 +44,6 @@ def validate_config(config):
                 errors.append(
                     f"KPI '{kpi_name}' state '{state}' missing label"
                 )
-            if state not in action_states:
-                errors.append(
-                    f"KPI '{kpi_name}' state '{state}' missing action_plans"
-                )
 
         # Persona validation
         for state, persona_block in kpi.get("action_plans", {}).items():
@@ -131,7 +127,10 @@ def render_action_plan(metric, state, persona, config):
     st.subheader("🎯 Recommended Action Plan")
 
     if not plans:
-        st.info("No prescribed actions for this decision state.")
+        st.info(
+            "No action is prescribed for this role in the current decision state. "
+            "Ownership lies with a different leadership role, or no intervention is required."
+        )
         return
 
     df = pd.DataFrame(plans)
