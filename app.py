@@ -103,6 +103,60 @@ page = st.sidebar.radio(
 st.session_state.page = page
 
 # ============================================================
+# PAGE ROUTING
+# ============================================================
+
+if page == "Overview":
+    st.title("The Catalyst")
+    st.caption("A people decision engine for leaders")
+
+    st.markdown("""
+    Catalyst connects **workforce signals → root causes → financial impact → action**.
+
+    Each metric is designed as a **decision page**, not a dashboard.
+    """)
+
+elif page == "Sentiment Health":
+    st.title("Sentiment Health")
+    st.caption("Early warning signal for engagement and execution risk")
+
+    render_executive_storyline(persona)
+
+    sentiment_state, sentiment_label = classify_kpi(
+        "sentiment_health",
+        sentiment_score,
+        CLIENT_CONFIG,
+        direction="lower_is_worse"
+    )
+
+    col1, col2 = st.columns([2, 1])
+
+    with col1:
+        chart = alt.Chart(df_sentiment).mark_line(point=True).encode(
+            x="Date:T",
+            y=alt.Y(
+                "Sentiment Score:Q",
+                scale=alt.Scale(domain=[-10, 0])
+            ),
+            tooltip=["Date", "Sentiment Score"]
+        ).properties(height=300)
+
+        st.altair_chart(chart, use_container_width=True)
+
+    with col2:
+        st.metric("Sentiment Status", sentiment_label)
+        st.caption(f"Decision state: {sentiment_state.upper()}")
+
+    render_action_plan(
+        metric="sentiment_health",
+        state=sentiment_state,
+        persona=persona,
+        config=CLIENT_CONFIG
+    )
+
+    executive_transition("Sentiment Health", persona)
+
+# ============================================================
 # MOCK DATA
 # ============================================================
 
@@ -118,20 +172,6 @@ df_sentiment = pd.DataFrame({
     "Date": dates,
     "Sentiment Score": sentiment_trend
 })
-
-# ============================================================
-# OVERVIEW
-# ============================================================
-
-if page == "Overview":
-    st.title("The Catalyst")
-    st.caption("A people decision engine for leaders")
-
-    st.markdown("""
-    **Signal → Root Cause → Financial Impact → Action**
-
-    Each page is a **decision surface**, not a dashboard.
-    """)
 
 # ============================================================
 # SENTIMENT HEALTH
