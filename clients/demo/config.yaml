@@ -29,105 +29,33 @@ personas:
 kpis:
 
   sentiment_health:
-    enabled: true
     thresholds:
       critical: -10
       negative: -5
-      watch: 0
     labels:
       critical: "Critical Sentiment Risk"
       negative: "Elevated Sentiment Risk"
-      watch: "Watch"
-      healthy: "Healthy"
-    lookback_months: 12
-
-  attrition_economics:
-  enabled: true
-
-  thresholds:
-    critical: 25
-    high: 18
-    watch: 12
-
-  labels:
-    critical: "Severe Financial Exposure"
-    high: "High Financial Exposure"
-    watch: "Emerging Financial Risk"
-    healthy: "Controlled Attrition Cost"
-
-  assumptions:
-    cost_per_exit_multiplier: 1.2
-
-  action_plans:
-    critical:
-      CEO:
-        - priority: High
-          action: "Treat attrition cost as EBIT leakage"
-          owner: "Executive Committee"
-          timeline: "30 days"
-          success: "Cost ownership assigned"
-
-        - priority: Medium
-          action: "Freeze non-critical hiring and stabilize exits"
-          owner: "CEO / COO"
-          timeline: "60 days"
-          success: "Run-rate stabilized"
-
-      CHRO:
-        - priority: High
-          action: "Reallocate spend to high-retention levers"
-          owner: "HR Leadership"
-          timeline: "30 days"
-          success: "Exit velocity reduced"
-
-      HRBP:
-        - priority: High
-          action: "Target flight-risk roles immediately"
-          owner: "HRBP"
-          timeline: "30 days"
-          success: "Exits reduced"
-
-    high:
-      CEO:
-        - priority: Medium
-          action: "Prioritize top cost-heavy locations"
-          owner: "COO"
-          timeline: "60 days"
-          success: "Attrition cost trend bends"
-
-      CHRO:
-        - priority: Medium
-          action: "Align workforce plans to risk profile"
-          owner: "Workforce COE"
-          timeline: "60 days"
-          success: "Predictability improves"
-
-    watch:
-      CEO:
-        - priority: Low
-          action: "Monitor attrition economics monthly"
-          owner: "Strategy"
-          timeline: "Ongoing"
-          success: "Early warning maintained"
-
-    healthy:
-      CEO:
-        - priority: Low
-          action: "Maintain current retention strategy"
-          owner: "Leadership Team"
-          timeline: "Ongoing"
-          success: "Cost remains controlled"
-
+      healthy: "Sentiment Within Control"
 
   manager_effectiveness:
-    enabled: true
     thresholds:
-      weak: 60
       critical: 50
+      negative: 60
     labels:
-      critical: "Severely Ineffective"
-      weak: "Below Expected Effectiveness"
-      healthy: "Effective Management"
+      critical: "Severe Manager Capability Risk"
+      negative: "Manager Capability Gaps"
+      healthy: "Manager Effectiveness Acceptable"
+
+  attrition_economics:
+    thresholds:
+      critical: 25
+      high: 18
+      watch: 12
+    labels:
+      critical: "Severe Financial Exposure"
+      high: "High Financial Exposure"
+      watch: "Emerging Financial Risk"
+      healthy: "Controlled Attrition Cost"
 
 
 # ============================================================
