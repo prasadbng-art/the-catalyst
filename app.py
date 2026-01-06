@@ -13,7 +13,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
-
 # ============================================================
 # CLIENT CONFIG LOADING
 # ============================================================
@@ -22,6 +21,53 @@ CLIENT_ID = "demo"
 CONFIG_PATH = Path(f"clients/{CLIENT_ID}/config.yaml")
 with open(CONFIG_PATH, "r") as f:
     CLIENT_CONFIG = yaml.safe_load(f)
+validate_config(CLIENT_CONFIG)
+
+# ============================================================
+# CONFIG VALIDATOR (FAIL-FAST)
+# ============================================================
+
+def validate_config(config):
+    errors = []
+
+    enabled_personas = set(config.get("personas", {}).get("enabled", []))
+    kpis = config.get("kpis", {})
+
+    for kpi_name, kpi in kpis.items():
+        if not kpi.get("enabled", False):
+            continue
+
+        # ---- required blocks
+        for required in ["thresholds", "labels", "action_plans"]:
+            if required not in kpi:
+                errors.append(f"KPI '{kpi_name}' missing '{required}' block")
+
+        thresholds = set(kpi.get("thresholds", {}).keys())
+        labels = set(kpi.get("labels", {}).keys())
+        action_states = set(kpi.get("action_plans", {}).keys())
+
+        # ---- state alignment
+        for state in thresholds:
+            if state not in labels:
+                errors.append(
+                    f"KPI '{kpi_name}' state '{state}' has no matching label"
+                )
+            if state not in action_states:
+                errors.append(
+                    f"KPI '{kpi_name}' state '{state}' has no action_plans defined"
+                )
+
+        # ---- persona validation
+        for state, persona_block in kpi.get("action_plans", {}).items():
+            for persona in persona_block.keys():
+                if persona not in enabled_personas:
+                    errors.append(
+                        f"KPI '{kpi_name}' state '{state}' uses undefined persona '{persona}'"
+                    )
+
+    if errors:
+        raise ValueError("CONFIG VALIDATION FAILED:\n" + "\n".join(errors))
+
 
 # ============================================================
 # MOCK DATA (SANDBOX)
