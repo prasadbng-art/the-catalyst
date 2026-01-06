@@ -13,17 +13,7 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
-# ============================================================
-# CLIENT CONFIG LOADING
-# ============================================================
-CLIENT_ID = "demo"
-
-CONFIG_PATH = Path(f"clients/{CLIENT_ID}/config.yaml")
-with open(CONFIG_PATH, "r") as f:
-    CLIENT_CONFIG = yaml.safe_load(f)
-validate_config(CLIENT_CONFIG)
-
-# ============================================================
+## ============================================================
 # CONFIG VALIDATOR (FAIL-FAST)
 # ============================================================
 
@@ -68,6 +58,15 @@ def validate_config(config):
     if errors:
         raise ValueError("CONFIG VALIDATION FAILED:\n" + "\n".join(errors))
 
+ ============================================================
+# CLIENT CONFIG LOADING
+# ============================================================
+CLIENT_ID = "demo"
+
+CONFIG_PATH = Path(f"clients/{CLIENT_ID}/config.yaml")
+with open(CONFIG_PATH, "r") as f:
+    CLIENT_CONFIG = yaml.safe_load(f)
+validate_config(CLIENT_CONFIG)
 
 # ============================================================
 # MOCK DATA (SANDBOX)
