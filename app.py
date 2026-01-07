@@ -135,7 +135,29 @@ def generate_cross_metric_insights(states):
         )
 
     return insights
+def generate_executive_summary(metric, state):
+    summaries = {
+        "sentiment_health": {
+            "negative": "Rising sentiment risk may impair execution if not addressed.",
+            "critical": "Severe sentiment risk threatens near-term execution stability.",
+            "healthy": "Employee sentiment is within control with no immediate execution risk."
+        },
+        "manager_effectiveness": {
+            "negative": "Manager capability gaps are constraining execution and may be driving downstream risk.",
+            "critical": "Systemic manager effectiveness issues are impairing execution.",
+            "healthy": "Manager capability is supporting execution effectively."
+        },
+        "attrition_economics": {
+            "high": "Attrition is creating material financial exposure requiring targeted intervention.",
+            "critical": "Severe attrition-related cost leakage threatens financial performance.",
+            "healthy": "Attrition-related costs are currently controlled."
+        }
+    }
 
+    return summaries.get(metric, {}).get(
+        state,
+        "No executive summary available for the current state."
+    )
 
 # ============================================================
 # ACTION PLAN RENDERER (CONFIG-DRIVEN)
@@ -283,12 +305,15 @@ if page == "Overview":
 elif page == "Sentiment Health":
     st.title("Sentiment Health")
     st.caption("Early warning signal for engagement and execution risk")
-
+   
     sentiment_state, sentiment_label = classify_kpi(
         "sentiment_health",
         sentiment_score,
         CLIENT_CONFIG,
         direction="lower_is_worse"
+    )
+    st.info(
+        generate_executive_summary("sentiment_health", sentiment_state)
     )
     decision_states["sentiment_health"] = sentiment_state
 
@@ -330,6 +355,12 @@ elif page == "Manager Effectiveness":
         CLIENT_CONFIG,
         direction="lower_is_worse"
     )
+    manager_state, manager_label = classify_kpi(...)
+
+    st.info(
+        generate_executive_summary("manager_effectiveness", manager_state)
+    )
+
     decision_states["manager_effectiveness"] = manager_state
 
     st.metric("Manager Effectiveness Status", manager_label)
@@ -361,6 +392,12 @@ elif page == "Attrition Economics":
         CLIENT_CONFIG,
         direction="higher_is_worse"
     )
+    attrition_state, attrition_label = classify_kpi(...)
+
+    st.info(
+        generate_executive_summary("attrition_economics", attrition_state)
+    )
+
     decision_states["attrition_economics"] = attrition_state
 
     st.metric("Attrition Risk Level", attrition_label)
