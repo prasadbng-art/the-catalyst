@@ -350,12 +350,11 @@ elif page == "Manager Effectiveness":
     st.caption("Root cause of sentiment and attrition outcomes")
 
     manager_state, manager_label = classify_kpi(
-        "manager_effectiveness",
-        manager_effectiveness_index,
-        CLIENT_CONFIG,
-        direction="lower_is_worse"
-    )
-    manager_state, manager_label = classify_kpi(...)
+    "manager_effectiveness",
+    manager_effectiveness_index,
+    CLIENT_CONFIG,
+    direction="lower_is_worse"
+)
 
     st.info(
         generate_executive_summary("manager_effectiveness", manager_state)
@@ -392,8 +391,7 @@ elif page == "Attrition Economics":
         CLIENT_CONFIG,
         direction="higher_is_worse"
     )
-    attrition_state, attrition_label = classify_kpi(...)
-
+    
     st.info(
         generate_executive_summary("attrition_economics", attrition_state)
     )
