@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 
 # ============================================================
-# IMPORT DRIVER INTERPRETATION ENGINE (PACKAGE-SAFE)
+# IMPORT DRIVER INTERPRETATION ENGINE (STREAMLIT-CORRECT)
 # ============================================================
 from intelligence.driver_interpreter import (
     load_driver_definitions,
@@ -24,7 +24,7 @@ st.set_page_config(
 # ============================================================
 @st.cache_data(show_spinner=False)
 def load_drivers():
-    return load_driver_definitions("catalyst/config/drivers.yaml")
+    return load_driver_definitions("config/drivers.yaml")
 
 DRIVER_DEFS = load_drivers()
 
@@ -33,7 +33,7 @@ DRIVER_DEFS = load_drivers()
 # ============================================================
 @st.cache_data(show_spinner=False)
 def load_driver_evidence():
-    path = Path("catalyst/clients/demo/data/driver_evidence.json")
+    path = Path("clients/demo/data/driver_evidence.json")
     with open(path, "r") as f:
         return json.load(f)
 
@@ -97,32 +97,26 @@ def render_attrition_intelligence_page(attrition_rate: float):
     )
 
     with tab_exit:
-        exit_drivers = DRIVER_EVIDENCE["attrition"]["exit_drivers"]
-
-        for driver_id, evidence in exit_drivers.items():
+        for driver_id, evidence in DRIVER_EVIDENCE["attrition"]["exit_drivers"].items():
             narrative = generate_driver_narrative(
                 driver_id=driver_id,
                 evidence=evidence,
                 kpi_label="attrition",
                 driver_definitions=DRIVER_DEFS
             )
-
             if narrative:
                 st.markdown(f"**{DRIVER_DEFS[driver_id]['meta']['label']}**")
                 st.write(narrative)
                 st.markdown("---")
 
     with tab_damage:
-        damage_drivers = DRIVER_EVIDENCE["attrition"]["damage_drivers"]
-
-        for driver_id, evidence in damage_drivers.items():
+        for driver_id, evidence in DRIVER_EVIDENCE["attrition"]["damage_drivers"].items():
             narrative = generate_driver_narrative(
                 driver_id=driver_id,
                 evidence=evidence,
                 kpi_label="attrition",
                 driver_definitions=DRIVER_DEFS
             )
-
             if narrative:
                 st.markdown(f"**{DRIVER_DEFS[driver_id]['meta']['label']}**")
                 st.write(narrative)
@@ -135,7 +129,6 @@ def render_attrition_intelligence_page(attrition_rate: float):
 
     with st.container(border=True):
         col1, col2, col3 = st.columns(3)
-
         col1.metric("Expected Exits (90 days)", "7–9")
         col2.metric("Expected Exits (180 days)", "18–22")
         col3.metric("Projected Hidden Cost Exposure", "US$9.4–11.2M")
@@ -152,7 +145,6 @@ def render_attrition_intelligence_page(attrition_rate: float):
 
     with st.container(border=True):
         st.subheader("Knowledge Capture & Shadow Staffing")
-
         st.markdown(
             """
             This intervention does not directly reduce attrition probability.
