@@ -1,0 +1,60 @@
+{
+  "attrition": {
+    "segment_context": {
+      "segment_name": "Engineering | Mid-tenure | High Performers",
+      "population_pct": 22,
+      "business_criticality": "High"
+    },
+
+    "exit_drivers": {
+      "manager_effectiveness": {
+        "strength": 0.41,
+        "direction": "negative",
+        "signals": [
+          "Low upward feedback scores in quarterly reviews",
+          "Attrition clustering under specific manager cohorts",
+          "Below-benchmark team engagement scores"
+        ]
+      },
+
+      "career_velocity": {
+        "strength": 0.33,
+        "direction": "negative",
+        "signals": [
+          "Delayed promotions beyond expected tenure bands",
+          "Low internal role mobility in last 18 months"
+        ]
+      },
+
+      "engagement_sentiment": {
+        "strength": 0.29,
+        "direction": "negative",
+        "signals": [
+          "Sustained decline in engagement pulse scores",
+          "Negative sentiment detected in open-text feedback"
+        ]
+      }
+    },
+
+    "damage_drivers": {
+      "knowledge_concentration": {
+        "strength": 0.52,
+        "direction": "high",
+        "signals": [
+          "Critical systems knowledge held by limited individuals",
+          "Low documentation coverage for key workflows",
+          "Extended tenure without formal shadowing"
+        ]
+      },
+
+      "successor_readiness": {
+        "strength": 0.37,
+        "direction": "medium",
+        "signals": [
+          "No ready-now successors identified for key roles",
+          "Extended ramp-up periods for recent hires"
+        ]
+      }
+    }
+  }
+}
