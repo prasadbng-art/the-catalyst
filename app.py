@@ -127,7 +127,7 @@ def render_action_plan(metric, state, persona, config):
         .get(persona, [])
     )
 
-    st.subheader("🎯 Recommended Action Plan")
+    st.subheader("🎯 Recommended Actions")
 
     if not plans:
         st.info(
@@ -136,9 +136,31 @@ def render_action_plan(metric, state, persona, config):
         )
         return
 
-    df = pd.DataFrame(plans)
-    st.caption(f"Decision state: {state.upper()}")
-    st.dataframe(df, use_container_width=True)
+    for i, plan in enumerate(plans, start=1):
+        priority = plan.get("priority", "Medium")
+        action = plan.get("action", "")
+        owner = plan.get("owner", "—")
+        timeline = plan.get("timeline", "—")
+        success = plan.get("success_metric", "—")
+
+        # Priority styling
+        if priority.lower() == "high":
+            badge = "🔴 HIGH PRIORITY"
+        elif priority.lower() == "medium":
+            badge = "🟠 MEDIUM PRIORITY"
+        else:
+            badge = "🟢 LOW PRIORITY"
+
+        with st.container():
+            st.markdown(f"### {badge}")
+            st.markdown(f"**Action {i}: {action}**")
+
+            cols = st.columns(3)
+            cols[0].markdown(f"**Owner**  \n{owner}")
+            cols[1].markdown(f"**Timeline**  \n{timeline}")
+            cols[2].markdown(f"**Success Metric**  \n{success}")
+
+            st.markdown("---")
 
 # ============================================================
 # SIDEBAR
