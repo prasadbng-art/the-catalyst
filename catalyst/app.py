@@ -1,6 +1,7 @@
 import streamlit as st
 import json
 from pathlib import Path
+from copy import deepcopy
 
 # ============================================================
 # IMPORT INTELLIGENCE LAYERS (STREAMLIT-CORRECT)
@@ -42,7 +43,7 @@ def load_driver_evidence():
 DRIVER_EVIDENCE = load_driver_evidence()
 
 # ============================================================
-# LOAD HIDDEN COST CONTEXT (DEMO)
+# LOAD HIDDEN COST CONTEXT (BASELINE)
 # ============================================================
 @st.cache_data(show_spinner=False)
 def load_hidden_cost_context():
@@ -50,12 +51,12 @@ def load_hidden_cost_context():
     with open(path, "r") as f:
         return json.load(f)
 
-HIDDEN_COST_CONTEXT = load_hidden_cost_context()
+BASE_HIDDEN_COST_CONTEXT = load_hidden_cost_context()
 
 # ============================================================
 # ATTRITION INTELLIGENCE PAGE
 # ============================================================
-def render_attrition_intelligence_page(attrition_rate: float):
+def render_attrition_intelligence_page(attrition_rate: float, scenario_context: dict):
 
     st.title("Attrition Intelligence")
     st.caption(
@@ -64,11 +65,11 @@ def render_attrition_intelligence_page(attrition_rate: float):
     )
 
     # --------------------------------------------------------
-    # COMPUTE HIDDEN COST (PER EXIT)
+    # COMPUTE HIDDEN COST (PER EXIT, SCENARIO-AWARE)
     # --------------------------------------------------------
     hidden_cost = calculate_hidden_cost(
-        role_cost_usd_monthly=HIDDEN_COST_CONTEXT["role_cost_usd_monthly"],
-        context=HIDDEN_COST_CONTEXT["context"]
+        role_cost_usd_monthly=BASE_HIDDEN_COST_CONTEXT["role_cost_usd_monthly"],
+        context=scenario_context
     )
 
     per_exit_hidden_cost = hidden_cost["total_hidden_cost"]
@@ -90,8 +91,8 @@ def render_attrition_intelligence_page(attrition_rate: float):
         )
 
     st.info(
-        "Attrition exposure is driven primarily by **hidden operational and "
-        "knowledge loss**, not just visible replacement costs."
+        "Hidden cost exposure updates live based on scenario assumptions. "
+        "These represent **controllable operational levers**, not fixed outcomes."
     )
 
     # --------------------------------------------------------
@@ -167,12 +168,12 @@ def render_attrition_intelligence_page(attrition_rate: float):
         )
 
     st.caption(
-        "Model confidence: **Medium**. Projections are conservative and exclude "
-        "long-term reputational or strategic costs."
+        "Projections update dynamically with scenario assumptions. "
+        "This enables realistic **what-if analysis**, not static forecasts."
     )
 
     # --------------------------------------------------------
-    # SECTION 5 — PRESCRIPTIVE ACTIONS
+    # SECTION 5 — PRESCRIPTIVE ACTIONS (PRE-ROI)
     # --------------------------------------------------------
     st.markdown("## Prescriptive Actions")
 
@@ -182,12 +183,12 @@ def render_attrition_intelligence_page(attrition_rate: float):
         st.markdown(
             """
             This intervention does not directly reduce attrition probability.
-            Its primary objective is to **contain hidden cost exposure** by
-            accelerating knowledge transfer and reducing single-point failure risk.
+            Its objective is to **contain hidden cost exposure** by reducing
+            knowledge loss and ramp-up inefficiencies.
             """
         )
 
-        cost_avoided = projected_hidden_cost * 0.32
+        cost_avoided = projected_hidden_cost * 0.32  # placeholder impact
 
         col1, col2, col3, col4 = st.columns(4)
         col1.metric("Attrition Risk Impact", "Neutral")
@@ -199,9 +200,40 @@ def render_attrition_intelligence_page(attrition_rate: float):
         )
 
 # ============================================================
-# SIDEBAR
+# SIDEBAR — SCENARIO CONTROLS (STEP 1)
 # ============================================================
 st.sidebar.title("The Catalyst")
+
+st.sidebar.markdown("### Scenario Controls")
+
+# Clone baseline context to apply scenario overrides
+scenario_context = deepcopy(BASE_HIDDEN_COST_CONTEXT["context"])
+
+scenario_context["vacancy_duration_months"] = st.sidebar.slider(
+    "Vacancy Duration (months)",
+    min_value=0.5,
+    max_value=4.0,
+    value=scenario_context["vacancy_duration_months"],
+    step=0.25
+)
+
+scenario_context["ramp_up_duration_months"] = st.sidebar.slider(
+    "Ramp-up Duration (months)",
+    min_value=2.0,
+    max_value=8.0,
+    value=scenario_context["ramp_up_duration_months"],
+    step=0.5
+)
+
+scenario_context["knowledge_risk_multiplier"] = st.sidebar.slider(
+    "Knowledge Risk Multiplier",
+    min_value=0.2,
+    max_value=1.0,
+    value=scenario_context["knowledge_risk_multiplier"],
+    step=0.05
+)
+
+st.sidebar.markdown("---")
 
 attrition_rate = st.sidebar.slider(
     "Annual Attrition Rate (%)",
@@ -227,4 +259,4 @@ if page == "Overview":
     )
 
 elif page == "Attrition Intelligence":
-    render_attrition_intelligence_page(attrition_rate)
+    render_attrition_intelligence_page(attrition_rate, scenario_context)
