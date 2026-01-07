@@ -1,13 +1,11 @@
 import streamlit as st
-import pandas as pd
-import numpy as np
-import altair as alt
-import yaml
 import json
 from pathlib import Path
 
-# === NEW IMPORTS ===
-from intelligence.driver_interpreter import (
+# ============================================================
+# IMPORT DRIVER INTERPRETATION ENGINE (PACKAGE-SAFE)
+# ============================================================
+from catalyst.intelligence.driver_interpreter import (
     load_driver_definitions,
     generate_driver_narrative
 )
@@ -22,20 +20,20 @@ st.set_page_config(
 )
 
 # ============================================================
-# LOAD DRIVER DEFINITIONS (GLOBAL CONTRACT)
+# LOAD GLOBAL DRIVER DEFINITIONS
 # ============================================================
 @st.cache_data(show_spinner=False)
 def load_drivers():
-    return load_driver_definitions("config/drivers.yaml")
+    return load_driver_definitions("catalyst/config/drivers.yaml")
 
 DRIVER_DEFS = load_drivers()
 
 # ============================================================
-# LOAD DRIVER EVIDENCE (CLIENT-SPECIFIC)
+# LOAD CLIENT DRIVER EVIDENCE (DEMO)
 # ============================================================
 @st.cache_data(show_spinner=False)
 def load_driver_evidence():
-    path = Path("clients/demo/data/driver_evidence.json")
+    path = Path("catalyst/clients/demo/data/driver_evidence.json")
     with open(path, "r") as f:
         return json.load(f)
 
@@ -44,12 +42,12 @@ DRIVER_EVIDENCE = load_driver_evidence()
 # ============================================================
 # ATTRITION INTELLIGENCE PAGE
 # ============================================================
-def render_attrition_intelligence_page(attrition_rate):
+def render_attrition_intelligence_page(attrition_rate: float):
 
     st.title("Attrition Intelligence")
     st.caption(
-        "An integrated view of exit risk, hidden cost exposure, and value leakage — "
-        "designed for decision-making, not reporting."
+        "Decision-grade insight into attrition risk, hidden cost exposure, "
+        "and value leakage."
     )
 
     # --------------------------------------------------------
@@ -66,8 +64,8 @@ def render_attrition_intelligence_page(attrition_rate):
         col4.metric("Hidden Attrition Cost", "US$13.9M ⚠️")
 
     st.info(
-        "Current attrition exposure is driven more by hidden operational and knowledge loss "
-        "than by visible replacement costs."
+        "Current attrition exposure is driven primarily by **hidden operational "
+        "and knowledge loss**, not just visible replacement costs."
     )
 
     # --------------------------------------------------------
@@ -77,15 +75,15 @@ def render_attrition_intelligence_page(attrition_rate):
 
     segment = DRIVER_EVIDENCE["attrition"]["segment_context"]
 
-    with st.expander(segment["segment_name"]):
+    with st.expander(segment["segment_name"], expanded=False):
         st.markdown(
             f"""
             **Why this segment matters**
-            - Represents ~{segment['population_pct']}% of projected exits
+            - Represents approximately **{segment['population_pct']}%** of projected exits
             - Business criticality: **{segment['business_criticality']}**
 
-            Attrition in this segment disproportionately affects delivery timelines,
-            institutional knowledge, and downstream productivity.
+            Attrition in this segment has a disproportionate impact on delivery
+            continuity, institutional knowledge, and downstream productivity.
             """
         )
 
@@ -188,12 +186,13 @@ page = st.sidebar.radio(
 )
 
 # ============================================================
-# PAGES
+# PAGE ROUTING
 # ============================================================
 if page == "Overview":
     st.title("The Catalyst")
     st.caption(
-        "Catalyst connects workforce signals → drivers → future risk → financial impact → action."
+        "Catalyst connects workforce signals → drivers → future risk → "
+        "financial impact → prescriptive action."
     )
 
 elif page == "Attrition Intelligence":
