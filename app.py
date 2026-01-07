@@ -135,6 +135,24 @@ def generate_cross_metric_insights(states):
         )
 
     return insights
+
+def derive_kpis_from_employee_data(df):
+    """
+    Translates row-level employee data into Catalyst decision KPIs.
+    Assumes one-row-per-employee.
+    """
+
+    # Sentiment proxy: engagement_score (1–5) → -10 to 0 scale
+    sentiment_score = round((df["engagement_score"].mean() - 3) * 2.5, 1)
+
+    # Manager effectiveness proxy: performance_score (1–5) → 0–100 index
+    manager_effectiveness_index = round(df["performance_score"].mean() * 20, 0)
+
+    # Attrition rate (%)
+    attrition_rate = round(df["Attrition"].mean() * 100, 1)
+
+    return sentiment_score, manager_effectiveness_index, attrition_rate
+
 def generate_executive_summary(metric, state):
     summaries = {
         "sentiment_health": {
@@ -254,15 +272,9 @@ elif data_mode == "Client Upload":
 
     if uploaded_file is not None:
         df_client = pd.read_csv(uploaded_file)
-
-        sentiment_score = df_client.get("sentiment_score", [None])[0]
-        manager_effectiveness_index = df_client.get("manager_effectiveness_index", [None])[0]
-        attrition_rate = df_client.get("attrition_rate", [None])[0]
-
-    else:
-        sentiment_score = None
-        manager_effectiveness_index = None
-        attrition_rate = None
+        sentiment_score, manager_effectiveness_index, attrition_rate = (
+            derive_kpis_from_employee_data(df_client)
+        )
 
 st.sidebar.markdown("---")
 persona = st.sidebar.selectbox(
