@@ -12,6 +12,7 @@ from intelligence.driver_interpreter import (
 )
 from intelligence.hidden_cost import calculate_hidden_cost
 from intelligence.action_roi import compute_action_roi
+from intelligence.sensitivity import generate_sensitivity_contexts
 
 # ============================================================
 # PAGE CONFIG
@@ -89,16 +90,21 @@ def render_attrition_intelligence_page(attrition_rate: float, scenario_context: 
     )
 
     # --------------------------------------------------------
-    # HIDDEN COST (SCENARIO-AWARE)
+    # SENSITIVITY CONTEXTS
     # --------------------------------------------------------
-    hidden_cost = calculate_hidden_cost(
-        role_cost_usd_monthly=BASE_HIDDEN_COST_CONTEXT["role_cost_usd_monthly"],
-        context=scenario_context
-    )
+    low_ctx, base_ctx, high_ctx = generate_sensitivity_contexts(scenario_context)
 
-    per_exit_hidden_cost = hidden_cost["total_hidden_cost"]
-    projected_exits_180d = 20
-    projected_hidden_cost = per_exit_hidden_cost * projected_exits_180d
+    def hidden_cost_total(ctx):
+        return calculate_hidden_cost(
+            BASE_HIDDEN_COST_CONTEXT["role_cost_usd_monthly"],
+            ctx
+        )["total_hidden_cost"]
+
+    hc_low = hidden_cost_total(low_ctx)
+    hc_base = hidden_cost_total(base_ctx)
+    hc_high = hidden_cost_total(high_ctx)
+
+    projected_exits = 20
 
     # --------------------------------------------------------
     # ATTRITION RISK POSTURE
@@ -107,13 +113,13 @@ def render_attrition_intelligence_page(attrition_rate: float, scenario_context: 
 
     with st.container(border=True):
         col1, col2, col3, col4 = st.columns(4)
+
         col1.metric("Annual Attrition Rate", f"{attrition_rate}%")
         col2.metric("Expected Exits (180 days)", "18–22")
-        col3.metric("Visible Attrition Cost (per exit)", "US$0.42M")
-        col4.metric(
-            "Hidden Attrition Cost (per exit)",
-            f"US${per_exit_hidden_cost / 1_000_000:.2f}M ⚠️"
-        )
+        col3.metric("Hidden Cost / Exit (Range)",
+                    f"US${hc_low/1e6:.2f}–{hc_high/1e6:.2f}M")
+        col4.metric("Projected Exposure (180d)",
+                    f"US${(hc_low*projected_exits)/1e6:.1f}–{(hc_high*projected_exits)/1e6:.1f}M")
 
     # --------------------------------------------------------
     # DRIVER INTELLIGENCE
@@ -145,40 +151,34 @@ def render_attrition_intelligence_page(attrition_rate: float, scenario_context: 
                 st.markdown("---")
 
     # --------------------------------------------------------
-    # PREDICTIVE OUTLOOK
+    # PRESCRIPTIVE ACTIONS — ROI BANDS
     # --------------------------------------------------------
-    st.markdown("## Predictive Outlook")
-    st.metric(
-        "Projected Hidden Cost Exposure (180 days)",
-        f"US${projected_hidden_cost / 1_000_000:.2f}M"
-    )
-
-    # --------------------------------------------------------
-    # PRESCRIPTIVE ACTIONS — ROI RANKED
-    # --------------------------------------------------------
-    st.markdown("## Prescriptive Actions (ROI Ranked)")
-
-    roi_results = []
+    st.markdown("## Prescriptive Actions (ROI Bands)")
 
     for action in ACTIONS:
-        roi = compute_action_roi(projected_hidden_cost, action)
-        roi_results.append({**action, **roi})
+        roi_low = compute_action_roi(hc_low * projected_exits, action)
+        roi_base = compute_action_roi(hc_base * projected_exits, action)
+        roi_high = compute_action_roi(hc_high * projected_exits, action)
 
-    roi_results = sorted(
-        roi_results,
-        key=lambda x: x["roi_multiple"] or 0,
-        reverse=True
-    )
-
-    for action in roi_results:
         with st.container(border=True):
             st.subheader(action["name"])
 
-            col1, col2, col3, col4 = st.columns(4)
-            col1.metric("Cost to Execute", f"US${action['cost_to_execute'] / 1_000_000:.2f}M")
-            col2.metric("Cost Avoided", f"US${action['cost_avoided'] / 1_000_000:.2f}M")
-            col3.metric("ROI Multiple", f"{action['roi_multiple']}×")
-            col4.metric("Payback", f"{action['payback_days']} days")
+            col1, col2, col3 = st.columns(3)
+
+            col1.metric(
+                "Cost Avoided (Range)",
+                f"US${roi_low['cost_avoided']/1e6:.1f}–{roi_high['cost_avoided']/1e6:.1f}M"
+            )
+
+            col2.metric(
+                "ROI Multiple (Range)",
+                f"{roi_low['roi_multiple']}×–{roi_high['roi_multiple']}×"
+            )
+
+            col3.metric(
+                "Payback (days)",
+                f"{roi_base['payback_days']} (base)"
+            )
 
 # ============================================================
 # SIDEBAR — SCENARIO CONTROLS
