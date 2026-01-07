@@ -5,7 +5,7 @@ from pathlib import Path
 # ============================================================
 # IMPORT DRIVER INTERPRETATION ENGINE (PACKAGE-SAFE)
 # ============================================================
-from catalyst.intelligence.driver_interpreter import (
+from intelligence.driver_interpreter import (
     load_driver_definitions,
     generate_driver_narrative
 )
