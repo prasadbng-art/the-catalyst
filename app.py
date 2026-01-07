@@ -115,6 +115,28 @@ def classify_kpi(kpi_name, value, config, direction):
                 return state, labels[state]
         return "healthy", labels["healthy"]
 
+def generate_cross_metric_insights(states):
+    insights = []
+
+    mgr = states.get("manager_effectiveness")
+    sentiment = states.get("sentiment_health")
+    attrition = states.get("attrition_economics")
+
+    if mgr in ["negative", "critical"] and sentiment in ["negative", "critical"]:
+        insights.append(
+            "Manager capability gaps are likely contributing to the current sentiment risk. "
+            "Leadership effectiveness should be reviewed in affected teams."
+        )
+
+    if mgr in ["negative", "critical"] and attrition in ["high", "critical"]:
+        insights.append(
+            "Preventable attrition costs appear to be linked to manager effectiveness issues. "
+            "Targeted manager interventions may reduce financial leakage."
+        )
+
+    return insights
+
+
 # ============================================================
 # ACTION PLAN RENDERER (CONFIG-DRIVEN)
 # ============================================================
@@ -206,6 +228,10 @@ page = st.sidebar.radio(
         "Attrition Economics"
     ]
 )
+# ============================================================
+# DECISION STATE STORE (CROSS-METRIC CONTEXT)
+# ============================================================
+decision_states = {}
 
 # ============================================================
 # OVERVIEW
@@ -235,6 +261,7 @@ elif page == "Sentiment Health":
         CLIENT_CONFIG,
         direction="lower_is_worse"
     )
+    decision_states["sentiment_health"] = sentiment_state
 
     col1, col2 = st.columns([2, 1])
 
@@ -274,6 +301,7 @@ elif page == "Manager Effectiveness":
         CLIENT_CONFIG,
         direction="lower_is_worse"
     )
+    decision_states["manager_effectiveness"] = manager_state
 
     st.metric("Manager Effectiveness Status", manager_label)
     st.caption(f"Decision state: {manager_state.upper()}")
@@ -284,6 +312,12 @@ elif page == "Manager Effectiveness":
         persona=persona,
         config=CLIENT_CONFIG
     )
+    insights = generate_cross_metric_insights(decision_states)
+
+    if insights:
+        st.markdown("### 🧠 Decision Context")
+        for insight in insights:
+            st.info(insight)
 
 # ============================================================
 # ATTRITION ECONOMICS
@@ -298,6 +332,7 @@ elif page == "Attrition Economics":
         CLIENT_CONFIG,
         direction="higher_is_worse"
     )
+    decision_states["attrition_economics"] = attrition_state
 
     st.metric("Attrition Risk Level", attrition_label)
     st.caption(f"Decision state: {attrition_state.upper()}")
@@ -308,3 +343,9 @@ elif page == "Attrition Economics":
         persona=persona,
         config=CLIENT_CONFIG
     )
+    insights = generate_cross_metric_insights(decision_states)
+
+    if insights:
+        st.markdown("### 🧠 Decision Context")
+        for insight in insights:
+            st.info(insight)
