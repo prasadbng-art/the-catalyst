@@ -11,6 +11,7 @@ from intelligence.driver_interpreter import (
     generate_driver_narrative
 )
 from intelligence.hidden_cost import calculate_hidden_cost
+from intelligence.action_roi import compute_action_roi
 
 # ============================================================
 # PAGE CONFIG
@@ -22,7 +23,7 @@ st.set_page_config(
 )
 
 # ============================================================
-# LOAD DRIVER DEFINITIONS (PATH SAFE)
+# LOAD DRIVER DEFINITIONS
 # ============================================================
 @st.cache_data(show_spinner=False)
 def load_drivers():
@@ -53,6 +54,30 @@ def load_hidden_cost_context():
 BASE_HIDDEN_COST_CONTEXT = load_hidden_cost_context()
 
 # ============================================================
+# ACTION CATALOG (DEMO)
+# ============================================================
+ACTIONS = [
+    {
+        "name": "Knowledge Capture & Shadow Staffing",
+        "cost_to_execute": 420000,
+        "impact_pct": 0.32,
+        "time_to_impact_days": 30
+    },
+    {
+        "name": "Manager Coaching Sprint",
+        "cost_to_execute": 180000,
+        "impact_pct": 0.18,
+        "time_to_impact_days": 60
+    },
+    {
+        "name": "Accelerated Internal Mobility Program",
+        "cost_to_execute": 260000,
+        "impact_pct": 0.22,
+        "time_to_impact_days": 90
+    }
+]
+
+# ============================================================
 # ATTRITION INTELLIGENCE PAGE
 # ============================================================
 def render_attrition_intelligence_page(attrition_rate: float, scenario_context: dict):
@@ -63,13 +88,21 @@ def render_attrition_intelligence_page(attrition_rate: float, scenario_context: 
         "and value leakage."
     )
 
+    # --------------------------------------------------------
+    # HIDDEN COST (SCENARIO-AWARE)
+    # --------------------------------------------------------
     hidden_cost = calculate_hidden_cost(
         role_cost_usd_monthly=BASE_HIDDEN_COST_CONTEXT["role_cost_usd_monthly"],
         context=scenario_context
     )
 
     per_exit_hidden_cost = hidden_cost["total_hidden_cost"]
+    projected_exits_180d = 20
+    projected_hidden_cost = per_exit_hidden_cost * projected_exits_180d
 
+    # --------------------------------------------------------
+    # ATTRITION RISK POSTURE
+    # --------------------------------------------------------
     st.markdown("## Attrition Risk Posture")
 
     with st.container(border=True):
@@ -82,6 +115,9 @@ def render_attrition_intelligence_page(attrition_rate: float, scenario_context: 
             f"US${per_exit_hidden_cost / 1_000_000:.2f}M ⚠️"
         )
 
+    # --------------------------------------------------------
+    # DRIVER INTELLIGENCE
+    # --------------------------------------------------------
     st.markdown("## Driver Intelligence")
 
     tab_exit, tab_damage = st.tabs(
@@ -108,16 +144,44 @@ def render_attrition_intelligence_page(attrition_rate: float, scenario_context: 
                 st.write(narrative)
                 st.markdown("---")
 
-    projected_hidden_cost = per_exit_hidden_cost * 20
-
+    # --------------------------------------------------------
+    # PREDICTIVE OUTLOOK
+    # --------------------------------------------------------
     st.markdown("## Predictive Outlook")
     st.metric(
         "Projected Hidden Cost Exposure (180 days)",
         f"US${projected_hidden_cost / 1_000_000:.2f}M"
     )
 
+    # --------------------------------------------------------
+    # PRESCRIPTIVE ACTIONS — ROI RANKED
+    # --------------------------------------------------------
+    st.markdown("## Prescriptive Actions (ROI Ranked)")
+
+    roi_results = []
+
+    for action in ACTIONS:
+        roi = compute_action_roi(projected_hidden_cost, action)
+        roi_results.append({**action, **roi})
+
+    roi_results = sorted(
+        roi_results,
+        key=lambda x: x["roi_multiple"] or 0,
+        reverse=True
+    )
+
+    for action in roi_results:
+        with st.container(border=True):
+            st.subheader(action["name"])
+
+            col1, col2, col3, col4 = st.columns(4)
+            col1.metric("Cost to Execute", f"US${action['cost_to_execute'] / 1_000_000:.2f}M")
+            col2.metric("Cost Avoided", f"US${action['cost_avoided'] / 1_000_000:.2f}M")
+            col3.metric("ROI Multiple", f"{action['roi_multiple']}×")
+            col4.metric("Payback", f"{action['payback_days']} days")
+
 # ============================================================
-# SIDEBAR — SCENARIO CONTROLS (FIXED)
+# SIDEBAR — SCENARIO CONTROLS
 # ============================================================
 st.sidebar.title("The Catalyst")
 st.sidebar.markdown("### Scenario Controls")
@@ -125,37 +189,24 @@ st.sidebar.markdown("### Scenario Controls")
 scenario_context = deepcopy(BASE_HIDDEN_COST_CONTEXT["context"])
 
 scenario_context["vacancy_duration_months"] = st.sidebar.slider(
-    "Vacancy Duration (months)",
-    min_value=0.5,
-    max_value=4.0,
-    value=float(scenario_context["vacancy_duration_months"]),
-    step=0.25
+    "Vacancy Duration (months)", 0.5, 4.0,
+    float(scenario_context["vacancy_duration_months"]), 0.25
 )
 
 scenario_context["ramp_up_duration_months"] = st.sidebar.slider(
-    "Ramp-up Duration (months)",
-    min_value=2.0,
-    max_value=8.0,
-    value=float(scenario_context["ramp_up_duration_months"]),
-    step=0.5
+    "Ramp-up Duration (months)", 2.0, 8.0,
+    float(scenario_context["ramp_up_duration_months"]), 0.5
 )
 
 scenario_context["knowledge_risk_multiplier"] = st.sidebar.slider(
-    "Knowledge Risk Multiplier",
-    min_value=0.2,
-    max_value=1.0,
-    value=float(scenario_context["knowledge_risk_multiplier"]),
-    step=0.05
+    "Knowledge Risk Multiplier", 0.2, 1.0,
+    float(scenario_context["knowledge_risk_multiplier"]), 0.05
 )
 
 st.sidebar.markdown("---")
 
 attrition_rate = st.sidebar.slider(
-    "Annual Attrition Rate (%)",
-    min_value=5.0,
-    max_value=40.0,
-    value=21.3,
-    step=0.5
+    "Annual Attrition Rate (%)", 5.0, 40.0, 21.3, 0.5
 )
 
 page = st.sidebar.radio(
