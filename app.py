@@ -188,31 +188,60 @@ def render_action_plan(metric, state, persona, config):
 # SIDEBAR
 # ============================================================
 st.sidebar.title("The Catalyst")
+data_mode = st.sidebar.radio(
+    "Data Mode",
+    ["Demo Data", "Client Upload"],
+    index=0
+)
+
+st.sidebar.markdown("---")
+
 st.sidebar.markdown("### 🔧 Scenario Controls")
 
-sentiment_score = st.sidebar.slider(
-    "Employee Sentiment Score",
-    min_value=-10,
-    max_value=0,
-    value=-8,
-    step=1
-)
+if data_mode == "Demo Data":
+    sentiment_score = st.sidebar.slider(
+        "Employee Sentiment Score",
+        min_value=-10,
+        max_value=0,
+        value=-8,
+        step=1
+    )
 
-manager_effectiveness_index = st.sidebar.slider(
-    "Manager Effectiveness Index",
-    min_value=40,
-    max_value=90,
-    value=61,
-    step=1
-)
+    manager_effectiveness_index = st.sidebar.slider(
+        "Manager Effectiveness Index",
+        min_value=40,
+        max_value=90,
+        value=61,
+        step=1
+    )
 
-attrition_rate = st.sidebar.slider(
-    "Annual Attrition Rate (%)",
-    min_value=5.0,
-    max_value=40.0,
-    value=21.3,
-    step=0.5
-)
+    attrition_rate = st.sidebar.slider(
+        "Annual Attrition Rate (%)",
+        min_value=5.0,
+        max_value=40.0,
+        value=21.3,
+        step=0.5
+    )
+elif data_mode == "Client Upload":
+    st.sidebar.markdown("### 📤 Upload Client Data")
+
+    uploaded_file = st.sidebar.file_uploader(
+        "Upload CSV",
+        type=["csv"]
+    )
+
+    if uploaded_file is not None:
+        df_client = pd.read_csv(uploaded_file)
+
+        sentiment_score = df_client.get("sentiment_score", [None])[0]
+        manager_effectiveness_index = df_client.get("manager_effectiveness_index", [None])[0]
+        attrition_rate = df_client.get("attrition_rate", [None])[0]
+
+    else:
+        sentiment_score = None
+        manager_effectiveness_index = None
+        attrition_rate = None
+
 st.sidebar.markdown("---")
 persona = st.sidebar.selectbox(
     "View as",
