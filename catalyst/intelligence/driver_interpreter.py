@@ -5,10 +5,15 @@ from pathlib import Path
 # ------------------------------------------------------------
 # Load Driver Definitions
 # ------------------------------------------------------------
-def load_driver_definitions(path="config/drivers.yaml"):
-    with open(Path(path), "r") as f:
-        return yaml.safe_load(f)["drivers"]
+def load_driver_definitions(relative_path: str):
+    """
+    Load drivers.yaml using a path relative to the catalyst package root.
+    """
+    base_dir = Path(__file__).resolve().parents[1]  # catalyst/
+    full_path = base_dir / relative_path
 
+    with open(full_path, "r") as f:
+        return yaml.safe_load(f)["drivers"]
 
 # ------------------------------------------------------------
 # Template Selection Logic
