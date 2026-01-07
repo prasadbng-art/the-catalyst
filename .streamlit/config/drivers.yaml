@@ -1,0 +1,278 @@
+drivers:
+  manager_effectiveness:
+    meta:
+      label: "Manager Effectiveness"
+      description: >
+        Day-to-day leadership behaviours that influence role clarity,
+        feedback quality, accountability, and psychological safety.
+      impact_type: probability          # probability | severity
+      category: people_leadership
+
+    applicability:
+      kpis:
+        - attrition
+        - engagement
+        - sentiment
+        - productivity
+      segments:
+        - team
+        - manager
+        - function
+
+    evidence_schema:
+      strength:
+        type: float
+        range: [0.0, 1.0]
+      direction:
+        allowed: [positive, neutral, negative]
+      signals:
+        type: list
+        examples:
+          - "Low upward feedback scores"
+          - "High team attrition clustering"
+          - "Below-benchmark performance ratings"
+
+    narrative:
+      templates:
+        high_impact:
+          when:
+            strength_gte: 0.35
+          text: >
+            Manager effectiveness is a primary contributor to {{kpi_label}} risk
+            in this segment, accounting for approximately {{strength_pct}}% of
+            the observed risk signal. Evidence includes {{signals}}.
+
+        moderate_impact:
+          when:
+            strength_between: [0.20, 0.35]
+          text: >
+            Manager effectiveness is a contributing factor to {{kpi_label}} outcomes
+            in this segment. While not dominant, leadership signals such as {{signals}}
+            indicate elevated sensitivity.
+
+        low_impact:
+          when:
+            strength_lt: 0.20
+          text: >
+            Manager effectiveness is not a significant driver of {{kpi_label}}
+            outcomes in this segment at this time.
+
+  career_velocity:
+    meta:
+      label: "Career Velocity"
+      description: >
+        The rate at which employees experience role progression,
+        skill utilisation, and internal mobility relative to expectations.
+      impact_type: probability
+      category: talent_growth
+
+    applicability:
+      kpis:
+        - attrition
+        - engagement
+        - retention
+      segments:
+        - tenure_band
+        - role
+        - performance_band
+
+    evidence_schema:
+      strength:
+        type: float
+        range: [0.0, 1.0]
+      direction:
+        allowed: [positive, neutral, negative]
+      signals:
+        type: list
+        examples:
+          - "Delayed promotions"
+          - "Low internal mobility"
+          - "Skill underutilisation indicators"
+
+    narrative:
+      templates:
+        high_impact:
+          when:
+            strength_gte: 0.30
+          text: >
+            Career velocity constraints are materially increasing {{kpi_label}}
+            risk for this segment. Employees show signs of stalled progression,
+            including {{signals}}, which raises opportunity cost of staying.
+
+        moderate_impact:
+          when:
+            strength_between: [0.15, 0.30]
+          text: >
+            Career progression signals suggest moderate friction. While not the
+            primary driver, {{signals}} indicate rising sensitivity to growth
+            expectations.
+
+        low_impact:
+          when:
+            strength_lt: 0.15
+          text: >
+            Career velocity is currently not a significant contributor to
+            {{kpi_label}} risk in this segment.
+
+  engagement_sentiment:
+    meta:
+      label: "Engagement & Sentiment"
+      description: >
+        Emotional and psychological connection to work, team, and organisation,
+        reflected through engagement and sentiment signals.
+      impact_type: probability
+      category: workforce_experience
+
+    applicability:
+      kpis:
+        - attrition
+        - productivity
+        - sentiment
+      segments:
+        - team
+        - function
+        - location
+
+    evidence_schema:
+      strength:
+        type: float
+        range: [0.0, 1.0]
+      direction:
+        allowed: [positive, neutral, negative]
+      signals:
+        type: list
+        examples:
+          - "Sustained decline in engagement scores"
+          - "Negative sentiment in open-text feedback"
+
+    narrative:
+      templates:
+        high_impact:
+          when:
+            strength_gte: 0.40
+          text: >
+            Engagement and sentiment decline is strongly predictive of {{kpi_label}}
+            outcomes in this segment. Sustained signals such as {{signals}} suggest
+            emotional withdrawal preceding behavioural outcomes.
+
+        moderate_impact:
+          when:
+            strength_between: [0.25, 0.40]
+          text: >
+            Engagement signals indicate moderate risk sensitivity. While not yet
+            acute, trends such as {{signals}} warrant monitoring.
+
+        low_impact:
+          when:
+            strength_lt: 0.25
+          text: >
+            Engagement and sentiment levels are not materially influencing
+            {{kpi_label}} outcomes in this segment.
+
+  knowledge_concentration:
+    meta:
+      label: "Knowledge Concentration"
+      description: >
+        Degree to which critical operational or institutional knowledge
+        is concentrated in a small number of individuals.
+      impact_type: severity
+      category: operational_risk
+
+    applicability:
+      kpis:
+        - attrition
+        - succession
+        - skills
+      segments:
+        - role
+        - team
+
+    evidence_schema:
+      strength:
+        type: float
+        range: [0.0, 1.0]
+      direction:
+        allowed: [low, medium, high]
+      signals:
+        type: list
+        examples:
+          - "Single-point role dependencies"
+          - "Low documentation maturity"
+          - "Extended tenure without backup"
+
+    narrative:
+      templates:
+        high_impact:
+          when:
+            strength_gte: 0.50
+          text: >
+            Knowledge concentration significantly amplifies the impact of exits
+            in this segment. Critical expertise is held by a limited number of
+            individuals, increasing disruption risk if attrition occurs.
+
+        moderate_impact:
+          when:
+            strength_between: [0.25, 0.50]
+          text: >
+            Knowledge dependency is present but partially mitigated. Some exposure
+            remains due to {{signals}}.
+
+        low_impact:
+          when:
+            strength_lt: 0.25
+          text: >
+            Knowledge distribution appears sufficiently broad, limiting
+            disruption risk from individual exits.
+
+  successor_readiness:
+    meta:
+      label: "Successor Readiness"
+      description: >
+        Availability and preparedness of internal successors
+        to assume responsibilities with minimal productivity loss.
+      impact_type: severity
+      category: succession_risk
+
+    applicability:
+      kpis:
+        - attrition
+        - leadership_continuity
+      segments:
+        - role
+        - critical_positions
+
+    evidence_schema:
+      strength:
+        type: float
+        range: [0.0, 1.0]
+      direction:
+        allowed: [low, medium, high]
+      signals:
+        type: list
+        examples:
+          - "No ready-now successors"
+          - "Extended ramp-up durations"
+
+    narrative:
+      templates:
+        high_impact:
+          when:
+            strength_gte: 0.40
+          text: >
+            Limited successor readiness significantly increases the operational
+            impact of attrition in this segment. Replacement timelines are likely
+            to extend, increasing hidden cost exposure.
+
+        moderate_impact:
+          when:
+            strength_between: [0.20, 0.40]
+          text: >
+            Partial successor readiness exists, but gaps remain that could
+            increase ramp-up inefficiencies.
+
+        low_impact:
+          when:
+            strength_lt: 0.20
+          text: >
+            Successor readiness appears adequate, reducing disruption risk
+            from potential exits.
