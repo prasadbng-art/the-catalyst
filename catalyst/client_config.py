@@ -91,3 +91,18 @@ def seed_demo_data(client_id: str):
 
         if src.exists() and not dst.exists():
             dst.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
+# ============================================================
+# REPAIR CLIENT DATA (SELF-HEAL)
+# ============================================================
+def repair_client_data(client_id: str):
+    base_dir = Path(__file__).resolve().parents[1]
+    demo_data = base_dir / "clients" / "demo" / "data"
+    client_data = base_dir / "clients" / client_id / "data"
+
+    client_data.mkdir(parents=True, exist_ok=True)
+
+    for fname in ["hidden_cost_context.json", "driver_evidence.json"]:
+        src = demo_data / fname
+        dst = client_data / fname
+        if src.exists() and not dst.exists():
+            dst.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")

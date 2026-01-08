@@ -32,6 +32,27 @@ from defaults import (
 from kpi_thresholds import resolve_kpi_thresholds, classify_kpi
 
 # ============================================================
+# STARTUP INTEGRITY CHECK (v0.7)
+# ============================================================
+def run_startup_integrity_check():
+    required_paths = [
+        Path("clients/demo/data/hidden_cost_context.json"),
+        Path("clients/demo/data/driver_evidence.json"),
+        Path("config/drivers.yaml"),
+    ]
+
+    missing = [str(p) for p in required_paths if not p.exists()]
+
+    if missing:
+        st.error("🚨 Catalyst startup check failed.")
+        st.write("The following required files are missing:")
+        for m in missing:
+            st.write(f"- {m}")
+
+        st.info("Fix these files or run client seeding.")
+        st.stop()
+
+# ============================================================
 # KPI ENABLEMENT RESOLVER (CLIENT-AWARE)
 # ============================================================
 def resolve_enabled_kpis(active_client, kpi_registry):
@@ -123,6 +144,7 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+run_startup_integrity_check()
 
 # ============================================================
 # LOAD DRIVER DEFINITIONS
@@ -221,6 +243,19 @@ if st.sidebar.button("Run Client Calibration Wizard"):
 
 active_client = get_active_client(st.session_state)
 
+# ---- Self-heal client data (v0.7)
+if active_client:
+    if st.sidebar.button("🛠 Fix Missing Client Data"):
+        from client_config import repair_client_data
+        repair_client_data(st.session_state.active_client)
+        st.sidebar.success("Client data repaired.")
+        st.rerun()
+
+# ---- Debug / inspection
+if active_client:
+    with st.sidebar.expander("Active Client (Debug)", expanded=False):
+        st.json(active_client)
+        
 # ============================================================
 # LOAD CLIENT-AWARE HIDDEN COST CONTEXT (CANONICAL)
 # ============================================================
