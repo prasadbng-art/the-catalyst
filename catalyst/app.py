@@ -220,6 +220,13 @@ if st.sidebar.button("Run Client Calibration Wizard"):
     st.stop()
 
 active_client = get_active_client(st.session_state)
+
+# ============================================================
+# LOAD CLIENT-AWARE HIDDEN COST CONTEXT (CANONICAL)
+# ============================================================
+BASE_HIDDEN_COST_CONTEXT = load_hidden_cost_context(active_client)
+
+
 enabled_kpis, primary_kpi = resolve_enabled_kpis(active_client, KPI_REGISTRY)
 
 if active_client:
