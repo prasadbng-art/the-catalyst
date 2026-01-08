@@ -18,6 +18,7 @@ from intelligence.hidden_cost import calculate_hidden_cost
 from intelligence.action_roi import compute_action_roi
 from intelligence.sensitivity import generate_sensitivity_contexts
 from narrative_engine import generate_narrative
+from scenario_store import save_scenario, list_scenarios, load_scenario
 
 # ============================================================
 # REGISTRIES & DEFAULTS
@@ -324,6 +325,37 @@ else:
         f"{portfolio['portfolio_roi']:.2f}×"
         if portfolio["portfolio_roi"] else "—"
     )
+# ============================================================
+# SAVE SCENARIO (STEP F)
+# ============================================================
+st.markdown("---")
+st.subheader("Save Scenario")
+
+scenario_name = st.text_input("Scenario name")
+
+if st.button("Save Scenario"):
+    if not active_client:
+        st.error("Select an active client before saving a scenario.")
+    elif not scenario_name:
+        st.error("Scenario name is required.")
+    else:
+        save_scenario(
+            scenario_name=scenario_name,
+            client_name=st.session_state.active_client,
+            persona=persona,
+            inputs={
+                "attrition_rate": attrition_rate,
+                "scenario_context": scenario_context,
+                "portfolio_budget": portfolio_budget,
+                "portfolio_horizon": portfolio_horizon
+            },
+            derived={
+                "exposure": projected_exposure,
+                "kpi_status": status
+            },
+            portfolio=portfolio
+        )
+        st.success("Scenario saved.")
 
 # ============================================================
 # ATTRITION INTELLIGENCE
