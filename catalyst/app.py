@@ -3,6 +3,57 @@ import json
 from pathlib import Path
 from copy import deepcopy
 
+def apply_persona_theme(persona: str):
+    themes = {
+        "CEO": {
+            "bg": "#0047AB",       # Cobalt Blue
+            "text": "#FFFFFF",
+            "header": "#E6F0FF"
+        },
+        "CFO": {
+            "bg": "#8C5A00",       # Dark Amber
+            "text": "#FFF8E1",
+            "header": "#FFE082"
+        },
+        "CHRO": {
+            "bg": "#005F5F",       # Deep Teal
+            "text": "#E0F2F1",
+            "header": "#B2DFDB"
+        }
+    }
+
+    theme = themes.get(persona, themes["CEO"])
+
+    st.markdown(
+        f"""
+        <style>
+        /* Sidebar background */
+        section[data-testid="stSidebar"] {{
+            background-color: {theme["bg"]};
+        }}
+
+        /* Sidebar text */
+        section[data-testid="stSidebar"] * {{
+            color: {theme["text"]};
+        }}
+
+        /* Sidebar headers */
+        section[data-testid="stSidebar"] h1,
+        section[data-testid="stSidebar"] h2,
+        section[data-testid="stSidebar"] h3 {{
+            color: {theme["header"]};
+        }}
+
+        /* Slider labels */
+        section[data-testid="stSidebar"] label {{
+            color: {theme["text"]};
+            font-weight: 500;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
 # ============================================================
 # IMPORT INTELLIGENCE LAYERS
 # ============================================================
