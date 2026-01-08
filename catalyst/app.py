@@ -159,27 +159,34 @@ def load_driver_evidence(active_client: dict | None):
     return {}
 
 # ============================================================
-# LOAD HIDDEN COST CONTEXT
+# LOAD HIDDEN COST CONTEXT (CLIENT-AWARE, SAFE)
 # ============================================================
 @st.cache_data(show_spinner=False)
 def load_hidden_cost_context(active_client: dict | None):
-    base = Path(__file__).resolve().parent
+    base_dir = Path(__file__).resolve().parent
 
+    # ---- Client-specific
     if active_client:
-        client_id = active_client["client"]["name"].lower().replace(" ", "_")
-        path = base / "clients" / client_id / "data" / "hidden_cost_context.json"
+        client_id = active_client["client"]["id"]
+        client_path = (
+            base_dir / "clients" / client_id / "data" / "hidden_cost_context.json"
+        )
 
-        if path.exists():
-            return json.loads(path.read_text())
+        if client_path.exists():
+            with open(client_path, "r", encoding="utf-8") as f:
+                return json.load(f)
 
-    raise FileNotFoundError("Hidden cost context missing for active client.")
+    # ---- Fallback to demo
+    fallback = base_dir / "clients" / "demo" / "data" / "hidden_cost_context.json"
+    if fallback.exists():
+        with open(fallback, "r", encoding="utf-8") as f:
+            return json.load(f)
 
-# ---- RESOLVE ACTIVE CLIENT FIRST
-active_client = get_active_client(st.session_state)
+    # ---- Hard fail (this is correct behaviour)
+    raise FileNotFoundError(
+        "Hidden cost context missing for active client and demo fallback."
+    )
 
-# ---- LOAD EVIDENCE SAFELY
-DRIVER_EVIDENCE = load_driver_evidence(active_client)
-BASE_HIDDEN_COST_CONTEXT = load_hidden_cost_context(active_client)
 
 # ============================================================
 # ACTION CATALOG (DEMO)
