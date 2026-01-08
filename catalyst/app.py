@@ -28,6 +28,24 @@ from defaults import (
     DEFAULT_PORTFOLIO_HORIZON_DAYS,
     DEFAULT_EXPOSURE_BASE
 )
+# ============================================================
+# KPI ENABLEMENT RESOLVER (CLIENT-AWARE)
+# ============================================================
+def resolve_enabled_kpis(active_client, kpi_registry):
+    """
+    Returns (enabled_kpis, primary_kpi)
+    """
+    if not active_client:
+        return list(kpi_registry.keys()), None
+
+    enabled = [
+        k for k, v in active_client["kpis"].items()
+        if isinstance(v, dict) and v.get("enabled")
+    ]
+
+    primary = active_client["kpis"].get("primary")
+
+    return enabled, primary
 
 # ============================================================
 # EXPOSURE RESOLVER (TEMPORARY v0.6 → v0.7 BRIDGE)
