@@ -211,8 +211,11 @@ else:
 scenario_context = deepcopy(BASE_HIDDEN_COST_CONTEXT["context"])
 
 scenario_context["vacancy_duration_months"] = st.sidebar.slider(
-    "Vacancy Duration (months)", 0.5, 4.0,
-    scenario_context["vacancy_duration_months"], 0.25
+    "Vacancy Duration (months)",
+    min_value=0.5,
+    max_value=4.0,
+    value=float(scenario_context["vacancy_duration_months"]),
+    step=0.25
 )
 
 scenario_context["ramp_up_duration_months"] = st.sidebar.slider(
