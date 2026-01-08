@@ -28,6 +28,8 @@ from defaults import (
     DEFAULT_PORTFOLIO_BUDGET,
     DEFAULT_PORTFOLIO_HORIZON_DAYS,
    )
+from kpi_thresholds import resolve_kpi_thresholds, classify_kpi
+
 # # ============================================================
 # KPI ENABLEMENT RESOLVER (CLIENT-AWARE)
 # ============================================================
@@ -332,9 +334,27 @@ def render_attrition_intelligence_page(attrition_rate: float, scenario_context: 
     st.title("Attrition Intelligence")
     st.caption("Operational and financial intelligence for attrition risk")
 
+thresholds = resolve_kpi_thresholds(
+    kpi="attrition",
+    active_client=active_client
+)
+
+status = classify_kpi(attrition_rate, thresholds)
+
+status_color = {
+    "green": "🟢",
+    "amber": "🟠",
+    "red": "🔴"
+}[status]
+
+st.markdown(
+    f"### Attrition Status: {status_color} **{status.upper()}**"
+)
+
 # ---- Narrative
 kpi_state = {
-    "attrition_rate": attrition_rate
+    "attrition_rate": attrition_rate,
+    "status": status
 }
 
 strategy_context = (

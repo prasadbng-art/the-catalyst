@@ -52,13 +52,18 @@ def _attrition_narrative(
     # ---- Headline logic
     if rate > 25:
         headline = "Attrition risk is materially elevated"
-        confidence = "high"
     elif rate > 15:
         headline = "Attrition risk is trending above tolerance"
-        confidence = "medium"
+        
     else:
         headline = "Attrition remains within controllable bounds"
-        confidence = "low"
+
+#---- confidence driven by client thresholds ---
+    confidence = {
+        "green": "low",
+        "amber": "medium",
+        "red": "high"
+    }.get(kpi_state.get("status"), "low")
 
     # ---- Persona-aware interpretation
     if persona == "CFO":
