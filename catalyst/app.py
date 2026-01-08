@@ -2,20 +2,27 @@ import streamlit as st
 import json
 from pathlib import Path
 from copy import deepcopy
-from wizard.wizard import run_client_wizard
 
+# ============================================================
+# WIZARD & CLIENT CONFIG
+# ============================================================
+from wizard.wizard import run_client_wizard
+from client_config import list_clients, get_active_client
+
+# ============================================================
+# INTELLIGENCE LAYERS
+# ============================================================
 from intelligence.action_portfolio import optimise_action_portfolio
-from intelligence.driver_interpreter import (
-    load_driver_definitions,
-    generate_driver_narrative
-)
+from intelligence.driver_interpreter import load_driver_definitions
 from intelligence.hidden_cost import calculate_hidden_cost
 from intelligence.action_roi import compute_action_roi
 from intelligence.sensitivity import generate_sensitivity_contexts
 
+# ============================================================
+# REGISTRIES & DEFAULTS
+# ============================================================
 from metric_registry import METRIC_REGISTRY
 from kpi_registry import KPI_REGISTRY
-
 from defaults import (
     DEFAULT_PORTFOLIO_BUDGET,
     DEFAULT_PORTFOLIO_HORIZON_DAYS,
@@ -26,14 +33,9 @@ from defaults import (
 # EXPOSURE RESOLVER (TEMPORARY v0.6 → v0.7 BRIDGE)
 # ============================================================
 def resolve_projected_exposure(exposure_context: dict) -> float:
-    """
-    Converts exposure context into a monetary exposure figure.
-    This is a temporary resolver until client wizard + cost models fully own this.
-    """
     attrition_rate = exposure_context["attrition_rate"]
     headcount = exposure_context["headcount"]
 
-    # Baseline financial assumptions (explicit & replaceable)
     avg_salary_usd = 1_200_000
     replacement_multiplier = 1.3
 
@@ -41,7 +43,7 @@ def resolve_projected_exposure(exposure_context: dict) -> float:
 
 
 # ============================================================
-# PERSONA THEME (PAUSED FOR POLISH, BUT CORRECTLY WIRED)
+# PERSONA THEME (LOGIC-ONLY)
 # ============================================================
 def apply_persona_theme(persona: str):
     themes = {
@@ -92,7 +94,7 @@ def load_driver_evidence():
 DRIVER_EVIDENCE = load_driver_evidence()
 
 # ============================================================
-# LOAD HIDDEN COST CONTEXT (FAIL FAST)
+# LOAD HIDDEN COST CONTEXT
 # ============================================================
 @st.cache_data(show_spinner=False)
 def load_hidden_cost_context():
@@ -100,10 +102,9 @@ def load_hidden_cost_context():
     with open(base_dir / "clients/demo/data/hidden_cost_context.json", "r") as f:
         ctx = json.load(f)
 
-    required = ["role_cost_usd_monthly", "context"]
-    missing = [k for k in required if k not in ctx]
-    if missing:
-        raise ValueError(f"Hidden cost context missing keys: {missing}")
+    for key in ["role_cost_usd_monthly", "context"]:
+        if key not in ctx:
+            raise ValueError(f"Hidden cost context missing key: {key}")
 
     return ctx
 
@@ -121,98 +122,44 @@ ACTIONS = [
 PROJECTED_EXITS_180D = 20
 
 # ============================================================
-# ATTRITION INTELLIGENCE
-# ============================================================
-def render_attrition_intelligence_page(attrition_rate: float, scenario_context: dict):
-
-    st.title("Attrition Intelligence")
-    st.caption("Operational and financial intelligence for attrition risk")
-
-    st.markdown("### Signals in Scope")
-
-    cols = st.columns(3)
-    for i, metric_key in enumerate(KPI_REGISTRY["attrition"]["metrics"]):
-        meta = METRIC_REGISTRY.get(metric_key)
-        if not meta:
-            continue
-
-        value = meta.get("default", "—")
-        if meta["type"] == "currency":
-            value = f"US${value:,.0f}"
-        elif meta["type"] == "percentage":
-            value = f"{value}%"
-
-        cols[i % 3].metric(meta["label"], value)
-
-    st.markdown("---")
-
-    low_ctx, base_ctx, high_ctx = generate_sensitivity_contexts(scenario_context)
-
-    def hc(ctx):
-        return calculate_hidden_cost(
-            BASE_HIDDEN_COST_CONTEXT["role_cost_usd_monthly"], ctx
-        )["total_hidden_cost"]
-
-    hc_low, hc_base, hc_high = hc(low_ctx), hc(base_ctx), hc(high_ctx)
-
-    st.metric(
-        "Hidden Cost per Exit (Range)",
-        f"US${hc_low/1e6:.2f}–{hc_high/1e6:.2f}M"
-    )
-
-# ============================================================
-# CFO SUMMARY
-# ============================================================
-def render_cfo_summary(
-    attrition_rate: float,
-    scenario_context: dict,
-    portfolio_budget: float,
-    portfolio_horizon: int
-):
-    st.title("CFO / Board Summary")
-
-    low_ctx, base_ctx, high_ctx = generate_sensitivity_contexts(scenario_context)
-
-    def hc(ctx):
-        return calculate_hidden_cost(
-            BASE_HIDDEN_COST_CONTEXT["role_cost_usd_monthly"], ctx
-        )["total_hidden_cost"]
-
-    hc_base = hc(base_ctx)
-    exposure_base = hc_base * PROJECTED_EXITS_180D
-
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Attrition Rate", f"{attrition_rate}%")
-    col2.metric("Projected Exits (180d)", PROJECTED_EXITS_180D)
-    col3.metric("Exposure (Base)", f"US${exposure_base/1e6:.1f}M")
-
-    st.markdown("### ROI-Ranked Actions")
-
-    roi_rows = []
-    for action in ACTIONS:
-        roi = compute_action_roi(exposure_base, action)
-        roi_rows.append({**action, **roi})
-
-    roi_rows.sort(key=lambda x: x["roi_multiple"] or 0, reverse=True)
-
-    for action in roi_rows[:3]:
-        with st.container(border=True):
-            st.subheader(action["name"])
-            c1, c2, c3, c4 = st.columns(4)
-            c1.metric("Investment", f"US${action['cost_to_execute']/1e6:.2f}M")
-            c2.metric("Avoided Cost", f"US${action['cost_avoided']/1e6:.2f}M")
-            c3.metric("ROI", f"{action['roi_multiple']}×")
-            c4.metric("Payback", f"{action['payback_days']} days")
-
-# ============================================================
-# SIDEBAR
+# SIDEBAR — CLIENT CONTROL PLANE
 # ============================================================
 st.sidebar.title("The Catalyst")
 
+st.sidebar.markdown("## Client Context")
+
+available_clients = list_clients()
+
+if available_clients:
+    selected_client = st.sidebar.selectbox(
+        "Active Client",
+        options=["— None —"] + available_clients
+    )
+
+    if selected_client != "— None —":
+        st.session_state.active_client = selected_client
+    else:
+        st.session_state.pop("active_client", None)
+else:
+    st.sidebar.info("No calibrated clients found.")
+
+if st.sidebar.button("Run Client Calibration Wizard"):
+    run_client_wizard()
+    st.stop()
+
+active_client = get_active_client(st.session_state)
+
+if active_client:
+    with st.sidebar.expander("Active Client (Debug)", expanded=False):
+        st.json(active_client)
+
+st.sidebar.markdown("---")
+
+# ============================================================
+# PERSONA & KPI SELECTION
+# ============================================================
 persona = st.sidebar.selectbox("View as", ["CEO", "CFO", "CHRO"])
 apply_persona_theme(persona)
-
-st.sidebar.markdown("### KPI Focus")
 
 selected_kpi = st.sidebar.selectbox(
     "Select KPI",
@@ -220,12 +167,9 @@ selected_kpi = st.sidebar.selectbox(
     format_func=lambda k: KPI_REGISTRY[k]["label"]
 )
 
-st.sidebar.markdown("---")
-
-if st.sidebar.button("Run Client Calibration Wizard"):
-    run_client_wizard()
-    st.stop()
-
+# ============================================================
+# SCENARIO CONTEXT
+# ============================================================
 scenario_context = deepcopy(BASE_HIDDEN_COST_CONTEXT["context"])
 
 scenario_context["vacancy_duration_months"] = st.sidebar.slider(
@@ -243,8 +187,6 @@ scenario_context["knowledge_risk_multiplier"] = st.sidebar.slider(
     float(scenario_context["knowledge_risk_multiplier"]), 0.05
 )
 
-st.sidebar.markdown("---")
-
 attrition_rate = st.sidebar.slider(
     "Annual Attrition Rate (%)", 5.0, 40.0, 21.3, 0.5
 )
@@ -254,22 +196,15 @@ page = st.sidebar.radio(
     ["Overview", "KPI Intelligence", "CFO Summary"]
 )
 
-st.sidebar.markdown("### Action Portfolio Constraints")
+# ============================================================
+# ACTION PORTFOLIO CONSTRAINTS (CLIENT-AWARE)
+# ============================================================
+portfolio_budget = DEFAULT_PORTFOLIO_BUDGET
 
-portfolio_budget = st.sidebar.number_input(
-    "Available Budget (US$)",
-    min_value=100000,
-    max_value=5000000,
-    value=DEFAULT_PORTFOLIO_BUDGET,
-    step=50000
-)
-
-portfolio_horizon = st.sidebar.slider(
-    "Time Horizon (days)",
-    min_value=30,
-    max_value=180,
-    value=DEFAULT_PORTFOLIO_HORIZON_DAYS,
-    step=15
+portfolio_horizon = (
+    DEFAULT_PORTFOLIO_HORIZON_DAYS
+    if not active_client
+    else active_client["strategy"]["horizon_days"]
 )
 
 # ============================================================
@@ -318,15 +253,12 @@ if page == "Overview":
 
 elif page == "KPI Intelligence":
     if selected_kpi == "attrition":
-        render_attrition_intelligence_page(attrition_rate, scenario_context)
+        st.title("Attrition Intelligence")
+        st.caption("Operational and financial intelligence for attrition risk")
     else:
         st.title(KPI_REGISTRY[selected_kpi]["label"])
         st.info("This KPI intelligence module is under active development.")
 
 elif page == "CFO Summary":
-    render_cfo_summary(
-        attrition_rate,
-        scenario_context,
-        portfolio_budget,
-        portfolio_horizon
-    )
+    st.title("CFO / Board Summary")
+    st.info("Client-aware CFO narratives coming next.")
