@@ -2,14 +2,42 @@ import streamlit as st
 import json
 from pathlib import Path
 from copy import deepcopy
+
 from intelligence.action_portfolio import optimise_action_portfolio
+from intelligence.driver_interpreter import (
+    load_driver_definitions,
+    generate_driver_narrative
+)
+from intelligence.hidden_cost import calculate_hidden_cost
+from intelligence.action_roi import compute_action_roi
+from intelligence.sensitivity import generate_sensitivity_contexts
+
 from metric_registry import METRIC_REGISTRY
 from kpi_registry import KPI_REGISTRY
+
 from defaults import (
     DEFAULT_PORTFOLIO_BUDGET,
     DEFAULT_PORTFOLIO_HORIZON_DAYS,
     DEFAULT_EXPOSURE_BASE
 )
+
+# ============================================================
+# EXPOSURE RESOLVER (TEMPORARY v0.6 → v0.7 BRIDGE)
+# ============================================================
+def resolve_projected_exposure(exposure_context: dict) -> float:
+    """
+    Converts exposure context into a monetary exposure figure.
+    This is a temporary resolver until client wizard + cost models fully own this.
+    """
+    attrition_rate = exposure_context["attrition_rate"]
+    headcount = exposure_context["headcount"]
+
+    # Baseline financial assumptions (explicit & replaceable)
+    avg_salary_usd = 1_200_000
+    replacement_multiplier = 1.3
+
+    return attrition_rate * headcount * avg_salary_usd * replacement_multiplier
+
 
 # ============================================================
 # PERSONA THEME (PAUSED FOR POLISH, BUT CORRECTLY WIRED)
@@ -32,17 +60,6 @@ def apply_persona_theme(persona: str):
         """,
         unsafe_allow_html=True
     )
-
-# ============================================================
-# IMPORT INTELLIGENCE LAYERS
-# ============================================================
-from intelligence.driver_interpreter import (
-    load_driver_definitions,
-    generate_driver_narrative
-)
-from intelligence.hidden_cost import calculate_hidden_cost
-from intelligence.action_roi import compute_action_roi
-from intelligence.sensitivity import generate_sensitivity_contexts
 
 # ============================================================
 # PAGE CONFIG
@@ -110,12 +127,10 @@ def render_attrition_intelligence_page(attrition_rate: float, scenario_context: 
     st.title("Attrition Intelligence")
     st.caption("Operational and financial intelligence for attrition risk")
 
-    # ---- Signals in scope (dual registry proof)
     st.markdown("### Signals in Scope")
 
     cols = st.columns(3)
-    i = 0
-    for metric_key in KPI_REGISTRY["attrition"]["metrics"]:
+    for i, metric_key in enumerate(KPI_REGISTRY["attrition"]["metrics"]):
         meta = METRIC_REGISTRY.get(metric_key)
         if not meta:
             continue
@@ -127,11 +142,9 @@ def render_attrition_intelligence_page(attrition_rate: float, scenario_context: 
             value = f"{value}%"
 
         cols[i % 3].metric(meta["label"], value)
-        i += 1
 
     st.markdown("---")
 
-    # ---- Sensitivity
     low_ctx, base_ctx, high_ctx = generate_sensitivity_contexts(scenario_context)
 
     def hc(ctx):
@@ -164,11 +177,8 @@ def render_cfo_summary(
             BASE_HIDDEN_COST_CONTEXT["role_cost_usd_monthly"], ctx
         )["total_hidden_cost"]
 
-    hc_low, hc_base, hc_high = hc(low_ctx), hc(base_ctx), hc(high_ctx)
-
-    exposure_low = hc_low * PROJECTED_EXITS_180D
+    hc_base = hc(base_ctx)
     exposure_base = hc_base * PROJECTED_EXITS_180D
-    exposure_high = hc_high * PROJECTED_EXITS_180D
 
     col1, col2, col3 = st.columns(3)
     col1.metric("Attrition Rate", f"{attrition_rate}%")
@@ -192,44 +202,6 @@ def render_cfo_summary(
             c2.metric("Avoided Cost", f"US${action['cost_avoided']/1e6:.2f}M")
             c3.metric("ROI", f"{action['roi_multiple']}×")
             c4.metric("Payback", f"{action['payback_days']} days")
-
-# --------------------------------------------------------
-# OPTIMAL ACTION PORTFOLIO
-# --------------------------------------------------------            
-st.markdown("## Optimal Action Portfolio")
-
-portfolio_budget = DEFAULT_PORTFOLIO_BUDGET
-portfolio_horizon = DEFAULT_PORTFOLIO_HORIZON_DAYS
-exposure_base = DEFAULT_EXPOSURE_BASE
-
-portfolio = optimise_action_portfolio(
-    actions=ACTIONS,
-    total_budget=portfolio_budget,
-    max_time_days=portfolio_horizon,
-    projected_exposure=exposure_base
-)
-
-if not portfolio["selected_actions"]:
-    st.warning("No actions fit within the current constraints.")
-else:
-    for action in portfolio["selected_actions"]:
-        with st.container(border=True):
-            st.subheader(action["name"])
-            c1, c2, c3 = st.columns(3)
-            c1.metric("Cost", f"US${action['cost_to_execute']/1e6:.2f}M")
-            c2.metric("Cost Avoided", f"US${action['cost_avoided']/1e6:.2f}M")
-            c3.metric("ROI", f"{action['roi']:.2f}×")
-
-    st.markdown("### Portfolio Summary")
-
-    c1, c2, c3 = st.columns(3)
-    c1.metric("Budget Used", f"US${portfolio['budget_used']/1e6:.2f}M")
-    c2.metric("Budget Remaining", f"US${portfolio['budget_remaining']/1e6:.2f}M")
-    c3.metric(
-        "Portfolio ROI",
-        f"{portfolio['portfolio_roi']:.2f}×"
-        if portfolio["portfolio_roi"] else "—"
-    )
 
 # ============================================================
 # SIDEBAR
@@ -276,13 +248,14 @@ page = st.sidebar.radio(
     "Navigate",
     ["Overview", "KPI Intelligence", "CFO Summary"]
 )
+
 st.sidebar.markdown("### Action Portfolio Constraints")
 
 portfolio_budget = st.sidebar.number_input(
     "Available Budget (US$)",
     min_value=100000,
     max_value=5000000,
-    value=1000000,
+    value=DEFAULT_PORTFOLIO_BUDGET,
     step=50000
 )
 
@@ -290,9 +263,46 @@ portfolio_horizon = st.sidebar.slider(
     "Time Horizon (days)",
     min_value=30,
     max_value=180,
-    value=90,
+    value=DEFAULT_PORTFOLIO_HORIZON_DAYS,
     step=15
 )
+
+# ============================================================
+# OPTIMAL ACTION PORTFOLIO
+# ============================================================
+st.markdown("## Optimal Action Portfolio")
+
+exposure_context = DEFAULT_EXPOSURE_BASE
+projected_exposure = resolve_projected_exposure(exposure_context)
+
+portfolio = optimise_action_portfolio(
+    actions=ACTIONS,
+    total_budget=portfolio_budget,
+    max_time_days=portfolio_horizon,
+    projected_exposure=projected_exposure
+)
+
+if not portfolio["selected_actions"]:
+    st.warning("No actions fit within the current constraints.")
+else:
+    for action in portfolio["selected_actions"]:
+        with st.container(border=True):
+            st.subheader(action["name"])
+            c1, c2, c3 = st.columns(3)
+            c1.metric("Cost", f"US${action['cost_to_execute']/1e6:.2f}M")
+            c2.metric("Cost Avoided", f"US${action['cost_avoided']/1e6:.2f}M")
+            c3.metric("ROI", f"{action['roi']:.2f}×")
+
+    st.markdown("### Portfolio Summary")
+
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Budget Used", f"US${portfolio['budget_used']/1e6:.2f}M")
+    c2.metric("Budget Remaining", f"US${portfolio['budget_remaining']/1e6:.2f}M")
+    c3.metric(
+        "Portfolio ROI",
+        f"{portfolio['portfolio_roi']:.2f}×"
+        if portfolio["portfolio_roi"] else "—"
+    )
 
 # ============================================================
 # ROUTING
