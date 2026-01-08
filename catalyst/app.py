@@ -8,17 +8,20 @@ def apply_persona_theme(persona: str):
         "CEO": {
             "bg": "#0047AB",       # Cobalt Blue
             "text": "#FFFFFF",
-            "header": "#E6F0FF"
+            "header": "#E6F0FF",
+            "accent": "#AECBFA"
         },
         "CFO": {
             "bg": "#8C5A00",       # Dark Amber
             "text": "#FFF8E1",
-            "header": "#FFE082"
+            "header": "#FFE082",
+            "accent": "#FFD54F"
         },
         "CHRO": {
             "bg": "#005F5F",       # Deep Teal
             "text": "#E0F2F1",
-            "header": "#B2DFDB"
+            "header": "#B2DFDB",
+            "accent": "#80CBC4"
         }
     }
 
@@ -32,7 +35,7 @@ def apply_persona_theme(persona: str):
             background-color: {theme["bg"]};
         }}
 
-        /* Sidebar text */
+        /* General sidebar text */
         section[data-testid="stSidebar"] * {{
             color: {theme["text"]};
         }}
@@ -44,15 +47,36 @@ def apply_persona_theme(persona: str):
             color: {theme["header"]};
         }}
 
-        /* Slider labels */
-        section[data-testid="stSidebar"] label {{
+        /* Widget labels (sliders, radios, selectbox) */
+        section[data-testid="stSidebar"] label,
+        section[data-testid="stSidebar"] span {{
+            color: {theme["text"]} !important;
+        }}
+
+        /* Slider value text */
+        section[data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] {{
+            color: {theme["text"]} !important;
+        }}
+
+        /* Radio buttons & checkmarks */
+        section[data-testid="stSidebar"] svg {{
+            fill: {theme["accent"]};
+        }}
+
+        /* Slider track & thumb */
+        section[data-testid="stSidebar"] div[data-baseweb="slider"] > div {{
+            color: {theme["accent"]};
+        }}
+
+        /* Dropdown (selectbox) text */
+        section[data-testid="stSidebar"] div[data-baseweb="select"] {{
             color: {theme["text"]};
-            font-weight: 500;
         }}
         </style>
         """,
         unsafe_allow_html=True
     )
+
 
 # ============================================================
 # IMPORT INTELLIGENCE LAYERS
