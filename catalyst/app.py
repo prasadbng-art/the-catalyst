@@ -27,8 +27,7 @@ from kpi_registry import KPI_REGISTRY
 from defaults import (
     DEFAULT_PORTFOLIO_BUDGET,
     DEFAULT_PORTFOLIO_HORIZON_DAYS,
-    DEFAULT_EXPOSURE_BASE
-)
+   )
 # # ============================================================
 # KPI ENABLEMENT RESOLVER (CLIENT-AWARE)
 # ============================================================
@@ -49,16 +48,45 @@ def resolve_enabled_kpis(active_client, kpi_registry):
     return enabled_kpis, primary_kpi
 
 # ============================================================
-# EXPOSURE RESOLVER (TEMPORARY v0.6 → v0.7 BRIDGE)
+# CLIENT-DRIVEN EXPOSURE RESOLVER (v0.7)
 # ============================================================
-def resolve_projected_exposure(exposure_context: dict) -> float:
-    attrition_rate = exposure_context["attrition_rate"]
-    headcount = exposure_context["headcount"]
+def resolve_client_exposure(
+    *,
+    scenario_context: dict,
+    projected_exits: int,
+    client_financials: dict | None,
+    base_hidden_cost_context: dict
+) -> float:
+    """
+    Computes total projected exposure using client financial assumptions.
+    """
 
-    avg_salary_usd = 1_200_000
-    replacement_multiplier = 1.3
+    # ---- Base hidden cost per exit
+    base_cost = calculate_hidden_cost(
+        base_hidden_cost_context["role_cost_usd_monthly"],
+        scenario_context
+    )["total_hidden_cost"]
 
-    return attrition_rate * headcount * avg_salary_usd * replacement_multiplier
+    # ---- Client financial overrides
+    replacement_multiplier = (
+        client_financials["replacement_multiplier"]
+        if client_financials
+        else 1.0
+    )
+
+    productivity_loss_pct = (
+        client_financials["productivity_loss_pct"]
+        if client_financials
+        else 0.0
+    )
+
+    # ---- Final exposure calculation
+    adjusted_cost_per_exit = base_cost * replacement_multiplier
+    productivity_loss = adjusted_cost_per_exit * productivity_loss_pct
+
+    total_cost_per_exit = adjusted_cost_per_exit + productivity_loss
+
+    return total_cost_per_exit * projected_exits
 
 # ============================================================
 # PERSONA THEME (LOGIC-ONLY)
@@ -253,8 +281,18 @@ portfolio_horizon = (
 # ============================================================
 st.markdown("## Optimal Action Portfolio")
 
-exposure_context = DEFAULT_EXPOSURE_BASE
-projected_exposure = resolve_projected_exposure(exposure_context)
+client_financials = (
+    active_client["financials"]
+    if active_client
+    else None
+)
+
+projected_exposure = resolve_client_exposure(
+    scenario_context=scenario_context,
+    projected_exits=PROJECTED_EXITS_180D,
+    client_financials=client_financials,
+    base_hidden_cost_context=BASE_HIDDEN_COST_CONTEXT
+)
 
 portfolio = optimise_action_portfolio(
     actions=ACTIONS,
