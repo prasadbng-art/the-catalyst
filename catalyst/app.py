@@ -137,12 +137,31 @@ DRIVER_DEFS = load_drivers()
 # LOAD DRIVER EVIDENCE
 # ============================================================
 @st.cache_data(show_spinner=False)
-def load_driver_evidence():
+def load_driver_evidence(active_client: dict | None):
     base_dir = Path(__file__).resolve().parent
-    with open(base_dir / "clients/demo/data/driver_evidence.json", "r") as f:
-        return json.load(f)
 
-DRIVER_EVIDENCE = load_driver_evidence()
+    # ---- Client-specific path
+    if active_client:
+        client_id = active_client["client"]["id"]
+        client_path = base_dir / "clients" / client_id / "data" / "driver_evidence.json"
+        if client_path.exists():
+            with open(client_path, "r") as f:
+                return json.load(f)
+
+    # ---- Fallback to demo defaults
+    fallback = base_dir / "clients" / "demo" / "data" / "driver_evidence.json"
+    if fallback.exists():
+        with open(fallback, "r") as f:
+            return json.load(f)
+
+    # ---- Absolute last resort
+    return {}
+
+# ---- RESOLVE ACTIVE CLIENT FIRST
+active_client = get_active_client(st.session_state)
+
+# ---- LOAD EVIDENCE SAFELY
+DRIVER_EVIDENCE = load_driver_evidence(active_client)
 
 # ============================================================
 # LOAD HIDDEN COST CONTEXT
