@@ -30,53 +30,56 @@ def apply_persona_theme(persona: str):
     st.markdown(
         f"""
         <style>
-        /* Sidebar background */
+        /* Sidebar container */
         section[data-testid="stSidebar"] {{
             background-color: {theme["bg"]};
         }}
 
-        /* General sidebar text */
+        /* Force ALL sidebar text visible */
         section[data-testid="stSidebar"] * {{
-            color: {theme["text"]};
+            color: {theme["text"]} !important;
         }}
 
-        /* Sidebar headers */
+        /* Headers */
         section[data-testid="stSidebar"] h1,
         section[data-testid="stSidebar"] h2,
         section[data-testid="stSidebar"] h3 {{
-            color: {theme["header"]};
+            color: {theme["header"]} !important;
         }}
 
-        /* Widget labels (sliders, radios, selectbox) */
-        section[data-testid="stSidebar"] label,
-        section[data-testid="stSidebar"] span {{
+        /* Selectbox: selected value */
+        section[data-testid="stSidebar"] div[data-baseweb="select"] span {{
             color: {theme["text"]} !important;
         }}
 
-        /* Slider value text */
-        section[data-testid="stSidebar"] div[data-testid="stMarkdownContainer"] {{
+        /* Selectbox dropdown options */
+        div[role="option"] {{
+            color: #000000 !important;
+        }}
+
+        /* Radio labels */
+        section[data-testid="stSidebar"] label[data-baseweb="radio"] span {{
             color: {theme["text"]} !important;
         }}
 
-        /* Radio buttons & checkmarks */
+        /* Radio icons */
         section[data-testid="stSidebar"] svg {{
-            fill: {theme["accent"]};
+            fill: {theme["accent"]} !important;
         }}
 
-        /* Slider track & thumb */
-        section[data-testid="stSidebar"] div[data-baseweb="slider"] > div {{
-            color: {theme["accent"]};
+        /* Slider labels and values */
+        section[data-testid="stSidebar"] div[data-baseweb="slider"] span {{
+            color: {theme["text"]} !important;
         }}
 
-        /* Dropdown (selectbox) text */
-        section[data-testid="stSidebar"] div[data-baseweb="select"] {{
-            color: {theme["text"]};
+        /* Section dividers */
+        section[data-testid="stSidebar"] hr {{
+            border-color: {theme["accent"]};
         }}
         </style>
         """,
         unsafe_allow_html=True
     )
-
 
 # ============================================================
 # IMPORT INTELLIGENCE LAYERS
