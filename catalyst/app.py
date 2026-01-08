@@ -28,7 +28,7 @@ from defaults import (
     DEFAULT_PORTFOLIO_HORIZON_DAYS,
     DEFAULT_EXPOSURE_BASE
 )
-# ============================================================
+# # ============================================================
 # KPI ENABLEMENT RESOLVER (CLIENT-AWARE)
 # ============================================================
 def resolve_enabled_kpis(active_client, kpi_registry):
@@ -38,14 +38,14 @@ def resolve_enabled_kpis(active_client, kpi_registry):
     if not active_client:
         return list(kpi_registry.keys()), None
 
-    enabled = [
+    enabled_kpis = [
         k for k, v in active_client["kpis"].items()
         if isinstance(v, dict) and v.get("enabled")
     ]
 
-    primary = active_client["kpis"].get("primary")
+    primary_kpi = active_client["kpis"].get("primary")
 
-    return enabled, primary
+    return enabled_kpis, primary_kpi
 
 # ============================================================
 # EXPOSURE RESOLVER (TEMPORARY v0.6 → v0.7 BRIDGE)
@@ -58,7 +58,6 @@ def resolve_projected_exposure(exposure_context: dict) -> float:
     replacement_multiplier = 1.3
 
     return attrition_rate * headcount * avg_salary_usd * replacement_multiplier
-
 
 # ============================================================
 # PERSONA THEME (LOGIC-ONLY)
@@ -167,6 +166,10 @@ if st.sidebar.button("Run Client Calibration Wizard"):
 
 # ---- Resolve active client ONCE
 active_client = get_active_client(st.session_state)
+enabled_kpis, primary_kpi = resolve_enabled_kpis(
+    active_client,
+    KPI_REGISTRY
+)
 
 # ---- Existing debug (client profile)
 if active_client:
