@@ -216,8 +216,11 @@ scenario_context["vacancy_duration_months"] = st.sidebar.slider(
 )
 
 scenario_context["ramp_up_duration_months"] = st.sidebar.slider(
-    "Ramp-up Duration (months)", 2.0, 8.0,
-    scenario_context["ramp_up_duration_months"], 0.5
+    "Ramp-up Duration (months)",
+    min_value=2.0,
+    max_value=8.0,
+    value=float(scenario_context["ramp_up_duration_months"]),
+    step=0.5
 )
 
 scenario_context["knowledge_risk_multiplier"] = st.sidebar.slider(
