@@ -293,7 +293,11 @@ portfolio_horizon = (
 # ============================================================
 st.markdown("## Optimal Action Portfolio")
 
-client_financials = active_client["financials"] if active_client else None
+client_financials = (
+    active_client.get("financials")
+    if active_client
+    else None
+)
 
 projected_exposure = resolve_client_exposure(
     scenario_context=scenario_context,
