@@ -6,9 +6,8 @@ from pathlib import Path
 # ============================================================
 # CLIENT STORAGE (FOLDER-BASED — CANONICAL)
 # ============================================================
-BASE_DIR = Path(__file__).resolve().parents[1]
+BASE_DIR = Path(__file__).resolve().parent
 CLIENTS_DIR = BASE_DIR / "clients"
-CLIENTS_DIR.mkdir(exist_ok=True)
 
 # ============================================================
 # LIST AVAILABLE CLIENTS
