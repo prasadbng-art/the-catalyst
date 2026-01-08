@@ -28,27 +28,22 @@ from kpi_registry import KPI_REGISTRY
 from defaults import (
     DEFAULT_PORTFOLIO_BUDGET,
     DEFAULT_PORTFOLIO_HORIZON_DAYS,
-   )
+)
 from kpi_thresholds import resolve_kpi_thresholds, classify_kpi
 
-# # ============================================================
+# ============================================================
 # KPI ENABLEMENT RESOLVER (CLIENT-AWARE)
 # ============================================================
 def resolve_enabled_kpis(active_client, kpi_registry):
-    """
-    Returns (enabled_kpis, primary_kpi)
-    """
     if not active_client:
         return list(kpi_registry.keys()), None
 
-    enabled_kpis = [
+    enabled = [
         k for k, v in active_client["kpis"].items()
         if isinstance(v, dict) and v.get("enabled")
     ]
-
-    primary_kpi = active_client["kpis"].get("primary")
-
-    return enabled_kpis, primary_kpi
+    primary = active_client["kpis"].get("primary")
+    return enabled, primary
 
 # ============================================================
 # CLIENT-DRIVEN EXPOSURE RESOLVER (v0.7)
@@ -60,17 +55,12 @@ def resolve_client_exposure(
     client_financials: dict | None,
     base_hidden_cost_context: dict
 ) -> float:
-    """
-    Computes total projected exposure using client financial assumptions.
-    """
 
-    # ---- Base hidden cost per exit
     base_cost = calculate_hidden_cost(
         base_hidden_cost_context["role_cost_usd_monthly"],
         scenario_context
     )["total_hidden_cost"]
 
-    # ---- Client financial overrides
     replacement_multiplier = (
         client_financials["replacement_multiplier"]
         if client_financials
@@ -83,13 +73,10 @@ def resolve_client_exposure(
         else 0.0
     )
 
-    # ---- Final exposure calculation
-    adjusted_cost_per_exit = base_cost * replacement_multiplier
-    productivity_loss = adjusted_cost_per_exit * productivity_loss_pct
+    adjusted = base_cost * replacement_multiplier
+    productivity_loss = adjusted * productivity_loss_pct
 
-    total_cost_per_exit = adjusted_cost_per_exit + productivity_loss
-
-    return total_cost_per_exit * projected_exits
+    return (adjusted + productivity_loss) * projected_exits
 
 # ============================================================
 # PERSONA THEME (LOGIC-ONLY)
@@ -101,7 +88,6 @@ def apply_persona_theme(persona: str):
         "CHRO": {"bg": "#005F5F"}
     }
     theme = themes.get(persona, themes["CEO"])
-
     st.markdown(
         f"""
         <style>
@@ -174,19 +160,13 @@ PROJECTED_EXITS_180D = 20
 # SIDEBAR — CLIENT CONTROL PLANE
 # ============================================================
 st.sidebar.title("The Catalyst")
-
 st.sidebar.markdown("## Client Context")
 
 available_clients = list_clients()
-
 if available_clients:
-    selected_client = st.sidebar.selectbox(
-        "Active Client",
-        options=["— None —"] + available_clients
-    )
-
-    if selected_client != "— None —":
-        st.session_state.active_client = selected_client
+    selected = st.sidebar.selectbox("Active Client", ["— None —"] + available_clients)
+    if selected != "— None —":
+        st.session_state.active_client = selected
     else:
         st.session_state.pop("active_client", None)
 else:
@@ -196,19 +176,12 @@ if st.sidebar.button("Run Client Calibration Wizard"):
     run_client_wizard()
     st.stop()
 
-# ---- Resolve active client ONCE
 active_client = get_active_client(st.session_state)
-enabled_kpis, primary_kpi = resolve_enabled_kpis(
-    active_client,
-    KPI_REGISTRY
-)
+enabled_kpis, primary_kpi = resolve_enabled_kpis(active_client, KPI_REGISTRY)
 
-# ---- Existing debug (client profile)
 if active_client:
     with st.sidebar.expander("Active Client (Debug)", expanded=False):
         st.json(active_client)
-
-if active_client:
     with st.sidebar.expander("KPI Configuration", expanded=False):
         st.write("Enabled KPIs:", enabled_kpis)
         st.write("Primary KPI:", primary_kpi)
@@ -222,22 +195,15 @@ persona = st.sidebar.selectbox("View as", ["CEO", "CFO", "CHRO"])
 apply_persona_theme(persona)
 
 if enabled_kpis:
-    default_index = (
-        enabled_kpis.index(primary_kpi)
-        if primary_kpi in enabled_kpis
-        else 0
-    )
-
     selected_kpi = st.sidebar.selectbox(
         "Select KPI",
-        options=enabled_kpis,
-        index=default_index,
+        enabled_kpis,
+        index=enabled_kpis.index(primary_kpi) if primary_kpi in enabled_kpis else 0,
         format_func=lambda k: KPI_REGISTRY[k]["label"]
     )
 else:
-    st.sidebar.warning("No KPIs enabled for this client.")
     selected_kpi = None
-
+    st.sidebar.warning("No KPIs enabled.")
 
 # ============================================================
 # SCENARIO CONTEXT
@@ -246,17 +212,17 @@ scenario_context = deepcopy(BASE_HIDDEN_COST_CONTEXT["context"])
 
 scenario_context["vacancy_duration_months"] = st.sidebar.slider(
     "Vacancy Duration (months)", 0.5, 4.0,
-    float(scenario_context["vacancy_duration_months"]), 0.25
+    scenario_context["vacancy_duration_months"], 0.25
 )
 
 scenario_context["ramp_up_duration_months"] = st.sidebar.slider(
     "Ramp-up Duration (months)", 2.0, 8.0,
-    float(scenario_context["ramp_up_duration_months"]), 0.5
+    scenario_context["ramp_up_duration_months"], 0.5
 )
 
 scenario_context["knowledge_risk_multiplier"] = st.sidebar.slider(
     "Knowledge Risk Multiplier", 0.2, 1.0,
-    float(scenario_context["knowledge_risk_multiplier"]), 0.05
+    scenario_context["knowledge_risk_multiplier"], 0.05
 )
 
 attrition_rate = st.sidebar.slider(
@@ -269,14 +235,13 @@ page = st.sidebar.radio(
 )
 
 # ============================================================
-# ACTION PORTFOLIO CONSTRAINTS (CLIENT-AWARE)
+# ACTION PORTFOLIO CONSTRAINTS
 # ============================================================
 portfolio_budget = DEFAULT_PORTFOLIO_BUDGET
-
 portfolio_horizon = (
-    DEFAULT_PORTFOLIO_HORIZON_DAYS
-    if not active_client
-    else active_client["strategy"]["horizon_days"]
+    active_client["strategy"]["horizon_days"]
+    if active_client
+    else DEFAULT_PORTFOLIO_HORIZON_DAYS
 )
 
 # ============================================================
@@ -284,11 +249,7 @@ portfolio_horizon = (
 # ============================================================
 st.markdown("## Optimal Action Portfolio")
 
-client_financials = (
-    active_client["financials"]
-    if active_client
-    else None
-)
+client_financials = active_client["financials"] if active_client else None
 
 projected_exposure = resolve_client_exposure(
     scenario_context=scenario_context,
@@ -316,15 +277,11 @@ else:
             c3.metric("ROI", f"{action['roi']:.2f}×")
 
     st.markdown("### Portfolio Summary")
-
     c1, c2, c3 = st.columns(3)
     c1.metric("Budget Used", f"US${portfolio['budget_used']/1e6:.2f}M")
     c2.metric("Budget Remaining", f"US${portfolio['budget_remaining']/1e6:.2f}M")
-    c3.metric(
-        "Portfolio ROI",
-        f"{portfolio['portfolio_roi']:.2f}×"
-        if portfolio["portfolio_roi"] else "—"
-    )
+    c3.metric("Portfolio ROI", f"{portfolio['portfolio_roi']:.2f}×")
+
 # ============================================================
 # SAVE SCENARIO (STEP F)
 # ============================================================
@@ -335,7 +292,7 @@ scenario_name = st.text_input("Scenario name")
 
 if st.button("Save Scenario"):
     if not active_client:
-        st.error("Select an active client before saving a scenario.")
+        st.error("Select an active client before saving.")
     elif not scenario_name:
         st.error("Scenario name is required.")
     else:
@@ -351,95 +308,14 @@ if st.button("Save Scenario"):
             },
             derived={
                 "exposure": projected_exposure,
-                "kpi_status": status
+                "kpi_status": classify_kpi(
+                    attrition_rate,
+                    resolve_kpi_thresholds("attrition", active_client)
+                )
             },
             portfolio=portfolio
         )
         st.success("Scenario saved.")
-
-# ============================================================
-# ATTRITION INTELLIGENCE
-# ============================================================
-
-def render_attrition_intelligence_page(attrition_rate: float, scenario_context: dict):
-
-    st.title("Attrition Intelligence")
-    st.caption("Operational and financial intelligence for attrition risk")
-
-thresholds = resolve_kpi_thresholds(
-    kpi="attrition",
-    active_client=active_client
-)
-
-status = classify_kpi(attrition_rate, thresholds)
-
-status_color = {
-    "green": "🟢",
-    "amber": "🟠",
-    "red": "🔴"
-}[status]
-
-st.markdown(
-    f"### Attrition Status: {status_color} **{status.upper()}**"
-)
-
-# ---- Narrative
-kpi_state = {
-    "attrition_rate": attrition_rate,
-    "status": status
-}
-
-strategy_context = (
-    active_client["strategy"]
-    if active_client
-    else None
-)
-
-narrative = generate_narrative(
-    kpi="attrition",
-    kpi_state=kpi_state,
-    client_context=active_client,
-    persona=persona,
-    strategy_context=strategy_context
-)
-
-with st.container(border=True):
-    st.subheader(narrative["headline"])
-    st.write(narrative["interpretation"])
-    st.markdown(f"**Risk:** {narrative['risk_statement']}")
-    st.markdown(f"**Recommended posture:** {narrative['recommended_posture']}")
-
-    st.markdown("### Signals in Scope")
-
-    cols = st.columns(3)
-    for i, metric_key in enumerate(KPI_REGISTRY["attrition"]["metrics"]):
-        meta = METRIC_REGISTRY.get(metric_key)
-        if not meta:
-            continue
-
-        value = meta.get("default", "—")
-        if meta["type"] == "currency":
-            value = f"US${value:,.0f}"
-        elif meta["type"] == "percentage":
-            value = f"{value}%"
-
-        cols[i % 3].metric(meta["label"], value)
-
-    st.markdown("---")
-
-    low_ctx, base_ctx, high_ctx = generate_sensitivity_contexts(scenario_context)
-
-    def hc(ctx):
-        return calculate_hidden_cost(
-            BASE_HIDDEN_COST_CONTEXT["role_cost_usd_monthly"], ctx
-        )["total_hidden_cost"]
-
-    hc_low, hc_base, hc_high = hc(low_ctx), hc(base_ctx), hc(high_ctx)
-
-    st.metric(
-        "Hidden Cost per Exit (Range)",
-        f"US${hc_low/1e6:.2f}–{hc_high/1e6:.2f}M"
-    )
 
 # ============================================================
 # ROUTING
@@ -449,13 +325,27 @@ if page == "Overview":
     st.caption("Catalyst converts people risk into financial decisions.")
 
 elif page == "KPI Intelligence":
-    if not selected_kpi:
-        st.warning("No KPI enabled for this client.")
-    elif selected_kpi == "attrition":
-        render_attrition_intelligence_page(attrition_rate, scenario_context)
+    if selected_kpi == "attrition":
+        st.title("Attrition Intelligence")
+        thresholds = resolve_kpi_thresholds("attrition", active_client)
+        status = classify_kpi(attrition_rate, thresholds)
+
+        narrative = generate_narrative(
+            kpi="attrition",
+            kpi_state={"attrition_rate": attrition_rate, "status": status},
+            client_context=active_client,
+            persona=persona,
+            strategy_context=active_client["strategy"] if active_client else None
+        )
+
+        with st.container(border=True):
+            st.subheader(narrative["headline"])
+            st.write(narrative["interpretation"])
+            st.markdown(f"**Risk:** {narrative['risk_statement']}")
+            st.markdown(f"**Recommended posture:** {narrative['recommended_posture']}")
+
     else:
-        st.title(KPI_REGISTRY[selected_kpi]["label"])
-        st.info("This KPI intelligence module is under active development.")
+        st.info("This KPI module is under development.")
 
 elif page == "CFO Summary":
     st.title("CFO / Board Summary")
