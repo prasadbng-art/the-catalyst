@@ -165,11 +165,18 @@ if st.sidebar.button("Run Client Calibration Wizard"):
     run_client_wizard()
     st.stop()
 
+# ---- Resolve active client ONCE
 active_client = get_active_client(st.session_state)
 
+# ---- Existing debug (client profile)
 if active_client:
     with st.sidebar.expander("Active Client (Debug)", expanded=False):
         st.json(active_client)
+
+if active_client:
+    with st.sidebar.expander("KPI Configuration", expanded=False):
+        st.write("Enabled KPIs:", enabled_kpis)
+        st.write("Primary KPI:", primary_kpi)
 
 st.sidebar.markdown("---")
 
@@ -179,11 +186,23 @@ st.sidebar.markdown("---")
 persona = st.sidebar.selectbox("View as", ["CEO", "CFO", "CHRO"])
 apply_persona_theme(persona)
 
-selected_kpi = st.sidebar.selectbox(
-    "Select KPI",
-    options=list(KPI_REGISTRY.keys()),
-    format_func=lambda k: KPI_REGISTRY[k]["label"]
-)
+if enabled_kpis:
+    default_index = (
+        enabled_kpis.index(primary_kpi)
+        if primary_kpi in enabled_kpis
+        else 0
+    )
+
+    selected_kpi = st.sidebar.selectbox(
+        "Select KPI",
+        options=enabled_kpis,
+        index=default_index,
+        format_func=lambda k: KPI_REGISTRY[k]["label"]
+    )
+else:
+    st.sidebar.warning("No KPIs enabled for this client.")
+    selected_kpi = None
+
 
 # ============================================================
 # SCENARIO CONTEXT
@@ -263,6 +282,47 @@ else:
     )
 
 # ============================================================
+# ATTRITION INTELLIGENCE
+# ============================================================
+
+def render_attrition_intelligence_page(attrition_rate: float, scenario_context: dict):
+
+    st.title("Attrition Intelligence")
+    st.caption("Operational and financial intelligence for attrition risk")
+
+    st.markdown("### Signals in Scope")
+
+    cols = st.columns(3)
+    for i, metric_key in enumerate(KPI_REGISTRY["attrition"]["metrics"]):
+        meta = METRIC_REGISTRY.get(metric_key)
+        if not meta:
+            continue
+
+        value = meta.get("default", "—")
+        if meta["type"] == "currency":
+            value = f"US${value:,.0f}"
+        elif meta["type"] == "percentage":
+            value = f"{value}%"
+
+        cols[i % 3].metric(meta["label"], value)
+
+    st.markdown("---")
+
+    low_ctx, base_ctx, high_ctx = generate_sensitivity_contexts(scenario_context)
+
+    def hc(ctx):
+        return calculate_hidden_cost(
+            BASE_HIDDEN_COST_CONTEXT["role_cost_usd_monthly"], ctx
+        )["total_hidden_cost"]
+
+    hc_low, hc_base, hc_high = hc(low_ctx), hc(base_ctx), hc(high_ctx)
+
+    st.metric(
+        "Hidden Cost per Exit (Range)",
+        f"US${hc_low/1e6:.2f}–{hc_high/1e6:.2f}M"
+    )
+
+# ============================================================
 # ROUTING
 # ============================================================
 if page == "Overview":
@@ -270,9 +330,10 @@ if page == "Overview":
     st.caption("Catalyst converts people risk into financial decisions.")
 
 elif page == "KPI Intelligence":
-    if selected_kpi == "attrition":
-        st.title("Attrition Intelligence")
-        st.caption("Operational and financial intelligence for attrition risk")
+    if not selected_kpi:
+        st.warning("No KPI enabled for this client.")
+    elif selected_kpi == "attrition":
+        render_attrition_intelligence_page(attrition_rate, scenario_context)
     else:
         st.title(KPI_REGISTRY[selected_kpi]["label"])
         st.info("This KPI intelligence module is under active development.")
