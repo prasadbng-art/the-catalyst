@@ -1,1 +1,14 @@
-
+{
+  "manager_effectiveness": {
+    "signal_strength": 0.7,
+    "confidence": 0.8
+  },
+  "workload_pressure": {
+    "signal_strength": 0.6,
+    "confidence": 0.7
+  },
+  "career_stagnation": {
+    "signal_strength": 0.5,
+    "confidence": 0.6
+  }
+}
