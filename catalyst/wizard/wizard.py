@@ -32,6 +32,39 @@ def run_client_wizard():
             },
             "financials": {}
         }
+def run_client_wizard():
+
+    if "profile" not in st.session_state:
+        st.session_state.profile = {}
+
+    # ---- INITIALISE CLIENT PROFILE SCHEMA (CRITICAL)
+    st.session_state.profile.setdefault("client", {
+        "name": "",
+        "industry": "",
+        "region": ""
+    })
+
+    st.session_state.profile.setdefault("strategy", {
+        "posture": "cost",
+        "horizon_days": 180
+    })
+
+    st.session_state.profile.setdefault("financials", {
+        "replacement_multiplier": 1.0,
+        "productivity_loss_pct": 0.0
+    })
+
+    st.session_state.profile.setdefault("kpis", {
+        "primary": "attrition",
+        "attrition": {
+            "enabled": True
+        }
+    })
+
+    if "wizard_step" not in st.session_state:
+        st.session_state.wizard_step = 0
+
+    ...
 
     steps = [
         step_client_identity,
