@@ -5,6 +5,11 @@ from copy import deepcopy
 from intelligence.action_portfolio import optimise_action_portfolio
 from metric_registry import METRIC_REGISTRY
 from kpi_registry import KPI_REGISTRY
+from defaults import (
+    DEFAULT_PORTFOLIO_BUDGET,
+    DEFAULT_PORTFOLIO_HORIZON_DAYS,
+    DEFAULT_EXPOSURE_BASE
+)
 
 # ============================================================
 # PERSONA THEME (PAUSED FOR POLISH, BUT CORRECTLY WIRED)
