@@ -146,8 +146,9 @@ if st.sidebar.button("Run Client Calibration Wizard"):
 client_id = st.session_state.get("active_client")
 active_client = get_active_client(st.session_state)
 
-if active_client:
-    with st.sidebar.expander("Active Client (Debug)"):
+DEV_MODE = False #toggle manually
+if DEV_MODE and active_client:
+    with st.sidebar.expander("Active Client (Debug)", expanded = False):
         st.json(active_client)
 
 # ============================================================
