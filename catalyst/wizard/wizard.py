@@ -14,9 +14,10 @@ from .steps import (
 from .validators import validate_client_profile
 
 # ============================================================
-# CLIENT STORAGE (MUST MATCH app.py EXPECTATIONS)
+# CLIENT STORAGE (MUST MATCH client_config.py)
 # ============================================================
-CLIENT_BASE_DIR = Path(__file__).resolve().parents[1] / "clients"
+CLIENTS_DIR = Path(__file__).resolve().parents[1] / "clients"
+CLIENTS_DIR.mkdir(exist_ok=True)
 
 # ============================================================
 # CANONICAL CLIENT PROFILE SCHEMA
@@ -37,15 +38,9 @@ CLIENT_PROFILE_SCHEMA = {
     },
     "kpis": {
         "primary": "attrition",
-        "attrition": {
-            "enabled": True
-        },
-        "engagement": {
-            "enabled": False
-        },
-        "sentiment": {
-            "enabled": False
-        }
+        "attrition": {"enabled": True},
+        "engagement": {"enabled": False},
+        "sentiment": {"enabled": False}
     }
 }
 
@@ -66,7 +61,7 @@ def run_client_wizard():
         step_strategy,
         step_kpi_enablement,
         step_financials,
-        step_complete  # 👈 EXPLICIT FINAL STEP
+        step_complete
     ]
 
     # ---- Render current step
@@ -85,13 +80,11 @@ def run_client_wizard():
             st.session_state.wizard_step += 1
             st.rerun()
 
-
 # ============================================================
 # FINAL COMMIT STEP (CRITICAL)
 # ============================================================
 def step_complete(profile: dict):
     st.header("Review & Save Client Profile")
-
     st.write("Please review the calibrated client profile:")
     st.json(profile)
 
@@ -103,32 +96,31 @@ def step_complete(profile: dict):
         return
 
     if st.button("Save Client Profile"):
-        client_name = profile["client"]["name"].strip()
+        raw_name = profile["client"]["name"].strip()
 
-        if not client_name:
+        if not raw_name:
             st.error("Client name is required.")
             return
 
-        save_client_profile(profile)
+        # ---- Canonical client id
+        client_id = raw_name.lower().replace(" ", "_")
 
-        # ---- Make client immediately active
-        st.session_state.active_client = client_name
+        save_client_profile(profile, client_id)
+
+        # ---- Activate client immediately
+        st.session_state.active_client = client_id
 
         # ---- Clean up wizard state
-        del st.session_state.profile
-        del st.session_state.wizard_step
+        st.session_state.pop("profile", None)
+        st.session_state.pop("wizard_step", None)
 
-        st.success(f"Client '{client_name}' calibrated successfully.")
+        st.success(f"Client '{raw_name}' calibrated and activated.")
         st.rerun()
 
-
 # ============================================================
-# PERSISTENCE (MATCHES app.py)
+# PERSISTENCE (FLAT FILE — MATCHES client_config.py)
 # ============================================================
-def save_client_profile(profile: dict):
-    client_name = profile["client"]["name"].strip()
-    client_dir = CLIENT_BASE_DIR / client_name
-    client_dir.mkdir(parents=True, exist_ok=True)
-
-    with open(client_dir / "config.yaml", "w") as f:
+def save_client_profile(profile: dict, client_id: str):
+    path = CLIENTS_DIR / f"{client_id}.yaml"
+    with open(path, "w") as f:
         yaml.safe_dump(profile, f, sort_keys=False)
