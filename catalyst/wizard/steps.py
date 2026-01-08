@@ -46,32 +46,45 @@ def step_strategy(state):
         [90, 180, 365]
     )
 
-
-def step_kpi_enablement(state):
+def step_kpi_enablement(state: dict):
     st.subheader("KPI Enablement")
 
-    state["kpis"]["attrition"]["enabled"] = st.checkbox(
-        "Attrition", value=True, disabled=True
-    )
+    # ---- Ensure KPI container exists
+    kpis = state.setdefault("kpis", {})
 
-    state["kpis"]["engagement"]["enabled"] = st.checkbox(
-        "Engagement"
-    )
+    # ---- Canonical KPI list
+    KPI_KEYS = ["attrition", "engagement", "sentiment"]
 
-    state["kpis"]["sentiment"]["enabled"] = st.checkbox(
-        "Sentiment"
-    )
+    st.markdown("### Enable KPIs")
 
-    enabled = [
-        k for k, v in state["kpis"].items()
-        if isinstance(v, dict) and v["enabled"]
+    for kpi in KPI_KEYS:
+        # ---- Default: attrition enabled, others off
+        current = kpis.get(kpi, {}).get("enabled", kpi == "attrition")
+
+        enabled = st.checkbox(
+            kpi.title(),
+            value=current,
+            disabled=(kpi == "attrition"),  # attrition always on
+            key=f"kpi_enable_{kpi}"
+        )
+
+        kpis[kpi] = {"enabled": enabled}
+
+    # ---- Resolve enabled KPIs safely
+    enabled_kpis = [
+        k for k in KPI_KEYS
+        if kpis.get(k, {}).get("enabled")
     ]
 
-    state["kpis"]["primary"] = st.selectbox(
-        "Primary KPI",
-        enabled
-    )
+    if not enabled_kpis:
+        st.warning("At least one KPI must be enabled.")
+        return
 
+    # ---- Primary KPI selection
+    primary_default = (
+        kpis.get("primary")
+        if kpis.get("primary") in enabled_kpis
+        else enabled
 
 def step_financials(state):
     st.subheader("Financial Sensitivity")
