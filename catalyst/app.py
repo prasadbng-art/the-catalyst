@@ -189,6 +189,26 @@ if active_client:
 st.sidebar.markdown("---")
 
 # ============================================================
+# SCENARIO COMPARE — SELECTION
+# ============================================================
+st.sidebar.markdown("## Scenario Compare")
+
+if active_client:
+    saved_scenarios = list_scenarios(st.session_state.active_client)
+
+    if saved_scenarios:
+        selected_scenarios = st.sidebar.multiselect(
+            "Select scenarios to compare",
+            saved_scenarios
+        )
+    else:
+        st.sidebar.info("No saved scenarios yet.")
+        selected_scenarios = []
+else:
+    st.sidebar.info("Select a client to view scenarios.")
+    selected_scenarios = []
+
+# ============================================================
 # PERSONA & KPI SELECTION
 # ============================================================
 persona = st.sidebar.selectbox("View as", ["CEO", "CFO", "CHRO"])
@@ -237,7 +257,7 @@ attrition_rate = st.sidebar.slider(
 
 page = st.sidebar.radio(
     "Navigate",
-    ["Overview", "KPI Intelligence", "CFO Summary"]
+    ["Overview", "KPI Intelligence", "CFO Summary", "Scenario Compare"]
 )
 
 # ============================================================
@@ -356,3 +376,31 @@ elif page == "KPI Intelligence":
 elif page == "CFO Summary":
     st.title("CFO / Board Summary")
     st.info("Client-aware CFO narratives coming next.")
+
+elif page == "Scenario Compare":
+    st.title("Scenario Comparison")
+
+    if not active_client:
+        st.warning("Select an active client to compare scenarios.")
+    elif not selected_scenarios:
+        st.info("Select one or more scenarios from the sidebar.")
+    else:
+        rows = []
+
+        for scenario_name in selected_scenarios:
+            scenario = load_scenario(
+                st.session_state.active_client,
+                scenario_name
+            )
+
+            rows.append({
+                "Scenario": scenario["metadata"]["scenario_name"],
+                "Persona": scenario["metadata"]["persona"],
+                "Attrition %": scenario["inputs"]["attrition_rate"],
+                "KPI Status": scenario["derived"]["kpi_status"],
+                "Exposure (USD M)": round(scenario["derived"]["exposure"] / 1e6, 2),
+                "Budget Used (USD M)": round(scenario["portfolio"]["budget_used"] / 1e6, 2),
+                "Portfolio ROI": scenario["portfolio"]["portfolio_roi"]
+            })
+
+        st.dataframe(rows, use_container_width=True)
