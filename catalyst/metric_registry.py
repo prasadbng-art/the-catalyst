@@ -1,4 +1,4 @@
-KPI_REGISTRY = {
+METRIC_REGISTRY = {
     "eNPS": {
         "label": "Employee Net Promoter Score",
         "type": "index",
