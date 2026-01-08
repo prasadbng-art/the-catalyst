@@ -281,7 +281,9 @@ page = st.sidebar.radio(
 # ============================================================
 portfolio_budget = DEFAULT_PORTFOLIO_BUDGET
 portfolio_horizon = (
-    active_client["strategy"]["horizon_days"]
+    active_client
+    .get("strategy", {})
+    .get("horizon_days", DEFAULT_PORTFOLIO_HORIZON_DAYS)
     if active_client
     else DEFAULT_PORTFOLIO_HORIZON_DAYS
 )
@@ -377,7 +379,7 @@ elif page == "KPI Intelligence":
             kpi_state={"attrition_rate": attrition_rate, "status": status},
             client_context=active_client,
             persona=persona,
-            strategy_context=active_client["strategy"] if active_client else None
+            strategy_context=active_client.get("strategy") if active_client else None
         )
 
         with st.container(border=True):
