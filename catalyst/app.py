@@ -3,78 +3,25 @@ import json
 from pathlib import Path
 from copy import deepcopy
 
+from metric_registry import METRIC_REGISTRY
+from kpi_registry import KPI_REGISTRY
+
+# ============================================================
+# PERSONA THEME (PAUSED FOR POLISH, BUT CORRECTLY WIRED)
+# ============================================================
 def apply_persona_theme(persona: str):
     themes = {
-        "CEO": {
-            "bg": "#0047AB",       # Cobalt Blue
-            "text": "#FFFFFF",
-            "header": "#E6F0FF",
-            "accent": "#AECBFA"
-        },
-        "CFO": {
-            "bg": "#8C5A00",       # Dark Amber
-            "text": "#FFF8E1",
-            "header": "#FFE082",
-            "accent": "#FFD54F"
-        },
-        "CHRO": {
-            "bg": "#005F5F",       # Deep Teal
-            "text": "#E0F2F1",
-            "header": "#B2DFDB",
-            "accent": "#80CBC4"
-        }
+        "CEO": {"bg": "#0047AB"},
+        "CFO": {"bg": "#8C5A00"},
+        "CHRO": {"bg": "#005F5F"}
     }
-
     theme = themes.get(persona, themes["CEO"])
 
     st.markdown(
         f"""
         <style>
-        /* Sidebar container */
         section[data-testid="stSidebar"] {{
             background-color: {theme["bg"]};
-        }}
-
-        /* Force ALL sidebar text visible */
-        section[data-testid="stSidebar"] * {{
-            color: {theme["text"]} !important;
-        }}
-
-        /* Headers */
-        section[data-testid="stSidebar"] h1,
-        section[data-testid="stSidebar"] h2,
-        section[data-testid="stSidebar"] h3 {{
-            color: {theme["header"]} !important;
-        }}
-
-        /* Selectbox: selected value */
-        section[data-testid="stSidebar"] div[data-baseweb="select"] span {{
-            color: {theme["text"]} !important;
-        }}
-
-        /* Selectbox dropdown options */
-        div[role="option"] {{
-            color: #000000 !important;
-        }}
-
-        /* Radio labels */
-        section[data-testid="stSidebar"] label[data-baseweb="radio"] span {{
-            color: {theme["text"]} !important;
-        }}
-
-        /* Radio icons */
-        section[data-testid="stSidebar"] svg {{
-            fill: {theme["accent"]} !important;
-        }}
-
-        /* Slider labels and values */
-        section[data-testid="stSidebar"] div[data-baseweb="slider"] span {{
-            color: {theme["text"]} !important;
-        }}
-
-        /* Section dividers */
-        section[data-testid="stSidebar"] hr {{
-            border-color: {theme["accent"]};
         }}
         </style>
         """,
@@ -122,13 +69,20 @@ def load_driver_evidence():
 DRIVER_EVIDENCE = load_driver_evidence()
 
 # ============================================================
-# LOAD HIDDEN COST CONTEXT
+# LOAD HIDDEN COST CONTEXT (FAIL FAST)
 # ============================================================
 @st.cache_data(show_spinner=False)
 def load_hidden_cost_context():
     base_dir = Path(__file__).resolve().parent
     with open(base_dir / "clients/demo/data/hidden_cost_context.json", "r") as f:
-        return json.load(f)
+        ctx = json.load(f)
+
+    required = ["role_cost_usd_monthly", "context"]
+    missing = [k for k in required if k not in ctx]
+    if missing:
+        raise ValueError(f"Hidden cost context missing keys: {missing}")
+
+    return ctx
 
 BASE_HIDDEN_COST_CONTEXT = load_hidden_cost_context()
 
@@ -136,36 +90,43 @@ BASE_HIDDEN_COST_CONTEXT = load_hidden_cost_context()
 # ACTION CATALOG (DEMO)
 # ============================================================
 ACTIONS = [
-    {
-        "name": "Knowledge Capture & Shadow Staffing",
-        "cost_to_execute": 420000,
-        "impact_pct": 0.32,
-        "time_to_impact_days": 30
-    },
-    {
-        "name": "Manager Coaching Sprint",
-        "cost_to_execute": 180000,
-        "impact_pct": 0.18,
-        "time_to_impact_days": 60
-    },
-    {
-        "name": "Accelerated Internal Mobility Program",
-        "cost_to_execute": 260000,
-        "impact_pct": 0.22,
-        "time_to_impact_days": 90
-    }
+    {"name": "Knowledge Capture & Shadow Staffing", "cost_to_execute": 420000, "impact_pct": 0.32, "time_to_impact_days": 30},
+    {"name": "Manager Coaching Sprint", "cost_to_execute": 180000, "impact_pct": 0.18, "time_to_impact_days": 60},
+    {"name": "Accelerated Internal Mobility Program", "cost_to_execute": 260000, "impact_pct": 0.22, "time_to_impact_days": 90}
 ]
 
 PROJECTED_EXITS_180D = 20
 
 # ============================================================
-# ATTRITION INTELLIGENCE PAGE (UNCHANGED CORE)
+# ATTRITION INTELLIGENCE
 # ============================================================
 def render_attrition_intelligence_page(attrition_rate: float, scenario_context: dict):
 
     st.title("Attrition Intelligence")
-    st.caption("Operational and financial intelligence for attrition risk.")
+    st.caption("Operational and financial intelligence for attrition risk")
 
+    # ---- Signals in scope (dual registry proof)
+    st.markdown("### Signals in Scope")
+
+    cols = st.columns(3)
+    i = 0
+    for metric_key in KPI_REGISTRY["attrition"]["metrics"]:
+        meta = METRIC_REGISTRY.get(metric_key)
+        if not meta:
+            continue
+
+        value = meta.get("default", "—")
+        if meta["type"] == "currency":
+            value = f"US${value:,.0f}"
+        elif meta["type"] == "percentage":
+            value = f"{value}%"
+
+        cols[i % 3].metric(meta["label"], value)
+        i += 1
+
+    st.markdown("---")
+
+    # ---- Sensitivity
     low_ctx, base_ctx, high_ctx = generate_sensitivity_contexts(scenario_context)
 
     def hc(ctx):
@@ -181,12 +142,11 @@ def render_attrition_intelligence_page(attrition_rate: float, scenario_context: 
     )
 
 # ============================================================
-# CFO / BOARD SUMMARY VIEW
+# CFO SUMMARY
 # ============================================================
 def render_cfo_summary(attrition_rate: float, scenario_context: dict):
 
     st.title("CFO / Board Summary")
-    st.caption("One-page financial view of attrition exposure and decisions.")
 
     low_ctx, base_ctx, high_ctx = generate_sensitivity_contexts(scenario_context)
 
@@ -201,86 +161,44 @@ def render_cfo_summary(attrition_rate: float, scenario_context: dict):
     exposure_base = hc_base * PROJECTED_EXITS_180D
     exposure_high = hc_high * PROJECTED_EXITS_180D
 
-    # --------------------------------------------------------
-    # EXECUTIVE SNAPSHOT
-    # --------------------------------------------------------
-    st.markdown("## Executive Risk Snapshot")
-
     col1, col2, col3 = st.columns(3)
-    col1.metric("Annual Attrition Rate", f"{attrition_rate}%")
-    col2.metric("Projected Exits (180 days)", PROJECTED_EXITS_180D)
-    col3.metric(
-        "Financial Exposure (Base)",
-        f"US${exposure_base/1e6:.1f}M"
-    )
+    col1.metric("Attrition Rate", f"{attrition_rate}%")
+    col2.metric("Projected Exits (180d)", PROJECTED_EXITS_180D)
+    col3.metric("Exposure (Base)", f"US${exposure_base/1e6:.1f}M")
 
-    # --------------------------------------------------------
-    # FINANCIAL EXPOSURE BANDS
-    # --------------------------------------------------------
-    st.markdown("## Financial Exposure (Low / Base / High)")
-
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Low Case", f"US${exposure_low/1e6:.1f}M")
-    col2.metric("Base Case", f"US${exposure_base/1e6:.1f}M")
-    col3.metric("High Case", f"US${exposure_high/1e6:.1f}M")
-
-    st.caption(
-        "Ranges reflect operational uncertainty in vacancy duration, "
-        "ramp-up efficiency, and knowledge loss."
-    )
-
-    # --------------------------------------------------------
-    # ACTION ROI SUMMARY
-    # --------------------------------------------------------
-    st.markdown("## ROI-Ranked Mitigation Options")
+    st.markdown("### ROI-Ranked Actions")
 
     roi_rows = []
-
     for action in ACTIONS:
         roi = compute_action_roi(exposure_base, action)
         roi_rows.append({**action, **roi})
 
-    roi_rows = sorted(
-        roi_rows,
-        key=lambda x: x["roi_multiple"] or 0,
-        reverse=True
-    )
+    roi_rows.sort(key=lambda x: x["roi_multiple"] or 0, reverse=True)
 
     for action in roi_rows[:3]:
         with st.container(border=True):
             st.subheader(action["name"])
-
-            col1, col2, col3, col4 = st.columns(4)
-            col1.metric("Investment", f"US${action['cost_to_execute']/1e6:.2f}M")
-            col2.metric("Cost Avoided", f"US${action['cost_avoided']/1e6:.2f}M")
-            col3.metric("ROI", f"{action['roi_multiple']}×")
-            col4.metric("Payback", f"{action['payback_days']} days")
-
-    # --------------------------------------------------------
-    # DECISION GUIDANCE
-    # --------------------------------------------------------
-    st.markdown("## Decision Guidance")
-
-    st.info(
-        f"""
-        - Attrition presents a **material financial exposure** in the next 180 days.
-        - Even in a conservative case, exposure exceeds **US${exposure_low/1e6:.1f}M**.
-        - The top ranked action delivers **>3× ROI** with payback inside one quarter.
-        - Delay increases exposure asymmetrically due to knowledge and ramp-up effects.
-        """
-    )
+            c1, c2, c3, c4 = st.columns(4)
+            c1.metric("Investment", f"US${action['cost_to_execute']/1e6:.2f}M")
+            c2.metric("Avoided Cost", f"US${action['cost_avoided']/1e6:.2f}M")
+            c3.metric("ROI", f"{action['roi_multiple']}×")
+            c4.metric("Payback", f"{action['payback_days']} days")
 
 # ============================================================
 # SIDEBAR
 # ============================================================
 st.sidebar.title("The Catalyst")
 
-persona = st.sidebar.selectbox(
-    "View as",
-    ["CEO", "CFO", "CHRO"]
-)
-
+persona = st.sidebar.selectbox("View as", ["CEO", "CFO", "CHRO"])
 apply_persona_theme(persona)
+
+st.sidebar.markdown("### KPI Focus")
+
+selected_kpi = st.sidebar.selectbox(
+    "Select KPI",
+    options=list(KPI_REGISTRY.keys()),
+    format_func=lambda k: KPI_REGISTRY[k]["label"]
+)
 
 st.sidebar.markdown("---")
 
@@ -309,7 +227,7 @@ attrition_rate = st.sidebar.slider(
 
 page = st.sidebar.radio(
     "Navigate",
-    ["Overview", "Attrition Intelligence", "CFO Summary"]
+    ["Overview", "KPI Intelligence", "CFO Summary"]
 )
 
 # ============================================================
@@ -317,12 +235,14 @@ page = st.sidebar.radio(
 # ============================================================
 if page == "Overview":
     st.title("The Catalyst")
-    st.caption(
-        "Catalyst converts people risk into financial decisions."
-    )
+    st.caption("Catalyst converts people risk into financial decisions.")
 
-elif page == "Attrition Intelligence":
-    render_attrition_intelligence_page(attrition_rate, scenario_context)
+elif page == "KPI Intelligence":
+    if selected_kpi == "attrition":
+        render_attrition_intelligence_page(attrition_rate, scenario_context)
+    else:
+        st.title(KPI_REGISTRY[selected_kpi]["label"])
+        st.info("This KPI intelligence module is under active development.")
 
 elif page == "CFO Summary":
     render_cfo_summary(attrition_rate, scenario_context)
