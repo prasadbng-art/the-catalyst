@@ -95,9 +95,9 @@ def seed_demo_data(client_id: str):
 # REPAIR CLIENT DATA (SELF-HEAL)
 # ============================================================
 def repair_client_data(client_id: str):
-    base_dir = Path(__file__).resolve().parents[1]
-    demo_data = base_dir / "clients" / "demo" / "data"
-    client_data = base_dir / "clients" / client_id / "data"
+    demo_data = CLIENTS_DIR / "demo" / "data"
+
+    client_data = CLIENTS_DIR / "clients" / client_id / "data"
 
     client_data.mkdir(parents=True, exist_ok=True)
 

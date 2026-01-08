@@ -12,6 +12,7 @@ from .steps import (
     step_financials,
 )
 from .validators import validate_client_profile
+from client_config import save_client_profile
 
 # ============================================================
 # CLIENT STORAGE (MUST MATCH client_config.py)
@@ -107,7 +108,9 @@ def step_complete(profile: dict):
 
         client_id = raw_name.lower().replace(" ", "_")
 
+        from client_config import save_client_profile
         save_client_profile(profile, client_id)
+
 
         # ---- Activate client immediately
         st.session_state.active_client = client_id
@@ -118,17 +121,3 @@ def step_complete(profile: dict):
 
         st.success(f"Client '{raw_name}' calibrated and activated.")
         st.rerun()
-
-
-# ============================================================
-# PERSISTENCE
-# ============================================================
-def save_client_profile(profile: dict, client_id: str):
-    client_dir = CLIENTS_DIR / client_id
-    data_dir = client_dir / "data"
-
-    client_dir.mkdir(parents=True, exist_ok=True)
-    data_dir.mkdir(exist_ok=True)
-
-    with open(client_dir / "config.yaml", "w", encoding="utf-8") as f:
-        yaml.safe_dump(profile, f, sort_keys=False)
