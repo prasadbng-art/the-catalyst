@@ -144,8 +144,12 @@ def render_attrition_intelligence_page(attrition_rate: float, scenario_context: 
 # ============================================================
 # CFO SUMMARY
 # ============================================================
-def render_cfo_summary(attrition_rate: float, scenario_context: dict):
-
+def render_cfo_summary(
+    attrition_rate: float,
+    scenario_context: dict,
+    portfolio_budget: float,
+    portfolio_horizon: int
+):
     st.title("CFO / Board Summary")
 
     low_ctx, base_ctx, high_ctx = generate_sensitivity_contexts(scenario_context)
@@ -296,5 +300,9 @@ elif page == "KPI Intelligence":
         st.info("This KPI intelligence module is under active development.")
 
 elif page == "CFO Summary":
-    render_cfo_summary(attrition_rate, scenario_context)
-    
+    render_cfo_summary(
+        attrition_rate,
+        scenario_context,
+        portfolio_budget,
+        portfolio_horizon
+    )
