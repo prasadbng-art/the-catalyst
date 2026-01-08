@@ -138,15 +138,16 @@ DRIVER_DEFS = load_drivers()
 # ============================================================
 @st.cache_data(show_spinner=False)
 def load_driver_evidence(active_client: dict | None):
-    base_dir = Path(__file__).resolve().parent
+    base = Path(__file__).resolve().parent
 
-    # ---- Client-specific path
     if active_client:
-        client_id = active_client["client"]["id"]
-        client_path = base_dir / "clients" / client_id / "data" / "driver_evidence.json"
-        if client_path.exists():
-            with open(client_path, "r") as f:
-                return json.load(f)
+        client_id = active_client["client"]["name"].lower().replace(" ", "_")
+        path = base / "clients" / client_id / "data" / "driver_evidence.json"
+
+        if path.exists():
+            return json.loads(path.read_text())
+
+    return {}
 
     # ---- Fallback to demo defaults
     fallback = base_dir / "clients" / "demo" / "data" / "driver_evidence.json"
@@ -157,28 +158,28 @@ def load_driver_evidence(active_client: dict | None):
     # ---- Absolute last resort
     return {}
 
+# ============================================================
+# LOAD HIDDEN COST CONTEXT
+# ============================================================
+@st.cache_data(show_spinner=False)
+def load_hidden_cost_context(active_client: dict | None):
+    base = Path(__file__).resolve().parent
+
+    if active_client:
+        client_id = active_client["client"]["name"].lower().replace(" ", "_")
+        path = base / "clients" / client_id / "data" / "hidden_cost_context.json"
+
+        if path.exists():
+            return json.loads(path.read_text())
+
+    raise FileNotFoundError("Hidden cost context missing for active client.")
+
 # ---- RESOLVE ACTIVE CLIENT FIRST
 active_client = get_active_client(st.session_state)
 
 # ---- LOAD EVIDENCE SAFELY
 DRIVER_EVIDENCE = load_driver_evidence(active_client)
-
-# ============================================================
-# LOAD HIDDEN COST CONTEXT
-# ============================================================
-@st.cache_data(show_spinner=False)
-def load_hidden_cost_context():
-    base_dir = Path(__file__).resolve().parent
-    with open(base_dir / "clients/demo/data/hidden_cost_context.json", "r") as f:
-        ctx = json.load(f)
-
-    for key in ["role_cost_usd_monthly", "context"]:
-        if key not in ctx:
-            raise ValueError(f"Hidden cost context missing key: {key}")
-
-    return ctx
-
-BASE_HIDDEN_COST_CONTEXT = load_hidden_cost_context()
+BASE_HIDDEN_COST_CONTEXT = load_hidden_cost_context(active_client)
 
 # ============================================================
 # ACTION CATALOG (DEMO)

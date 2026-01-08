@@ -1,0 +1,14 @@
+{
+  "manager_quality": {
+    "signal_strength": 0.6,
+    "confidence": 0.5
+  },
+  "career_mobility": {
+    "signal_strength": 0.5,
+    "confidence": 0.4
+  },
+  "workload_stress": {
+    "signal_strength": 0.4,
+    "confidence": 0.6
+  }
+}

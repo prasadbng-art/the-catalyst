@@ -32,11 +32,11 @@ def load_client_profile(client_id: str) -> dict | None:
         return yaml.safe_load(f)
 
 
-def get_active_client(session_state) -> dict | None:
+def get_active_client(st_session_state) -> dict | None:
     """
     Returns active client profile if selected.
     """
-    client_id = session_state.get("active_client")
+    client_id = st_session_state.get("active_client")
     if not client_id:
         return None
 
