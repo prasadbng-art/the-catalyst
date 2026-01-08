@@ -85,7 +85,7 @@ def step_kpi_enablement(state: dict):
         kpis.get("primary")
         if kpis.get("primary") in enabled_kpis
         else enabled
-
+    )
 def step_financials(state):
     st.subheader("Financial Sensitivity")
 
@@ -103,3 +103,4 @@ def step_financials(state):
         "Productivity Loss (%)",
         0.1, 0.5, 0.25, 0.05
     )
+    
