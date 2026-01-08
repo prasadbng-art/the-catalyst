@@ -17,6 +17,7 @@ from intelligence.driver_interpreter import load_driver_definitions
 from intelligence.hidden_cost import calculate_hidden_cost
 from intelligence.action_roi import compute_action_roi
 from intelligence.sensitivity import generate_sensitivity_contexts
+from narrative_engine import generate_narrative
 
 # ============================================================
 # REGISTRIES & DEFAULTS
@@ -292,6 +293,31 @@ def render_attrition_intelligence_page(attrition_rate: float, scenario_context: 
 
     st.title("Attrition Intelligence")
     st.caption("Operational and financial intelligence for attrition risk")
+
+# ---- Narrative
+kpi_state = {
+    "attrition_rate": attrition_rate
+}
+
+strategy_context = (
+    active_client["strategy"]
+    if active_client
+    else None
+)
+
+narrative = generate_narrative(
+    kpi="attrition",
+    kpi_state=kpi_state,
+    client_context=active_client,
+    persona=persona,
+    strategy_context=strategy_context
+)
+
+with st.container(border=True):
+    st.subheader(narrative["headline"])
+    st.write(narrative["interpretation"])
+    st.markdown(f"**Risk:** {narrative['risk_statement']}")
+    st.markdown(f"**Recommended posture:** {narrative['recommended_posture']}")
 
     st.markdown("### Signals in Scope")
 
