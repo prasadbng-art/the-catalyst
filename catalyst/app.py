@@ -2,7 +2,7 @@ import streamlit as st
 import json
 from pathlib import Path
 from copy import deepcopy
-
+from intelligence.action_portfolio import optimise_action_portfolio
 from metric_registry import METRIC_REGISTRY
 from kpi_registry import KPI_REGISTRY
 
@@ -184,6 +184,40 @@ def render_cfo_summary(attrition_rate: float, scenario_context: dict):
             c3.metric("ROI", f"{action['roi_multiple']}×")
             c4.metric("Payback", f"{action['payback_days']} days")
 
+# --------------------------------------------------------
+# OPTIMAL ACTION PORTFOLIO
+# --------------------------------------------------------            
+st.markdown("## Optimal Action Portfolio")
+
+portfolio = optimise_action_portfolio(
+    actions=ACTIONS,
+    total_budget=portfolio_budget,
+    max_time_days=portfolio_horizon,
+    projected_exposure=exposure_base
+)
+
+if not portfolio["selected_actions"]:
+    st.warning("No actions fit within the current constraints.")
+else:
+    for action in portfolio["selected_actions"]:
+        with st.container(border=True):
+            st.subheader(action["name"])
+            c1, c2, c3 = st.columns(3)
+            c1.metric("Cost", f"US${action['cost_to_execute']/1e6:.2f}M")
+            c2.metric("Cost Avoided", f"US${action['cost_avoided']/1e6:.2f}M")
+            c3.metric("ROI", f"{action['roi']:.2f}×")
+
+    st.markdown("### Portfolio Summary")
+
+    c1, c2, c3 = st.columns(3)
+    c1.metric("Budget Used", f"US${portfolio['budget_used']/1e6:.2f}M")
+    c2.metric("Budget Remaining", f"US${portfolio['budget_remaining']/1e6:.2f}M")
+    c3.metric(
+        "Portfolio ROI",
+        f"{portfolio['portfolio_roi']:.2f}×"
+        if portfolio["portfolio_roi"] else "—"
+    )
+
 # ============================================================
 # SIDEBAR
 # ============================================================
@@ -229,6 +263,23 @@ page = st.sidebar.radio(
     "Navigate",
     ["Overview", "KPI Intelligence", "CFO Summary"]
 )
+st.sidebar.markdown("### Action Portfolio Constraints")
+
+portfolio_budget = st.sidebar.number_input(
+    "Available Budget (US$)",
+    min_value=100000,
+    max_value=5000000,
+    value=1000000,
+    step=50000
+)
+
+portfolio_horizon = st.sidebar.slider(
+    "Time Horizon (days)",
+    min_value=30,
+    max_value=180,
+    value=90,
+    step=15
+)
 
 # ============================================================
 # ROUTING
@@ -246,3 +297,4 @@ elif page == "KPI Intelligence":
 
 elif page == "CFO Summary":
     render_cfo_summary(attrition_rate, scenario_context)
+    
