@@ -198,6 +198,10 @@ def render_cfo_summary(
 # --------------------------------------------------------            
 st.markdown("## Optimal Action Portfolio")
 
+portfolio_budget = DEFAULT_PORTFOLIO_BUDGET
+portfolio_horizon = DEFAULT_PORTFOLIO_HORIZON_DAYS
+exposure_base = DEFAULT_EXPOSURE_BASE
+
 portfolio = optimise_action_portfolio(
     actions=ACTIONS,
     total_budget=portfolio_budget,
