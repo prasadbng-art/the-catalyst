@@ -35,15 +35,31 @@ from kpi_thresholds import resolve_kpi_thresholds, classify_kpi
 # KPI ENABLEMENT RESOLVER (CLIENT-AWARE)
 # ============================================================
 def resolve_enabled_kpis(active_client, kpi_registry):
+    """
+    Returns (enabled_kpis, primary_kpi)
+    Only KPIs present in KPI_REGISTRY are allowed.
+    """
+
+    # ---- No client: everything enabled
     if not active_client:
         return list(kpi_registry.keys()), None
 
-    enabled = [
-        k for k, v in active_client["kpis"].items()
-        if isinstance(v, dict) and v.get("enabled")
+    client_kpis = active_client.get("kpis", {})
+
+    enabled_kpis = [
+        k for k, v in client_kpis.items()
+        if (
+            isinstance(v, dict)
+            and v.get("enabled")
+            and k in kpi_registry      # ✅ correct guard
+        )
     ]
-    primary = active_client["kpis"].get("primary")
-    return enabled, primary
+
+    primary_kpi = client_kpis.get("primary")
+    if primary_kpi not in kpi_registry:
+        primary_kpi = None
+
+    return enabled_kpis, primary_kpi
 
 # ============================================================
 # CLIENT-DRIVEN EXPOSURE RESOLVER (v0.7)
