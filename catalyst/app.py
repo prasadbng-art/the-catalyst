@@ -2,6 +2,7 @@ import streamlit as st
 import json
 from pathlib import Path
 from copy import deepcopy
+from wizard.wizard import run_client_wizard
 
 from intelligence.action_portfolio import optimise_action_portfolio
 from intelligence.driver_interpreter import (
@@ -220,6 +221,10 @@ selected_kpi = st.sidebar.selectbox(
 )
 
 st.sidebar.markdown("---")
+
+if st.sidebar.button("Run Client Calibration Wizard"):
+    run_client_wizard()
+    st.stop()
 
 scenario_context = deepcopy(BASE_HIDDEN_COST_CONTEXT["context"])
 
