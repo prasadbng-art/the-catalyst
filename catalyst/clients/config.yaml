@@ -1,0 +1,22 @@
+client:
+  id: demo
+  name: Catalyst Demo Organization
+  industry: Technology
+  region: Global
+
+strategy:
+  posture: cost
+  horizon_days: 180
+
+financials:
+  replacement_multiplier: 1.2
+  productivity_loss_pct: 0.15
+
+kpis:
+  primary: attrition
+  attrition:
+    enabled: true
+  engagement:
+    enabled: true
+  sentiment:
+    enabled: false
