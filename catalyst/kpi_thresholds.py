@@ -21,3 +21,18 @@ def resolve_kpi_thresholds(
         return active_client["kpis"][kpi]["thresholds"]
 
     return DEFAULT_KPI_THRESHOLDS.get(kpi, {})
+
+def classify_kpi(value: float, thresholds: dict) -> str:
+    """
+    Classifies KPI value into green / amber / red.
+    """
+    if value <= thresholds["green"]["max"]:
+        return "green"
+
+    if (
+        "amber" in thresholds
+        and thresholds["amber"]["min"] <= value <= thresholds["amber"]["max"]
+    ):
+        return "amber"
+
+    return "red"
