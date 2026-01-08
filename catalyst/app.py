@@ -248,6 +248,15 @@ def render_cfo_summary(attrition_rate: float, scenario_context: dict):
 # ============================================================
 st.sidebar.title("The Catalyst")
 
+persona = st.sidebar.selectbox(
+    "View as",
+    ["CEO", "CFO", "CHRO"]
+)
+
+apply_persona_theme(persona)
+
+st.sidebar.markdown("---")
+
 scenario_context = deepcopy(BASE_HIDDEN_COST_CONTEXT["context"])
 
 scenario_context["vacancy_duration_months"] = st.sidebar.slider(
