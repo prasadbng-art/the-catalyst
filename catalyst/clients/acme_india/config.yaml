@@ -1,25 +1,22 @@
 client:
-  name: "Acme India Pvt Ltd"
-  industry: "Manufacturing"
-  region: "India"
-  currency: "INR"
-
+  name: acme india
+  industry: IT Services
+  region: ''
+  geography: India
+  size_band: 1000-5000
 strategy:
-  posture: "cost"
-  horizon_days: 180
-
+  posture: cost
+  horizon_days: 90
+  risk_tolerance: low
 financials:
-  replacement_multiplier: 1.25
-  productivity_loss_pct: 0.15
-
+  replacement_multiplier: 1.4
+  productivity_loss_pct: 0.25
+  time_to_fill_days: 60
 kpis:
-  primary: "attrition"
-
+  primary: attrition
   attrition:
     enabled: true
-
   engagement:
-    enabled: true
-
+    enabled: false
   sentiment:
     enabled: false
