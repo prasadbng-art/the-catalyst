@@ -10,7 +10,7 @@ import streamlit as st
 # ----------------------------------------------------------
 
 from wizard.wizard import run_client_wizard
-from visuals.kpi_current import render_kpi_current
+from visuals.kpi_current import render_kpi_current_performance
 from narrative_engine import render_sentiment_health
 
 # ----------------------------------------------------------
@@ -56,7 +56,7 @@ elif page == "Sentiment Health":
     render_sentiment_health()
 
 elif page == "Current KPIs":
-    render_kpi_current()
+    render_kpi_current_performance()
 
 elif page == "Scenario Comparison (v0.9)":
     render_scenario_v09()
