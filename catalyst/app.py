@@ -1,315 +1,354 @@
+# ================================
+# Catalyst v0.9 — Scenario Comparison
+# End-to-End Reference app.py
+# ================================
+
 import streamlit as st
-import json
-from pathlib import Path
-from copy import deepcopy
+from enum import Enum
+from typing import Dict, List, Optional, Literal
+from dataclasses import dataclass
+from pydantic import BaseModel, Field, validator
 
-# ============================================================
-# APP CONFIG
-# ============================================================
+# ================================
+# Page config
+# ================================
+
 st.set_page_config(
-    page_title="The Catalyst",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    page_title="Catalyst v0.9",
+    layout="wide"
 )
 
-BASE_DIR = Path(__file__).resolve().parent
-CLIENTS_DIR = BASE_DIR / "clients"
+st.title("Catalyst")
+st.caption("Scenario Comparison — Decision Trade-off Intelligence (v0.9)")
 
-# ============================================================
-# WIZARD & CLIENT CONFIG
-# ============================================================
-from wizard.wizard import run_client_wizard
-from client_config import list_clients, get_active_client
+# ================================
+# Enums
+# ================================
 
-# ============================================================
-# INTELLIGENCE LAYERS
-# ============================================================
-from intelligence.action_portfolio import optimise_action_portfolio
-from intelligence.hidden_cost import calculate_hidden_cost
-from narrative_engine import generate_narrative
-from scenario_store import save_scenario
+class QualitativeLevel(str, Enum):
+    low = "low"
+    medium = "medium"
+    high = "high"
 
-# ============================================================
-# VISUALS (v0.8)
-# ============================================================
-from visuals.kpi_current import render_kpi_current_performance
+class TimeSpeed(str, Enum):
+    fast = "fast"
+    moderate = "moderate"
+    slow = "slow"
 
-# ============================================================
-# REGISTRIES & DEFAULTS
-# ============================================================
-from kpi_registry import KPI_REGISTRY
-from defaults import (
-    DEFAULT_PORTFOLIO_BUDGET,
-    DEFAULT_PORTFOLIO_HORIZON_DAYS,
-)
-from kpi_thresholds import resolve_kpi_thresholds, classify_kpi
+class PostureSignal(str, Enum):
+    control_oriented = "control_oriented"
+    capability_building = "capability_building"
+    growth_oriented = "growth_oriented"
+    defensive = "defensive"
 
-# ============================================================
-# STARTUP INTEGRITY CHECK
-# ============================================================
-def run_startup_integrity_check():
-    required = [
-        CLIENTS_DIR / "demo" / "data" / "hidden_cost_context.json",
-        CLIENTS_DIR / "demo" / "data" / "driver_evidence.json",
-        BASE_DIR / "config" / "drivers.yaml",
-    ]
+class Direction(str, Enum):
+    up = "up"
+    down = "down"
+    neutral = "neutral"
 
-    missing = [str(p) for p in required if not p.exists()]
-    if missing:
-        st.error("🚨 Catalyst startup check failed.")
-        for m in missing:
-            st.write(f"- {m}")
-        st.stop()
+# ================================
+# Scenario Schema (v0.9)
+# ================================
 
-run_startup_integrity_check()
+class ScenarioIdentity(BaseModel):
+    id: str = Field(..., pattern="^[a-z0-9_]+$")
+    label: str
+    intent: str
 
-# ============================================================
-# CLIENT-AWARE LOADERS
-# ============================================================
-@st.cache_data(show_spinner=False)
-def load_hidden_cost_context(client_id: str | None):
-    if client_id:
-        path = CLIENTS_DIR / client_id / "data" / "hidden_cost_context.json"
-        if path.exists():
-            return json.loads(path.read_text(encoding="utf-8"))
+class AssumptionBlock(BaseModel):
+    external: Dict[str, str]
+    internal: Dict[str, str]
 
-    fallback = CLIENTS_DIR / "demo" / "data" / "hidden_cost_context.json"
-    return json.loads(fallback.read_text(encoding="utf-8"))
+class InterventionBlock(BaseModel):
+    interventions: List[str]
 
-# ============================================================
-# KPI ENABLEMENT
-# ============================================================
-def resolve_enabled_kpis(active_client):
-    if not active_client:
-        return list(KPI_REGISTRY.keys()), None
+    @validator("interventions")
+    def must_have_interventions(cls, v):
+        if not v:
+            raise ValueError("At least one intervention required.")
+        return v
 
-    kpis = active_client.get("kpis", {})
-    enabled = [
-        k for k, v in kpis.items()
-        if isinstance(v, dict) and v.get("enabled") and k in KPI_REGISTRY
-    ]
+class CapitalConstraint(BaseModel):
+    budget_range: QualitativeLevel
+    spend_profile: str
 
-    primary = kpis.get("primary")
-    if primary not in enabled:
-        primary = enabled[0] if enabled else None
+class TimeConstraint(BaseModel):
+    horizon_months: int
+    first_signal_months: int
 
-    return enabled, primary
+    @validator("first_signal_months")
+    def signal_before_horizon(cls, v, values):
+        if "horizon_months" in values and v >= values["horizon_months"]:
+            raise ValueError("First signal must be before horizon.")
+        return v
 
-# ============================================================
-# CLIENT-DRIVEN EXPOSURE
-# ============================================================
-def resolve_client_exposure(
-    *,
-    scenario_context: dict,
-    projected_exits: int,
-    client_financials: dict | None,
-    base_hidden_cost_context: dict
-) -> float:
+class ConstraintBlock(BaseModel):
+    capital: CapitalConstraint
+    time: TimeConstraint
 
-    base_cost = calculate_hidden_cost(
-        base_hidden_cost_context["role_cost_usd_monthly"],
-        scenario_context
-    )["total_hidden_cost"]
+class AxisExposure(BaseModel):
+    capital_intensity: QualitativeLevel
+    time_to_impact: TimeSpeed
+    execution_risk: QualitativeLevel
+    cultural_risk: QualitativeLevel
+    posture_signal: PostureSignal
 
-    multiplier = (
-        client_financials.get("replacement_multiplier", 1.0)
-        if client_financials else 1.0
+class MetricExpectation(BaseModel):
+    expected_direction: Direction
+    confidence: QualitativeLevel
+
+class MetricMapping(BaseModel):
+    metrics: Dict[str, MetricExpectation]
+
+class ScenarioV09(BaseModel):
+    identity: ScenarioIdentity
+    assumptions: AssumptionBlock
+    interventions: InterventionBlock
+    constraints: ConstraintBlock
+    axis_exposure: AxisExposure
+    metrics: Optional[MetricMapping] = None
+
+# ================================
+# Example Scenarios (Embedded)
+# ================================
+
+SCENARIOS = {
+    "Cost Containment": ScenarioV09(
+        identity=ScenarioIdentity(
+            id="cost_containment",
+            label="Cost Containment",
+            intent="Stabilise attrition through short-term control mechanisms"
+        ),
+        assumptions=AssumptionBlock(
+            external={"labour_market": "tight"},
+            internal={"leadership_alignment": "medium"}
+        ),
+        interventions=InterventionBlock(
+            interventions=["policy_enforcement", "manager_targeting"]
+        ),
+        constraints=ConstraintBlock(
+            capital=CapitalConstraint(
+                budget_range=QualitativeLevel.low,
+                spend_profile="front_loaded"
+            ),
+            time=TimeConstraint(
+                horizon_months=12,
+                first_signal_months=3
+            )
+        ),
+        axis_exposure=AxisExposure(
+            capital_intensity=QualitativeLevel.low,
+            time_to_impact=TimeSpeed.fast,
+            execution_risk=QualitativeLevel.low,
+            cultural_risk=QualitativeLevel.medium,
+            posture_signal=PostureSignal.control_oriented
+        )
+    ),
+    "Capability Build": ScenarioV09(
+        identity=ScenarioIdentity(
+            id="capability_build",
+            label="Capability Build",
+            intent="Reduce attrition risk by building durable people capability"
+        ),
+        assumptions=AssumptionBlock(
+            external={"labour_market": "tight"},
+            internal={"leadership_alignment": "high"}
+        ),
+        interventions=InterventionBlock(
+            interventions=[
+                "manager_coaching_program",
+                "career_pathing_framework",
+                "listening_infrastructure"
+            ]
+        ),
+        constraints=ConstraintBlock(
+            capital=CapitalConstraint(
+                budget_range=QualitativeLevel.medium,
+                spend_profile="phased"
+            ),
+            time=TimeConstraint(
+                horizon_months=18,
+                first_signal_months=6
+            )
+        ),
+        axis_exposure=AxisExposure(
+            capital_intensity=QualitativeLevel.medium,
+            time_to_impact=TimeSpeed.slow,
+            execution_risk=QualitativeLevel.medium,
+            cultural_risk=QualitativeLevel.low,
+            posture_signal=PostureSignal.capability_building
+        )
     )
-    productivity_loss = (
-        client_financials.get("productivity_loss_pct", 0.0)
-        if client_financials else 0.0
-    )
+}
 
-    adjusted = base_cost * multiplier
-    return (adjusted + adjusted * productivity_loss) * projected_exits
+# ================================
+# Comparison Engine
+# ================================
 
-# ============================================================
-# KPI CURRENT VALUE RESOLVER (DEMO — v0.8)
-# ============================================================
-def resolve_current_kpi_value(*, kpi: str, attrition_rate: float):
-    """
-    v0.8 demo resolver.
-    Normalizes all KPIs onto a 0–100 scale.
-    """
-    DEMO_VALUES = {
-        "attrition": attrition_rate,
-        "engagement": 67.5,
-        "sentiment": 0.18,
+QUAL_MAP = {"low": 1, "medium": 2, "high": 3}
+TIME_MAP = {"fast": 3, "moderate": 2, "slow": 1}
+
+@dataclass
+class AxisDelta:
+    axis: str
+    direction: Literal["A_over_B", "B_over_A"]
+    magnitude: Literal["small", "moderate", "large"]
+    interpretation: str
+
+def delta_magnitude(diff: int) -> str:
+    if abs(diff) == 1:
+        return "small"
+    elif abs(diff) == 2:
+        return "moderate"
+    return "large"
+
+def compare_axes(a: ScenarioV09, b: ScenarioV09) -> List[AxisDelta]:
+    deltas = []
+
+    # Capital
+    diff = QUAL_MAP[a.axis_exposure.capital_intensity] - QUAL_MAP[b.axis_exposure.capital_intensity]
+    if diff != 0:
+        deltas.append(AxisDelta(
+            axis="capital",
+            direction="A_over_B" if diff > 0 else "B_over_A",
+            magnitude=delta_magnitude(diff),
+            interpretation="Higher capital commitment in exchange for broader intervention scope"
+        ))
+
+    # Time
+    diff = TIME_MAP[a.axis_exposure.time_to_impact] - TIME_MAP[b.axis_exposure.time_to_impact]
+    if diff != 0:
+        deltas.append(AxisDelta(
+            axis="time",
+            direction="A_over_B" if diff > 0 else "B_over_A",
+            magnitude=delta_magnitude(diff),
+            interpretation="Faster visible impact at the cost of long-term durability"
+        ))
+
+    # Execution risk (lower is better)
+    diff = QUAL_MAP[a.axis_exposure.execution_risk] - QUAL_MAP[b.axis_exposure.execution_risk]
+    if diff != 0:
+        deltas.append(AxisDelta(
+            axis="execution_risk",
+            direction="A_over_B" if diff < 0 else "B_over_A",
+            magnitude=delta_magnitude(diff),
+            interpretation="Lower execution risk due to organisational familiarity"
+        ))
+
+    # Cultural risk (lower is better)
+    diff = QUAL_MAP[a.axis_exposure.cultural_risk] - QUAL_MAP[b.axis_exposure.cultural_risk]
+    if diff != 0:
+        deltas.append(AxisDelta(
+            axis="cultural_risk",
+            direction="A_over_B" if diff < 0 else "B_over_A",
+            magnitude=delta_magnitude(diff),
+            interpretation="Lower likelihood of employee backlash or disengagement"
+        ))
+
+    # Posture
+    if a.axis_exposure.posture_signal != b.axis_exposure.posture_signal:
+        deltas.append(AxisDelta(
+            axis="posture",
+            direction="A_over_B",
+            magnitude="moderate",
+            interpretation=f"Signals a shift toward {a.axis_exposure.posture_signal.replace('_', ' ')} leadership posture"
+        ))
+
+    return deltas
+
+def detect_asymmetry(deltas: List[AxisDelta]) -> str:
+    gains = [d for d in deltas if d.direction == "A_over_B"]
+    losses = [d for d in deltas if d.direction == "B_over_A"]
+
+    if gains and losses:
+        return "balanced_tradeoff"
+    if gains and not losses:
+        return "dominant_but_risky"
+    if losses and not gains:
+        return "defensive_choice"
+    return "neutral"
+
+# ================================
+# Narrative Engine
+# ================================
+
+def generate_narrative(a: ScenarioV09, b: ScenarioV09, deltas, asymmetry):
+    bullets = []
+    for d in deltas[:3]:
+        bullets.append(
+            f"You gain advantage on **{d.axis.replace('_', ' ')}** at the cost of corresponding trade-offs."
+        )
+
+    framing_map = {
+        "balanced_tradeoff": "This is a deliberate trade between speed, cost, risk, and organisational posture.",
+        "dominant_but_risky": "This option appears advantaged but concentrates risk in fewer bets.",
+        "defensive_choice": "This choice limits downside exposure while constraining long-term upside.",
+        "neutral": "These scenarios differ more in posture than in expected outcomes."
     }
-    return DEMO_VALUES.get(kpi)
 
-# ============================================================
-# SIDEBAR — CLIENT CONTROL PLANE
-# ============================================================
-st.sidebar.title("The Catalyst")
-st.sidebar.markdown("## Client Context")
+    return {
+        "headline": f"Choosing **{a.identity.label}** over **{b.identity.label}** involves the following trade-offs:",
+        "bullets": bullets,
+        "framing": framing_map[asymmetry]
+    }
 
-clients = list_clients()
-if clients:
-    selected = st.sidebar.selectbox("Active Client", ["— None —"] + clients)
-    if selected != "— None —":
-        st.session_state.active_client = selected
-    else:
-        st.session_state.pop("active_client", None)
-else:
-    st.sidebar.info("No calibrated clients found.")
+# ================================
+# UI Rendering
+# ================================
 
-if st.sidebar.button("Run Client Calibration Wizard"):
-    run_client_wizard()
+st.header("Scenario Comparison")
+
+col1, col2 = st.columns(2)
+with col1:
+    a_label = st.selectbox("Scenario A", list(SCENARIOS.keys()), index=1)
+with col2:
+    b_label = st.selectbox("Scenario B", list(SCENARIOS.keys()), index=0)
+
+if a_label == b_label:
+    st.error("Please select two different scenarios.")
     st.stop()
 
-client_id = st.session_state.get("active_client")
-active_client = get_active_client(st.session_state)
+scenario_a = SCENARIOS[a_label]
+scenario_b = SCENARIOS[b_label]
 
-# ============================================================
-# LOAD CLIENT DATA
-# ============================================================
-BASE_HIDDEN_COST_CONTEXT = load_hidden_cost_context(client_id)
+deltas = compare_axes(scenario_a, scenario_b)
+if not deltas:
+    st.error("Catalyst cannot identify a meaningful decision difference between these scenarios.")
+    st.stop()
 
-enabled_kpis, primary_kpi = resolve_enabled_kpis(active_client)
+asymmetry = detect_asymmetry(deltas)
 
-# ============================================================
-# PERSONA & KPI SELECTION
-# ============================================================
-persona = st.sidebar.selectbox("View as", ["CEO", "CFO", "CHRO"])
+left, center, right = st.columns([3, 2, 3])
 
-if enabled_kpis:
-    selected_kpi = st.sidebar.selectbox(
-        "Select KPI",
-        enabled_kpis,
-        index=enabled_kpis.index(primary_kpi) if primary_kpi in enabled_kpis else 0,
-        format_func=lambda k: KPI_REGISTRY[k]["label"]
-    )
-else:
-    selected_kpi = None
-    st.sidebar.warning("No KPIs enabled.")
+def render_card(s):
+    st.subheader(s.identity.label)
+    st.caption(s.identity.intent)
+    st.markdown("**Constraints**")
+    st.markdown(f"- Capital: {s.constraints.capital.budget_range.value}")
+    st.markdown(f"- Horizon: {s.constraints.time.horizon_months} months")
+    st.markdown(f"- First signal: {s.constraints.time.first_signal_months} months")
+    st.markdown("**Leadership posture**")
+    st.info(s.axis_exposure.posture_signal.replace("_", " ").title())
 
-# ============================================================
-# SCENARIO CONTEXT
-# ============================================================
-scenario_context = deepcopy(BASE_HIDDEN_COST_CONTEXT["context"])
+with left:
+    render_card(scenario_a)
 
-scenario_context["vacancy_duration_months"] = st.sidebar.slider(
-    "Vacancy Duration (months)", 0.5, 4.0,
-    float(scenario_context["vacancy_duration_months"]), 0.25
-)
+with center:
+    st.markdown("### Trade-offs")
+    for d in deltas:
+        arrow = "⬅️" if d.direction == "A_over_B" else "➡️"
+        st.markdown(f"**{d.axis.replace('_', ' ').title()}** {arrow}  \n{d.interpretation}")
 
-scenario_context["ramp_up_duration_months"] = st.sidebar.slider(
-    "Ramp-up Duration (months)", 2.0, 8.0,
-    float(scenario_context["ramp_up_duration_months"]), 0.5
-)
+with right:
+    render_card(scenario_b)
 
-scenario_context["knowledge_risk_multiplier"] = st.sidebar.slider(
-    "Knowledge Risk Multiplier", 0.2, 1.0,
-    scenario_context["knowledge_risk_multiplier"], 0.05
-)
+st.divider()
 
-attrition_rate = st.sidebar.slider(
-    "Annual Attrition Rate (%)", 5.0, 40.0, 21.3, 0.5
-)
+narrative = generate_narrative(scenario_a, scenario_b, deltas, asymmetry)
 
-page = st.sidebar.radio(
-    "Navigate",
-    ["Overview", "KPI Intelligence", "CFO Summary"]
-)
-
-# ============================================================
-# ACTION PORTFOLIO
-# ============================================================
-ACTIONS = [
-    {"name": "Knowledge Capture & Shadow Staffing", "cost_to_execute": 420000, "impact_pct": 0.32, "time_to_impact_days": 30},
-    {"name": "Manager Coaching Sprint", "cost_to_execute": 180000, "impact_pct": 0.18, "time_to_impact_days": 60},
-    {"name": "Accelerated Internal Mobility Program", "cost_to_execute": 260000, "impact_pct": 0.22, "time_to_impact_days": 90},
-]
-
-PROJECTED_EXITS_180D = 20
-
-portfolio_budget = DEFAULT_PORTFOLIO_BUDGET
-portfolio_horizon = (
-    active_client.get("strategy", {}).get("horizon_days", DEFAULT_PORTFOLIO_HORIZON_DAYS)
-    if active_client else DEFAULT_PORTFOLIO_HORIZON_DAYS
-)
-
-client_financials = active_client.get("financials") if active_client else None
-
-projected_exposure = resolve_client_exposure(
-    scenario_context=scenario_context,
-    projected_exits=PROJECTED_EXITS_180D,
-    client_financials=client_financials,
-    base_hidden_cost_context=BASE_HIDDEN_COST_CONTEXT
-)
-
-portfolio = optimise_action_portfolio(
-    actions=ACTIONS,
-    total_budget=portfolio_budget,
-    max_time_days=portfolio_horizon,
-    projected_exposure=projected_exposure
-)
-
-# ============================================================
-# MAIN VIEW (PAGE ROUTING)
-# ============================================================
-if page == "Overview":
-    st.title("The Catalyst")
-    st.caption("From people signals to executive decisions.")
-
-elif page == "KPI Intelligence":
-    if not selected_kpi:
-        st.warning("No KPI selected.")
-    else:
-        current_value = resolve_current_kpi_value(
-            kpi=selected_kpi,
-            attrition_rate=attrition_rate,
-        )
-
-        render_kpi_current_performance(
-            kpi=selected_kpi,
-            current_value=current_value,
-            active_client=active_client,
-        )
-
-elif page == "CFO Summary":
-    st.title("Optimal Action Portfolio")
-
-    for action in portfolio.get("selected_actions", []):
-        with st.container(border=True):
-            st.subheader(action["name"])
-            c1, c2, c3 = st.columns(3)
-            c1.metric("Cost", f"US${action['cost_to_execute']/1e6:.2f}M")
-            c2.metric("Cost Avoided", f"US${action['cost_avoided']/1e6:.2f}M")
-            c3.metric("ROI", f"{action['roi']:.2f}×")
-
-# ============================================================
-# SAVE SCENARIO
-# ============================================================
+st.markdown("## Executive Decision Narrative")
+st.markdown(narrative["headline"])
+for b in narrative["bullets"]:
+    st.markdown(f"- {b}")
 st.markdown("---")
-st.subheader("Save Scenario")
-
-scenario_name = st.text_input("Scenario name")
-
-if st.button("Save Scenario"):
-    if not client_id:
-        st.error("Select an active client before saving.")
-    elif not scenario_name:
-        st.error("Scenario name is required.")
-    else:
-        save_scenario(
-            scenario_name=scenario_name,
-            client_name=client_id,
-            persona=persona,
-            inputs={
-                "attrition_rate": attrition_rate,
-                "scenario_context": scenario_context,
-                "portfolio_budget": portfolio_budget,
-                "portfolio_horizon": portfolio_horizon,
-            },
-            derived={
-                "exposure": projected_exposure,
-                "kpi_status": classify_kpi(
-                    attrition_rate,
-                    resolve_kpi_thresholds("attrition", active_client),
-                ),
-            },
-            portfolio=portfolio,
-        )
-        st.success("Scenario saved.")
+st.markdown(narrative["framing"])
