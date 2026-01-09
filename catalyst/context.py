@@ -21,7 +21,6 @@ DEFAULT_CONTEXT = {
     }
 }
 
-
 def get_active_context() -> dict:
     """
     Single source of truth for Catalyst context.
@@ -30,3 +29,22 @@ def get_active_context() -> dict:
         st.session_state["catalyst_context"] = DEFAULT_CONTEXT.copy()
 
     return st.session_state["catalyst_context"]
+
+def update_context_from_wizard(
+    *,
+    persona: str,
+    posture: str,
+    kpis: dict,
+):
+    """
+    Controlled entry point for Wizard → Context writes.
+    """
+
+    context = get_active_context()
+
+    context["persona"] = persona
+    context["strategy"]["posture"] = posture
+
+    for kpi, state in kpis.items():
+        if kpi in context["kpis"]:
+            context["kpis"][kpi].update(state)
