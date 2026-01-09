@@ -126,6 +126,27 @@ def resolve_client_exposure(
     return (adjusted + adjusted * productivity_loss) * projected_exits
 
 # ============================================================
+# KPI CURRENT VALUE RESOLVER (v0.8)
+# ============================================================
+def resolve_current_kpi_value(
+    *,
+    kpi: str,
+    attrition_rate: float,
+):
+    """
+    Temporary resolver for current-period KPI values.
+    Replaced by real data ingestion in v0.9.
+    """
+
+    DEMO_VALUES = {
+        "attrition": attrition_rate,
+        "engagement": 67.5,
+        "sentiment": 0.18,
+    }
+
+    return DEMO_VALUES.get(kpi)
+
+# ============================================================
 # DEMO TREND GENERATOR (v0.8 – Milestone 2)
 # ============================================================
 def generate_demo_trend(current_value: float, periods: int = 6):
@@ -442,12 +463,16 @@ if page == "Overview":
     st.caption("From people signals to executive decisions.")
 
 elif page == "KPI Intelligence":
-    render_kpi_current_performance(
-        kpi=selected_kpi,
-        current_value=attrition_rate,
-        active_client=active_client,
+    current_value = resolve_current_kpi_value(
+    kpi=selected_kpi,
+    attrition_rate=attrition_rate,
     )
 
+    render_kpi_current_performance(
+        kpi=selected_kpi,
+        current_value=current_value,
+        active_client=active_client,
+    )
 elif page == "CFO Summary":
     st.title("Optimal Action Portfolio")
 
