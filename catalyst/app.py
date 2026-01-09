@@ -1,3 +1,4 @@
+from cProfile import label
 import streamlit as st
 import json
 from pathlib import Path
@@ -218,11 +219,31 @@ def render_kpi_current_performance(
     thresholds = resolve_kpi_thresholds(kpi, active_client)
     status = classify_kpi(current_value, thresholds)
 
-    status_icon = {
-        "green": "🟢",
-        "amber": "🟠",
-        "red": "🔴"
-    }[status]
+    STATUS_VISUALS = {
+    "low": {
+        "icon": "🟢",
+        "label": "Low risk",
+        "color": "green",
+    },
+    "moderate": {
+        "icon": "🟡",
+        "label": "Moderate risk",
+        "color": "orange",
+    },
+    "high": {
+        "icon": "🔴",
+        "label": "High risk",
+        "color": "red",
+    },
+    "unknown": {
+        "icon": "⚪",
+        "label": "Unknown",
+        "color": "grey",
+    },
+}
+    visual = STATUS_VISUALS.get(status, STATUS_VISUALS["unknown"])
+    status_icon = visual["icon"]
+    status_label = visual["label"]
 
     st.markdown(f"## {label} — Current Performance")
     st.caption("Observed performance for the current period")
@@ -230,10 +251,10 @@ def render_kpi_current_performance(
     # ---- Headline
     c1, c2, c3 = st.columns(3)
     c1.metric(label, f"{current_value}%")
-    c2.metric("Status", f"{status_icon} {status.upper()}")
+    c2.metric("Status", f"{status_icon} {status_label}")
     c3.metric(
         "Tolerance",
-        f"{thresholds['green']}–{thresholds['amber']}%"
+        f"{thresholds['low']}–{thresholds['high']}%"
     )
 
     st.markdown("---")
