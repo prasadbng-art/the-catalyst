@@ -124,6 +124,18 @@ def resolve_client_exposure(
     return (adjusted + adjusted * productivity_loss) * projected_exits
 
 # ============================================================
+# DEMO TREND GENERATOR (v0.8 – Milestone 2)
+# ============================================================
+def generate_demo_trend(current_value: float, periods: int = 6):
+    """
+    Generates a simple synthetic trend ending at current_value.
+    Used only for visual grounding (no analytics).
+    """
+    step = current_value * 0.02
+    base = current_value - (step * (periods - 1))
+    return [round(base + i * step, 2) for i in range(periods)]
+
+# ============================================================
 # CLIENT CONTEXT SUMMARY CARD (v0.8 – Milestone 1)
 # ============================================================
 def render_client_context_summary(active_client: dict):
@@ -191,6 +203,90 @@ def render_client_context_summary(active_client: dict):
             help=", ".join(missing) if missing else "All required data present"
         )
 
+# ============================================================
+# KPI CURRENT PERFORMANCE PAGE (v0.8 – Milestone 2)
+# ============================================================
+def render_kpi_current_performance(
+    *,
+    kpi: str,
+    current_value: float,
+    active_client: dict | None
+):
+    meta = KPI_REGISTRY[kpi]
+    label = meta["label"]
+
+    thresholds = resolve_kpi_thresholds(kpi, active_client)
+    status = classify_kpi(current_value, thresholds)
+
+    status_icon = {
+        "green": "🟢",
+        "amber": "🟠",
+        "red": "🔴"
+    }[status]
+
+    st.markdown(f"## {label} — Current Performance")
+    st.caption("Observed performance for the current period")
+
+    # ---- Headline
+    c1, c2, c3 = st.columns(3)
+    c1.metric(label, f"{current_value}%")
+    c2.metric("Status", f"{status_icon} {status.upper()}")
+    c3.metric(
+        "Tolerance",
+        f"{thresholds['green']}–{thresholds['amber']}%"
+    )
+
+    st.markdown("---")
+
+    # ---- Trend
+    trend = generate_demo_trend(current_value)
+
+    st.markdown("### Recent Trend")
+    st.line_chart(trend, height=220)
+
+    st.markdown("---")
+
+    # ---- Interpretation
+    if trend[-1] > trend[0]:
+        direction = "worsening"
+    elif trend[-1] < trend[0]:
+        direction = "improving"
+    else:
+        direction = "stable"
+
+    st.markdown("### Interpretation")
+    st.write(
+        f"{label} is currently **{direction}** and sits in the "
+        f"**{status.upper()}** zone relative to client thresholds. "
+        "This establishes the baseline for predictive and prescriptive analysis."
+    )
+
+    st.markdown("---")
+
+    # ---- Signals
+    st.markdown("### Signals in Scope")
+
+    cols = st.columns(3)
+    for i, metric_key in enumerate(meta["metrics"]):
+        signal = KPI_REGISTRY.get("attrition", {}).get("metrics", [])
+        metric = None
+        if metric_key in signal:
+            metric = None
+
+        metric = None
+        from metric_registry import METRIC_REGISTRY
+        metric = METRIC_REGISTRY.get(metric_key)
+
+        if not metric:
+            continue
+
+        value = metric.get("default", "—")
+        if metric["type"] == "percentage":
+            value = f"{value}%"
+        elif metric["type"] == "currency":
+            value = f"US${value:,.0f}"
+
+        cols[i % 3].metric(metric["label"], value)
 
 # ============================================================
 # SIDEBAR — CLIENT CONTROL PLANE
@@ -316,15 +412,39 @@ portfolio = optimise_action_portfolio(
 # ============================================================
 # MAIN VIEW
 # ============================================================
-st.title("Optimal Action Portfolio")
+# ============================================================
+# MAIN VIEW (PAGE-AWARE)
+# ============================================================
+if page == "Overview":
+    st.title("The Catalyst")
+    st.caption("From people signals to executive decisions.")
 
-for action in portfolio.get("selected_actions", []):
-    with st.container(border=True):
-        st.subheader(action["name"])
-        c1, c2, c3 = st.columns(3)
-        c1.metric("Cost", f"US${action['cost_to_execute']/1e6:.2f}M")
-        c2.metric("Cost Avoided", f"US${action['cost_avoided']/1e6:.2f}M")
-        c3.metric("ROI", f"{action['roi']:.2f}×")
+elif page == "KPI Intelligence":
+    if not selected_kpi:
+        st.warning("No KPI enabled for this client.")
+    elif selected_kpi == "attrition":
+        render_kpi_current_performance(
+            kpi="attrition",
+            current_value=attrition_rate,
+            active_client=active_client
+        )
+    else:
+        st.info("Current performance view for this KPI is coming next.")
+
+elif page == "CFO Summary":
+    st.title("Optimal Action Portfolio")
+
+    for action in portfolio.get("selected_actions", []):
+        with st.container(border=True):
+            st.subheader(action["name"])
+            c1, c2, c3 = st.columns(3)
+            c1.metric("Cost", f"US${action['cost_to_execute']/1e6:.2f}M")
+            c2.metric("Cost Avoided", f"US${action['cost_avoided']/1e6:.2f}M")
+            c3.metric("ROI", f"{action['roi']:.2f}×")
+
+elif page == "Scenario Compare":
+    st.info("Scenario comparison view remains unchanged.")
+
 
 # ============================================================
 # SAVE SCENARIO
