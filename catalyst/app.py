@@ -1,354 +1,62 @@
-# ================================
-# Catalyst v0.9 — Scenario Comparison
-# End-to-End Reference app.py
-# ================================
+# ==========================================================
+# Catalyst — Main App Router
+# (Corrected to match actual repo structure)
+# ==========================================================
 
 import streamlit as st
-from enum import Enum
-from typing import Dict, List, Optional, Literal
-from dataclasses import dataclass
-from pydantic import BaseModel, Field, validator
 
-# ================================
-# Page config
-# ================================
+# ----------------------------------------------------------
+# Existing Catalyst imports (verified from your tree)
+# ----------------------------------------------------------
+
+from wizard.wizard import render_wizard
+from visuals.kpi_current import render_kpi_current
+from narrative_engine import render_sentiment_health
+
+# ----------------------------------------------------------
+# NEW: v0.9 Scenario Comparison
+# ----------------------------------------------------------
+
+from scenario_v09 import render_scenario_v09
+
+
+# ==========================================================
+# Page Config (ONLY here)
+# ==========================================================
 
 st.set_page_config(
-    page_title="Catalyst v0.9",
+    page_title="Catalyst",
     layout="wide"
 )
 
 st.title("Catalyst")
-st.caption("Scenario Comparison — Decision Trade-off Intelligence (v0.9)")
 
-# ================================
-# Enums
-# ================================
+# ==========================================================
+# Navigation
+# ==========================================================
 
-class QualitativeLevel(str, Enum):
-    low = "low"
-    medium = "medium"
-    high = "high"
+page = st.sidebar.selectbox(
+    "Navigate",
+    [
+        "Wizard",
+        "Sentiment Health",
+        "Current KPIs",
+        "Scenario Comparison (v0.9)"
+    ]
+)
 
-class TimeSpeed(str, Enum):
-    fast = "fast"
-    moderate = "moderate"
-    slow = "slow"
+# ==========================================================
+# Router
+# ==========================================================
 
-class PostureSignal(str, Enum):
-    control_oriented = "control_oriented"
-    capability_building = "capability_building"
-    growth_oriented = "growth_oriented"
-    defensive = "defensive"
+if page == "Wizard":
+    render_wizard()
 
-class Direction(str, Enum):
-    up = "up"
-    down = "down"
-    neutral = "neutral"
+elif page == "Sentiment Health":
+    render_sentiment_health()
 
-# ================================
-# Scenario Schema (v0.9)
-# ================================
+elif page == "Current KPIs":
+    render_kpi_current()
 
-class ScenarioIdentity(BaseModel):
-    id: str = Field(..., pattern="^[a-z0-9_]+$")
-    label: str
-    intent: str
-
-class AssumptionBlock(BaseModel):
-    external: Dict[str, str]
-    internal: Dict[str, str]
-
-class InterventionBlock(BaseModel):
-    interventions: List[str]
-
-    @validator("interventions")
-    def must_have_interventions(cls, v):
-        if not v:
-            raise ValueError("At least one intervention required.")
-        return v
-
-class CapitalConstraint(BaseModel):
-    budget_range: QualitativeLevel
-    spend_profile: str
-
-class TimeConstraint(BaseModel):
-    horizon_months: int
-    first_signal_months: int
-
-    @validator("first_signal_months")
-    def signal_before_horizon(cls, v, values):
-        if "horizon_months" in values and v >= values["horizon_months"]:
-            raise ValueError("First signal must be before horizon.")
-        return v
-
-class ConstraintBlock(BaseModel):
-    capital: CapitalConstraint
-    time: TimeConstraint
-
-class AxisExposure(BaseModel):
-    capital_intensity: QualitativeLevel
-    time_to_impact: TimeSpeed
-    execution_risk: QualitativeLevel
-    cultural_risk: QualitativeLevel
-    posture_signal: PostureSignal
-
-class MetricExpectation(BaseModel):
-    expected_direction: Direction
-    confidence: QualitativeLevel
-
-class MetricMapping(BaseModel):
-    metrics: Dict[str, MetricExpectation]
-
-class ScenarioV09(BaseModel):
-    identity: ScenarioIdentity
-    assumptions: AssumptionBlock
-    interventions: InterventionBlock
-    constraints: ConstraintBlock
-    axis_exposure: AxisExposure
-    metrics: Optional[MetricMapping] = None
-
-# ================================
-# Example Scenarios (Embedded)
-# ================================
-
-SCENARIOS = {
-    "Cost Containment": ScenarioV09(
-        identity=ScenarioIdentity(
-            id="cost_containment",
-            label="Cost Containment",
-            intent="Stabilise attrition through short-term control mechanisms"
-        ),
-        assumptions=AssumptionBlock(
-            external={"labour_market": "tight"},
-            internal={"leadership_alignment": "medium"}
-        ),
-        interventions=InterventionBlock(
-            interventions=["policy_enforcement", "manager_targeting"]
-        ),
-        constraints=ConstraintBlock(
-            capital=CapitalConstraint(
-                budget_range=QualitativeLevel.low,
-                spend_profile="front_loaded"
-            ),
-            time=TimeConstraint(
-                horizon_months=12,
-                first_signal_months=3
-            )
-        ),
-        axis_exposure=AxisExposure(
-            capital_intensity=QualitativeLevel.low,
-            time_to_impact=TimeSpeed.fast,
-            execution_risk=QualitativeLevel.low,
-            cultural_risk=QualitativeLevel.medium,
-            posture_signal=PostureSignal.control_oriented
-        )
-    ),
-    "Capability Build": ScenarioV09(
-        identity=ScenarioIdentity(
-            id="capability_build",
-            label="Capability Build",
-            intent="Reduce attrition risk by building durable people capability"
-        ),
-        assumptions=AssumptionBlock(
-            external={"labour_market": "tight"},
-            internal={"leadership_alignment": "high"}
-        ),
-        interventions=InterventionBlock(
-            interventions=[
-                "manager_coaching_program",
-                "career_pathing_framework",
-                "listening_infrastructure"
-            ]
-        ),
-        constraints=ConstraintBlock(
-            capital=CapitalConstraint(
-                budget_range=QualitativeLevel.medium,
-                spend_profile="phased"
-            ),
-            time=TimeConstraint(
-                horizon_months=18,
-                first_signal_months=6
-            )
-        ),
-        axis_exposure=AxisExposure(
-            capital_intensity=QualitativeLevel.medium,
-            time_to_impact=TimeSpeed.slow,
-            execution_risk=QualitativeLevel.medium,
-            cultural_risk=QualitativeLevel.low,
-            posture_signal=PostureSignal.capability_building
-        )
-    )
-}
-
-# ================================
-# Comparison Engine
-# ================================
-
-QUAL_MAP = {"low": 1, "medium": 2, "high": 3}
-TIME_MAP = {"fast": 3, "moderate": 2, "slow": 1}
-
-@dataclass
-class AxisDelta:
-    axis: str
-    direction: Literal["A_over_B", "B_over_A"]
-    magnitude: Literal["small", "moderate", "large"]
-    interpretation: str
-
-def delta_magnitude(diff: int) -> str:
-    if abs(diff) == 1:
-        return "small"
-    elif abs(diff) == 2:
-        return "moderate"
-    return "large"
-
-def compare_axes(a: ScenarioV09, b: ScenarioV09) -> List[AxisDelta]:
-    deltas = []
-
-    # Capital
-    diff = QUAL_MAP[a.axis_exposure.capital_intensity] - QUAL_MAP[b.axis_exposure.capital_intensity]
-    if diff != 0:
-        deltas.append(AxisDelta(
-            axis="capital",
-            direction="A_over_B" if diff > 0 else "B_over_A",
-            magnitude=delta_magnitude(diff),
-            interpretation="Higher capital commitment in exchange for broader intervention scope"
-        ))
-
-    # Time
-    diff = TIME_MAP[a.axis_exposure.time_to_impact] - TIME_MAP[b.axis_exposure.time_to_impact]
-    if diff != 0:
-        deltas.append(AxisDelta(
-            axis="time",
-            direction="A_over_B" if diff > 0 else "B_over_A",
-            magnitude=delta_magnitude(diff),
-            interpretation="Faster visible impact at the cost of long-term durability"
-        ))
-
-    # Execution risk (lower is better)
-    diff = QUAL_MAP[a.axis_exposure.execution_risk] - QUAL_MAP[b.axis_exposure.execution_risk]
-    if diff != 0:
-        deltas.append(AxisDelta(
-            axis="execution_risk",
-            direction="A_over_B" if diff < 0 else "B_over_A",
-            magnitude=delta_magnitude(diff),
-            interpretation="Lower execution risk due to organisational familiarity"
-        ))
-
-    # Cultural risk (lower is better)
-    diff = QUAL_MAP[a.axis_exposure.cultural_risk] - QUAL_MAP[b.axis_exposure.cultural_risk]
-    if diff != 0:
-        deltas.append(AxisDelta(
-            axis="cultural_risk",
-            direction="A_over_B" if diff < 0 else "B_over_A",
-            magnitude=delta_magnitude(diff),
-            interpretation="Lower likelihood of employee backlash or disengagement"
-        ))
-
-    # Posture
-    if a.axis_exposure.posture_signal != b.axis_exposure.posture_signal:
-        deltas.append(AxisDelta(
-            axis="posture",
-            direction="A_over_B",
-            magnitude="moderate",
-            interpretation=f"Signals a shift toward {a.axis_exposure.posture_signal.replace('_', ' ')} leadership posture"
-        ))
-
-    return deltas
-
-def detect_asymmetry(deltas: List[AxisDelta]) -> str:
-    gains = [d for d in deltas if d.direction == "A_over_B"]
-    losses = [d for d in deltas if d.direction == "B_over_A"]
-
-    if gains and losses:
-        return "balanced_tradeoff"
-    if gains and not losses:
-        return "dominant_but_risky"
-    if losses and not gains:
-        return "defensive_choice"
-    return "neutral"
-
-# ================================
-# Narrative Engine
-# ================================
-
-def generate_narrative(a: ScenarioV09, b: ScenarioV09, deltas, asymmetry):
-    bullets = []
-    for d in deltas[:3]:
-        bullets.append(
-            f"You gain advantage on **{d.axis.replace('_', ' ')}** at the cost of corresponding trade-offs."
-        )
-
-    framing_map = {
-        "balanced_tradeoff": "This is a deliberate trade between speed, cost, risk, and organisational posture.",
-        "dominant_but_risky": "This option appears advantaged but concentrates risk in fewer bets.",
-        "defensive_choice": "This choice limits downside exposure while constraining long-term upside.",
-        "neutral": "These scenarios differ more in posture than in expected outcomes."
-    }
-
-    return {
-        "headline": f"Choosing **{a.identity.label}** over **{b.identity.label}** involves the following trade-offs:",
-        "bullets": bullets,
-        "framing": framing_map[asymmetry]
-    }
-
-# ================================
-# UI Rendering
-# ================================
-
-st.header("Scenario Comparison")
-
-col1, col2 = st.columns(2)
-with col1:
-    a_label = st.selectbox("Scenario A", list(SCENARIOS.keys()), index=1)
-with col2:
-    b_label = st.selectbox("Scenario B", list(SCENARIOS.keys()), index=0)
-
-if a_label == b_label:
-    st.error("Please select two different scenarios.")
-    st.stop()
-
-scenario_a = SCENARIOS[a_label]
-scenario_b = SCENARIOS[b_label]
-
-deltas = compare_axes(scenario_a, scenario_b)
-if not deltas:
-    st.error("Catalyst cannot identify a meaningful decision difference between these scenarios.")
-    st.stop()
-
-asymmetry = detect_asymmetry(deltas)
-
-left, center, right = st.columns([3, 2, 3])
-
-def render_card(s):
-    st.subheader(s.identity.label)
-    st.caption(s.identity.intent)
-    st.markdown("**Constraints**")
-    st.markdown(f"- Capital: {s.constraints.capital.budget_range.value}")
-    st.markdown(f"- Horizon: {s.constraints.time.horizon_months} months")
-    st.markdown(f"- First signal: {s.constraints.time.first_signal_months} months")
-    st.markdown("**Leadership posture**")
-    st.info(s.axis_exposure.posture_signal.replace("_", " ").title())
-
-with left:
-    render_card(scenario_a)
-
-with center:
-    st.markdown("### Trade-offs")
-    for d in deltas:
-        arrow = "⬅️" if d.direction == "A_over_B" else "➡️"
-        st.markdown(f"**{d.axis.replace('_', ' ').title()}** {arrow}  \n{d.interpretation}")
-
-with right:
-    render_card(scenario_b)
-
-st.divider()
-
-narrative = generate_narrative(scenario_a, scenario_b, deltas, asymmetry)
-
-st.markdown("## Executive Decision Narrative")
-st.markdown(narrative["headline"])
-for b in narrative["bullets"]:
-    st.markdown(f"- {b}")
-st.markdown("---")
-st.markdown(narrative["framing"])
+elif page == "Scenario Comparison (v0.9)":
+    render_scenario_v09()
