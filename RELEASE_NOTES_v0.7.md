@@ -12,6 +12,7 @@
 - Single KPI active at a time
 - Narrative depth limited to attrition
 - No multi-scenario overlays yet
-
+- v0.9 requires Pydantic v2 (Field pattern, not regex)  
+  
 ## Status
 Stable. Ready for demos and controlled pilots.
