@@ -3,6 +3,7 @@ import streamlit as st
 import json
 from pathlib import Path
 from copy import deepcopy
+from visuals.kpi_current import render_kpi_current_performance
 
 # ============================================================
 # APP CONFIG
@@ -441,16 +442,11 @@ if page == "Overview":
     st.caption("From people signals to executive decisions.")
 
 elif page == "KPI Intelligence":
-    if not selected_kpi:
-        st.warning("No KPI enabled for this client.")
-    elif selected_kpi == "attrition":
-        render_kpi_current_performance(
-            kpi="attrition",
-            current_value=attrition_rate,
-            active_client=active_client
-        )
-    else:
-        st.info("Current performance view for this KPI is coming next.")
+    render_kpi_current_performance(
+        kpi=selected_kpi,
+        current_value=attrition_rate,
+        active_client=active_client,
+    )
 
 elif page == "CFO Summary":
     st.title("Optimal Action Portfolio")
