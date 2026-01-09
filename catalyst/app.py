@@ -4,6 +4,7 @@ from wizard.wizard import run_client_wizard
 from visuals.kpi_current import render_kpi_current_performance
 from narrative_engine import generate_narrative
 from scenario_v09 import render_scenario_v09
+from context import get_active_context
 
 
 st.set_page_config(page_title="Catalyst", layout="wide")
@@ -37,21 +38,11 @@ def render_sentiment_health_page():
     st.header("Sentiment Health")
     st.caption("Narrative decision support")
 
-    persona = st.selectbox(
-        "Persona",
-        ["CEO", "CFO", "CHRO"]
-    )
+    context = get_active_context()
 
-    kpi_state = {
-        "attrition_rate": st.slider(
-            "Attrition Rate (%)",
-            0.0, 40.0, 18.0, 0.5
-        ),
-        "status": st.selectbox(
-            "Status",
-            ["green", "amber", "red"]
-        )
-    }
+    persona = context["persona"]
+    strategy = context["strategy"]
+    kpi_state = context["kpis"]["attrition"]
 
     narrative = generate_narrative(
         kpi="attrition",
