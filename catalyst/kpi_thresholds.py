@@ -41,15 +41,24 @@ def resolve_kpi_thresholds(kpi: str, active_client: dict | None):
 
 def classify_kpi(value: float, thresholds: dict) -> str:
     """
-    Classifies KPI value into green / amber / red.
+    Classifies KPI value using semantic thresholds:
+    low / moderate / high
     """
-    if value <= thresholds["green"]["max"]:
-        return "green"
 
-    if (
-        "amber" in thresholds
-        and thresholds["amber"]["min"] <= value <= thresholds["amber"]["max"]
-    ):
-        return "amber"
+    if not thresholds:
+        return "unknown"
 
-    return "red"
+    low = thresholds.get("low")
+    moderate = thresholds.get("moderate")
+    high = thresholds.get("high")
+
+    if low is None or moderate is None or high is None:
+        return "unknown"
+
+    if value <= low:
+        return "low"
+    elif value <= moderate:
+        return "moderate"
+    else:
+        return "high"
+
