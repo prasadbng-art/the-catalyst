@@ -10,29 +10,22 @@ from context import get_active_context
 st.set_page_config(page_title="Catalyst", layout="wide")
 st.title("Catalyst")
 
-
 def render_current_kpis_page():
     st.header("Current KPI Performance")
+context = get_active_context()
 
-    kpi = st.selectbox(
-        "Select KPI",
-        ["attrition", "engagement", "sentiment"]
-    )
+kpi = st.selectbox(
+    "Select KPI",
+    list(context["kpis"].keys())
+)
 
-    current_value = st.slider(
-        "Current Value (%)",
-        min_value=0.0,
-        max_value=100.0,
-        value=12.5,
-        step=0.1,
-    )
+kpi_state = context["kpis"][kpi]
 
-    render_kpi_current_performance(
-        kpi=kpi,
-        current_value=current_value,
-        active_client=None,
-    )
-
+render_kpi_current_performance(
+    kpi=kpi,
+    current_value=kpi_state["value"],
+    active_client=None,
+)
 
 def render_sentiment_health_page():
     st.header("Sentiment Health")

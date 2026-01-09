@@ -7,7 +7,15 @@ DEFAULT_CONTEXT = {
     },
     "kpis": {
         "attrition": {
-            "attrition_rate": 18.0,
+            "value": 18.0,
+            "status": "amber"
+        },
+        "engagement": {
+            "value": 72.0,
+            "status": "green"
+        },
+        "sentiment": {
+            "value": 64.0,
             "status": "amber"
         }
     }
@@ -18,7 +26,6 @@ def get_active_context() -> dict:
     """
     Single source of truth for Catalyst context.
     """
-
     if "catalyst_context" not in st.session_state:
         st.session_state["catalyst_context"] = DEFAULT_CONTEXT.copy()
 
