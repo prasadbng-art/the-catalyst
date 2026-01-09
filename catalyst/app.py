@@ -1,32 +1,18 @@
-# ==========================================================
-# Catalyst — Main App Router
-# (Corrected to match actual repo structure)
-# ==========================================================
-
 import streamlit as st
-
-# ----------------------------------------------------------
-# Existing Catalyst imports (verified from your tree)
-# ----------------------------------------------------------
 
 from wizard.wizard import run_client_wizard
 from visuals.kpi_current import render_kpi_current_performance
-from narrative_engine import render_sentiment_health
-
-# ----------------------------------------------------------
-# NEW: v0.9 Scenario Comparison
-# ----------------------------------------------------------
-
+from narrative_engine import generate_narrative
 from scenario_v09 import render_scenario_v09
 
-def render_current_kpis_page():
-    """
-    Temporary wrapper to render current KPI performance as a page.
-    """
 
+st.set_page_config(page_title="Catalyst", layout="wide")
+st.title("Catalyst")
+
+
+def render_current_kpis_page():
     st.header("Current KPI Performance")
 
-    # --- Demo selector (can later be client-driven)
     kpi = st.selectbox(
         "Select KPI",
         ["attrition", "engagement", "sentiment"]
@@ -40,27 +26,51 @@ def render_current_kpis_page():
         step=0.1,
     )
 
-    # --- Render using existing component
     render_kpi_current_performance(
         kpi=kpi,
         current_value=current_value,
         active_client=None,
     )
 
-# ==========================================================
-# Page Config (ONLY here)
-# ==========================================================
 
-st.set_page_config(
-    page_title="Catalyst",
-    layout="wide"
-)
+def render_sentiment_health_page():
+    st.header("Sentiment Health")
+    st.caption("Narrative decision support")
 
-st.title("Catalyst")
+    persona = st.selectbox(
+        "Persona",
+        ["CEO", "CFO", "CHRO"]
+    )
 
-# ==========================================================
-# Navigation
-# ==========================================================
+    kpi_state = {
+        "attrition_rate": st.slider(
+            "Attrition Rate (%)",
+            0.0, 40.0, 18.0, 0.5
+        ),
+        "status": st.selectbox(
+            "Status",
+            ["green", "amber", "red"]
+        )
+    }
+
+    narrative = generate_narrative(
+        kpi="attrition",
+        kpi_state=kpi_state,
+        client_context=None,
+        persona=persona,
+        strategy_context={"posture": "cost"},
+    )
+
+    st.divider()
+
+    st.subheader(narrative["headline"])
+    st.markdown(narrative["interpretation"])
+    st.markdown("**Risk statement**")
+    st.markdown(narrative["risk_statement"])
+    st.markdown("**Recommended posture**")
+    st.info(narrative["recommended_posture"])
+    st.caption(f"Confidence: {narrative['confidence']}")
+
 
 page = st.sidebar.selectbox(
     "Navigate",
@@ -72,18 +82,15 @@ page = st.sidebar.selectbox(
     ]
 )
 
-# ==========================================================
-# Router
-# ==========================================================
-
 if page == "Wizard":
     run_client_wizard()
 
 elif page == "Sentiment Health":
-    render_sentiment_health()
+    render_sentiment_health_page()
 
 elif page == "Current KPIs":
     render_current_kpis_page()
 
 elif page == "Scenario Comparison (v0.9)":
     render_scenario_v09()
+# ============================================================
