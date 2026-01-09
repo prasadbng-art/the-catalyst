@@ -124,6 +124,75 @@ def resolve_client_exposure(
     return (adjusted + adjusted * productivity_loss) * projected_exits
 
 # ============================================================
+# CLIENT CONTEXT SUMMARY CARD (v0.8 – Milestone 1)
+# ============================================================
+def render_client_context_summary(active_client: dict):
+    """
+    Read-only summary of the active client context.
+    No state mutation. No calculations.
+    """
+
+    client = active_client.get("client", {})
+    strategy = active_client.get("strategy", {})
+    kpis = active_client.get("kpis", {})
+    financials = active_client.get("financials", {})
+
+    enabled_kpis = [
+        k for k, v in kpis.items()
+        if isinstance(v, dict) and v.get("enabled")
+    ]
+
+    with st.container(border=True):
+        st.markdown("### 🧭 Client Context")
+
+        # ---- Row 1: Identity
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Client", client.get("name", "—"))
+        c2.metric("Industry", client.get("industry", "—"))
+        c3.metric("Region", client.get("region", "—"))
+
+        st.markdown("---")
+
+        # ---- Row 2: Strategy
+        c4, c5, c6 = st.columns(3)
+        c4.metric("Strategic Posture", strategy.get("posture", "—").title())
+        c5.metric("Planning Horizon (days)", strategy.get("horizon_days", "—"))
+        c6.metric("Primary KPI", kpis.get("primary", "—").title())
+
+        st.markdown("---")
+
+        # ---- Row 3: Calibration Status
+        c7, c8, c9 = st.columns(3)
+
+        c7.metric(
+            "Enabled KPIs",
+            len(enabled_kpis),
+            help=", ".join(enabled_kpis) if enabled_kpis else "None"
+        )
+
+        c8.metric(
+            "Financial Assumptions",
+            "Yes" if financials else "No"
+        )
+
+        # ---- Data readiness checks (safe, non-fatal)
+        data_ready = True
+        missing = []
+
+        try:
+            _ = BASE_HIDDEN_COST_CONTEXT
+        except Exception:
+            data_ready = False
+            missing.append("Hidden Cost Context")
+
+        c9.metric(
+            "Data Readiness",
+            "Ready" if data_ready else "Partial",
+            help=", ".join(missing) if missing else "All required data present"
+        )
+
+
+# ============================================================
 # SIDEBAR — CLIENT CONTROL PLANE
 # ============================================================
 st.sidebar.title("The Catalyst")
@@ -145,6 +214,13 @@ if st.sidebar.button("Run Client Calibration Wizard"):
 
 client_id = st.session_state.get("active_client")
 active_client = get_active_client(st.session_state)
+
+# ============================================================
+# CLIENT CONTEXT SUMMARY (v0.8)
+# ============================================================
+if active_client:
+    render_client_context_summary(active_client)
+    st.markdown("")  # small visual spacer
 
 DEV_MODE = False #toggle manually
 if DEV_MODE and active_client:
