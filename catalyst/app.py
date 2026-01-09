@@ -6,9 +6,62 @@ from narrative_engine import generate_narrative
 from scenario_v09 import render_scenario_v09
 from context import get_active_context
 
+# --------------------------------------------------
+# Context editor (DEFINE FIRST)
+# --------------------------------------------------
 
+def render_context_editor():
+    """
+    Temporary demo/control panel for Catalyst context.
+    This is NOT part of page logic.
+    """
+
+    with st.sidebar.expander("Context (Demo Control)", expanded=False):
+        context = get_active_context()
+
+        # ---- Persona
+        context["persona"] = st.selectbox(
+            "Persona",
+            ["CEO", "CFO", "CHRO"],
+            index=["CEO", "CFO", "CHRO"].index(context["persona"])
+        )
+
+        # ---- Strategy posture
+        context["strategy"]["posture"] = st.selectbox(
+            "Strategy posture",
+            ["cost", "growth", "balanced"],
+            index=["cost", "growth", "balanced"].index(
+                context["strategy"]["posture"]
+            )
+        )
+
+        st.markdown("### KPI Baseline")
+
+        for kpi, kpi_state in context["kpis"].items():
+            st.markdown(f"**{kpi.title()}**")
+
+            kpi_state["value"] = st.slider(
+                f"{kpi} value",
+                min_value=0.0,
+                max_value=100.0,
+                value=float(kpi_state["value"]),
+                step=0.5,
+                key=f"{kpi}_value"
+            )
+
+            kpi_state["status"] = st.selectbox(
+                f"{kpi} status",
+                ["green", "amber", "red"],
+                index=["green", "amber", "red"].index(kpi_state["status"]),
+                key=f"{kpi}_status"
+            )
+# --------------------------------------------------
+# App setup
+# --------------------------------------------------
 st.set_page_config(page_title="Catalyst", layout="wide")
 st.title("Catalyst")
+
+render_context_editor()
 
 def render_current_kpis_page():
     st.header("Current KPI Performance")
