@@ -127,6 +127,10 @@ def resolve_client_exposure(
 # KPI CURRENT VALUE RESOLVER (DEMO — v0.8)
 # ============================================================
 def resolve_current_kpi_value(*, kpi: str, attrition_rate: float):
+    """
+    v0.8 demo resolver.
+    Normalizes all KPIs onto a 0–100 scale.
+    """
     DEMO_VALUES = {
         "attrition": attrition_rate,
         "engagement": 67.5,

@@ -14,9 +14,9 @@ KPI_THRESHOLDS = {
         "high": 80
     },
     "sentiment": {
-        "low": -0.2,
-        "moderate": 0.2,
-        "high": 0.5
+        "low": 50,
+        "moderate": 60,
+        "high": 70
     }
 }
 
