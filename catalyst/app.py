@@ -9,7 +9,7 @@ import streamlit as st
 # Existing Catalyst imports (verified from your tree)
 # ----------------------------------------------------------
 
-from wizard.wizard import render_wizard
+from wizard.wizard import run_client_wizard
 from visuals.kpi_current import render_kpi_current
 from narrative_engine import render_sentiment_health
 
@@ -50,7 +50,7 @@ page = st.sidebar.selectbox(
 # ==========================================================
 
 if page == "Wizard":
-    render_wizard()
+    run_client_wizard()
 
 elif page == "Sentiment Health":
     render_sentiment_health()
