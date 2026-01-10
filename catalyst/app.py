@@ -10,6 +10,7 @@ import streamlit as st
 from catalyst.wizard.wizard import run_client_wizard
 from catalyst.context_manager_v1 import get_effective_context
 from scenario_application_boundary_v1 import apply_scenario, clear_scenario
+from scenario_state_reader import get_active_scenario
 
 from scenario_application_boundary_v1 import (
     apply_scenario,
@@ -40,9 +41,24 @@ if not context:
 
 
 # ============================================================
-# Sidebar: Context editor (demo / control only)
+# Sidebar: Scenario Status (Phase C1)
 # ============================================================
 
+with st.sidebar.container():
+    active_scenario = get_active_scenario(context)
+
+    if active_scenario:
+        st.info(f"Scenario active: {active_scenario['label']}")
+        st.markdown("### 🔁 Active Scenario")
+        st.success(active_scenario["label"])
+        st.caption("Context is scenario-adjusted")
+    else:
+        st.markdown("### 🟢 Baseline Context")
+        st.caption("No active scenario")
+
+# ============================================================
+# Sidebar: Context editor (demo / control only)
+# ============================================================
 def render_context_editor():
     """
     Temporary demo/control panel for Catalyst context.
