@@ -22,6 +22,8 @@ from scenario_comparison_v09 import render_scenario_v09
 from kpi_delta_engine import compute_kpi_deltas
 from demo_loader_v1 import load_demo_context_v1
 
+from catalyst.ingestion.file_ingest_v1 import load_workforce_file
+
 # ============================================================
 # App setup
 # ============================================================
@@ -241,6 +243,32 @@ with st.sidebar.container():
         st.rerun()
 
 # ============================================================
+# Data Loader
+# ============================================================
+
+st.sidebar.markdown("### 📄 Upload Workforce Data")
+
+uploaded_file = st.sidebar.file_uploader(
+    "Upload CSV or Excel",
+    type=["csv", "xlsx"],
+)
+
+if uploaded_file:
+    df, errors, warnings = load_workforce_file(uploaded_file)
+
+    if errors:
+        for e in errors:
+            st.sidebar.error(e)
+        st.stop()
+
+    for w in warnings:
+        st.sidebar.warning(w)
+
+    st.session_state["workforce_df"] = df
+    st.sidebar.success(f"Loaded {len(df)} employee records")
+
+
+# ============================================================
 # Navigation
 # ============================================================
 
@@ -291,7 +319,7 @@ def render_current_kpis_page():
 
     if simulated_context:
         kpis = simulated_context.get("kpis", {})
-        
+
     elif context.get("effective"):
         kpis = context["effective"].get("kpis", {})
     else:
