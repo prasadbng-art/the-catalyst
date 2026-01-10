@@ -69,10 +69,9 @@ def apply_override(
     """
     Apply an override to context (non-destructive).
     """
-
-    context = deepcopy(context)
-
-    override_entry = {
+    if "overrides" not in context:
+        context["overrides"] = []
+        override_entry = {
         "id": override.get("id", str(uuid.uuid4())),
         "type": override["type"],
         "label": override.get("label", ""),
@@ -80,7 +79,7 @@ def apply_override(
         "changes": override["changes"],
         "expires": override.get("expires", True),
     }
-
+    context = deepcopy(context)
     context["overrides"].append(override_entry)
     context["meta"]["version"] += 1
 

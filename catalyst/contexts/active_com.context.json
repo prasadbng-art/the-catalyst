@@ -1,0 +1,44 @@
+{
+  "meta": {
+    "context_id": "5bfbb5d3-5d2d-4de9-ad2d-71b9ab6046ea",
+    "client_id": "active_com",
+    "created_at": "2026-01-10T06:53:51.266771",
+    "source": "wizard",
+    "version": 1
+  },
+  "baseline": {
+    "persona": "CEO",
+    "strategy": {
+      "posture": "cost",
+      "horizon_days": 90
+    },
+    "kpis": {
+      "attrition": {
+        "value": 18.0,
+        "status": "amber"
+      }
+    }
+  },
+  "overrides": [],
+  "effective": {
+    "persona": "CEO",
+    "strategy": {
+      "posture": "cost",
+      "horizon_days": 90
+    },
+    "kpis": {
+      "attrition": {
+        "value": 18.0,
+        "status": "amber"
+      }
+    }
+  },
+  "history": [
+    {
+      "timestamp": "2026-01-10T06:53:51.266771",
+      "actor": "wizard",
+      "action": "create_context",
+      "summary": "Context initialised from baseline"
+    }
+  ]
+}
