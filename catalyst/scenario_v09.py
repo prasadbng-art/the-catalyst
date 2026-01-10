@@ -3,6 +3,10 @@ scenario_v09.py — Phase B Refactor
 ---------------------------------
 This module defines scenario specifications as pure override emitters.
 
+# IMPORTANT:
+# This module is DATA-ONLY.
+# Do NOT add Streamlit or context mutation here.
+
 Rules:
 - NO context access
 - NO mutation
