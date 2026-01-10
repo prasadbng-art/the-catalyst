@@ -91,18 +91,26 @@ def render_context_editor():
     )
 
 
-# ---- Strategy posture
-    context["strategy"]["posture"] = st.selectbox(
-            "Strategy posture",
-            ["cost", "growth", "balanced"],
-            index=["cost", "growth", "balanced"].index(
-                context["strategy"]["posture"]
-            ),
-        )
+# ---- Strategy posture (UI-level default)
+strategy_options = ["cost", "growth", "balanced"]
 
-    st.markdown("### KPI Baseline")
+strategy = context.get("strategy", {})
+current_posture = strategy.get("posture", "balanced")
 
-    for kpi, kpi_state in context["kpis"].items():
+if current_posture not in strategy_options:
+        current_posture = "balanced"        
+strategy["posture"] = st.selectbox(
+    "Strategy posture",
+    strategy_options,
+    index=strategy_options.index(current_posture),
+)
+
+context["strategy"] = strategy
+
+
+st.markdown("### KPI Baseline")
+
+for kpi, kpi_state in context["kpis"].items():
             st.markdown(f"**{kpi.title()}**")
 
             kpi_state["value"] = st.slider(
