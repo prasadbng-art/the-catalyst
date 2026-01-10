@@ -4,6 +4,7 @@ import streamlit as st
 import yaml
 from pathlib import Path
 from copy import deepcopy
+from context_manager_v1 import create_context
 
 from .steps import (
     step_client_identity,
@@ -114,6 +115,33 @@ def step_complete(profile: dict):
 
         # ---- Activate client immediately
         st.session_state.active_client = client_id
+
+# ====================================================
+# STEP 2 — TRANSLATE WIZARD → CONTEXT v1 BASELINE
+# ====================================================
+baseline = {
+    "persona": "CEO",  # persona capture deferred
+    "strategy": {
+        "posture": profile["strategy"]["posture"],
+        "horizon_days": profile["strategy"]["horizon_days"],
+    },
+    "kpis": {
+        "attrition": {
+            "value": 18.0,
+            "status": "amber",
+        }
+    }
+}
+
+# ====================================================
+# STEP 3 — CREATE CONTEXT v1
+# ====================================================
+st.session_state["context_v1"] = create_context(
+    client_id=client_id,
+    baseline=baseline,
+    source="wizard",
+)
+
 
         # ---- Clean wizard state
         st.session_state.pop("profile", None)
