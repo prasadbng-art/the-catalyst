@@ -1,15 +1,14 @@
 # demo_loader_v1.py
 
-from context_manager_v1 import ContextManagerV1
+import streamlit as st
 from demo_context_v1 import DEMO_BASELINE_CONTEXT
 
 def load_demo_context_v1():
     """
-    Creates and returns a fully initialized Context v1
-    using the demo baseline.
+    Loads a fully populated demo baseline
+    into session_state in the canonical Context v1 way.
     """
-    context = ContextManagerV1(
-        baseline_context=DEMO_BASELINE_CONTEXT
-    )
 
-    return context
+    st.session_state["baseline_context"] = DEMO_BASELINE_CONTEXT
+    st.session_state["scenario_overrides"] = {}
+    st.session_state["context_initialized"] = True
