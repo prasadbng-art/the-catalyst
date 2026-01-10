@@ -188,13 +188,13 @@ def render_sentiment_health_page():
 
     kpi_state = kpis["attrition"]
 
-    narrative = generate_narrative(
-        kpi="attrition",
-        kpi_state=kpi_state,
-        client_context=None,
-        persona=context["persona"],
-        strategy_context=context["strategy"],
-    )
+    st.divider()
+    st.info(
+    "This view summarizes workforce risk based on uploaded data. "
+    "Use the What-If Sandbox to explore how changes in attrition risk, "
+    "engagement, and manager effectiveness alter outcomes."
+)
+
 
     st.divider()
     st.subheader(narrative["headline"])
