@@ -267,7 +267,6 @@ if uploaded_file:
     st.session_state["workforce_df"] = df
     st.sidebar.success(f"Loaded {len(df)} employee records")
 
-
 # ============================================================
 # Navigation
 # ============================================================
