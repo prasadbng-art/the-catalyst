@@ -4,7 +4,7 @@ from copy import deepcopy
 from datetime import datetime
 from typing import Dict, List
 import uuid
-
+import streamlit as st
 
 # ============================================================
 # Context v1 Manager (In-Memory, Persistence-Ready)
@@ -49,12 +49,14 @@ def create_context(
 
 # ------------------------------------------------------------
 
-def get_effective_context(session_state: dict) -> dict:
+def get_effective_context():
     """
-    Retrieve the active Context v1 from session state.
+    Return the authoritative effective Context v1.
     """
-    return session_state.get("context_v1")
+    if "context_v1" not in st.session_state:
+        return None
 
+    return st.session_state["context_v1"]["effective"]
 
 # ------------------------------------------------------------
 
