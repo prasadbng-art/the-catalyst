@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from pydantic import BaseModel, Field, validator
 
 # ==========================================================
-# Context v1 Override Wiring (Steps 2, 3, 4, 5)
+# Context v1 Override Wiring (Steps 2–5)
 # ==========================================================
 
 from context_manager_v1 import apply_override, remove_override
@@ -19,8 +19,8 @@ from scenario_override_adapter import scenario_to_override
 
 def reset_scenario_overrides(context_v1: dict) -> dict:
     """
-    Remove all scenario overrides before applying a new one.
-    Enforces pairwise-only integrity.
+    Remove all active scenario overrides.
+    Enforces strict pairwise-only integrity.
     """
     for o in list(context_v1.get("overrides", [])):
         if o.get("type") == "scenario":
@@ -41,16 +41,19 @@ class QualitativeLevel(str, Enum):
     medium = "medium"
     high = "high"
 
+
 class TimeSpeed(str, Enum):
     fast = "fast"
     moderate = "moderate"
     slow = "slow"
+
 
 class PostureSignal(str, Enum):
     control_oriented = "control_oriented"
     capability_building = "capability_building"
     growth_oriented = "growth_oriented"
     defensive = "defensive"
+
 
 class Direction(str, Enum):
     up = "up"
@@ -67,9 +70,11 @@ class ScenarioIdentity(BaseModel):
     label: str
     intent: str
 
+
 class AssumptionBlock(BaseModel):
     external: Dict[str, str]
     internal: Dict[str, str]
+
 
 class InterventionBlock(BaseModel):
     interventions: List[str]
@@ -80,9 +85,11 @@ class InterventionBlock(BaseModel):
             raise ValueError("At least one intervention must be declared.")
         return v
 
+
 class CapitalConstraint(BaseModel):
     budget_range: QualitativeLevel
     spend_profile: str
+
 
 class TimeConstraint(BaseModel):
     horizon_months: int
@@ -94,9 +101,11 @@ class TimeConstraint(BaseModel):
             raise ValueError("First signal must occur before horizon.")
         return v
 
+
 class ConstraintBlock(BaseModel):
     capital: CapitalConstraint
     time: TimeConstraint
+
 
 class AxisExposure(BaseModel):
     capital_intensity: QualitativeLevel
@@ -105,12 +114,15 @@ class AxisExposure(BaseModel):
     cultural_risk: QualitativeLevel
     posture_signal: PostureSignal
 
+
 class MetricExpectation(BaseModel):
     expected_direction: Direction
     confidence: QualitativeLevel
 
+
 class MetricMapping(BaseModel):
     metrics: Dict[str, MetricExpectation]
+
 
 class ScenarioV09(BaseModel):
     identity: ScenarioIdentity
@@ -130,68 +142,92 @@ SCENARIOS = {
         identity=ScenarioIdentity(
             id="cost_containment",
             label="Cost Containment",
-            intent="Stabilise attrition through short-term control mechanisms"
+            intent="Stabilise attrition through short-term control mechanisms",
         ),
         assumptions=AssumptionBlock(
             external={"labour_market": "tight"},
-            internal={"leadership_alignment": "medium"}
+            internal={"leadership_alignment": "medium"},
         ),
         interventions=InterventionBlock(
-            interventions=["policy_enforcement", "manager_targeting"]
+            interventions=["policy_enforcement", "manager_targeting"],
         ),
         constraints=ConstraintBlock(
             capital=CapitalConstraint(
                 budget_range=QualitativeLevel.low,
-                spend_profile="front_loaded"
+                spend_profile="front_loaded",
             ),
             time=TimeConstraint(
                 horizon_months=12,
-                first_signal_months=3
-            )
+                first_signal_months=3,
+            ),
         ),
         axis_exposure=AxisExposure(
             capital_intensity=QualitativeLevel.low,
             time_to_impact=TimeSpeed.fast,
             execution_risk=QualitativeLevel.low,
             cultural_risk=QualitativeLevel.medium,
-            posture_signal=PostureSignal.control_oriented
-        )
+            posture_signal=PostureSignal.control_oriented,
+        ),
     ),
     "Capability Build": ScenarioV09(
         identity=ScenarioIdentity(
             id="capability_build",
             label="Capability Build",
-            intent="Reduce attrition risk by building durable people capability"
+            intent="Reduce attrition risk by building durable people capability",
         ),
         assumptions=AssumptionBlock(
             external={"labour_market": "tight"},
-            internal={"leadership_alignment": "high"}
+            internal={"leadership_alignment": "high"},
         ),
         interventions=InterventionBlock(
             interventions=[
                 "manager_coaching_program",
                 "career_pathing_framework",
-                "listening_infrastructure"
-            ]
+                "listening_infrastructure",
+            ],
         ),
         constraints=ConstraintBlock(
             capital=CapitalConstraint(
                 budget_range=QualitativeLevel.medium,
-                spend_profile="phased"
+                spend_profile="phased",
             ),
             time=TimeConstraint(
                 horizon_months=18,
-                first_signal_months=6
-            )
+                first_signal_months=6,
+            ),
         ),
         axis_exposure=AxisExposure(
             capital_intensity=QualitativeLevel.medium,
             time_to_impact=TimeSpeed.slow,
             execution_risk=QualitativeLevel.medium,
             cultural_risk=QualitativeLevel.low,
-            posture_signal=PostureSignal.capability_building
-        )
-    )
+            posture_signal=PostureSignal.capability_building,
+        ),
+    ),
+}
+
+
+# ==========================================================
+# KPI Outcome Expectations (v0.9 → Context v1)
+# ==========================================================
+
+SCENARIO_KPI_EFFECTS = {
+    "cost_containment": {
+        "kpis": {
+            "attrition": {
+                "value": 16.0,
+                "status": "amber",
+            }
+        }
+    },
+    "capability_build": {
+        "kpis": {
+            "attrition": {
+                "value": 12.0,
+                "status": "green",
+            }
+        }
+    },
 }
 
 
@@ -202,12 +238,14 @@ SCENARIOS = {
 QUAL_MAP = {"low": 1, "medium": 2, "high": 3}
 TIME_MAP = {"fast": 3, "moderate": 2, "slow": 1}
 
+
 @dataclass
 class AxisDelta:
     axis: str
     direction: Literal["A_over_B", "B_over_A"]
     magnitude: Literal["small", "moderate", "large"]
     interpretation: str
+
 
 def delta_magnitude(diff: int) -> str:
     if abs(diff) == 1:
@@ -216,52 +254,63 @@ def delta_magnitude(diff: int) -> str:
         return "moderate"
     return "large"
 
+
 def compare_axes(a: ScenarioV09, b: ScenarioV09) -> List[AxisDelta]:
     deltas: List[AxisDelta] = []
 
     diff = QUAL_MAP[a.axis_exposure.capital_intensity] - QUAL_MAP[b.axis_exposure.capital_intensity]
     if diff != 0:
-        deltas.append(AxisDelta(
-            axis="capital",
-            direction="A_over_B" if diff > 0 else "B_over_A",
-            magnitude=delta_magnitude(diff),
-            interpretation="Higher capital commitment in exchange for broader intervention scope"
-        ))
+        deltas.append(
+            AxisDelta(
+                axis="capital",
+                direction="A_over_B" if diff > 0 else "B_over_A",
+                magnitude=delta_magnitude(diff),
+                interpretation="Higher capital commitment in exchange for broader intervention scope",
+            )
+        )
 
     diff = TIME_MAP[a.axis_exposure.time_to_impact] - TIME_MAP[b.axis_exposure.time_to_impact]
     if diff != 0:
-        deltas.append(AxisDelta(
-            axis="time",
-            direction="A_over_B" if diff > 0 else "B_over_A",
-            magnitude=delta_magnitude(diff),
-            interpretation="Faster visible impact at the cost of long-term durability"
-        ))
+        deltas.append(
+            AxisDelta(
+                axis="time",
+                direction="A_over_B" if diff > 0 else "B_over_A",
+                magnitude=delta_magnitude(diff),
+                interpretation="Faster visible impact at the cost of long-term durability",
+            )
+        )
 
     diff = QUAL_MAP[a.axis_exposure.execution_risk] - QUAL_MAP[b.axis_exposure.execution_risk]
     if diff != 0:
-        deltas.append(AxisDelta(
-            axis="execution_risk",
-            direction="A_over_B" if diff < 0 else "B_over_A",
-            magnitude=delta_magnitude(diff),
-            interpretation="Lower execution risk due to organisational familiarity"
-        ))
+        deltas.append(
+            AxisDelta(
+                axis="execution_risk",
+                direction="A_over_B" if diff < 0 else "B_over_A",
+                magnitude=delta_magnitude(diff),
+                interpretation="Lower execution risk due to organisational familiarity",
+            )
+        )
 
     diff = QUAL_MAP[a.axis_exposure.cultural_risk] - QUAL_MAP[b.axis_exposure.cultural_risk]
     if diff != 0:
-        deltas.append(AxisDelta(
-            axis="cultural_risk",
-            direction="A_over_B" if diff < 0 else "B_over_A",
-            magnitude=delta_magnitude(diff),
-            interpretation="Lower likelihood of employee backlash or disengagement"
-        ))
+        deltas.append(
+            AxisDelta(
+                axis="cultural_risk",
+                direction="A_over_B" if diff < 0 else "B_over_A",
+                magnitude=delta_magnitude(diff),
+                interpretation="Lower likelihood of employee backlash or disengagement",
+            )
+        )
 
     if a.axis_exposure.posture_signal != b.axis_exposure.posture_signal:
-        deltas.append(AxisDelta(
-            axis="posture",
-            direction="A_over_B",
-            magnitude="moderate",
-            interpretation=f"Signals a shift toward {a.axis_exposure.posture_signal.replace('_', ' ')} leadership posture"
-        ))
+        deltas.append(
+            AxisDelta(
+                axis="posture",
+                direction="A_over_B",
+                magnitude="moderate",
+                interpretation=f"Signals a shift toward {a.axis_exposure.posture_signal.replace('_', ' ')} leadership posture",
+            )
+        )
 
     return deltas
 
@@ -283,7 +332,12 @@ def detect_asymmetry(deltas: List[AxisDelta]) -> str:
 # Narrative Engine (UNCHANGED)
 # ==========================================================
 
-def generate_narrative(a: ScenarioV09, b: ScenarioV09, deltas: List[AxisDelta], asymmetry: str):
+def generate_narrative(
+    a: ScenarioV09,
+    b: ScenarioV09,
+    deltas: List[AxisDelta],
+    asymmetry: str,
+):
     bullets = []
     for d in deltas[:3]:
         bullets.append(
@@ -294,13 +348,13 @@ def generate_narrative(a: ScenarioV09, b: ScenarioV09, deltas: List[AxisDelta], 
         "balanced_tradeoff": "This is a deliberate trade between speed, cost, risk, and organisational posture.",
         "dominant_but_risky": "This option appears advantaged but concentrates risk in fewer bets.",
         "defensive_choice": "This choice limits downside exposure while constraining long-term upside.",
-        "neutral": "These scenarios differ more in posture than in expected outcomes."
+        "neutral": "These scenarios differ more in posture than in expected outcomes.",
     }
 
     return {
         "headline": f"Choosing **{a.identity.label}** over **{b.identity.label}** involves the following trade-offs:",
         "bullets": bullets,
-        "framing": framing_map[asymmetry]
+        "framing": framing_map[asymmetry],
     }
 
 
@@ -326,21 +380,27 @@ def render_scenario_v09():
     scenario_b = SCENARIOS[b_label]
 
     # ======================================================
-    # STEP 3 & 4 — APPLY CONTEXT v1 OVERRIDES (PAIRWISE)
+    # APPLY CONTEXT v1 OVERRIDE (Scenario A active)
     # ======================================================
 
     context_v1 = st.session_state.get("context_v1")
     if context_v1:
         context_v1 = reset_scenario_overrides(context_v1)
 
+        payload = {
+            "strategy": {
+                "posture": scenario_a.axis_exposure.posture_signal.value
+            }
+        }
+
+        kpi_effects = SCENARIO_KPI_EFFECTS.get(scenario_a.identity.id)
+        if kpi_effects:
+            payload.update(kpi_effects)
+
         override = scenario_to_override(
-            scenario_id=f"scenario_{scenario_a.identity.id}_vs_{scenario_b.identity.id}",
-            label=f"{scenario_a.identity.label} vs {scenario_b.identity.label}",
-            payload={
-                "strategy": {
-                    "posture": scenario_a.axis_exposure.posture_signal.value
-                }
-            },
+            scenario_id=f"scenario_{scenario_a.identity.id}",
+            label=scenario_a.identity.label,
+            payload=payload,
         )
 
         context_v1 = apply_override(
@@ -350,6 +410,10 @@ def render_scenario_v09():
         )
 
         st.session_state["context_v1"] = context_v1
+
+    # ======================================================
+    # v0.9 Comparison Logic (UNCHANGED)
+    # ======================================================
 
     deltas = compare_axes(scenario_a, scenario_b)
     if not deltas:
@@ -377,7 +441,9 @@ def render_scenario_v09():
         st.markdown("### Trade-offs")
         for d in deltas:
             arrow = "⬅️" if d.direction == "A_over_B" else "➡️"
-            st.markdown(f"**{d.axis.replace('_', ' ').title()}** {arrow}  \n{d.interpretation}")
+            st.markdown(
+                f"**{d.axis.replace('_', ' ').title()}** {arrow}  \n{d.interpretation}"
+            )
 
     with right:
         render_card(scenario_b)
@@ -394,7 +460,7 @@ def render_scenario_v09():
     st.markdown(narrative["framing"])
 
     # ======================================================
-    # STEP 5 — CLEAR SCENARIO (RETURN TO BASELINE)
+    # CLEAR SCENARIO (Return to baseline)
     # ======================================================
 
     if st.button("Clear Scenario"):
