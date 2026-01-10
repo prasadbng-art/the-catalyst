@@ -34,17 +34,14 @@ def apply_scenario(scenario_id: str, actor: str = "scenario_engine_v1") -> None:
     "id": f"scenario_{scenario_id}",
     "type": "scenario",
     "applies_to": list(payload.keys()),
+    "changes": payload,
     "label": scenario_id.replace("_", " ").title(),
-    "payload": payload,
 }
-
-
     apply_override(
         context=context,
         override=override,
         actor=actor,
     )
-
 
 def clear_scenario(context: dict | None = None, actor: str = "scenario_engine_v1") -> dict:
     """

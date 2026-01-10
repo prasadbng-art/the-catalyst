@@ -1,0 +1,22 @@
+client:
+  name: active comm
+  industry: IT Services
+  region: ''
+  geography: India
+  size_band: 1000-5000
+strategy:
+  posture: cost
+  horizon_days: 90
+  risk_tolerance: low
+financials:
+  replacement_multiplier: 1.4
+  productivity_loss_pct: 0.25
+  time_to_fill_days: 60
+kpis:
+  primary: attrition
+  attrition:
+    enabled: true
+  engagement:
+    enabled: false
+  sentiment:
+    enabled: false
