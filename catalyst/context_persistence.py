@@ -5,6 +5,9 @@ from pathlib import Path
 from copy import deepcopy
 from datetime import datetime
 
+# ============================================================
+# CONTEXT PERSISTENCE HELPERS
+# ============================================================
 
 BASE_DIR = Path(__file__).resolve().parents[0]
 CONTEXT_DIR = BASE_DIR / "contexts"

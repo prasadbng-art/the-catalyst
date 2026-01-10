@@ -13,7 +13,7 @@ from pydantic import BaseModel, Field, validator
 # Context v1 Override Wiring (Steps 2–5)
 # ==========================================================
 
-from context_manager_v1 import apply_override, remove_override
+from catalyst.context_manager_v1 import apply_override, remove_override
 from scenario_override_adapter import scenario_to_override
 
 
