@@ -1,0 +1,8 @@
+{
+  "role_cost_usd_monthly": 12000,
+  "context": {
+    "vacancy_duration_months": 2.5,
+    "ramp_up_duration_months": 5.0,
+    "knowledge_risk_multiplier": 0.6
+  }
+}
