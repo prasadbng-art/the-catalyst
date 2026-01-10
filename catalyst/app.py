@@ -5,10 +5,9 @@ import streamlit as st
 # ============================================================
 
 from catalyst.wizard.wizard import run_client_wizard
-from catalyst.context_manager_v1 import (
-    get_effective_context,
-    get_context_manager,
-)
+from catalyst.context_manager_v1 import get_effective_context
+from scenario_application_boundary_v1 import apply_scenario, clear_scenario
+
 from scenario_application_boundary_v1 import (
     apply_scenario,
     clear_scenario,
@@ -35,8 +34,6 @@ if not context:
     run_client_wizard()
     st.stop()
 
-# Canonical ContextManager (ONLY mutator)
-context_manager = get_context_manager()
 
 # ============================================================
 # Sidebar: Context editor (demo / control only)
@@ -107,16 +104,13 @@ with st.sidebar.expander("Scenario Control", expanded=False):
 
     with col_a:
         if st.button("Apply Scenario", disabled=selected_scenario == "none"):
-            apply_scenario(
-                context_manager=context_manager,
-                scenario_id=selected_scenario,
-            )
-            st.success("Scenario applied")
+         apply_scenario(selected_scenario)
+        st.success("Scenario applied")
 
-    with col_b:
-        if st.button("Clear Scenario"):
-            clear_scenario(context_manager)
-            st.info("Scenario cleared")
+    if st.button("Clear Scenario"):
+        clear_scenario()
+        st.info("Scenario cleared")
+
 
 # ============================================================
 # Navigation
