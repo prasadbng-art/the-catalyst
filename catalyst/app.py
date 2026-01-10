@@ -98,155 +98,13 @@ if not st.session_state.get("demo_welcomed"):
     st.session_state["demo_welcomed"] = True
 
 # ============================================================
-# Sidebar: Scenario Status
+# SIDEBAR — PHASE I DEMO (AUTHORITATIVE)
 # ============================================================
 
-with st.sidebar.container():
-    active_scenario = get_active_scenario(context)
-
-    if active_scenario:
-        st.markdown("### 🔁 Active Scenario")
-        st.success(active_scenario["label"])
-        st.caption("Context is scenario-adjusted")
-    else:
-        st.markdown("### 🟢 Baseline Context")
-        st.caption("No active scenario")
-
-# ============================================================
-# Sidebar: Context Editor (Demo Control)
-# ============================================================
-
-with st.sidebar.expander("Context (Demo Control)", expanded=False):
-
-    persona_options = ["CEO", "CFO", "CHRO"]
-    current_persona = context.get("persona", "CEO")
-
-    context["persona"] = st.selectbox(
-        "Persona",
-        persona_options,
-        index=persona_options.index(current_persona if current_persona in persona_options else "CEO"),
-    )
-
-    strategy_options = ["cost", "growth", "balanced"]
-    strategy = context.get("strategy", {})
-    current_posture = strategy.get("posture", "balanced")
-
-    strategy["posture"] = st.selectbox(
-        "Strategy posture",
-        strategy_options,
-        index=strategy_options.index(current_posture if current_posture in strategy_options else "balanced"),
-    )
-
-    context["strategy"] = strategy
-
-    st.markdown("### KPI Baseline")
-
-    kpis = context.get("kpis", {})
-
-    for kpi, kpi_state in kpis.items():
-        st.markdown(f"**{kpi.title()}**")
-
-        kpi_state["value"] = st.slider(
-            f"{kpi} value",
-            min_value=0.0,
-            max_value=100.0,
-            value=float(kpi_state.get("value", 0.0)),
-            step=0.5,
-            key=f"{kpi}_value",
-        )
-
-        kpi_state["status"] = st.selectbox(
-            f"{kpi} status",
-            ["green", "amber", "red"],
-            index=["green", "amber", "red"].index(kpi_state.get("status", "amber")),
-            key=f"{kpi}_status",
-        )
-
-    context["kpis"] = kpis
-
-# ============================================================
-# Sidebar: Scenario Control (Phase B)
-# ============================================================
-
-with st.sidebar.expander("Scenario Control", expanded=False):
-
-    scenarios = list_scenarios()
-    scenario_ids = ["none"] + list(scenarios.keys())
-
-    selected_scenario = st.selectbox(
-        "Active Scenario",
-        scenario_ids,
-        format_func=lambda s: "None" if s == "none" else scenarios[s]["label"],
-    )
-
-    col_a, col_b = st.columns(2)
-
-    with col_a:
-        if st.button("Apply Scenario", disabled=selected_scenario == "none"):
-            apply_scenario(selected_scenario)
-            st.success("Scenario applied")
-
-    with col_b:
-        if st.button("Clear Scenario"):
-            clear_scenario()
-            st.info("Scenario cleared")
-
-    st.caption(
-        "Apply a scenario to see how strategic actions shift KPIs and risk exposure."
-)
-
-# ============================================================
-# Sidebar: What-If Simulation (Phase C)
-# ============================================================
-
-with st.sidebar.expander("What-If Simulation", expanded=False):
-
-    scenario_ids = list(scenarios.keys())
-
-    simulate_id = st.selectbox(
-        "Simulate scenario",
-        ["none"] + scenario_ids,
-        format_func=lambda s: "None" if s == "none" else scenarios[s]["label"],
-        key="simulate_scenario_id",
-    )
-
-    st.session_state["simulate"] = st.button(
-        "Run Simulation",
-        disabled=simulate_id == "none",
-    )
-
-    st.caption(
-        "Simulate outcomes before committing to a scenario."
-)
-
-# ============================================================
-# Sidebar: Demo Reset (Safety Control)
-# ============================================================
-
-st.sidebar.divider()
-
-with st.sidebar.container():
-    st.caption("Demo control")
-
-    if st.button("🔄 Reset Demo"):
-        for key in [
-            "baseline_context",
-            "scenario_overrides",
-            "context_initialized",
-            "context_v1",
-            "simulate",
-            "simulate_scenario_id",
-            "demo_welcomed",
-        ]:
-            st.session_state.pop(key, None)
-
-        st.rerun()
-
-# ============================================================
-# Data Loader
-# ============================================================
-
-st.sidebar.markdown("### 📄 Upload Workforce Data")
+# ----------------------------
+# 📄 Upload Workforce Data
+# ----------------------------
+st.sidebar.markdown("## 📄 Upload Workforce Data")
 
 uploaded_file = st.sidebar.file_uploader(
     "Upload CSV or Excel",
@@ -267,18 +125,74 @@ if uploaded_file:
     st.session_state["workforce_df"] = df
     st.sidebar.success(f"Loaded {len(df)} employee records")
 
-# ============================================================
-# Navigation
-# ============================================================
+# ----------------------------
+# 👤 View As (Persona)
+# ----------------------------
+st.sidebar.markdown("## 👤 View As")
 
-page = st.sidebar.selectbox(
-    "Navigate",
-    [
-        "Sentiment Health",
-        "Current KPIs",
-        "Scenario Comparison (v0.9)",
-    ],
+persona_options = ["CEO", "CFO", "CHRO"]
+
+current_persona = context.get("persona", "CEO")
+if current_persona not in persona_options:
+    current_persona = "CEO"
+
+context["persona"] = st.sidebar.selectbox(
+    "Persona",
+    persona_options,
+    index=persona_options.index(current_persona),
 )
+
+# ----------------------------
+# 🧪 What-If Sandbox
+# ----------------------------
+st.sidebar.markdown("## 🧪 What-If Sandbox")
+
+attrition_reduction = st.sidebar.slider(
+    "Reduce attrition risk (%)",
+    0, 30, 0,
+    help="Retention programs, compensation actions, policy changes"
+)
+
+engagement_lift = st.sidebar.slider(
+    "Increase engagement (points)",
+    0, 20, 0,
+    help="Culture, workload balance, manager quality"
+)
+
+manager_lift = st.sidebar.slider(
+    "Improve manager effectiveness (points)",
+    0, 20, 0,
+    help="Coaching, capability building"
+)
+
+run_what_if = st.sidebar.button("Apply What-If")
+
+if run_what_if and "workforce_df" in st.session_state:
+    from catalyst.analytics.what_if_engine_v1 import apply_what_if
+
+    levers = {
+        "attrition_risk_reduction_pct": attrition_reduction,
+        "engagement_lift": engagement_lift,
+        "manager_effectiveness_lift": manager_lift,
+        "headcount": len(st.session_state["workforce_df"]),
+        "risk_realization_factor": 0.6,
+    }
+
+    baseline_kpis = context["baseline"]["kpis"]
+
+    st.session_state["what_if_kpis"] = apply_what_if(
+        baseline_kpis,
+        levers
+    )
+
+# ----------------------------
+# ↩ Reset What-If
+# ----------------------------
+st.sidebar.divider()
+
+if st.sidebar.button("↩ Reset What-If"):
+    st.session_state.pop("what_if_kpis", None)
+
 
 # ============================================================
 # Pages
