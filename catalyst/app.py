@@ -44,7 +44,7 @@ def render_demo_entry():
     )
 
     st.divider()
-    
+
 if st.button("▶ Run Interactive Demo", use_container_width=True):
     load_demo_context_v1()
     st.session_state["demo_mode"] = True
@@ -289,8 +289,13 @@ def render_sentiment_health_page():
 def render_current_kpis_page():
     st.header("Current KPI Performance")
 
-    active_context = simulated_context if simulated_context else context
-    kpis = active_context.get("kpis", {})
+    if simulated_context:
+        kpis = simulated_context.get("kpis", {})
+        
+    elif context.get("effective"):
+        kpis = context["effective"].get("kpis", {})
+    else:
+        kpis = context["baseline"].get("kpis", {})
 
     if not kpis:
         st.info("No KPIs configured.")
