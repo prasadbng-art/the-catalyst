@@ -238,25 +238,25 @@ def render_current_kpis_page():
     st.header("Current KPI Performance")
 
     active_context = simulated_context if simulated_context else context
+    kpis = active_context.get("kpis", {})
 
-    if simulated_context:
-        st.info(
-            f"Simulated scenario: "
-            f"{scenarios[st.session_state['simulate_scenario_id']]['label']}"
-        )
+    if not kpis:
+        st.info("No KPIs configured for this client.")
+        return
 
     kpi = st.selectbox(
         "Select KPI",
-        list(active_context["kpis"].keys()),
+        list(kpis.keys()),
     )
 
-    kpi_state = active_context["kpis"][kpi]
+    kpi_state = kpis[kpi]
 
     render_kpi_current_performance(
         kpi=kpi,
-        current_value=kpi_state["value"],
+        current_value=kpi_state.get("value", 0.0),
         active_client=None,
     )
+
 # ======================================================
 # Phase D1 — Scenario Impact Table (EXECUTIVE VIEW)
 # ======================================================

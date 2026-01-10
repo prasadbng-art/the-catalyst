@@ -1,8 +1,8 @@
 {
   "meta": {
-    "context_id": "e2695c08-d4bc-4401-84e1-9da936cd0316",
+    "context_id": "595af198-f5dd-41e3-91c0-caee42269057",
     "client_id": "active",
-    "created_at": "2026-01-10T07:21:27.870414",
+    "created_at": "2026-01-10T07:28:41.713572",
     "source": "wizard",
     "version": 1
   },
@@ -35,7 +35,7 @@
   },
   "history": [
     {
-      "timestamp": "2026-01-10T07:21:27.870414",
+      "timestamp": "2026-01-10T07:28:41.713572",
       "actor": "wizard",
       "action": "create_context",
       "summary": "Context initialised from baseline"
