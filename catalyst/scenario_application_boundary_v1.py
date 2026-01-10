@@ -4,34 +4,27 @@ scenario_application_boundary_v1.py
 Canonical boundary for applying and clearing scenario overrides
 against Context v1.
 
-This version matches the actual Context v1 API
-(no manager object required).
+This version EXACTLY matches the Context v1 function signatures.
 """
 
-from catalyst.context_manager_v1 import apply_override, remove_override
+from catalyst.context_manager_v1 import (
+    get_effective_context,
+    apply_override,
+    remove_override,
+)
 from scenario_v09 import get_scenario_overrides
-from catalyst.context_manager_v1 import get_effective_context, remove_override
 
-def apply_scenario(
-    scenario_id: str,
-    actor: str = "scenario_engine_v1",
-) -> None:
+
+def apply_scenario(scenario_id: str, actor: str = "scenario_engine_v1") -> None:
     """
     Apply a scenario as a Context v1 override.
     """
 
-    # Clear existing scenario override first
-    clear_scenario(actor=actor)
+    # Get current effective context
+    context = get_effective_context()
 
-    overrides = get_scenario_overrides(scenario_id)
-    if not overrides:
-        return
-
-    def apply_scenario(scenario_id: str, actor: str = "scenario_engine_v1") -> None:
-        """Apply a scenario as a Context v1 override."""
-
-    # Always clear existing scenario first
-    clear_scenario(actor=actor)
+    # Clear any existing scenario override
+    context = clear_scenario(context=context, actor=actor)
 
     payload = get_scenario_overrides(scenario_id)
     if not payload:
@@ -45,21 +38,26 @@ def apply_scenario(
     }
 
     apply_override(
+        context=context,
         override=override,
         actor=actor,
     )
 
-def clear_scenario(actor: str = "scenario_engine_v1") -> None:
+
+def clear_scenario(context: dict | None = None, actor: str = "scenario_engine_v1") -> dict:
     """
-    Remove active scenario override (if any).
+    Remove active scenario override (if any) and return updated context.
     """
 
-    context = get_effective_context()
-    overrides = context.get("overrides", [])
+    if context is None:
+        context = get_effective_context()
 
-    for o in overrides:
+    for o in list(context.get("overrides", [])):
         if o.get("type") == "scenario":
-            remove_override(
+            context = remove_override(
+                context=context,
                 override_id=o["id"],
                 actor=actor,
             )
+
+    return context
