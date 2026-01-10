@@ -2,6 +2,9 @@ import streamlit as st
 
 # ============================================================
 # Imports (authoritative, no duplicates)
+# NOTE:
+# Scenario UI, scenario data, and scenario application
+# are intentionally separated (Phase B).
 # ============================================================
 
 from catalyst.wizard.wizard import run_client_wizard
