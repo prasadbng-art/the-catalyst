@@ -10,7 +10,7 @@ if str(PROJECT_ROOT) not in sys.path:
 # --------------------------------------------------
 
 import streamlit as st
-from wizard.wizard import run_client_wizard
+from catalyst.wizard.wizard import run_client_wizard
 from visuals.kpi_current import render_kpi_current_performance
 from narrative_engine import generate_narrative
 from scenario_v09 import render_scenario_v09
