@@ -21,6 +21,8 @@ from scenario_comparison_v09 import render_scenario_v09
 from scenario_v09 import list_scenarios
 from scenario_simulation_engine import simulate_scenario
 from scenario_v09 import list_scenarios
+from kpi_delta_engine import compute_kpi_deltas
+from visuals.kpi_impact_table import render_kpi_impact_table
 
 # ============================================================
 # App setup
@@ -222,6 +224,15 @@ def render_current_kpis_page():
         current_value=kpi_state["value"],
         active_client=None,
     )
+# ======================================================
+# Phase D1 — Scenario Impact Table (EXECUTIVE VIEW)
+# ======================================================
+    if simulated_context:
+        deltas = compute_kpi_deltas(
+            baseline=context,
+            scenario=simulated_context,
+        )
+        render_kpi_impact_table(deltas)
 
 # ============================================================
 # Router (ONLY place pages are invoked)
