@@ -4,24 +4,10 @@ import streamlit as st
 # Imports (authoritative, no duplicates)
 # ============================================================
 
-from catalyst.wizard.wizard import run_client_wizard
 from catalyst.context_manager_v1 import get_effective_context
-from scenario_application_boundary_v1 import apply_scenario, clear_scenario
-from scenario_state_reader import get_active_scenario
-
 from visuals.kpi_current import render_kpi_current_performance
-from visuals.kpi_impact_table import render_kpi_impact_table
-
-from narrative_engine import generate_narrative
-from decision_narrative_engine import generate_decision_narrative
-
-from scenario_v09 import list_scenarios
-from scenario_simulation_engine import simulate_scenario
-from scenario_comparison_v09 import render_scenario_v09
-
-from kpi_delta_engine import compute_kpi_deltas
+# from narrative_engine import generate_narrative
 from demo_loader_v1 import load_demo_context_v1
-
 from catalyst.ingestion.file_ingest_v1 import load_workforce_file
 
 # ============================================================
@@ -62,14 +48,6 @@ if not isinstance(st.session_state.get("context_v1"), dict):
     st.stop()
 
 context = get_effective_context()
-
-simulated_context = None
-
-if st.session_state.get("simulate") and st.session_state.get("simulate_scenario_id") != "none":
-    simulated_context = simulate_scenario(
-        base_context=context,
-        scenario_id=st.session_state["simulate_scenario_id"],
-    )
 
 st.markdown(
     """
@@ -230,20 +208,8 @@ def render_sentiment_health_page():
 def render_current_kpis_page():
     st.header("Current KPI Performance")
 
-    if simulated_context:
-        kpis = simulated_context.get("kpis", {})
-
-    elif context.get("effective"):
-        kpis = context["effective"].get("kpis", {})
-    else:
-        kpis = context["baseline"].get("kpis", {})
-
-    if not kpis:
-        st.info("No KPIs configured.")
-        return
-
-    kpi = st.selectbox("Select KPI", list(kpis.keys()))
-    kpi_state = kpis[kpi]
+    kpi = st.selectbox("Select KPI", list(kpi.keys()))
+    kpi_state = kpi[kpi]
 
     render_kpi_current_performance(
         kpi=kpi,
@@ -251,35 +217,21 @@ def render_current_kpis_page():
         active_client=None,
     )
 
-    if simulated_context:
-        deltas = compute_kpi_deltas(
-            baseline=context,
-            scenario=simulated_context,
-        )
+    #st.divider()
+    #st.subheader(narrative["headline"])
+    #st.markdown(narrative["framing"])
+    #st.markdown(f"**Summary:** {narrative['summary']}")
+    #st.info(narrative["recommendation"])
 
-        render_kpi_impact_table(deltas)
-
-        narrative = generate_decision_narrative(
-            deltas=deltas,
-            persona=context["persona"],
-            scenario_label=scenarios[st.session_state["simulate_scenario_id"]]["label"],
-        )
-
-        st.divider()
-        st.subheader(narrative["headline"])
-        st.markdown(narrative["framing"])
-        st.markdown(f"**Summary:** {narrative['summary']}")
-        st.info(narrative["recommendation"])
-
+page = st.sidebar.selectbox(
+    "Navigate",
+    ["Sentiment Health", "Current KPIs"],
+)    
 # ============================================================
 # Router
 # ============================================================
-
 if page == "Sentiment Health":
     render_sentiment_health_page()
 
 elif page == "Current KPIs":
     render_current_kpis_page()
-
-elif page == "Scenario Comparison (v0.9)":
-    render_scenario_v09()
