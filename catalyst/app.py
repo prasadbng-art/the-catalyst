@@ -31,7 +31,7 @@ def render_context_editor():
     """
 
     with st.sidebar.expander("Context (Demo Control)", expanded=False):
-        context = get_active_context()
+        context = get_effective_context()
 
         # ---- Persona
         context["persona"] = st.selectbox(
