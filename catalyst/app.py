@@ -50,11 +50,11 @@ def render_demo_entry():
         st.session_state["demo_mode"] = True
         st.rerun()
 
-# ============================================================
+# # ============================================================
 # 🔒 CONTEXT ENTRY GATE (AUTHORITATIVE)
 # ============================================================
 
-if "context_v1" not in st.session_state:
+if not isinstance(st.session_state.get("context_v1"), dict):
     render_demo_entry()
     st.stop()
 
@@ -85,6 +85,7 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
 if not st.session_state.get("demo_welcomed"):
     st.toast(
         "Welcome to the Catalyst interactive demo. "
