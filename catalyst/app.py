@@ -15,6 +15,7 @@ from scenario_application_boundary_v1 import (
 from visuals.kpi_current import render_kpi_current_performance
 from narrative_engine import generate_narrative
 from scenario_comparison_v09 import render_scenario_v09
+from scenario_v09 import list_scenarios
 
 # ============================================================
 # App setup
