@@ -195,15 +195,12 @@ def render_sentiment_health_page():
     "engagement, and manager effectiveness alter outcomes."
 )
 
-
     st.divider()
-    st.subheader(narrative["headline"])
-    st.markdown(narrative["interpretation"])
-    st.markdown("**Risk statement**")
-    st.markdown(narrative["risk_statement"])
-    st.markdown("**Recommended posture**")
-    st.info(narrative["recommended_posture"])
-    st.caption(f"Confidence: {narrative['confidence']}")
+    st.info(
+    "This view reflects workforce risk derived from uploaded data. "
+    "Use the What-If Sandbox to explore how changes in attrition risk, "
+    "engagement, and manager effectiveness alter outcomes."
+)
 
 def render_current_kpis_page():
     st.header("Current KPI Performance")
