@@ -10,7 +10,7 @@ def load_demo_context_v1():
 
     st.session_state["context_v1"] = {
         "baseline": DEMO_BASELINE_CONTEXT,
-        "overrides": {},
+        "overrides": [],          # ← MUST be a list
         "effective": None,
         "meta": {
             "mode": "demo"
