@@ -8,6 +8,8 @@ from enum import Enum
 from typing import Dict, List, Optional, Literal
 from dataclasses import dataclass
 from pydantic import BaseModel, Field, validator
+from context_manager_v1 import apply_override
+from scenario_override_adapter import scenario_to_override
 
 # ==========================================================
 # Enums

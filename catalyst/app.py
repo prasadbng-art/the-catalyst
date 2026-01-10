@@ -6,6 +6,19 @@ from narrative_engine import generate_narrative
 from scenario_v09 import render_scenario_v09
 from context import get_active_context
 
+def get_effective_context():
+    """
+    Return Context v1 effective view if available,
+    else fall back to v0.9 context.
+    """
+
+    if "context_v1" in st.session_state:
+        return st.session_state["context_v1"]["effective"]
+
+    # v0.9 fallback
+    from context import get_active_context
+    return get_active_context()
+
 # --------------------------------------------------
 # Context editor (DEFINE FIRST)
 # --------------------------------------------------
@@ -65,7 +78,7 @@ render_context_editor()
 
 def render_current_kpis_page():
     st.header("Current KPI Performance")
-context = get_active_context()
+context = get_effective_context()
 
 kpi = st.selectbox(
     "Select KPI",
@@ -84,10 +97,10 @@ def render_sentiment_health_page():
     st.header("Sentiment Health")
     st.caption("Narrative decision support")
 
-    context = get_active_context()
+    context = get_effective_context()
 
     persona = context["persona"]
-    strategy = context["strategy"]
+    strategy = context["strategy"]  
     kpi_state = context["kpis"]["attrition"]
 
     narrative = generate_narrative(
