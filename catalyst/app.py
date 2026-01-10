@@ -68,6 +68,31 @@ if st.session_state.get("simulate") and st.session_state.get("simulate_scenario_
         scenario_id=st.session_state["simulate_scenario_id"],
     )
 
+st.markdown(
+    """
+    <div style="
+        position: fixed;
+        top: 8px;
+        right: 16px;
+        background-color: #f0f2f6;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        color: #555;
+        z-index: 1000;">
+        🧪 Demo Mode
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+if not st.session_state.get("demo_welcomed"):
+    st.toast(
+        "Welcome to the Catalyst interactive demo. "
+        "Explore baseline risk, apply scenarios, and simulate outcomes.",
+        icon="🎬",
+    )
+    st.session_state["demo_welcomed"] = True
+
 # ============================================================
 # Sidebar: Scenario Status
 # ============================================================
@@ -162,6 +187,10 @@ with st.sidebar.expander("Scenario Control", expanded=False):
             clear_scenario()
             st.info("Scenario cleared")
 
+    st.caption(
+        "Apply a scenario to see how strategic actions shift KPIs and risk exposure."
+)
+
 # ============================================================
 # Sidebar: What-If Simulation (Phase C)
 # ============================================================
@@ -181,6 +210,33 @@ with st.sidebar.expander("What-If Simulation", expanded=False):
         "Run Simulation",
         disabled=simulate_id == "none",
     )
+
+    st.caption(
+        "Simulate outcomes before committing to a scenario."
+)
+
+# ============================================================
+# Sidebar: Demo Reset (Safety Control)
+# ============================================================
+
+st.sidebar.divider()
+
+with st.sidebar.container():
+    st.caption("Demo control")
+
+    if st.button("🔄 Reset Demo"):
+        for key in [
+            "baseline_context",
+            "scenario_overrides",
+            "context_initialized",
+            "context_v1",
+            "simulate",
+            "simulate_scenario_id",
+            "demo_welcomed",
+        ]:
+            st.session_state.pop(key, None)
+
+        st.rerun()
 
 # ============================================================
 # Navigation
