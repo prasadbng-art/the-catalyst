@@ -5,7 +5,7 @@ from visuals.kpi_current import render_kpi_current_performance
 from narrative_engine import generate_narrative
 from scenario_v09 import render_scenario_v09
 from context_persistence import load_context_v1
-from catalyst.context_manager_v1 import get_effective_context
+from context_manager_v1 import get_effective_context
 
 # ============================================================
 # CONTEXT RETRIEVAL HELPER 
