@@ -31,11 +31,13 @@ def apply_scenario(scenario_id: str, actor: str = "scenario_engine_v1") -> None:
         return
 
     override = {
-        "id": f"scenario_{scenario_id}",
-        "type": "scenario",
-        "label": scenario_id.replace("_", " ").title(),
-        "payload": payload,
-    }
+    "id": f"scenario_{scenario_id}",
+    "type": "scenario",
+    "applies_to": list(payload.keys()),
+    "label": scenario_id.replace("_", " ").title(),
+    "payload": payload,
+}
+
 
     apply_override(
         context=context,

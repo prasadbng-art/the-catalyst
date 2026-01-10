@@ -1,0 +1,22 @@
+client:
+  name: active
+  industry: IT Services
+  region: ''
+  geography: India
+  size_band: 1000-5000
+strategy:
+  posture: cost
+  horizon_days: 90
+  risk_tolerance: low
+financials:
+  replacement_multiplier: 1.7
+  productivity_loss_pct: 0.25
+  time_to_fill_days: 90
+kpis:
+  primary: attrition
+  attrition:
+    enabled: true
+  engagement:
+    enabled: false
+  sentiment:
+    enabled: false
