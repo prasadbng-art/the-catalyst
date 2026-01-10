@@ -27,10 +27,25 @@ def apply_scenario(
     if not overrides:
         return
 
+    def apply_scenario(scenario_id: str, actor: str = "scenario_engine_v1") -> None:
+        """Apply a scenario as a Context v1 override."""
+
+    # Always clear existing scenario first
+    clear_scenario(actor=actor)
+
+    payload = get_scenario_overrides(scenario_id)
+    if not payload:
+        return
+
+    override = {
+        "id": f"scenario_{scenario_id}",
+        "type": "scenario",
+        "label": scenario_id.replace("_", " ").title(),
+        "payload": payload,
+    }
+
     apply_override(
-        override_id=f"scenario_{scenario_id}",
-        override_type="scenario",
-        payload=overrides,
+        override=override,
         actor=actor,
     )
 

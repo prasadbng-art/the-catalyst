@@ -1,8 +1,8 @@
 {
   "meta": {
-    "context_id": "8fd9e42d-c083-4392-8447-e83a1d5463f2",
+    "context_id": "03bcb39c-dba0-4fca-9b68-c68bc37a8126",
     "client_id": "acme-india",
-    "created_at": "2026-01-10T06:24:55.579628",
+    "created_at": "2026-01-10T06:31:37.854880",
     "source": "wizard",
     "version": 1
   },
@@ -35,7 +35,7 @@
   },
   "history": [
     {
-      "timestamp": "2026-01-10T06:24:55.579628",
+      "timestamp": "2026-01-10T06:31:37.854880",
       "actor": "wizard",
       "action": "create_context",
       "summary": "Context initialised from baseline"
