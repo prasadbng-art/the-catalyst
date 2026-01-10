@@ -23,6 +23,7 @@ from scenario_simulation_engine import simulate_scenario
 from scenario_v09 import list_scenarios
 from kpi_delta_engine import compute_kpi_deltas
 from visuals.kpi_impact_table import render_kpi_impact_table
+from decision_narrative_engine import generate_decision_narrative
 
 # ============================================================
 # App setup
@@ -233,6 +234,22 @@ def render_current_kpis_page():
             scenario=simulated_context,
         )
         render_kpi_impact_table(deltas)
+
+# ======================================================
+# Phase D2 — Executive Decision Narrative
+# ======================================================
+    if simulated_context:
+        narrative = generate_decision_narrative(
+            deltas=deltas,
+            persona=context["persona"],
+            scenario_label=scenarios[st.session_state["simulate_scenario_id"]]["label"],
+        )
+
+        st.divider()
+        st.subheader(narrative["headline"])
+        st.markdown(narrative["framing"])
+        st.markdown(f"**Summary:** {narrative['summary']}")
+        st.info(narrative["recommendation"])
 
 # ============================================================
 # Router (ONLY place pages are invoked)
