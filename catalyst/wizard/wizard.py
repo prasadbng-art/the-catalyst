@@ -14,6 +14,7 @@ from .steps import (
 )
 from .validators import validate_client_profile
 from client_config import save_client_profile
+from context_persistence import save_context_v1
 
 # ============================================================
 # CLIENT STORAGE (MUST MATCH client_config.py)
@@ -102,6 +103,9 @@ def step_complete(profile: dict):
         return
 
     if st.button("Save Client Profile"):
+        # --------------------------------------------
+        # Extract client identity
+        # --------------------------------------------
         raw_name = profile["client"]["name"].strip()
         if not raw_name:
             st.error("Client name is required.")
@@ -109,41 +113,47 @@ def step_complete(profile: dict):
 
         client_id = raw_name.lower().replace(" ", "_")
 
-        from client_config import save_client_profile
+        # --------------------------------------------
+        # Persist client profile (existing behavior)
+        # --------------------------------------------
         save_client_profile(profile, client_id)
 
-
-        # ---- Activate client immediately
+        # --------------------------------------------
+        # Activate client
+        # --------------------------------------------
         st.session_state.active_client = client_id
 
-# ====================================================
-# STEP 2 — TRANSLATE WIZARD → CONTEXT v1 BASELINE
-# ====================================================
-baseline = {
-    "persona": "CEO",  # persona capture deferred
-    "strategy": {
-        "posture": profile["strategy"]["posture"],
-        "horizon_days": profile["strategy"]["horizon_days"],
-    },
-    "kpis": {
-        "attrition": {
-            "value": 18.0,
-            "status": "amber",
+        # --------------------------------------------
+        # CREATE CONTEXT v1 (baseline from Wizard)
+        # --------------------------------------------
+        baseline = {
+            "persona": "CEO",  # persona capture deferred
+            "strategy": {
+                "posture": profile["strategy"]["posture"],
+                "horizon_days": profile["strategy"]["horizon_days"],
+            },
+            "kpis": {
+                "attrition": {
+                    "value": 18.0,
+                    "status": "amber",
+                }
+            },
         }
-    }
-}
 
-# ====================================================
-# STEP 3 — CREATE CONTEXT v1
-# ====================================================
-st.session_state["context_v1"] = create_context(
-    client_id=client_id,
-    baseline=baseline,
-    source="wizard",
-)
+        st.session_state["context_v1"] = create_context(
+            client_id=client_id,
+            baseline=baseline,
+            source="wizard",
+        )
 
+        # --------------------------------------------
+        # PERSIST CONTEXT v1 (NEW STEP)
+        # --------------------------------------------
+        save_context_v1(st.session_state["context_v1"])
 
-        # ---- Clean wizard state
+        # --------------------------------------------
+        # Cleanup wizard state
+        # --------------------------------------------
         st.session_state.pop("profile", None)
         st.session_state.pop("wizard_step", None)
 
