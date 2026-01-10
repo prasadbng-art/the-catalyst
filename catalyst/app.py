@@ -5,10 +5,17 @@ import streamlit as st
 # ============================================================
 
 from catalyst.wizard.wizard import run_client_wizard
-from catalyst.context_manager_v1 import get_effective_context
+from catalyst.context_manager_v1 import (
+    get_effective_context,
+    get_context_manager,
+)
+from scenario_application_boundary_v1 import (
+    apply_scenario,
+    clear_scenario,
+)
 from visuals.kpi_current import render_kpi_current_performance
 from narrative_engine import generate_narrative
-from scenario_v09 import render_scenario_v09
+from scenario_v09 import render_scenario_v09, list_scenarios
 
 # ============================================================
 # App setup
@@ -27,6 +34,9 @@ if not context:
     st.info("No active context found. Launching Client Wizard.")
     run_client_wizard()
     st.stop()
+
+# Canonical ContextManager (ONLY mutator)
+context_manager = get_context_manager()
 
 # ============================================================
 # Sidebar: Context editor (demo / control only)
@@ -77,6 +87,36 @@ def render_context_editor():
             )
 
 render_context_editor()
+
+# ============================================================
+# Sidebar: Scenario Control (Phase B — Explicit)
+# ============================================================
+
+with st.sidebar.expander("Scenario Control", expanded=False):
+
+    scenarios = list_scenarios()
+    scenario_ids = ["none"] + list(scenarios.keys())
+
+    selected_scenario = st.selectbox(
+        "Active Scenario",
+        scenario_ids,
+        format_func=lambda s: "None" if s == "none" else scenarios[s]["label"],
+    )
+
+    col_a, col_b = st.columns(2)
+
+    with col_a:
+        if st.button("Apply Scenario", disabled=selected_scenario == "none"):
+            apply_scenario(
+                context_manager=context_manager,
+                scenario_id=selected_scenario,
+            )
+            st.success("Scenario applied")
+
+    with col_b:
+        if st.button("Clear Scenario"):
+            clear_scenario(context_manager)
+            st.info("Scenario cleared")
 
 # ============================================================
 # Navigation
