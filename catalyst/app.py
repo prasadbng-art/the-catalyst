@@ -75,7 +75,7 @@ kpi = st.selectbox(
 kpi_state = context["kpis"][kpi]
 
 render_kpi_current_performance(
-    kpi=kpi,
+    kpi=kpi,    
     current_value=kpi_state["value"],
     active_client=None,
 )
