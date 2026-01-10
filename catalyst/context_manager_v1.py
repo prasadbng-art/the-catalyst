@@ -2,14 +2,52 @@
 
 from copy import deepcopy
 from datetime import datetime
-from typing import Dict, List
 import uuid
 import streamlit as st
+from typing import Dict
 
 # ============================================================
-# Context v1 Manager (In-Memory, Persistence-Ready)
+# Context v1 Manager
+# Canonical, invariant-safe implementation
 # ============================================================
 
+
+# ------------------------------------------------------------
+# 🔒 Context invariant initializer (CRITICAL)
+# ------------------------------------------------------------
+
+def _ensure_context_invariants(context: dict) -> dict:
+    """
+    Ensure Context v1 structural invariants.
+    This function makes the context self-healing and safe
+    for all mutation and read paths.
+    """
+
+    # ---- meta
+    if "meta" not in context:
+        context["meta"] = {}
+
+    if "version" not in context["meta"]:
+        context["meta"]["version"] = 1
+
+    # ---- overrides
+    if "overrides" not in context:
+        context["overrides"] = []
+
+    # ---- history
+    if "history" not in context:
+        context["history"] = []
+
+    # ---- effective
+    if "effective" not in context and "baseline" in context:
+        context["effective"] = deepcopy(context["baseline"])
+
+    return context
+
+
+# ------------------------------------------------------------
+# Context creation
+# ------------------------------------------------------------
 
 def create_context(
     *,
@@ -44,20 +82,27 @@ def create_context(
         ],
     }
 
+    return _ensure_context_invariants(context)
+
+
+# ------------------------------------------------------------
+# Accessor
+# ------------------------------------------------------------
+
+def get_effective_context() -> dict | None:
+    """
+    Return the authoritative effective Context v1.
+    """
+
+    if "context_v1" not in st.session_state:
+        return None
+
+    context = _ensure_context_invariants(st.session_state["context_v1"])
     return context
 
 
 # ------------------------------------------------------------
-
-def get_effective_context():
-    """
-    Return the authoritative effective Context v1.
-    """
-    if "context_v1" not in st.session_state:
-        return None
-
-    return st.session_state["context_v1"]["effective"]
-
+# Override application
 # ------------------------------------------------------------
 
 def apply_override(
@@ -67,19 +112,21 @@ def apply_override(
     actor: str,
 ) -> dict:
     """
-    Apply an override to context (non-destructive).
+    Apply an override to Context v1 (non-destructive).
     """
-    if "overrides" not in context:
-        context["overrides"] = []
-        override_entry = {
-        "id": override.get("id", str(uuid.uuid4())),
+
+    context = _ensure_context_invariants(deepcopy(context))
+
+    override_entry = {
+        "id": override["id"],
         "type": override["type"],
         "label": override.get("label", ""),
         "applies_to": override["applies_to"],
         "changes": override["changes"],
-        "expires": override.get("expires", True),
+        "actor": actor,
+        "timestamp": datetime.utcnow(),
     }
-    context = deepcopy(context)
+
     context["overrides"].append(override_entry)
     context["meta"]["version"] += 1
 
@@ -88,7 +135,7 @@ def apply_override(
             "timestamp": datetime.utcnow(),
             "actor": actor,
             "action": "apply_override",
-            "summary": f"Applied override: {override_entry['label']}",
+            "summary": f"Applied override: {override_entry['id']}",
         }
     )
 
@@ -97,6 +144,8 @@ def apply_override(
     return context
 
 
+# ------------------------------------------------------------
+# Override removal
 # ------------------------------------------------------------
 
 def remove_override(
@@ -109,7 +158,7 @@ def remove_override(
     Remove an override by ID.
     """
 
-    context = deepcopy(context)
+    context = _ensure_context_invariants(deepcopy(context))
 
     context["overrides"] = [
         o for o in context["overrides"] if o["id"] != override_id
@@ -132,11 +181,15 @@ def remove_override(
 
 
 # ------------------------------------------------------------
+# Effective context resolution
+# ------------------------------------------------------------
 
 def resolve_effective_context(context: dict) -> dict:
     """
     Compute the effective context by applying overrides to baseline.
     """
+
+    context = _ensure_context_invariants(context)
 
     effective = deepcopy(context["baseline"])
 
@@ -150,7 +203,7 @@ def resolve_effective_context(context: dict) -> dict:
 # Internal helpers
 # ------------------------------------------------------------
 
-def _apply_changes(target: dict, changes: dict):
+def _apply_changes(target: dict, changes: dict) -> None:
     """
     Recursively apply changes into target dict.
     """
