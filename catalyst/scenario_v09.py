@@ -8,8 +8,29 @@ from enum import Enum
 from typing import Dict, List, Optional, Literal
 from dataclasses import dataclass
 from pydantic import BaseModel, Field, validator
-from context_manager_v1 import apply_override
+
+# ==========================================================
+# Context v1 Override Wiring (Steps 2, 3, 4, 5)
+# ==========================================================
+
+from context_manager_v1 import apply_override, remove_override
 from scenario_override_adapter import scenario_to_override
+
+
+def reset_scenario_overrides(context_v1: dict) -> dict:
+    """
+    Remove all scenario overrides before applying a new one.
+    Enforces pairwise-only integrity.
+    """
+    for o in list(context_v1.get("overrides", [])):
+        if o.get("type") == "scenario":
+            context_v1 = remove_override(
+                context=context_v1,
+                override_id=o["id"],
+                actor="scenario_v09",
+            )
+    return context_v1
+
 
 # ==========================================================
 # Enums
@@ -35,6 +56,7 @@ class Direction(str, Enum):
     up = "up"
     down = "down"
     neutral = "neutral"
+
 
 # ==========================================================
 # Scenario Schema (v0.9)
@@ -97,6 +119,7 @@ class ScenarioV09(BaseModel):
     constraints: ConstraintBlock
     axis_exposure: AxisExposure
     metrics: Optional[MetricMapping] = None
+
 
 # ==========================================================
 # Example Scenarios (Embedded)
@@ -171,8 +194,9 @@ SCENARIOS = {
     )
 }
 
+
 # ==========================================================
-# Comparison Engine
+# Comparison Engine (UNCHANGED)
 # ==========================================================
 
 QUAL_MAP = {"low": 1, "medium": 2, "high": 3}
@@ -195,7 +219,6 @@ def delta_magnitude(diff: int) -> str:
 def compare_axes(a: ScenarioV09, b: ScenarioV09) -> List[AxisDelta]:
     deltas: List[AxisDelta] = []
 
-    # Capital
     diff = QUAL_MAP[a.axis_exposure.capital_intensity] - QUAL_MAP[b.axis_exposure.capital_intensity]
     if diff != 0:
         deltas.append(AxisDelta(
@@ -205,7 +228,6 @@ def compare_axes(a: ScenarioV09, b: ScenarioV09) -> List[AxisDelta]:
             interpretation="Higher capital commitment in exchange for broader intervention scope"
         ))
 
-    # Time
     diff = TIME_MAP[a.axis_exposure.time_to_impact] - TIME_MAP[b.axis_exposure.time_to_impact]
     if diff != 0:
         deltas.append(AxisDelta(
@@ -215,7 +237,6 @@ def compare_axes(a: ScenarioV09, b: ScenarioV09) -> List[AxisDelta]:
             interpretation="Faster visible impact at the cost of long-term durability"
         ))
 
-    # Execution risk (lower is better)
     diff = QUAL_MAP[a.axis_exposure.execution_risk] - QUAL_MAP[b.axis_exposure.execution_risk]
     if diff != 0:
         deltas.append(AxisDelta(
@@ -225,7 +246,6 @@ def compare_axes(a: ScenarioV09, b: ScenarioV09) -> List[AxisDelta]:
             interpretation="Lower execution risk due to organisational familiarity"
         ))
 
-    # Cultural risk (lower is better)
     diff = QUAL_MAP[a.axis_exposure.cultural_risk] - QUAL_MAP[b.axis_exposure.cultural_risk]
     if diff != 0:
         deltas.append(AxisDelta(
@@ -235,7 +255,6 @@ def compare_axes(a: ScenarioV09, b: ScenarioV09) -> List[AxisDelta]:
             interpretation="Lower likelihood of employee backlash or disengagement"
         ))
 
-    # Posture
     if a.axis_exposure.posture_signal != b.axis_exposure.posture_signal:
         deltas.append(AxisDelta(
             axis="posture",
@@ -245,6 +264,7 @@ def compare_axes(a: ScenarioV09, b: ScenarioV09) -> List[AxisDelta]:
         ))
 
     return deltas
+
 
 def detect_asymmetry(deltas: List[AxisDelta]) -> str:
     gains = [d for d in deltas if d.direction == "A_over_B"]
@@ -258,8 +278,9 @@ def detect_asymmetry(deltas: List[AxisDelta]) -> str:
         return "defensive_choice"
     return "neutral"
 
+
 # ==========================================================
-# Narrative Engine
+# Narrative Engine (UNCHANGED)
 # ==========================================================
 
 def generate_narrative(a: ScenarioV09, b: ScenarioV09, deltas: List[AxisDelta], asymmetry: str):
@@ -282,6 +303,7 @@ def generate_narrative(a: ScenarioV09, b: ScenarioV09, deltas: List[AxisDelta], 
         "framing": framing_map[asymmetry]
     }
 
+
 # ==========================================================
 # UI Renderer (Entry Point)
 # ==========================================================
@@ -302,6 +324,32 @@ def render_scenario_v09():
 
     scenario_a = SCENARIOS[a_label]
     scenario_b = SCENARIOS[b_label]
+
+    # ======================================================
+    # STEP 3 & 4 — APPLY CONTEXT v1 OVERRIDES (PAIRWISE)
+    # ======================================================
+
+    context_v1 = st.session_state.get("context_v1")
+    if context_v1:
+        context_v1 = reset_scenario_overrides(context_v1)
+
+        override = scenario_to_override(
+            scenario_id=f"scenario_{scenario_a.identity.id}_vs_{scenario_b.identity.id}",
+            label=f"{scenario_a.identity.label} vs {scenario_b.identity.label}",
+            payload={
+                "strategy": {
+                    "posture": scenario_a.axis_exposure.posture_signal.value
+                }
+            },
+        )
+
+        context_v1 = apply_override(
+            context=context_v1,
+            override=override,
+            actor="scenario_v09",
+        )
+
+        st.session_state["context_v1"] = context_v1
 
     deltas = compare_axes(scenario_a, scenario_b)
     if not deltas:
@@ -344,3 +392,13 @@ def render_scenario_v09():
         st.markdown(f"- {b}")
     st.markdown("---")
     st.markdown(narrative["framing"])
+
+    # ======================================================
+    # STEP 5 — CLEAR SCENARIO (RETURN TO BASELINE)
+    # ======================================================
+
+    if st.button("Clear Scenario"):
+        context_v1 = st.session_state.get("context_v1")
+        if context_v1:
+            context_v1 = reset_scenario_overrides(context_v1)
+            st.session_state["context_v1"] = context_v1
