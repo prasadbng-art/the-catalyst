@@ -10,7 +10,7 @@ This version matches the actual Context v1 API
 
 from catalyst.context_manager_v1 import apply_override, remove_override
 from scenario_v09 import get_scenario_overrides
-
+from catalyst.context_manager_v1 import get_effective_context, remove_override
 
 def apply_scenario(
     scenario_id: str,
@@ -34,15 +34,17 @@ def apply_scenario(
         actor=actor,
     )
 
-
-def clear_scenario(
-    actor: str = "scenario_engine_v1",
-) -> None:
+def clear_scenario(actor: str = "scenario_engine_v1") -> None:
     """
-    Remove any active scenario override.
+    Remove active scenario override (if any).
     """
 
-    remove_override(
-        override_type="scenario",
-        actor=actor,
-    )
+    context = get_effective_context()
+    overrides = context.get("overrides", [])
+
+    for o in overrides:
+        if o.get("type") == "scenario":
+            remove_override(
+                override_id=o["id"],
+                actor=actor,
+            )
