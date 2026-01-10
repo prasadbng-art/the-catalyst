@@ -8,7 +8,7 @@ from catalyst.context_manager_v1 import get_effective_context
 from visuals.kpi_current import render_kpi_current_performance
 # from narrative_engine import generate_narrative
 from demo_loader_v1 import load_demo_context_v1
-from catalyst.ingestion.file_ingest_v1 import load_workforce_file
+from catalyst.file_ingest_v1 import load_workforce_file
 
 # ============================================================
 # App setup
