@@ -1,54 +1,49 @@
-import sys
-from pathlib import Path
-
-# --------------------------------------------------
-# Ensure project root is on Python path (Streamlit)
-# --------------------------------------------------
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
-# --------------------------------------------------
-
 import streamlit as st
+
+# ============================================================
+# Imports (authoritative, no duplicates)
+# ============================================================
+
 from catalyst.wizard.wizard import run_client_wizard
+from catalyst.context_manager_v1 import get_effective_context
 from visuals.kpi_current import render_kpi_current_performance
 from narrative_engine import generate_narrative
 from scenario_v09 import render_scenario_v09
-from context_persistence import load_context_v1
-from context_manager_v1 import get_effective_context
 
 # ============================================================
-# CONTEXT RETRIEVAL HELPER 
+# App setup
 # ============================================================
 
-def get_effective_context():
-    """
-    Authoritative context accessor (v1 only).
-    """
-    if "context_v1" not in st.session_state:
-        st.error("No active context found. Please run the Client Wizard.")
-        st.stop()
+st.set_page_config(page_title="Catalyst", layout="wide")
+st.title("Catalyst")
 
-    return st.session_state["context_v1"]["effective"]
+# ============================================================
+# 🔒 CONTEXT GATE (SINGLE, AUTHORITATIVE)
+# ============================================================
 
-# --------------------------------------------------
-# Context editor (DEFINE FIRST)
-# --------------------------------------------------
+context = get_effective_context()
+
+if not context:
+    st.info("No active context found. Launching Client Wizard.")
+    run_client_wizard()
+    st.stop()
+
+# ============================================================
+# Sidebar: Context editor (demo / control only)
+# ============================================================
 
 def render_context_editor():
     """
     Temporary demo/control panel for Catalyst context.
-    This is NOT part of page logic.
+    Context is assumed to exist.
     """
-
     with st.sidebar.expander("Context (Demo Control)", expanded=False):
-        context = get_effective_context()
 
         # ---- Persona
         context["persona"] = st.selectbox(
             "Persona",
             ["CEO", "CFO", "CHRO"],
-            index=["CEO", "CFO", "CHRO"].index(context["persona"])
+            index=["CEO", "CFO", "CHRO"].index(context["persona"]),
         )
 
         # ---- Strategy posture
@@ -57,7 +52,7 @@ def render_context_editor():
             ["cost", "growth", "balanced"],
             index=["cost", "growth", "balanced"].index(
                 context["strategy"]["posture"]
-            )
+            ),
         )
 
         st.markdown("### KPI Baseline")
@@ -71,60 +66,49 @@ def render_context_editor():
                 max_value=100.0,
                 value=float(kpi_state["value"]),
                 step=0.5,
-                key=f"{kpi}_value"
+                key=f"{kpi}_value",
             )
 
             kpi_state["status"] = st.selectbox(
                 f"{kpi} status",
                 ["green", "amber", "red"],
                 index=["green", "amber", "red"].index(kpi_state["status"]),
-                key=f"{kpi}_status"
+                key=f"{kpi}_status",
             )
-# --------------------------------------------------
-# App setup
-# --------------------------------------------------
-st.set_page_config(page_title="Catalyst", layout="wide")
-st.title("Catalyst")
 
 render_context_editor()
 
-def render_current_kpis_page():
-    st.header("Current KPI Performance")
-context = get_effective_context()
+# ============================================================
+# Navigation
+# ============================================================
 
-kpi = st.selectbox(
-    "Select KPI",
-    list(context["kpis"].keys())
+page = st.sidebar.selectbox(
+    "Navigate",
+    [
+        "Sentiment Health",
+        "Current KPIs",
+        "Scenario Comparison (v0.9)",
+        "Wizard",
+    ],
 )
 
-kpi_state = context["kpis"][kpi]
-
-render_kpi_current_performance(
-    kpi=kpi,    
-    current_value=kpi_state["value"],
-    active_client=None,
-)
+# ============================================================
+# Pages (context is guaranteed to exist)
+# ============================================================
 
 def render_sentiment_health_page():
     st.header("Sentiment Health")
     st.caption("Narrative decision support")
 
-    context = get_effective_context()
-
-    persona = context["persona"]
-    strategy = context["strategy"]  
-    kpi_state = context["kpis"]["attrition"]
-
     narrative = generate_narrative(
         kpi="attrition",
-        kpi_state=kpi_state,
+        kpi_state=context["kpis"]["attrition"],
         client_context=None,
-        persona=persona,
-        strategy_context={"posture": "cost"},
+        persona=context["persona"],
+        strategy_context=context["strategy"],
     )
 
     st.divider()
-
     st.subheader(narrative["headline"])
     st.markdown(narrative["interpretation"])
     st.markdown("**Risk statement**")
@@ -133,16 +117,25 @@ def render_sentiment_health_page():
     st.info(narrative["recommended_posture"])
     st.caption(f"Confidence: {narrative['confidence']}")
 
+def render_current_kpis_page():
+    st.header("Current KPI Performance")
 
-page = st.sidebar.selectbox(
-    "Navigate",
-    [
-        "Wizard",
-        "Sentiment Health",
-        "Current KPIs",
-        "Scenario Comparison (v0.9)"
-    ]
-)
+    kpi = st.selectbox(
+        "Select KPI",
+        list(context["kpis"].keys()),
+    )
+
+    kpi_state = context["kpis"][kpi]
+
+    render_kpi_current_performance(
+        kpi=kpi,
+        current_value=kpi_state["value"],
+        active_client=None,
+    )
+
+# ============================================================
+# Router (ONLY place pages are invoked)
+# ============================================================
 
 if page == "Wizard":
     run_client_wizard()
@@ -155,4 +148,3 @@ elif page == "Current KPIs":
 
 elif page == "Scenario Comparison (v0.9)":
     render_scenario_v09()
-# ============================================================
