@@ -11,7 +11,6 @@ from catalyst.wizard.wizard import run_client_wizard
 from catalyst.context_manager_v1 import get_effective_context
 from scenario_application_boundary_v1 import apply_scenario, clear_scenario
 from scenario_state_reader import get_active_scenario
-
 from scenario_application_boundary_v1 import (
     apply_scenario,
     clear_scenario,
@@ -19,6 +18,8 @@ from scenario_application_boundary_v1 import (
 from visuals.kpi_current import render_kpi_current_performance
 from narrative_engine import generate_narrative
 from scenario_comparison_v09 import render_scenario_v09
+from scenario_v09 import list_scenarios
+from scenario_simulation_engine import simulate_scenario
 from scenario_v09 import list_scenarios
 
 # ============================================================
@@ -39,6 +40,13 @@ if not context:
     run_client_wizard()
     st.stop()
 
+simulated_context = None
+
+if st.session_state.get("simulate") and st.session_state.get("simulate_scenario_id") != "none":
+    simulated_context = simulate_scenario(
+        base_context=context,
+        scenario_id=st.session_state["simulate_scenario_id"],
+    )
 
 # ============================================================
 # Sidebar: Scenario Status (Phase C1)
@@ -131,6 +139,26 @@ with st.sidebar.expander("Scenario Control", expanded=False):
         clear_scenario()
         st.info("Scenario cleared")
 
+# ============================================================
+# Sidebar: What-If Simulation (Phase C2)
+# ============================================================
+
+with st.sidebar.expander("What-If Simulation", expanded=False):
+
+    scenarios = list_scenarios()
+    scenario_ids = list(scenarios.keys())
+
+    simulate_id = st.selectbox(
+        "Simulate scenario",
+        ["none"] + scenario_ids,
+        format_func=lambda s: "None" if s == "none" else scenarios[s]["label"],
+        key="simulate_scenario_id",
+    )
+
+    simulate = st.button(
+        "Run Simulation",
+        disabled=simulate_id == "none",
+    )
 
 # ============================================================
 # Navigation
@@ -174,12 +202,20 @@ def render_sentiment_health_page():
 def render_current_kpis_page():
     st.header("Current KPI Performance")
 
+    active_context = simulated_context if simulated_context else context
+
+    if simulated_context:
+        st.info(
+            f"Simulated scenario: "
+            f"{scenarios[st.session_state['simulate_scenario_id']]['label']}"
+        )
+
     kpi = st.selectbox(
         "Select KPI",
-        list(context["kpis"].keys()),
+        list(active_context["kpis"].keys()),
     )
 
-    kpi_state = context["kpis"][kpi]
+    kpi_state = active_context["kpis"][kpi]
 
     render_kpi_current_performance(
         kpi=kpi,
