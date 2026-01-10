@@ -44,11 +44,12 @@ def render_demo_entry():
     )
 
     st.divider()
+    
+if st.button("▶ Run Interactive Demo", use_container_width=True):
+    load_demo_context_v1()
+    st.session_state["demo_mode"] = True
+    st.rerun()
 
-    if st.button("▶ Run Interactive Demo", use_container_width=True):
-        st.session_state["context_v1"] = load_demo_context_v1()
-        st.session_state["demo_mode"] = True
-        st.rerun()
 
 # # ============================================================
 # 🔒 CONTEXT ENTRY GATE (AUTHORITATIVE)
