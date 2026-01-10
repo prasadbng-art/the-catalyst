@@ -110,26 +110,34 @@ context["strategy"] = strategy
 
 st.markdown("### KPI Baseline")
 
-for kpi, kpi_state in context["kpis"].items():
-            st.markdown(f"**{kpi.title()}**")
+kpis = context.get("kpis", {})
 
-            kpi_state["value"] = st.slider(
-                f"{kpi} value",
-                min_value=0.0,
-                max_value=100.0,
-                value=float(kpi_state["value"]),
-                step=0.5,
-                key=f"{kpi}_value",
-            )
+if not kpis:
+    st.info("No KPIs configured for this client.")
+else:
+    for kpi, kpi_state in kpis.items():
+        st.markdown(f"**{kpi.title()}**")
 
-            kpi_state["status"] = st.selectbox(
-                f"{kpi} status",
-                ["green", "amber", "red"],
-                index=["green", "amber", "red"].index(kpi_state["status"]),
-                key=f"{kpi}_status",
-            )
+        kpi_state["value"] = st.slider(
+            f"{kpi} value",
+            min_value=0.0,
+            max_value=100.0,
+            value=float(kpi_state.get("value", 0.0)),
+            step=0.5,
+            key=f"{kpi}_value",
+        )
 
-render_context_editor()
+        kpi_state["status"] = st.selectbox(
+            f"{kpi} status",
+            ["green", "amber", "red"],
+            index=["green", "amber", "red"].index(
+                kpi_state.get("status", "amber")
+            ),
+            key=f"{kpi}_status",
+        )
+
+    context["kpis"] = kpis
+
 
 # ============================================================
 # Sidebar: Scenario Control (Phase B — Explicit)
