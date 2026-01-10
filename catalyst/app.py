@@ -208,12 +208,20 @@ def render_sentiment_health_page():
     st.header("Sentiment Health")
     st.caption("Narrative decision support")
 
+    kpis = context.get("kpis", {})
+
+    if "attrition" not in kpis:
+        st.info("Sentiment Health insights are unavailable because Attrition KPI is not configured for this client.")
+        return
+
+    kpi_state = kpis["attrition"]
+
     narrative = generate_narrative(
         kpi="attrition",
-        kpi_state=context["kpis"]["attrition"],
+        kpi_state=kpi_state,
         client_context=None,
-        persona=context["persona"],
-        strategy_context=context["strategy"],
+        persona=context.get("persona", "CEO"),
+        strategy_context=context.get("strategy", {}),
     )
 
     st.divider()
@@ -224,6 +232,7 @@ def render_sentiment_health_page():
     st.markdown("**Recommended posture**")
     st.info(narrative["recommended_posture"])
     st.caption(f"Confidence: {narrative['confidence']}")
+
 
 def render_current_kpis_page():
     st.header("Current KPI Performance")
