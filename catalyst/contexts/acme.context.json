@@ -1,8 +1,8 @@
 {
   "meta": {
-    "context_id": "6faddb77-58bd-4739-8ee7-7d803d537d4c",
+    "context_id": "27c935e4-3fdf-4096-80bb-b7f4b1c0421f",
     "client_id": "acme",
-    "created_at": "2026-01-10T07:25:59.789212",
+    "created_at": "2026-01-10T07:32:24.086220",
     "source": "wizard",
     "version": 1
   },
@@ -35,7 +35,7 @@
   },
   "history": [
     {
-      "timestamp": "2026-01-10T07:25:59.789212",
+      "timestamp": "2026-01-10T07:32:24.086220",
       "actor": "wizard",
       "action": "create_context",
       "summary": "Context initialised from baseline"
