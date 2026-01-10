@@ -49,7 +49,7 @@ def create_context(
 
 # ------------------------------------------------------------
 
-def get_context(session_state: dict) -> dict:
+def get_effective_context(session_state: dict) -> dict:
     """
     Retrieve the active Context v1 from session state.
     """
