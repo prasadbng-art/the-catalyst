@@ -4,20 +4,21 @@ from wizard.wizard import run_client_wizard
 from visuals.kpi_current import render_kpi_current_performance
 from narrative_engine import generate_narrative
 from scenario_v09 import render_scenario_v09
-from context import get_active_context
+from context_persistence import load_context_v1
+
+# ============================================================
+# CONTEXT RETRIEVAL HELPER 
+# ============================================================
 
 def get_effective_context():
     """
-    Return Context v1 effective view if available,
-    else fall back to v0.9 context.
+    Authoritative context accessor (v1 only).
     """
+    if "context_v1" not in st.session_state:
+        st.error("No active context found. Please run the Client Wizard.")
+        st.stop()
 
-    if "context_v1" in st.session_state:
-        return st.session_state["context_v1"]["effective"]
-
-    # v0.9 fallback
-    from context import get_active_context
-    return get_active_context()
+    return st.session_state["context_v1"]["effective"]
 
 # --------------------------------------------------
 # Context editor (DEFINE FIRST)
