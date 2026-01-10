@@ -1,0 +1,44 @@
+{
+  "meta": {
+    "context_id": "9505557f-6f25-404f-86ed-744cdbd05013",
+    "client_id": "acme_india",
+    "created_at": "2026-01-10T05:37:00.482373",
+    "source": "wizard",
+    "version": 1
+  },
+  "baseline": {
+    "persona": "CEO",
+    "strategy": {
+      "posture": "cost",
+      "horizon_days": 90
+    },
+    "kpis": {
+      "attrition": {
+        "value": 18.0,
+        "status": "amber"
+      }
+    }
+  },
+  "overrides": [],
+  "effective": {
+    "persona": "CEO",
+    "strategy": {
+      "posture": "cost",
+      "horizon_days": 90
+    },
+    "kpis": {
+      "attrition": {
+        "value": 18.0,
+        "status": "amber"
+      }
+    }
+  },
+  "history": [
+    {
+      "timestamp": "2026-01-10T05:37:00.482373",
+      "actor": "wizard",
+      "action": "create_context",
+      "summary": "Context initialised from baseline"
+    }
+  ]
+}
