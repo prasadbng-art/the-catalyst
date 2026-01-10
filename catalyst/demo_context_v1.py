@@ -1,4 +1,4 @@
-    # demo_context_v1.py
+# demo_context_v1.py
 
 DEMO_BASELINE_CONTEXT = {
     "client": {
@@ -14,16 +14,35 @@ DEMO_BASELINE_CONTEXT = {
     "strategy": {
         "primary_focus": "Retention & Capability Stability",
         "time_horizon_months": 18,
-        "risk_tolerance": "Medium"
+        "risk_tolerance": "Medium",
+        "posture": "balanced"
     },
 
     "kpis": {
-        "attrition_rate": 0.184,
-        "high_performer_attrition": 0.072,
-        "manager_effectiveness": 0.61,
-        "engagement_index": 0.58,
-        "sentiment_health": 0.55,
-        "regretted_loss_rate": 0.041
+        "attrition": {
+            "value": 18.4,
+            "status": "red"
+        },
+        "high_performer_attrition": {
+            "value": 7.2,
+            "status": "amber"
+        },
+        "manager_effectiveness": {
+            "value": 61.0,
+            "status": "amber"
+        },
+        "engagement_index": {
+            "value": 58.0,
+            "status": "red"
+        },
+        "sentiment_health": {
+            "value": 55.0,
+            "status": "amber"
+        },
+        "regretted_loss_rate": {
+            "value": 4.1,
+            "status": "amber"
+        }
     },
 
     "workforce": {
