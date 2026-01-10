@@ -77,15 +77,22 @@ def render_context_editor():
     """
     with st.sidebar.expander("Context (Demo Control)", expanded=False):
 
-        # ---- Persona
-        context["persona"] = st.selectbox(
-            "Persona",
-            ["CEO", "CFO", "CHRO"],
-            index=["CEO", "CFO", "CHRO"].index(context["persona"]),
-        )
+        # ---- Persona (UI-level default)
+        persona_options = ["CEO", "CFO", "CHRO"]
 
-        # ---- Strategy posture
-        context["strategy"]["posture"] = st.selectbox(
+    current_persona = context.get("persona", "CEO")
+    if current_persona not in persona_options:
+        current_persona = "CEO"
+
+    context["persona"] = st.selectbox(
+        "Persona",
+        persona_options,
+        index=persona_options.index(current_persona),
+    )
+
+
+# ---- Strategy posture
+    context["strategy"]["posture"] = st.selectbox(
             "Strategy posture",
             ["cost", "growth", "balanced"],
             index=["cost", "growth", "balanced"].index(
@@ -93,9 +100,9 @@ def render_context_editor():
             ),
         )
 
-        st.markdown("### KPI Baseline")
+    st.markdown("### KPI Baseline")
 
-        for kpi, kpi_state in context["kpis"].items():
+    for kpi, kpi_state in context["kpis"].items():
             st.markdown(f"**{kpi.title()}**")
 
             kpi_state["value"] = st.slider(
