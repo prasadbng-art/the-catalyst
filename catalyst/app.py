@@ -246,15 +246,16 @@ def render_sentiment_health_page():
         st.info("Attrition KPI not configured.")
         return
 
-    kpi_state = kpis["attrition"]
-
     st.divider()
     st.info(
-    "This view summarizes workforce risk based on uploaded data. "
-    "Use the What-If Sandbox to explore how changes in attrition risk, "
-    "engagement, and manager effectiveness alter outcomes."
-)
+        "This view summarizes workforce risk based on uploaded data. "
+        "Use the What-If Sandbox to explore how changes in attrition risk, "
+        "engagement, and manager effectiveness alter outcomes."
+    )
 
+    # ----------------------------
+    # KPI source selection
+    # ----------------------------
     if "what_if_kpis" in st.session_state:
         kpis = st.session_state["what_if_kpis"]
     else:
@@ -273,11 +274,24 @@ def render_sentiment_health_page():
         active_client=None,
     )
 
-    #st.divider()
-    #st.subheader(narrative["headline"])
-    #st.markdown(narrative["framing"])
-    #st.markdown(f"**Summary:** {narrative['summary']}")
-    #st.info(narrative["recommendation"])
+    # ====================================================
+    # ✅ WHAT-IF NARRATIVE (INSERT HERE — AT THE BOTTOM)
+    # ====================================================
+    if "what_if_kpis" in st.session_state:
+        from catalyst.what_if_narrative_engine_v1 import generate_what_if_narrative
+
+        narrative = generate_what_if_narrative(
+            baseline_kpis=context["baseline"]["kpis"],
+            what_if_kpis=st.session_state["what_if_kpis"],
+            persona=context["persona"],
+        )
+
+        st.divider()
+        st.subheader(narrative["headline"])
+        st.markdown(narrative["summary"])
+        st.markdown(narrative["implication"])
+        st.info(narrative["recommendation"])
+
 
 page = st.sidebar.selectbox(
     "Navigate",
