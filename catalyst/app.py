@@ -315,7 +315,7 @@ costs = compute_cost_framing(
 # Navigation
 # ============================================================
 
-page = st.sidebar.selectbox(
+    page = st.sidebar.selectbox(
     "Navigate",
     ["Sentiment Health", "Current KPIs"],
 )
