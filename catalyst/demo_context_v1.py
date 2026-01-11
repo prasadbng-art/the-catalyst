@@ -21,6 +21,7 @@ DEMO_BASELINE_CONTEXT = {
     "kpis": {
         "attrition_risk": {
             "value": 18.4,
+            "unit": "percent",
             "status": "red"
         },
         "high_performer_attrition": {
