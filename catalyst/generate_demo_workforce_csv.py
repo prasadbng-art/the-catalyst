@@ -84,15 +84,15 @@ def generate_employee(i):
     salary = int(base_salary * random.uniform(0.9, 1.1))
 
     return {
-        "employee_id": f"E{i:04d}",
-        "manager_id": manager_id,
-        "role": role,
-        "performance_band": performance_band,
-        "salary": salary,
-        "tenure_months": tenure_months,
-        "attrition_risk_score": attrition_risk_score,
-    }
-
+    "employee_id": f"E{i:04d}",
+    "manager_id": manager_id,
+    "role": role,
+    "performance_band": performance_band,
+    "salary": salary,
+    "tenure_months": tenure_months,
+    "engagement_score": engagement_score,          # ✅ ADD THIS
+    "attrition_risk_score": attrition_risk_score,
+}
 
 # --------------------------------------------------
 # Main
