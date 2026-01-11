@@ -1,4 +1,24 @@
 KPI_REGISTRY = {
+    
+    # --- existing KPIs ---
+
+    "attrition_risk": {
+        "label": "Attrition Risk",
+        "unit": "%",
+        "description": "Estimated probability of employee exits over the next 12 months",
+        "direction": "lower_is_better",
+        "format": "percentage",
+    },
+
+    "predicted_attrition_12m": {
+        "label": "Predicted Attrition (12 Months)",
+        "unit": "employees",
+        "description": "Expected number of employee exits over the next 12 months",
+        "direction": "lower_is_better",
+        "format": "integer",
+    },
+}
+
     "attrition": {
         "label": "Attrition Intelligence",
         "metrics": [
