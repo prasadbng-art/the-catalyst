@@ -15,12 +15,29 @@ from catalyst.file_ingest_v1 import load_workforce_file
 # ============================================================
 
 st.set_page_config(page_title="Catalyst", layout="wide")
+st.markdown(
+    """
+    <style>
+    .landing-card {
+        max-width: 720px;
+        margin: 60px auto;
+        padding: 40px;
+        border-radius: 12px;
+        background-color: #ffffff;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 # ============================================================
 # 🎬 DEMO ENTRY LANDING
 # ============================================================
 
 def render_demo_entry():
+    st.markdown('<div class="landing-card">', unsafe_allow_html=True)
+
     st.markdown("## Catalyst")
     st.markdown("### Interactive Talent Intelligence Demo")
 
@@ -51,6 +68,7 @@ def render_demo_entry():
         "You will be prompted to upload a simple workforce snapshot (CSV or Excel)."
     )
 
+    st.markdown("</div>", unsafe_allow_html=True)
 
 
 # # ============================================================
