@@ -9,6 +9,7 @@ from visuals.kpi_current import render_kpi_current_performance
 from demo_loader_v1 import load_demo_context_v1
 from catalyst.file_ingest_v1 import load_workforce_file
 from catalyst.analytics.baseline_kpi_builder_v1 import build_baseline_kpis
+from catalyst.analytics.cost_framing_v1 import compute_cost_framing
 
 # ============================================================
 # App setup
@@ -246,6 +247,13 @@ st.sidebar.divider()
 if st.sidebar.button("↩ Reset What-If"):
     st.session_state["what_if_kpis"] = None
 
+costs = compute_cost_framing(
+    baseline_kpis=context["baseline"]["kpis"],
+    workforce_df=st.session_state["workforce_df"],
+    financials=context.get("financials", {}),
+    what_if_kpis=st.session_state.get("what_if_kpis"),
+)
+
 # ============================================================
 # Navigation
 # ============================================================
@@ -284,6 +292,37 @@ def render_current_kpis_page():
         current_value=kpi_state.get("value", 0.0),
         active_client=None,
     )
+
+    # --------------------------------------------------
+    # 💰 Cost Framing (Phase I)
+    # --------------------------------------------------
+
+    costs = compute_cost_framing(
+        baseline_kpis=context["baseline"]["kpis"],
+        workforce_df=st.session_state["workforce_df"],
+        financials=context.get("financials", {}),
+        what_if_kpis=st.session_state.get("what_if_kpis"),
+    )
+
+    st.divider()
+    st.subheader("💰 Economic Impact")
+
+    st.metric(
+        "Baseline Attrition Cost Exposure",
+        f"₹{costs['baseline_cost_exposure'] / 1e7:.1f} Cr",
+    )
+
+    st.metric(
+        "Preventable Cost (Estimated)",
+        f"₹{costs['preventable_cost'] / 1e7:.1f} Cr",
+    )
+
+    if costs["what_if_cost_impact"]:
+        st.success(
+            f"This What-If scenario avoids approximately "
+            f"₹{costs['what_if_cost_impact'] / 1e7:.1f} Cr in attrition cost."
+        )
+
 
 # ============================================================
 # Router
