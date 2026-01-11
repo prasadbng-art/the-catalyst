@@ -36,20 +36,11 @@ st.markdown(
 # Session State Initialization (AUTHORITATIVE)
 # ============================================================
 
-if "context_v1" not in st.session_state:
-    st.session_state["context_v1"] = None
-
-if "demo_mode" not in st.session_state:
-    st.session_state["demo_mode"] = False
-
-if "demo_welcomed" not in st.session_state:
-    st.session_state["demo_welcomed"] = False
-
-if "workforce_df" not in st.session_state:
-    st.session_state["workforce_df"] = None
-
-if "what_if_kpis" not in st.session_state:
-    st.session_state["what_if_kpis"] = None
+st.session_state.setdefault("context_v1", None)
+st.session_state.setdefault("demo_mode", False)
+st.session_state.setdefault("demo_welcomed", False)
+st.session_state.setdefault("workforce_df", None)
+st.session_state.setdefault("what_if_kpis", None)
 
 # ============================================================
 # 🎬 DEMO ENTRY LANDING
@@ -131,12 +122,9 @@ if not st.session_state["demo_welcomed"]:
     st.session_state["demo_welcomed"] = True
 
 # ============================================================
-# SIDEBAR — PHASE I DEMO
+# SIDEBAR — DATA INGESTION
 # ============================================================
 
-# ----------------------------
-# 📄 Upload Workforce Data
-# ----------------------------
 st.sidebar.markdown("## 📄 Upload Workforce Data")
 
 uploaded_file = st.sidebar.file_uploader(
@@ -147,33 +135,9 @@ uploaded_file = st.sidebar.file_uploader(
 if uploaded_file:
     df, errors, warnings = load_workforce_file(uploaded_file)
 
-# ----------------------------
-# Derive baseline KPIs from workforce data
-# ----------------------------
-
-baseline_kpis = {
-    "attrition_risk": {
-        "value": attrition_risk,
-        "unit": "percent",
-        "status": "red" if attrition_risk > 15 else "amber",
-    },
-    "engagement_index": {
-        "value": round(df["engagement_score"].mean(), 1),
-        "unit": "index",
-    },
-    "manager_effectiveness": {
-        "value": round(df["manager_effectiveness_score"].mean(), 1),
-        "unit": "index",
-    },
-}
-
-# Inject into context
-st.session_state["context_v1"]["baseline"]["kpis"] = baseline_kpis
-
-
-if errors:
-    for e in errors:
-        st.sidebar.error(e)
+    if errors:
+        for e in errors:
+            st.sidebar.error(e)
         st.stop()
 
     for w in warnings:
@@ -182,17 +146,14 @@ if errors:
     st.session_state["workforce_df"] = df
     st.sidebar.success(f"Loaded {len(df)} employee records")
 
-# ---------------------------------
-# Build baseline KPIs from workforce
-# ---------------------------------
-baseline_kpis = build_baseline_kpis(df)
+    # ---------------------------------
+    # Build baseline KPIs (ONLY place)
+    # ---------------------------------
+    baseline_kpis = build_baseline_kpis(df)
 
-# Ensure context structure exists
-context.setdefault("baseline", {})
-context["baseline"]["kpis"] = baseline_kpis
-
-# Also expose as current KPIs
-context["kpis"] = baseline_kpis
+    context.setdefault("baseline", {})
+    context["baseline"]["kpis"] = baseline_kpis
+    context["kpis"] = baseline_kpis
 
 # ============================================================
 # EMPTY STATE (NO DATA)
@@ -251,29 +212,21 @@ context["persona"] = st.sidebar.selectbox(
 st.sidebar.markdown("## 🧪 What-If Sandbox")
 
 attrition_reduction = st.sidebar.slider(
-    "Reduce attrition risk (%)",
-    0, 30, 0,
-    help="Retention programs, compensation actions, policy changes"
+    "Reduce attrition risk (%)", 0, 30, 0
 )
 
 engagement_lift = st.sidebar.slider(
-    "Increase engagement (points)",
-    0, 20, 0,
-    help="Culture, workload balance, manager quality"
+    "Increase engagement (points)", 0, 20, 0
 )
 
 manager_lift = st.sidebar.slider(
-    "Improve manager effectiveness (points)",
-    0, 20, 0,
-    help="Coaching, capability building"
+    "Improve manager effectiveness (points)", 0, 20, 0
 )
 
 run_what_if = st.sidebar.button("Apply What-If")
 
 if run_what_if:
     from catalyst.analytics.what_if_engine_v1 import apply_what_if
-
-    baseline_kpis = context["baseline"]["kpis"]
 
     levers = {
         "attrition_risk_reduction_pct": attrition_reduction,
@@ -284,12 +237,12 @@ if run_what_if:
     }
 
     st.session_state["what_if_kpis"] = apply_what_if(
-        baseline_kpis,
-        levers
+        context["baseline"]["kpis"],
+        levers,
     )
 
-# Reset What-If
 st.sidebar.divider()
+
 if st.sidebar.button("↩ Reset What-If"):
     st.session_state["what_if_kpis"] = None
 
@@ -308,12 +261,9 @@ page = st.sidebar.selectbox(
 
 def render_sentiment_health_page():
     st.header("Sentiment Health")
-    st.caption("Narrative decision support")
-
-    st.info(
-        "This view summarizes workforce risk derived from uploaded data. "
-        "Use the What-If Sandbox to explore how changes in attrition risk, "
-        "engagement, and manager effectiveness alter outcomes."
+    st.caption(
+        "Workforce risk summary derived from uploaded data. "
+        "Use the What-If Sandbox to explore mitigation strategies."
     )
 
 def render_current_kpis_page():
@@ -325,10 +275,6 @@ def render_current_kpis_page():
     else:
         kpis = context["baseline"]["kpis"]
         st.caption("Showing baseline KPIs")
-
-    if not kpis:
-        st.info("No KPIs available.")
-        return
 
     selected_kpi = st.selectbox("Select KPI", list(kpis.keys()))
     kpi_state = kpis[selected_kpi]
