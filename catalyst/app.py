@@ -14,6 +14,7 @@ from catalyst.analytics.cost_narrative_v1 import generate_cost_narrative
 from catalyst.analytics.cost_confidence_bands_v1 import compute_cost_confidence_bands
 from catalyst.analytics.cost_narrative_cfo_v1 import generate_cfo_cost_narrative
 from catalyst.analytics.board_summary_v1 import generate_board_summary
+from catalyst.analytics.roi_lens_v1 import compute_roi_lens
 
 # ============================================================
 # App setup
@@ -159,6 +160,16 @@ if uploaded_file:
     context.setdefault("baseline", {})
     context["baseline"]["kpis"] = baseline_kpis
     context["kpis"] = baseline_kpis
+
+st.sidebar.markdown("## 💼 Intervention Economics")
+
+intervention_cost = st.sidebar.number_input(
+    "Estimated annual intervention cost (₹)",
+    min_value=0,
+    value=2_000_000,
+    step=500_000,
+    help="Estimated annual cost of retention programs, capability building, etc.",
+)
 
 # ============================================================
 # EMPTY STATE (NO DATA)
@@ -349,6 +360,31 @@ costs = compute_cost_framing(
         st.markdown(f"- {bullet}")
 
     st.info(board["implication"])
+
+    # --------------------------------------------------
+    # 📈 ROI Lens
+    # --------------------------------------------------
+
+    roi = compute_roi_lens(
+        what_if_cost_impact=costs.get("what_if_cost_impact"),
+        intervention_cost=intervention_cost,
+    )
+
+    if roi:
+        st.divider()
+        st.subheader("📈 ROI Lens")
+
+        col1, col2, col3, col4 = st.columns(4)
+
+        col1.metric("Intervention Cost", f"₹{roi['intervention_cost']/1e7:.1f} Cr")
+        col2.metric("Cost Avoided", f"₹{roi['cost_avoided']/1e7:.1f} Cr")
+        col3.metric("Net Benefit", f"₹{roi['net_benefit']/1e7:.1f} Cr")
+        col4.metric("ROI", f"{roi['roi']:.1f}×")
+
+        st.caption(
+            "ROI reflects estimated annual net benefit relative to intervention cost. "
+            "Figures are indicative and intended for directional decision support."
+        )
 
 # ============================================================
 # Navigation
