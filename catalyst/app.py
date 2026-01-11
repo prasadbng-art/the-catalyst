@@ -10,6 +10,7 @@ from demo_loader_v1 import load_demo_context_v1
 from catalyst.file_ingest_v1 import load_workforce_file
 from catalyst.analytics.baseline_kpi_builder_v1 import build_baseline_kpis
 from catalyst.analytics.cost_framing_v1 import compute_cost_framing
+from catalyst.analytics.cost_narrative_v1 import generate_cost_narrative
 
 # ============================================================
 # App setup
@@ -253,6 +254,22 @@ costs = compute_cost_framing(
     financials=context.get("financials", {}),
     what_if_kpis=st.session_state.get("what_if_kpis"),
 )
+
+    # --------------------------------------------------
+    # 🧠 Cost Narrative
+    # --------------------------------------------------
+
+    narrative = generate_cost_narrative(
+        costs=costs,
+        persona=context.get("persona", "CEO"),
+    )
+
+    st.divider()
+    st.subheader("🧠 Interpretation")
+
+    st.markdown(f"**{narrative['headline']}**")
+    st.markdown(narrative["body"])
+    st.info(f"**Recommended posture:** {narrative['posture']}")
 
 # ============================================================
 # Navigation
