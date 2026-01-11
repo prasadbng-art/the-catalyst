@@ -8,6 +8,7 @@ from catalyst.context_manager_v1 import get_effective_context
 from visuals.kpi_current import render_kpi_current_performance
 from demo_loader_v1 import load_demo_context_v1
 from catalyst.file_ingest_v1 import load_workforce_file
+from catalyst.analytics.baseline_kpi_builder_v1 import build_baseline_kpis
 
 # ============================================================
 # App setup
@@ -181,6 +182,18 @@ st.session_state["context_v1"]["baseline"]["kpis"] = baseline_kpis
 
     st.session_state["workforce_df"] = df
     st.sidebar.success(f"Loaded {len(df)} employee records")
+    
+# ---------------------------------
+# Build baseline KPIs from workforce
+# ---------------------------------
+baseline_kpis = build_baseline_kpis(df)
+
+# Ensure context structure exists
+context.setdefault("baseline", {})
+context["baseline"]["kpis"] = baseline_kpis
+
+# Also expose as current KPIs
+context["kpis"] = baseline_kpis
 
 # ============================================================
 # EMPTY STATE (NO DATA)
