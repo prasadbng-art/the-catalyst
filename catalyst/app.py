@@ -255,10 +255,7 @@ def render_sentiment_health_page():
     "engagement, and manager effectiveness alter outcomes."
 )
 
-    def render_current_kpis_page():
-    st.header("Current KPI Performance")
-
-    if "what_if_kpis" in st.session_state:
+        if "what_if_kpis" in st.session_state:
         kpis = st.session_state["what_if_kpis"]
     else:
         kpis = context["baseline"]["kpis"]
