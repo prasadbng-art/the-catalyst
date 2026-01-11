@@ -146,6 +146,31 @@ uploaded_file = st.sidebar.file_uploader(
 if uploaded_file:
     df, errors, warnings = load_workforce_file(uploaded_file)
 
+# ----------------------------
+# Derive baseline KPIs from workforce data
+# ----------------------------
+attrition_risk = round(df["attrition_risk_score"].mean(), 2)
+
+baseline_kpis = {
+    "attrition_risk": {
+        "value": attrition_risk,
+        "unit": "percent",
+        "status": "red" if attrition_risk > 15 else "amber",
+    },
+    "engagement_index": {
+        "value": round(df["engagement_score"].mean(), 1),
+        "unit": "index",
+    },
+    "manager_effectiveness": {
+        "value": round(df["manager_effectiveness_score"].mean(), 1),
+        "unit": "index",
+    },
+}
+
+# Inject into context
+st.session_state["context_v1"]["baseline"]["kpis"] = baseline_kpis
+
+
     if errors:
         for e in errors:
             st.sidebar.error(e)
