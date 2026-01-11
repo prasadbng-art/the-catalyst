@@ -1,601 +1,601 @@
-employee_id,role_level,function,location,tenure_years,manager_effectiveness,engagement_score,attrition_risk
-E0001,Manager,Engineering,Europe,2.8,73,76,12.8
-E0002,Manager,Engineering,US,1.4,54,55,27.0
-E0003,Manager,Marketing,APAC,2.6,51,41,29.4
-E0004,Manager,HR,Europe,2.0,70,78,12.3
-E0005,IC,Engineering,Europe,8.6,52,40,19.5
-E0006,Director,Finance,US,5.7,55,61,14.3
-E0007,Senior Manager,Operations,India,7.2,78,80,8.7
-E0008,IC,Engineering,APAC,3.1,74,67,15.8
-E0009,Senior IC,Sales,Europe,7.2,68,64,11.5
-E0010,IC,Finance,APAC,3.1,58,71,15.9
-E0011,IC,HR,US,2.7,80,81,12.8
-E0012,Director,Marketing,Europe,2.5,78,57,18.0
-E0013,Manager,Sales,Europe,1.8,69,56,22.9
-E0014,Manager,HR,India,10.0,57,64,16.7
-E0015,Senior Manager,Engineering,India,6.5,73,62,16.7
-E0016,Director,Operations,Europe,9.7,74,74,13.7
-E0017,Manager,Marketing,Europe,7.8,64,71,14.1
-E0018,Manager,Marketing,Europe,9.7,70,70,10.4
-E0019,IC,Marketing,Europe,8.5,62,61,12.7
-E0020,Director,Operations,US,6.2,75,70,14.1
-E0021,Senior IC,HR,India,1.1,90,73,26.0
-E0022,IC,Operations,India,1.7,77,64,23.6
-E0023,IC,Operations,APAC,9.7,88,80,7.3
-E0024,Senior IC,Marketing,Europe,4.7,52,46,23.8
-E0025,IC,HR,US,6.1,71,77,12.8
-E0026,IC,Engineering,Europe,1.2,77,78,22.4
-E0027,IC,Sales,APAC,2.8,57,58,21.7
-E0028,Senior IC,Finance,APAC,8.7,79,92,10.5
-E0029,Manager,Engineering,APAC,7.4,71,66,15.3
-E0030,IC,Sales,Europe,4.9,83,85,12.2
-E0031,Senior Manager,Operations,US,1.0,92,91,24.7
-E0032,Senior Manager,Sales,APAC,5.1,64,66,21.0
-E0033,IC,Finance,US,9.9,67,84,6.0
-E0034,Director,Operations,APAC,2.0,73,65,25.6
-E0035,Manager,Operations,US,7.6,84,88,3.1
-E0036,IC,Operations,US,8.6,69,72,14.5
-E0037,Senior Manager,Finance,US,9.4,55,49,21.2
-E0038,Manager,Operations,Europe,9.4,71,75,18.6
-E0039,IC,Finance,India,6.9,66,74,14.0
-E0040,Senior IC,Operations,US,1.2,65,66,25.3
-E0041,Director,Engineering,India,4.0,82,97,11.8
-E0042,Director,Marketing,US,6.8,54,32,17.7
-E0043,IC,Sales,Europe,1.6,81,88,17.4
-E0044,Manager,Sales,Europe,5.3,86,85,19.6
-E0045,IC,Marketing,APAC,8.4,80,82,14.7
-E0046,IC,Finance,APAC,5.8,94,100,17.7
-E0047,Manager,Sales,US,8.4,64,61,15.8
-E0048,Senior Manager,Engineering,Europe,2.5,77,77,14.4
-E0049,Senior Manager,Finance,India,9.3,70,75,14.6
-E0050,Senior IC,Sales,Europe,7.9,62,49,22.4
-E0051,Manager,Sales,Europe,2.0,66,56,21.3
-E0052,IC,Finance,Europe,3.4,73,75,15.9
-E0053,IC,Sales,APAC,3.6,90,70,17.2
-E0054,Senior IC,Operations,Europe,9.4,86,100,14.3
-E0055,IC,HR,US,1.5,52,58,21.4
-E0056,Senior IC,Finance,India,2.9,85,84,12.8
-E0057,Director,Operations,India,4.0,86,92,11.7
-E0058,Senior Manager,Marketing,Europe,5.3,79,74,15.7
-E0059,Manager,Operations,India,2.3,64,55,18.0
-E0060,Manager,Finance,US,3.4,62,66,23.1
-E0061,Manager,HR,APAC,4.7,63,52,20.1
-E0062,Manager,Marketing,US,3.2,40,32,24.4
-E0063,IC,Sales,Europe,2.6,70,72,18.1
-E0064,Senior Manager,Engineering,APAC,4.4,83,78,11.6
-E0065,Manager,Finance,APAC,2.8,69,68,18.0
-E0066,IC,Finance,India,2.2,49,60,21.1
-E0067,IC,Sales,US,4.8,75,60,22.0
-E0068,Director,Finance,APAC,8.4,68,47,18.1
-E0069,Manager,Finance,APAC,3.0,70,84,13.4
-E0070,Manager,HR,APAC,1.2,55,53,25.3
-E0071,Senior IC,Operations,US,1.8,72,87,17.7
-E0072,Senior IC,Operations,APAC,4.4,65,67,21.0
-E0073,Director,Operations,US,8.6,71,61,16.8
-E0074,Senior Manager,Finance,India,5.1,70,68,21.4
-E0075,Senior IC,Marketing,APAC,7.4,84,65,17.7
-E0076,Director,Operations,US,1.3,68,49,31.6
-E0077,IC,HR,APAC,3.6,59,61,19.8
-E0078,Director,Finance,Europe,8.4,63,46,20.9
-E0079,IC,HR,India,6.7,73,58,14.2
-E0080,IC,Engineering,India,2.8,40,35,28.2
-E0081,Director,Finance,Europe,7.8,78,89,9.0
-E0082,Senior Manager,HR,US,6.0,64,75,16.3
-E0083,Director,Finance,APAC,9.4,75,87,10.1
-E0084,Manager,HR,US,8.1,62,59,13.7
-E0085,Senior IC,Marketing,Europe,1.2,68,66,19.9
-E0086,Senior IC,HR,APAC,7.2,76,61,15.9
-E0087,Director,HR,APAC,4.9,77,65,17.0
-E0088,Director,HR,APAC,2.8,78,64,18.9
-E0089,Senior IC,Engineering,APAC,8.6,73,79,9.8
-E0090,Senior Manager,Marketing,Europe,5.8,59,52,17.8
-E0091,IC,Finance,APAC,5.8,70,81,12.2
-E0092,IC,HR,India,4.3,57,57,22.4
-E0093,Senior IC,Operations,Europe,4.5,69,60,17.3
-E0094,IC,Engineering,India,3.5,60,58,10.6
-E0095,Manager,Sales,India,7.5,67,80,9.3
-E0096,Director,Sales,Europe,2.7,53,53,18.5
-E0097,Senior IC,HR,US,9.8,52,46,24.2
-E0098,Senior IC,Engineering,Europe,5.0,87,81,13.7
-E0099,IC,Finance,US,8.3,66,68,13.3
-E0100,IC,Operations,Europe,1.3,67,67,26.8
-E0101,Senior IC,Operations,India,7.9,50,64,12.8
-E0102,Senior IC,Operations,US,6.3,85,83,1.7
-E0103,IC,Sales,Europe,6.8,74,79,9.2
-E0104,Senior IC,Operations,APAC,3.3,70,71,22.7
-E0105,Manager,Finance,US,7.0,88,79,5.9
-E0106,Director,Finance,US,5.7,57,43,18.8
-E0107,Senior Manager,Engineering,US,2.1,62,77,10.8
-E0108,IC,Marketing,Europe,7.1,65,76,7.8
-E0109,Senior IC,Engineering,US,8.9,68,54,16.1
-E0110,Manager,Operations,US,10.0,71,67,11.9
-E0111,IC,Sales,APAC,5.4,60,62,21.2
-E0112,Senior Manager,Engineering,APAC,3.8,69,61,21.9
-E0113,Senior Manager,HR,APAC,7.1,63,86,10.5
-E0114,Senior IC,HR,Europe,3.6,56,65,17.4
-E0115,Senior IC,Engineering,APAC,4.4,74,82,13.2
-E0116,Senior Manager,Sales,Europe,5.7,53,62,16.6
-E0117,Manager,Engineering,US,9.7,63,58,16.1
-E0118,Manager,Engineering,India,9.9,82,91,7.3
-E0119,IC,Sales,APAC,9.4,65,80,6.0
-E0120,Senior IC,Finance,India,4.1,76,86,11.3
-E0121,Senior Manager,Engineering,Europe,7.8,76,68,14.6
-E0122,IC,Marketing,Europe,8.5,60,47,17.9
-E0123,Senior Manager,Finance,APAC,3.8,55,50,15.5
-E0124,IC,Marketing,India,5.9,72,73,23.2
-E0125,IC,Marketing,APAC,7.2,74,64,11.1
-E0126,Director,Finance,US,1.7,50,58,22.4
-E0127,IC,Finance,US,5.5,51,55,14.3
-E0128,IC,Finance,Europe,3.7,79,73,13.9
-E0129,Senior Manager,Marketing,APAC,9.6,52,37,16.3
-E0130,Manager,Sales,Europe,10.0,71,70,10.8
-E0131,IC,Marketing,US,4.7,61,40,29.1
-E0132,IC,HR,APAC,1.9,76,63,22.2
-E0133,Senior Manager,Sales,India,1.3,81,70,23.4
-E0134,IC,Finance,Europe,4.9,96,85,7.4
-E0135,Senior IC,HR,India,1.2,100,89,15.7
-E0136,Manager,Finance,Europe,2.4,99,90,15.3
-E0137,IC,Operations,Europe,6.0,80,79,17.4
-E0138,IC,Operations,US,9.2,67,66,8.3
-E0139,Director,Sales,Europe,2.6,73,80,13.2
-E0140,Manager,Sales,US,9.1,49,43,21.9
-E0141,Senior IC,Operations,Europe,7.5,78,82,9.0
-E0142,IC,Operations,Europe,5.5,62,78,10.1
-E0143,IC,Finance,Europe,7.6,66,70,15.6
-E0144,Director,Marketing,APAC,9.7,68,71,11.3
-E0145,Senior Manager,Engineering,Europe,5.6,52,56,16.1
-E0146,Senior Manager,HR,US,6.9,55,41,20.7
-E0147,Director,HR,India,6.7,61,52,12.7
-E0148,IC,Engineering,US,3.4,53,48,24.1
-E0149,Senior Manager,Sales,APAC,4.8,60,45,26.9
-E0150,Manager,Sales,APAC,6.7,65,71,10.4
-E0151,Director,HR,US,7.1,72,82,9.2
-E0152,Director,HR,Europe,1.1,81,76,25.8
-E0153,Director,Finance,US,6.8,59,48,25.2
-E0154,IC,Sales,India,1.2,72,72,21.0
-E0155,IC,Sales,Europe,7.9,73,59,12.5
-E0156,Director,Operations,Europe,8.1,100,100,12.8
-E0157,IC,HR,India,6.1,79,79,11.2
-E0158,IC,Engineering,APAC,4.8,78,69,21.1
-E0159,Senior IC,Sales,US,7.4,84,76,7.6
-E0160,IC,Finance,APAC,4.5,86,98,16.0
-E0161,Senior IC,Engineering,Europe,6.3,78,81,6.5
-E0162,Senior IC,Operations,Europe,4.8,58,54,17.2
-E0163,Manager,Marketing,India,4.6,79,72,19.4
-E0164,Manager,HR,APAC,3.5,59,58,25.4
-E0165,Manager,Finance,US,1.4,80,85,17.9
-E0166,IC,Engineering,Europe,6.9,58,40,23.2
-E0167,Director,Finance,US,9.7,60,54,12.2
-E0168,Manager,Sales,US,3.8,66,61,17.5
-E0169,IC,Sales,APAC,8.5,91,88,5.7
-E0170,IC,Marketing,Europe,0.8,58,55,28.0
-E0171,Director,HR,US,2.2,80,91,17.5
-E0172,Director,Engineering,India,4.1,78,72,18.5
-E0173,Senior IC,HR,US,8.9,81,94,10.2
-E0174,Senior IC,Finance,APAC,6.3,71,65,15.1
-E0175,Senior IC,HR,APAC,1.6,62,49,26.5
-E0176,IC,Operations,US,0.6,68,65,25.0
-E0177,IC,HR,Europe,3.6,89,89,14.3
-E0178,Manager,Operations,Europe,1.2,80,81,17.3
-E0179,IC,Engineering,Europe,6.0,53,46,22.7
-E0180,IC,HR,India,8.1,72,58,10.2
-E0181,Director,Engineering,APAC,8.5,70,83,6.0
-E0182,Senior IC,HR,India,3.7,68,73,21.1
-E0183,IC,Operations,India,9.1,58,71,16.3
-E0184,IC,Sales,Europe,2.4,49,35,25.0
-E0185,Manager,Sales,APAC,4.9,55,49,21.4
-E0186,Manager,Operations,Europe,8.7,47,43,22.8
-E0187,IC,Finance,Europe,8.1,60,54,17.0
-E0188,IC,HR,Europe,1.2,76,88,13.6
-E0189,Manager,Operations,APAC,4.9,49,43,30.6
-E0190,Senior Manager,Marketing,India,3.6,62,56,18.3
-E0191,IC,Engineering,Europe,9.8,84,91,13.6
-E0192,Director,Operations,India,4.0,74,82,11.5
-E0193,Senior Manager,Marketing,US,8.0,67,64,17.7
-E0194,IC,Marketing,India,3.7,80,75,17.2
-E0195,Senior IC,Marketing,APAC,1.7,68,63,19.0
-E0196,Senior IC,Sales,US,6.6,63,54,15.3
-E0197,Senior IC,Sales,India,3.7,70,63,19.7
-E0198,IC,Engineering,US,6.8,69,78,6.1
-E0199,Manager,Sales,India,2.2,64,50,21.9
-E0200,IC,HR,India,9.7,58,45,16.8
-E0201,Senior Manager,Sales,India,3.4,74,63,19.5
-E0202,Director,Finance,APAC,7.8,60,62,10.5
-E0203,Senior IC,Sales,India,8.1,75,80,5.1
-E0204,Manager,Engineering,US,3.2,51,51,15.6
-E0205,Director,Sales,APAC,1.4,88,78,23.2
-E0206,Senior IC,Finance,Europe,2.7,51,60,17.9
-E0207,IC,Engineering,Europe,8.0,76,82,11.2
-E0208,IC,Marketing,APAC,4.8,53,57,18.0
-E0209,IC,Sales,APAC,1.6,67,75,26.0
-E0210,Senior Manager,Finance,US,1.6,73,84,15.7
-E0211,IC,Operations,India,7.3,69,69,11.7
-E0212,IC,Marketing,US,5.5,82,66,23.7
-E0213,Senior IC,Operations,US,4.2,53,55,20.3
-E0214,IC,Engineering,Europe,2.8,68,65,16.8
-E0215,Manager,HR,India,0.9,48,42,35.4
-E0216,Senior IC,Marketing,APAC,6.5,88,89,8.0
-E0217,Senior Manager,Finance,US,3.3,77,78,19.7
-E0218,Senior IC,Operations,APAC,2.9,77,77,11.0
-E0219,Senior IC,Engineering,Europe,3.1,73,62,15.4
-E0220,Director,HR,India,5.2,77,54,18.1
-E0221,Senior IC,Engineering,APAC,1.2,52,40,26.5
-E0222,IC,Marketing,Europe,3.4,67,58,16.1
-E0223,Manager,HR,APAC,0.9,77,70,25.4
-E0224,Director,Engineering,US,6.9,69,59,16.0
-E0225,Manager,Sales,US,1.9,53,42,30.1
-E0226,Senior Manager,HR,Europe,4.1,70,57,16.3
-E0227,Manager,HR,Europe,4.7,75,77,11.3
-E0228,IC,Engineering,US,7.5,77,67,14.0
-E0229,Manager,HR,Europe,7.2,73,86,5.2
-E0230,IC,Sales,US,4.8,29,37,26.1
-E0231,IC,Marketing,Europe,6.8,66,53,13.4
-E0232,IC,Marketing,India,8.0,79,73,13.9
-E0233,IC,Sales,India,8.0,85,87,5.3
-E0234,Manager,Operations,US,1.1,85,72,25.8
-E0235,Senior IC,Finance,APAC,8.3,98,100,6.9
-E0236,Manager,HR,India,8.8,59,61,9.8
-E0237,IC,Sales,APAC,5.3,85,71,15.5
-E0238,IC,Marketing,India,3.8,68,87,10.7
-E0239,Senior Manager,HR,India,6.5,64,62,12.8
-E0240,Senior IC,Sales,India,2.1,84,68,13.4
-E0241,Senior IC,Operations,US,8.3,73,73,11.5
-E0242,Manager,Operations,APAC,6.4,57,77,10.2
-E0243,Senior IC,Marketing,Europe,5.1,76,61,17.7
-E0244,IC,Finance,APAC,5.1,74,77,16.9
-E0245,Senior IC,Marketing,Europe,7.5,90,69,16.0
-E0246,Manager,HR,India,4.9,78,77,15.3
-E0247,IC,HR,APAC,8.7,43,55,22.5
-E0248,Director,Marketing,Europe,2.3,57,74,26.4
-E0249,Senior IC,HR,APAC,0.7,83,78,20.0
-E0250,Senior IC,Engineering,Europe,5.2,68,78,10.1
-E0251,Senior IC,Operations,US,8.5,47,55,17.3
-E0252,Senior IC,Finance,US,5.9,49,53,25.6
-E0253,IC,Operations,APAC,7.8,63,92,8.4
-E0254,Director,Finance,Europe,8.1,64,51,20.0
-E0255,Senior Manager,Sales,APAC,5.3,76,77,11.3
-E0256,Senior IC,Operations,India,3.6,81,76,11.8
-E0257,Director,Marketing,Europe,6.1,55,54,10.1
-E0258,Senior IC,Engineering,Europe,3.6,70,78,15.0
-E0259,Senior IC,Marketing,US,6.2,68,82,12.9
-E0260,IC,Engineering,APAC,2.1,67,57,15.0
-E0261,Senior Manager,Sales,India,0.8,75,73,25.6
-E0262,IC,Marketing,India,4.4,71,74,11.3
-E0263,Senior Manager,Marketing,US,7.2,54,52,17.4
-E0264,Senior IC,Sales,APAC,9.2,69,63,16.3
-E0265,Senior Manager,Marketing,Europe,6.3,73,80,7.0
-E0266,Director,HR,Europe,7.2,66,61,10.8
-E0267,Senior IC,Operations,Europe,3.2,56,50,20.4
-E0268,Senior IC,Sales,Europe,0.9,62,65,22.7
-E0269,Director,Marketing,Europe,7.6,75,93,8.5
-E0270,IC,Engineering,India,2.8,85,79,9.8
-E0271,Manager,Engineering,US,4.4,68,63,18.0
-E0272,Manager,Sales,APAC,6.7,68,76,6.7
-E0273,Manager,HR,Europe,3.2,89,95,11.7
-E0274,Manager,Engineering,India,4.5,62,74,12.0
-E0275,IC,Finance,APAC,2.3,69,48,23.8
-E0276,IC,Operations,US,9.3,73,67,16.8
-E0277,Manager,Operations,APAC,8.9,79,87,8.2
-E0278,Senior IC,Marketing,APAC,6.7,91,90,8.5
-E0279,Senior IC,HR,India,2.2,85,68,19.7
-E0280,IC,Marketing,US,2.3,57,62,20.1
-E0281,IC,HR,APAC,2.7,70,45,22.5
-E0282,IC,Marketing,Europe,7.1,88,92,9.6
-E0283,Senior IC,Finance,Europe,7.1,51,32,18.6
-E0284,Director,Finance,India,4.8,76,85,12.8
-E0285,Manager,Finance,India,7.7,63,50,14.9
-E0286,Senior IC,HR,US,9.2,55,69,17.7
-E0287,Director,Sales,India,2.1,77,68,16.0
-E0288,Senior IC,Operations,APAC,8.2,52,40,21.0
-E0289,Senior IC,Engineering,APAC,6.9,69,70,14.0
-E0290,IC,Engineering,US,4.5,70,66,14.4
-E0291,IC,Engineering,APAC,0.8,52,61,23.8
-E0292,Manager,Finance,Europe,9.9,36,21,28.1
-E0293,Director,Finance,US,7.0,62,51,12.4
-E0294,IC,Operations,APAC,5.5,60,59,15.9
-E0295,IC,Engineering,Europe,4.9,67,56,16.4
-E0296,Senior IC,Sales,Europe,2.3,75,87,9.4
-E0297,IC,Marketing,APAC,6.3,93,84,9.1
-E0298,Manager,Finance,US,2.8,74,84,13.9
-E0299,Senior IC,Engineering,India,5.3,64,81,12.7
-E0300,Manager,Marketing,Europe,2.8,59,79,6.9
-E0301,Senior IC,Finance,Europe,3.1,54,49,23.8
-E0302,Manager,Operations,APAC,0.9,62,53,26.6
-E0303,Senior IC,Operations,Europe,7.1,61,65,15.5
-E0304,IC,Sales,Europe,8.6,83,89,11.6
-E0305,IC,Finance,APAC,5.8,75,80,14.3
-E0306,Director,HR,US,5.6,86,87,12.1
-E0307,Senior IC,Operations,US,8.8,77,92,8.4
-E0308,Senior IC,HR,Europe,9.6,54,77,9.7
-E0309,Director,Engineering,APAC,9.2,63,48,18.2
-E0310,Senior IC,HR,APAC,4.9,75,69,15.9
-E0311,Senior IC,Finance,APAC,1.4,83,81,21.6
-E0312,Senior IC,Finance,US,5.8,47,48,29.7
-E0313,IC,Operations,APAC,3.3,72,78,11.0
-E0314,Manager,Marketing,Europe,2.9,66,77,6.0
-E0315,Manager,Finance,APAC,2.1,72,66,17.4
-E0316,Director,Operations,US,5.5,56,58,17.0
-E0317,Senior Manager,Engineering,US,4.4,74,67,17.9
-E0318,Senior IC,HR,US,6.4,68,61,10.4
-E0319,Senior IC,Finance,US,0.6,68,67,20.6
-E0320,Director,Engineering,APAC,8.2,68,72,13.2
-E0321,IC,Sales,India,2.3,48,44,27.7
-E0322,Senior IC,Finance,APAC,5.9,81,88,12.9
-E0323,Manager,Engineering,US,1.4,58,66,23.4
-E0324,IC,Finance,APAC,6.6,70,56,21.2
-E0325,Director,Operations,US,2.7,84,75,15.8
-E0326,Director,Marketing,Europe,9.0,66,63,13.7
-E0327,Director,HR,US,9.6,52,43,19.3
-E0328,IC,Sales,India,5.9,58,66,14.3
-E0329,Senior IC,Finance,India,8.0,68,64,13.9
-E0330,IC,Sales,US,3.7,58,60,10.6
-E0331,Senior IC,HR,US,6.5,72,61,14.5
-E0332,Senior IC,Sales,APAC,1.3,85,71,19.4
-E0333,Manager,Engineering,Europe,2.0,65,51,17.8
-E0334,IC,Engineering,Europe,4.7,59,59,16.6
-E0335,IC,Finance,APAC,5.8,64,63,21.2
-E0336,Manager,HR,APAC,0.6,78,63,25.7
-E0337,Manager,Operations,India,5.9,75,83,14.6
-E0338,Senior IC,Engineering,India,4.6,77,66,19.6
-E0339,IC,HR,India,7.3,53,53,12.4
-E0340,IC,Finance,Europe,8.5,71,56,18.1
-E0341,Senior IC,Finance,India,3.4,55,45,22.1
-E0342,Senior IC,HR,Europe,7.5,70,52,8.2
-E0343,Senior Manager,HR,APAC,3.2,72,62,19.8
-E0344,Director,Sales,US,9.6,66,50,15.1
-E0345,Senior IC,HR,US,8.3,73,63,9.8
-E0346,IC,Marketing,India,7.3,70,70,12.9
-E0347,Director,Finance,APAC,5.6,91,81,12.3
-E0348,Director,Marketing,US,1.5,71,71,27.4
-E0349,IC,Operations,US,5.9,59,47,26.6
-E0350,Senior Manager,Engineering,US,1.4,67,69,27.9
-E0351,Manager,Marketing,India,4.7,53,63,15.0
-E0352,Senior IC,Engineering,APAC,1.5,62,39,32.9
-E0353,IC,Marketing,India,3.8,58,72,15.2
-E0354,IC,Marketing,APAC,3.5,68,62,23.2
-E0355,IC,HR,US,6.9,87,100,9.1
-E0356,IC,Operations,APAC,9.6,77,78,12.0
-E0357,IC,Marketing,APAC,4.3,68,47,21.0
-E0358,IC,Sales,India,3.1,73,67,12.9
-E0359,Manager,Operations,India,4.0,71,75,16.3
-E0360,Director,HR,APAC,6.3,57,49,18.6
-E0361,Senior Manager,Operations,India,8.2,67,58,13.1
-E0362,IC,Engineering,India,3.4,66,72,22.2
-E0363,Senior IC,Finance,India,6.0,57,62,11.5
-E0364,Director,Sales,India,5.2,63,68,20.0
-E0365,Senior IC,Engineering,Europe,9.5,62,62,11.1
-E0366,Manager,Finance,APAC,4.4,80,86,10.1
-E0367,IC,Engineering,India,3.3,67,79,14.6
-E0368,Manager,Finance,US,5.9,81,79,16.7
-E0369,Director,Operations,US,7.7,62,64,9.6
-E0370,Manager,Sales,Europe,8.8,78,85,9.5
-E0371,Senior Manager,Engineering,APAC,8.7,86,98,10.2
-E0372,Manager,Marketing,APAC,2.1,89,93,14.6
-E0373,IC,Engineering,Europe,5.6,64,60,20.5
-E0374,Manager,Operations,US,1.8,68,68,19.9
-E0375,IC,HR,India,7.2,74,78,8.0
-E0376,Senior Manager,Finance,APAC,1.9,78,68,19.9
-E0377,Senior IC,Engineering,US,4.3,69,53,20.4
-E0378,Senior IC,Operations,US,8.8,60,62,12.9
-E0379,Director,Marketing,Europe,8.6,73,63,19.5
-E0380,Senior IC,HR,Europe,3.7,65,53,16.2
-E0381,Senior IC,HR,US,0.9,53,39,35.9
-E0382,IC,Finance,US,9.9,72,42,24.3
-E0383,Director,Marketing,Europe,2.0,78,74,16.7
-E0384,Senior IC,Marketing,India,1.0,62,50,19.6
-E0385,Senior Manager,Finance,US,7.2,83,83,10.4
-E0386,Manager,Engineering,US,7.1,76,88,0.8
-E0387,Senior IC,Sales,APAC,1.2,55,65,25.1
-E0388,Senior Manager,Sales,APAC,7.8,76,76,7.4
-E0389,Director,Sales,US,5.5,87,87,8.5
-E0390,Manager,Sales,APAC,6.4,77,70,14.7
-E0391,Senior Manager,Sales,US,6.1,46,63,17.4
-E0392,IC,Engineering,India,5.8,76,64,15.6
-E0393,Senior Manager,Marketing,US,8.6,64,56,10.4
-E0394,Manager,HR,US,7.9,68,70,11.9
-E0395,Senior IC,Sales,APAC,6.6,92,100,11.8
-E0396,Senior IC,Finance,APAC,4.0,70,63,13.4
-E0397,Director,Engineering,US,6.1,78,78,15.5
-E0398,Senior IC,HR,APAC,4.5,56,44,26.5
-E0399,Senior IC,Sales,Europe,1.3,93,100,19.7
-E0400,Senior IC,Operations,US,3.4,68,45,26.8
-E0401,IC,Sales,US,9.3,82,91,13.2
-E0402,Manager,Sales,US,0.6,76,76,18.3
-E0403,Senior IC,HR,Europe,2.1,84,96,12.3
-E0404,Senior Manager,Engineering,Europe,8.2,94,93,10.1
-E0405,Manager,Operations,US,5.2,65,64,19.1
-E0406,IC,Engineering,US,2.7,64,61,18.0
-E0407,Senior Manager,Sales,US,5.0,64,67,23.4
-E0408,Manager,Marketing,APAC,2.6,60,60,24.7
-E0409,Senior IC,Engineering,Europe,1.6,68,65,23.6
-E0410,IC,Finance,US,8.8,84,95,5.1
-E0411,Senior IC,Engineering,APAC,0.6,74,86,16.6
-E0412,Senior IC,Operations,APAC,10.0,85,87,4.2
-E0413,Senior IC,Sales,India,0.6,62,65,19.7
-E0414,Senior Manager,HR,US,7.7,88,76,12.4
-E0415,Senior IC,Sales,India,4.5,100,93,14.5
-E0416,IC,Sales,APAC,7.2,77,58,19.8
-E0417,IC,Engineering,India,6.6,57,65,18.1
-E0418,IC,HR,Europe,8.6,76,84,7.7
-E0419,Senior Manager,HR,Europe,4.8,72,95,16.4
-E0420,IC,Engineering,India,4.8,85,83,14.4
-E0421,Senior IC,Sales,APAC,3.4,69,74,20.5
-E0422,Senior Manager,Marketing,US,2.5,85,88,11.7
-E0423,Manager,HR,APAC,5.4,65,58,18.8
-E0424,Senior IC,Finance,India,1.4,69,83,21.2
-E0425,IC,Engineering,India,1.7,75,66,20.1
-E0426,Manager,HR,US,0.7,57,76,20.6
-E0427,Senior IC,Sales,US,9.1,75,67,17.2
-E0428,IC,Operations,APAC,8.3,73,71,14.4
-E0429,Manager,Sales,Europe,2.5,73,80,13.6
-E0430,Manager,Sales,Europe,5.2,67,75,15.7
-E0431,IC,Finance,India,4.5,56,42,24.1
-E0432,Senior IC,Engineering,APAC,7.9,100,92,11.9
-E0433,Senior IC,Operations,Europe,4.2,74,81,14.2
-E0434,Senior Manager,Engineering,APAC,5.5,95,99,1.2
-E0435,Director,Engineering,India,6.7,67,85,9.9
-E0436,Director,Sales,APAC,3.9,67,77,8.1
-E0437,IC,Operations,Europe,8.2,61,40,24.6
-E0438,Director,Operations,India,5.8,73,84,21.3
-E0439,Senior Manager,Finance,Europe,2.2,73,73,17.5
-E0440,Senior IC,HR,India,8.2,68,64,15.6
-E0441,Senior Manager,HR,US,0.7,47,35,33.9
-E0442,Senior Manager,Engineering,Europe,7.2,47,40,20.6
-E0443,Senior IC,HR,India,9.8,68,57,11.8
-E0444,Senior IC,Marketing,Europe,2.6,59,53,17.0
-E0445,Senior IC,Marketing,Europe,1.7,66,41,31.8
-E0446,Director,Operations,US,2.2,66,58,23.0
-E0447,Manager,Marketing,US,9.4,82,94,9.6
-E0448,IC,Engineering,Europe,4.7,100,99,15.3
-E0449,IC,HR,US,7.3,82,85,7.4
-E0450,Senior IC,Finance,Europe,5.7,73,82,15.0
-E0451,Senior Manager,Marketing,India,2.0,90,98,12.3
-E0452,Director,Engineering,Europe,2.1,80,68,21.4
-E0453,Senior IC,Engineering,Europe,6.1,59,51,21.0
-E0454,IC,Finance,India,1.0,75,61,30.1
-E0455,Senior IC,Operations,Europe,6.8,68,72,11.0
-E0456,Senior IC,Engineering,Europe,0.5,79,94,20.9
-E0457,Manager,Finance,India,1.4,74,87,21.4
-E0458,IC,Finance,APAC,5.1,68,65,16.9
-E0459,Senior IC,Sales,Europe,8.9,61,68,13.7
-E0460,IC,HR,US,1.9,83,81,16.7
-E0461,Manager,Operations,APAC,9.7,57,50,17.0
-E0462,Senior IC,Operations,APAC,5.9,51,51,20.5
-E0463,Senior IC,Marketing,US,5.3,87,76,11.2
-E0464,IC,Finance,India,9.5,55,58,15.8
-E0465,IC,Engineering,APAC,1.2,66,59,23.7
-E0466,Manager,HR,US,1.3,63,51,21.7
-E0467,Senior Manager,Operations,APAC,9.2,88,89,4.5
-E0468,IC,Sales,India,5.9,59,36,20.1
-E0469,IC,Engineering,US,8.0,86,70,15.7
-E0470,Manager,Operations,APAC,0.9,63,62,24.7
-E0471,Manager,Marketing,APAC,0.9,78,72,23.4
-E0472,Director,HR,US,3.7,89,91,10.5
-E0473,Senior Manager,Marketing,US,9.7,71,79,8.8
-E0474,Senior IC,Marketing,APAC,6.2,49,58,19.7
-E0475,Director,Finance,APAC,7.7,84,70,12.2
-E0476,Senior IC,Operations,APAC,1.8,69,81,13.0
-E0477,IC,Sales,India,8.5,70,81,13.1
-E0478,IC,Finance,APAC,6.5,60,61,14.5
-E0479,Senior IC,Operations,APAC,2.2,80,70,16.9
-E0480,Senior Manager,Marketing,US,3.2,75,70,19.2
-E0481,Manager,Sales,India,6.7,65,57,13.5
-E0482,Senior Manager,Marketing,US,5.0,71,75,19.4
-E0483,Senior Manager,Sales,Europe,6.3,87,81,8.4
-E0484,Senior Manager,HR,APAC,2.9,60,45,24.9
-E0485,Senior Manager,Finance,US,0.6,100,99,20.1
-E0486,Manager,HR,Europe,7.0,56,47,20.3
-E0487,IC,HR,Europe,3.0,63,42,23.5
-E0488,Senior Manager,Engineering,APAC,6.8,76,69,9.7
-E0489,Manager,HR,Europe,9.1,53,62,5.6
-E0490,Senior Manager,HR,India,7.0,50,42,17.4
-E0491,Director,HR,Europe,8.5,83,65,14.6
-E0492,IC,HR,India,9.5,74,85,6.4
-E0493,IC,Sales,Europe,4.5,78,71,15.1
-E0494,IC,Engineering,US,5.0,63,64,19.4
-E0495,Manager,Operations,Europe,4.4,74,69,20.7
-E0496,Director,Finance,India,3.5,69,65,12.9
-E0497,Senior IC,Marketing,India,3.5,82,85,14.3
-E0498,Manager,Sales,APAC,8.0,90,90,7.4
-E0499,Senior IC,Finance,APAC,4.6,68,68,13.2
-E0500,Director,HR,India,0.7,65,81,18.1
-E0501,IC,HR,Europe,1.7,58,66,25.8
-E0502,IC,HR,APAC,7.4,89,81,7.4
-E0503,Senior Manager,Sales,Europe,10.0,50,51,17.3
-E0504,Senior Manager,Engineering,India,2.6,92,98,12.8
-E0505,IC,Operations,India,1.7,64,46,26.0
-E0506,Senior Manager,Operations,US,6.1,82,86,9.4
-E0507,Senior Manager,Engineering,US,4.5,58,66,16.3
-E0508,Manager,Marketing,US,3.4,71,63,14.2
-E0509,IC,Operations,India,4.5,81,73,16.2
-E0510,Senior Manager,Finance,India,6.3,63,66,8.4
-E0511,Director,HR,APAC,3.3,83,85,14.8
-E0512,Senior IC,Engineering,US,6.9,96,100,5.9
-E0513,Manager,Sales,US,7.9,87,94,12.6
-E0514,Senior IC,HR,Europe,4.9,60,65,19.1
-E0515,IC,HR,Europe,8.1,62,77,13.2
-E0516,IC,Sales,India,3.6,81,100,8.4
-E0517,IC,Marketing,US,4.0,66,70,15.3
-E0518,Senior Manager,Marketing,APAC,8.1,77,66,9.7
-E0519,IC,Marketing,US,9.8,73,69,16.9
-E0520,Manager,Finance,India,6.3,62,64,9.9
-E0521,Senior Manager,Marketing,India,5.1,44,45,27.0
-E0522,Manager,Engineering,India,9.8,71,66,11.6
-E0523,Senior IC,Marketing,US,4.6,67,55,15.8
-E0524,IC,Operations,US,0.6,55,65,21.6
-E0525,Senior IC,Finance,India,1.2,61,61,23.9
-E0526,IC,Marketing,APAC,4.3,69,70,21.3
-E0527,Senior Manager,Finance,US,8.6,64,65,9.6
-E0528,IC,Finance,US,5.8,70,74,18.0
-E0529,Manager,Operations,Europe,9.0,53,47,17.4
-E0530,Senior Manager,Sales,APAC,3.7,72,73,14.0
-E0531,Manager,HR,APAC,1.6,70,62,19.9
-E0532,Director,HR,Europe,7.2,88,93,9.5
-E0533,IC,Marketing,APAC,1.5,64,59,25.7
-E0534,Senior IC,Sales,Europe,1.5,64,44,32.5
-E0535,Senior Manager,Operations,US,7.8,53,57,15.6
-E0536,Senior IC,Operations,US,5.8,68,55,19.6
-E0537,Director,Sales,India,7.4,78,85,4.0
-E0538,Senior IC,Finance,APAC,9.8,55,69,11.4
-E0539,IC,HR,Europe,4.8,78,85,11.5
-E0540,IC,Marketing,Europe,7.3,51,64,12.3
-E0541,IC,Operations,Europe,7.0,75,72,12.0
-E0542,IC,Operations,Europe,7.2,38,38,20.2
-E0543,Manager,Marketing,APAC,6.9,81,73,16.3
-E0544,IC,Engineering,US,4.1,61,64,18.3
-E0545,IC,Sales,Europe,7.0,72,74,14.4
-E0546,Senior IC,HR,APAC,1.5,62,73,19.4
-E0547,Senior Manager,Marketing,APAC,2.8,74,56,17.0
-E0548,Director,Finance,APAC,9.6,87,95,8.6
-E0549,Manager,Engineering,Europe,2.4,86,71,16.0
-E0550,Manager,Marketing,Europe,7.7,73,59,12.8
-E0551,Senior Manager,Sales,Europe,4.8,74,73,22.8
-E0552,IC,Engineering,APAC,3.2,65,64,19.8
-E0553,Senior Manager,Engineering,Europe,4.9,73,71,21.6
-E0554,Senior Manager,Marketing,Europe,5.2,62,53,16.8
-E0555,Senior Manager,HR,India,9.6,49,46,26.0
-E0556,Senior IC,HR,India,8.9,82,77,6.7
-E0557,IC,Operations,APAC,10.0,85,59,18.5
-E0558,Senior IC,Marketing,India,9.6,70,66,11.6
-E0559,Director,Engineering,APAC,2.9,69,66,12.9
-E0560,Senior IC,Operations,APAC,5.1,67,62,22.2
-E0561,Senior IC,Engineering,US,2.1,84,80,14.1
-E0562,Manager,Sales,APAC,8.4,70,75,19.4
-E0563,Senior Manager,Marketing,APAC,6.6,88,81,10.9
-E0564,Senior IC,Engineering,US,1.0,80,83,14.3
-E0565,Manager,Sales,Europe,4.4,58,61,16.8
-E0566,IC,Engineering,US,7.7,80,66,11.6
-E0567,IC,Operations,US,3.3,63,50,16.7
-E0568,Senior IC,Marketing,US,5.0,96,90,12.7
-E0569,Senior IC,Operations,Europe,9.6,81,92,13.6
-E0570,Manager,HR,US,5.8,59,54,17.5
-E0571,IC,Operations,APAC,5.6,79,76,12.9
-E0572,Senior IC,Finance,India,2.0,44,47,33.6
-E0573,IC,Sales,US,8.6,100,86,5.3
-E0574,IC,Engineering,Europe,1.4,73,71,19.6
-E0575,Senior IC,Sales,India,1.5,51,36,27.6
-E0576,Manager,HR,India,5.9,81,75,20.0
-E0577,Senior IC,Engineering,Europe,2.8,73,89,7.7
-E0578,IC,Marketing,Europe,8.8,78,68,14.7
-E0579,Senior IC,Operations,US,2.2,51,39,25.0
-E0580,Senior IC,HR,US,7.4,64,79,5.3
-E0581,Manager,Operations,APAC,7.8,70,72,13.6
-E0582,Senior IC,Marketing,India,4.0,95,97,18.1
-E0583,Manager,HR,India,4.9,57,56,13.6
-E0584,Senior Manager,Operations,India,7.7,69,72,15.4
-E0585,Manager,Operations,India,7.5,58,58,14.7
-E0586,IC,HR,India,0.9,83,88,24.3
-E0587,Senior IC,Finance,APAC,8.9,86,89,15.3
-E0588,Manager,HR,Europe,6.0,89,80,11.8
-E0589,Senior IC,Operations,US,5.4,51,66,15.2
-E0590,Senior Manager,Finance,APAC,8.9,68,88,9.3
-E0591,Senior IC,Sales,US,5.4,68,73,20.2
-E0592,Senior Manager,Marketing,India,4.4,83,80,14.3
-E0593,Manager,Finance,India,6.1,62,53,14.1
-E0594,Manager,Sales,US,9.0,76,79,10.4
-E0595,Director,Operations,APAC,6.2,67,66,13.2
-E0596,IC,Engineering,India,4.8,52,72,17.7
-E0597,IC,Finance,India,8.0,73,67,12.7
-E0598,Manager,HR,APAC,6.2,62,70,15.2
-E0599,IC,Engineering,India,5.5,85,76,14.9
-E0600,IC,Operations,US,8.8,55,38,19.0
+employee_id,manager_id,role,performance_band,salary,tenure_months,attrition_risk_score
+E0001,M048,Senior IC,High,110086,37,10.2
+E0002,M006,Senior IC,Low,112772,31,29.0
+E0003,M015,Senior IC,High,63993,57,13.1
+E0004,M049,IC,Medium,37432,44,18.7
+E0005,M047,Senior IC,High,123087,58,15.2
+E0006,M037,Manager,High,116007,27,14.9
+E0007,M007,Director,Low,113743,49,23.5
+E0008,M039,Manager,Medium,148867,78,13.5
+E0009,M044,IC,Medium,34308,43,20.4
+E0010,M014,IC,Low,69423,80,25.1
+E0011,M048,IC,High,33035,69,15.4
+E0012,M006,Director,Medium,111839,92,12.7
+E0013,M025,Senior IC,High,108275,49,18.9
+E0014,M050,Manager,Medium,108981,79,16.1
+E0015,M033,Director,Medium,150229,92,9.9
+E0016,M049,IC,Medium,75858,24,16.0
+E0017,M002,Senior IC,Medium,61631,19,28.8
+E0018,M006,Senior IC,Medium,120784,90,6.4
+E0019,M036,IC,Low,47297,25,24.7
+E0020,M026,Senior IC,Medium,90316,120,11.4
+E0021,M005,IC,Medium,35917,44,18.2
+E0022,M022,IC,High,84856,14,28.4
+E0023,M016,IC,Medium,44312,96,16.6
+E0024,M044,Senior IC,Medium,125477,80,13.2
+E0025,M016,Manager,Medium,161234,27,19.4
+E0026,M004,IC,High,82678,80,8.9
+E0027,M011,Manager,Low,67532,52,30.5
+E0028,M019,IC,High,45501,54,10.4
+E0029,M013,Manager,High,68357,39,8.2
+E0030,M004,Senior IC,Medium,56045,115,14.9
+E0031,M026,Senior IC,Medium,54111,19,20.5
+E0032,M017,Senior IC,Medium,88124,28,15.8
+E0033,M030,Senior IC,Medium,98929,42,7.6
+E0034,M033,IC,High,37654,36,10.5
+E0035,M029,IC,Low,31554,100,18.4
+E0036,M043,Manager,Medium,118573,18,22.4
+E0037,M018,Manager,High,75081,38,10.8
+E0038,M006,IC,Low,87004,78,24.2
+E0039,M011,IC,Low,75363,90,15.2
+E0040,M024,Director,Medium,182713,72,19.3
+E0041,M023,Manager,Medium,147191,30,19.2
+E0042,M016,Senior IC,Medium,59195,104,17.2
+E0043,M027,IC,Medium,64513,97,13.4
+E0044,M015,Manager,High,90449,28,11.6
+E0045,M002,Manager,Medium,72767,81,18.7
+E0046,M002,Senior IC,High,98325,19,18.7
+E0047,M039,IC,Medium,87933,55,15.2
+E0048,M003,Senior IC,High,90692,86,9.1
+E0049,M024,Manager,High,69369,55,9.8
+E0050,M043,Director,Low,138818,52,19.4
+E0051,M044,Senior IC,High,62450,91,4.3
+E0052,M030,IC,High,74112,56,9.8
+E0053,M043,Director,Low,115525,15,21.2
+E0054,M013,Senior IC,High,56224,22,21.5
+E0055,M027,Manager,Low,79008,106,18.7
+E0056,M050,Senior IC,High,120430,54,19.7
+E0057,M008,IC,Medium,38150,57,22.0
+E0058,M036,Manager,High,84151,56,18.0
+E0059,M050,Manager,Medium,104158,94,9.6
+E0060,M009,IC,Medium,84851,22,25.2
+E0061,M035,Senior IC,High,98029,58,9.0
+E0062,M031,IC,Medium,48181,7,28.0
+E0063,M035,Director,Low,118460,91,14.4
+E0064,M043,IC,Medium,69543,84,15.0
+E0065,M026,IC,Medium,84271,73,8.6
+E0066,M014,IC,Medium,66895,57,23.3
+E0067,M017,Director,Low,113381,100,21.0
+E0068,M049,IC,High,92184,9,24.7
+E0069,M043,IC,High,45953,19,18.9
+E0070,M050,Director,High,171975,99,8.7
+E0071,M026,IC,High,46774,112,10.1
+E0072,M037,IC,Medium,87670,94,16.6
+E0073,M001,Senior IC,Medium,95916,103,18.1
+E0074,M012,Manager,Medium,90239,90,13.5
+E0075,M030,Senior IC,Medium,59626,55,21.4
+E0076,M049,Manager,Low,67930,58,23.1
+E0077,M032,Manager,Medium,71644,30,21.4
+E0078,M006,IC,Low,33182,33,27.1
+E0079,M029,Senior IC,High,66060,96,8.1
+E0080,M028,Senior IC,Low,89167,120,13.1
+E0081,M008,IC,High,32840,88,13.4
+E0082,M047,Manager,Medium,120571,73,10.0
+E0083,M015,Manager,High,100199,46,13.6
+E0084,M041,IC,Low,35518,105,14.3
+E0085,M022,Senior IC,High,63709,27,7.5
+E0086,M010,IC,Medium,98890,22,23.0
+E0087,M039,IC,Low,43176,74,16.2
+E0088,M020,Senior IC,High,59790,70,15.8
+E0089,M017,Manager,High,74257,81,9.2
+E0090,M003,Senior IC,Medium,89172,32,13.5
+E0091,M041,Senior IC,Medium,83681,73,15.6
+E0092,M005,IC,High,37269,13,15.1
+E0093,M008,Director,Medium,118506,60,17.5
+E0094,M048,Senior IC,High,71004,43,14.3
+E0095,M049,Manager,Medium,154545,82,14.1
+E0096,M038,Director,Medium,109340,55,10.7
+E0097,M043,Senior IC,High,88208,18,14.6
+E0098,M030,Manager,Medium,158176,15,25.5
+E0099,M043,Manager,Medium,149954,105,9.8
+E0100,M014,Senior IC,Medium,129140,36,19.8
+E0101,M041,Senior IC,High,110237,75,10.4
+E0102,M030,Director,Medium,206440,114,12.6
+E0103,M027,IC,High,75906,100,6.2
+E0104,M005,Senior IC,Medium,59776,37,15.0
+E0105,M019,Senior IC,Medium,118717,88,10.8
+E0106,M036,Senior IC,Low,96652,92,29.9
+E0107,M037,Director,Medium,119095,49,16.6
+E0108,M032,IC,High,33823,116,14.5
+E0109,M007,IC,Medium,41889,66,14.3
+E0110,M022,Senior IC,High,86914,76,14.7
+E0111,M021,Senior IC,Medium,61552,78,10.0
+E0112,M015,Senior IC,Medium,92407,91,14.6
+E0113,M011,Manager,Medium,82872,85,14.7
+E0114,M037,IC,Medium,45985,84,15.7
+E0115,M032,IC,High,31565,110,8.9
+E0116,M044,Manager,High,120728,68,16.2
+E0117,M045,IC,Medium,42634,34,15.4
+E0118,M045,Senior IC,High,85940,39,12.4
+E0119,M039,Senior IC,Medium,127246,91,14.3
+E0120,M040,IC,Medium,36265,34,12.9
+E0121,M041,IC,High,82622,79,9.7
+E0122,M012,IC,Medium,43792,28,12.0
+E0123,M011,Senior IC,Medium,87096,34,19.7
+E0124,M010,IC,Low,93139,92,18.5
+E0125,M006,IC,High,72412,96,4.7
+E0126,M007,Senior IC,Medium,97977,82,14.7
+E0127,M042,IC,Medium,32478,13,23.0
+E0128,M032,Director,High,146659,19,22.7
+E0129,M038,IC,High,44173,91,11.8
+E0130,M045,Director,Medium,203507,48,20.6
+E0131,M035,IC,Medium,76286,109,12.7
+E0132,M043,Manager,High,136517,30,6.9
+E0133,M037,IC,Medium,33130,28,13.3
+E0134,M018,Manager,Medium,142519,104,15.2
+E0135,M009,IC,Medium,81943,7,23.2
+E0136,M048,Manager,Medium,152809,13,24.9
+E0137,M040,Senior IC,Low,60104,10,20.7
+E0138,M026,IC,High,44492,54,16.0
+E0139,M039,Manager,High,107379,22,14.9
+E0140,M030,Senior IC,Low,83059,63,27.3
+E0141,M028,Senior IC,High,50545,57,10.0
+E0142,M024,Senior IC,Medium,82642,115,10.9
+E0143,M007,IC,Medium,45555,91,21.0
+E0144,M023,Senior IC,High,70405,105,7.9
+E0145,M039,IC,High,74861,42,14.9
+E0146,M008,IC,Medium,74832,92,11.6
+E0147,M039,Director,Medium,182741,111,16.0
+E0148,M012,IC,High,83553,105,7.8
+E0149,M006,Senior IC,High,125318,91,7.4
+E0150,M004,Manager,High,137447,24,12.0
+E0151,M032,Senior IC,Medium,59941,75,11.2
+E0152,M034,Senior IC,High,66291,81,9.8
+E0153,M014,IC,Medium,69029,93,16.6
+E0154,M033,IC,Medium,34279,69,15.6
+E0155,M002,Manager,High,87382,58,10.2
+E0156,M002,IC,High,44640,116,15.4
+E0157,M006,Senior IC,High,96669,55,12.0
+E0158,M022,Manager,High,75459,94,11.0
+E0159,M023,IC,Medium,65761,88,14.1
+E0160,M012,Senior IC,Medium,121529,114,11.6
+E0161,M041,Senior IC,Medium,91645,42,14.4
+E0162,M020,IC,Medium,86167,58,18.7
+E0163,M040,Senior IC,Medium,108984,73,18.7
+E0164,M021,Director,Low,108911,74,20.9
+E0165,M046,Manager,Medium,110529,15,21.6
+E0166,M024,Senior IC,Low,93220,110,28.4
+E0167,M005,IC,Low,76501,43,17.9
+E0168,M022,Senior IC,High,52912,15,13.3
+E0169,M009,Senior IC,High,69071,74,10.2
+E0170,M042,Senior IC,High,115412,82,9.0
+E0171,M050,Director,High,138034,61,23.1
+E0172,M043,Manager,High,146301,44,11.4
+E0173,M047,IC,Medium,33494,56,18.3
+E0174,M015,Manager,High,84473,67,23.1
+E0175,M044,Manager,High,110604,114,8.4
+E0176,M039,Director,High,118230,21,23.3
+E0177,M046,Senior IC,Medium,129727,102,14.2
+E0178,M006,IC,Medium,43646,114,17.2
+E0179,M026,IC,High,97754,63,12.5
+E0180,M010,Manager,Medium,114313,21,29.5
+E0181,M029,IC,Medium,48962,75,14.4
+E0182,M008,Senior IC,High,61599,94,10.5
+E0183,M005,Senior IC,High,61645,19,27.6
+E0184,M001,IC,Medium,46479,75,17.1
+E0185,M005,IC,Low,75226,115,24.4
+E0186,M024,IC,High,43603,34,13.5
+E0187,M050,Manager,Medium,154283,72,16.4
+E0188,M045,Manager,High,88672,60,14.5
+E0189,M019,Director,Medium,186132,28,17.0
+E0190,M017,Manager,Medium,91156,9,22.0
+E0191,M018,IC,Medium,68413,20,23.7
+E0192,M045,Director,Low,127227,62,20.3
+E0193,M028,Manager,Medium,154827,74,13.5
+E0194,M011,IC,Medium,48330,85,14.7
+E0195,M018,IC,Medium,45117,79,12.5
+E0196,M002,Manager,Low,68021,22,27.7
+E0197,M024,IC,Low,68208,49,21.8
+E0198,M034,Manager,Low,81907,48,31.2
+E0199,M032,IC,Medium,33001,64,18.7
+E0200,M013,Senior IC,Medium,70182,20,21.4
+E0201,M044,Senior IC,High,114968,116,8.0
+E0202,M046,IC,Low,34030,86,12.2
+E0203,M009,IC,Medium,38381,32,15.0
+E0204,M005,IC,High,90462,40,13.0
+E0205,M009,Manager,Low,161338,116,12.8
+E0206,M050,Manager,Low,68331,116,23.7
+E0207,M020,IC,High,37764,25,14.0
+E0208,M013,Manager,High,105662,78,8.5
+E0209,M038,Senior IC,High,58767,112,8.2
+E0210,M006,Senior IC,Low,123627,10,27.9
+E0211,M040,Manager,Low,84710,79,12.1
+E0212,M020,Manager,High,83565,57,11.4
+E0213,M039,Senior IC,Medium,88176,22,26.8
+E0214,M021,Manager,High,139226,33,15.3
+E0215,M040,IC,High,46990,54,15.7
+E0216,M032,IC,Low,34981,120,26.3
+E0217,M033,IC,High,45877,57,15.3
+E0218,M019,Manager,High,91501,67,10.4
+E0219,M024,Manager,High,83067,10,17.4
+E0220,M040,Senior IC,High,88090,84,14.5
+E0221,M036,Manager,Medium,99996,112,10.5
+E0222,M031,IC,High,64956,64,18.1
+E0223,M011,Director,Low,150291,50,22.0
+E0224,M031,Senior IC,Low,98638,98,17.3
+E0225,M039,Senior IC,High,125313,60,13.6
+E0226,M034,Senior IC,Low,51125,78,17.1
+E0227,M037,Senior IC,Medium,124572,114,13.3
+E0228,M048,Senior IC,Medium,65791,88,10.5
+E0229,M034,Director,High,124220,49,9.3
+E0230,M040,Manager,Medium,105566,61,17.4
+E0231,M050,Director,High,163011,38,11.9
+E0232,M019,Manager,High,120563,20,21.4
+E0233,M019,Manager,Medium,78710,10,27.9
+E0234,M036,IC,Medium,71215,85,17.2
+E0235,M041,IC,High,32462,32,8.5
+E0236,M027,Director,High,113311,80,6.7
+E0237,M021,Manager,High,115251,38,11.7
+E0238,M012,Manager,Medium,136090,54,12.0
+E0239,M012,Manager,High,86155,112,9.3
+E0240,M019,IC,Medium,75449,57,15.2
+E0241,M018,IC,High,42175,27,10.8
+E0242,M037,Manager,High,113051,82,12.9
+E0243,M033,Senior IC,Medium,70665,43,21.4
+E0244,M016,IC,Medium,45742,56,20.7
+E0245,M042,Senior IC,High,93349,46,11.3
+E0246,M045,Director,High,153438,19,17.7
+E0247,M031,IC,Medium,34795,24,14.7
+E0248,M049,Senior IC,High,50400,34,6.9
+E0249,M005,Senior IC,High,90659,110,10.7
+E0250,M008,IC,Medium,48590,84,10.6
+E0251,M030,Senior IC,Medium,115396,21,19.8
+E0252,M001,IC,Medium,67823,91,13.6
+E0253,M005,IC,Medium,92547,118,14.7
+E0254,M024,Manager,Medium,91915,118,18.1
+E0255,M042,IC,High,38351,104,7.8
+E0256,M020,Manager,Medium,146378,58,14.9
+E0257,M023,IC,High,46441,24,13.1
+E0258,M016,Senior IC,Medium,122346,30,18.5
+E0259,M016,Manager,Medium,136693,90,15.2
+E0260,M015,Senior IC,High,91762,98,6.4
+E0261,M016,Senior IC,High,82097,40,13.5
+E0262,M041,Director,High,106577,82,8.7
+E0263,M034,Senior IC,Medium,64655,42,14.4
+E0264,M046,Manager,High,108078,22,19.2
+E0265,M025,Senior IC,High,50517,33,18.1
+E0266,M004,Manager,Low,80604,37,14.4
+E0267,M031,IC,Medium,32830,30,19.7
+E0268,M016,Manager,Medium,80568,85,11.1
+E0269,M025,IC,Medium,69524,58,14.1
+E0270,M049,Manager,High,83536,102,7.5
+E0271,M048,Senior IC,High,51176,22,16.3
+E0272,M037,IC,Low,46663,100,21.0
+E0273,M047,IC,Medium,46982,79,14.5
+E0274,M034,Senior IC,High,124037,9,18.1
+E0275,M009,Manager,High,82844,102,12.6
+E0276,M043,Senior IC,High,58654,61,13.2
+E0277,M035,Senior IC,High,97375,117,6.5
+E0278,M034,IC,Low,95673,22,27.4
+E0279,M006,IC,Medium,46656,48,20.1
+E0280,M006,Manager,Medium,154102,52,20.4
+E0281,M032,Manager,Medium,161843,102,22.0
+E0282,M014,Director,Medium,104964,109,10.4
+E0283,M035,Director,High,152611,70,10.0
+E0284,M005,Manager,High,90940,39,11.5
+E0285,M025,Senior IC,High,98537,92,8.4
+E0286,M015,IC,Low,49093,102,25.3
+E0287,M002,IC,Medium,68255,78,14.5
+E0288,M006,IC,High,41161,93,11.2
+E0289,M046,IC,High,48986,94,8.2
+E0290,M007,Senior IC,High,90985,21,22.0
+E0291,M006,Senior IC,High,115004,46,11.7
+E0292,M047,IC,High,91295,109,4.3
+E0293,M011,IC,High,44289,21,22.0
+E0294,M024,Senior IC,Medium,122251,34,22.2
+E0295,M009,IC,High,86931,40,9.1
+E0296,M020,IC,Medium,33699,42,17.3
+E0297,M019,Director,Low,143409,90,25.5
+E0298,M008,Manager,Medium,102958,112,23.8
+E0299,M047,Manager,Medium,159568,58,16.8
+E0300,M044,Manager,High,87697,62,11.3
+E0301,M005,Manager,Low,91283,57,18.4
+E0302,M024,Senior IC,Medium,129945,86,10.3
+E0303,M043,IC,High,36027,81,5.0
+E0304,M028,Director,Medium,157405,18,25.2
+E0305,M029,Senior IC,Medium,60474,49,17.4
+E0306,M027,Senior IC,High,94142,110,11.9
+E0307,M030,IC,Medium,69334,96,17.9
+E0308,M046,IC,High,93188,19,15.5
+E0309,M034,IC,High,34335,26,15.1
+E0310,M026,IC,Medium,45829,9,22.7
+E0311,M014,IC,Low,35258,37,20.2
+E0312,M030,IC,Low,38261,19,20.9
+E0313,M040,IC,High,46562,50,11.2
+E0314,M044,Manager,High,140491,21,20.7
+E0315,M027,Senior IC,Low,70449,74,10.3
+E0316,M036,Director,Medium,117523,25,19.9
+E0317,M001,Senior IC,High,88364,61,9.0
+E0318,M032,Senior IC,Low,61366,25,22.9
+E0319,M035,IC,Medium,35075,38,18.5
+E0320,M050,Senior IC,Medium,94622,68,17.8
+E0321,M035,Manager,Medium,91371,31,16.7
+E0322,M023,IC,High,64643,104,12.1
+E0323,M048,Manager,Medium,69588,73,12.8
+E0324,M004,IC,Low,32678,70,17.2
+E0325,M019,Director,High,139067,70,17.5
+E0326,M004,Manager,Medium,91223,118,12.8
+E0327,M016,IC,Low,68799,92,11.9
+E0328,M026,Senior IC,Medium,116857,64,24.9
+E0329,M038,Director,Medium,154924,6,23.6
+E0330,M035,IC,Medium,89904,51,16.9
+E0331,M022,IC,High,73671,68,14.5
+E0332,M002,IC,Low,40506,20,25.5
+E0333,M045,Director,Medium,101053,109,18.3
+E0334,M024,IC,Low,92260,81,13.2
+E0335,M028,Manager,Medium,70892,80,12.4
+E0336,M001,Senior IC,High,118135,85,0.8
+E0337,M015,IC,Medium,83468,49,15.6
+E0338,M042,Manager,High,67627,118,11.9
+E0339,M023,Senior IC,Medium,69679,88,10.1
+E0340,M009,IC,Medium,98338,91,12.4
+E0341,M016,IC,High,36952,37,9.7
+E0342,M014,Senior IC,Low,86319,64,24.7
+E0343,M032,IC,High,31584,50,18.7
+E0344,M009,IC,High,70648,50,10.3
+E0345,M050,IC,Medium,49038,14,25.4
+E0346,M041,IC,High,68631,87,5.9
+E0347,M018,Senior IC,High,53094,15,20.7
+E0348,M020,Senior IC,Medium,109389,85,8.2
+E0349,M008,IC,Medium,41574,57,17.7
+E0350,M011,Manager,Low,159675,62,28.0
+E0351,M009,IC,Medium,67690,91,18.7
+E0352,M017,Senior IC,High,118924,87,8.4
+E0353,M037,IC,High,41538,25,16.5
+E0354,M003,Manager,Medium,145919,104,14.1
+E0355,M003,Director,High,108157,69,10.7
+E0356,M005,Manager,High,100158,70,16.1
+E0357,M026,IC,Medium,90955,14,25.5
+E0358,M019,IC,Medium,34747,70,22.0
+E0359,M050,Senior IC,Medium,70621,94,14.5
+E0360,M041,IC,High,63020,102,3.9
+E0361,M007,Senior IC,High,83562,28,20.8
+E0362,M015,IC,Low,87704,108,20.4
+E0363,M038,Director,High,187529,16,22.5
+E0364,M019,Director,Medium,114415,36,22.9
+E0365,M029,Manager,High,102419,37,13.7
+E0366,M021,IC,Low,42368,52,23.3
+E0367,M008,IC,Medium,66010,16,22.9
+E0368,M006,Manager,Medium,68234,87,13.4
+E0369,M002,IC,Medium,32213,114,12.7
+E0370,M001,Manager,Medium,140943,13,21.9
+E0371,M038,Senior IC,Medium,123503,73,16.0
+E0372,M022,Manager,Medium,162723,20,23.7
+E0373,M032,Senior IC,Medium,62138,9,24.4
+E0374,M040,Manager,High,147359,76,11.5
+E0375,M006,Senior IC,High,123138,38,15.7
+E0376,M025,Manager,Low,149540,94,16.9
+E0377,M025,Director,High,143427,37,18.4
+E0378,M034,Manager,Medium,79213,46,16.9
+E0379,M018,IC,Medium,35529,67,18.6
+E0380,M023,Director,Low,113677,112,24.9
+E0381,M038,IC,Low,65635,9,27.4
+E0382,M035,Director,Medium,113582,40,18.1
+E0383,M001,IC,Low,47721,44,24.0
+E0384,M002,Manager,Medium,138327,22,22.4
+E0385,M005,Senior IC,High,83456,48,15.0
+E0386,M041,IC,Medium,49218,115,12.5
+E0387,M015,Senior IC,Medium,84198,81,13.7
+E0388,M050,IC,Medium,48789,116,14.8
+E0389,M041,Director,Medium,120612,70,17.9
+E0390,M046,IC,Medium,81205,82,11.3
+E0391,M023,IC,Medium,98443,34,14.3
+E0392,M025,Manager,Medium,89908,45,22.0
+E0393,M011,Senior IC,Medium,50651,57,20.3
+E0394,M011,IC,Low,41337,90,12.1
+E0395,M046,Senior IC,Medium,59816,9,25.3
+E0396,M027,IC,Medium,33356,85,9.2
+E0397,M007,IC,Low,34493,12,36.6
+E0398,M013,IC,High,49293,16,23.1
+E0399,M020,Senior IC,Low,117300,96,24.6
+E0400,M024,IC,High,42870,27,13.9
+E0401,M010,Manager,Medium,164121,91,11.9
+E0402,M025,Senior IC,Medium,128805,99,15.8
+E0403,M031,Senior IC,Medium,55184,39,21.8
+E0404,M008,Senior IC,Low,51338,114,23.3
+E0405,M009,IC,High,32535,10,20.7
+E0406,M047,Senior IC,High,88152,110,10.2
+E0407,M034,IC,Medium,68874,58,15.4
+E0408,M037,Senior IC,Medium,59674,73,6.9
+E0409,M019,Senior IC,Medium,121728,104,13.6
+E0410,M018,Senior IC,High,53918,51,14.9
+E0411,M045,IC,Low,74443,33,25.5
+E0412,M032,IC,Medium,66191,104,6.6
+E0413,M050,IC,High,42402,99,7.8
+E0414,M049,Manager,Medium,89955,64,18.7
+E0415,M009,IC,Low,42306,94,16.8
+E0416,M030,IC,High,87630,12,20.5
+E0417,M041,Senior IC,Medium,70986,111,10.7
+E0418,M023,Senior IC,High,93399,25,9.9
+E0419,M004,IC,Low,46599,24,31.7
+E0420,M033,IC,Medium,40580,8,19.0
+E0421,M039,Director,High,114606,97,13.4
+E0422,M023,IC,Medium,45185,58,20.5
+E0423,M001,Senior IC,Low,122617,64,22.0
+E0424,M031,IC,High,96506,13,18.7
+E0425,M013,IC,Low,71400,22,25.8
+E0426,M047,Senior IC,Low,59476,8,35.0
+E0427,M038,Senior IC,Medium,120831,86,13.7
+E0428,M033,Manager,Medium,111281,40,21.8
+E0429,M009,IC,Low,48596,90,20.2
+E0430,M023,Senior IC,Medium,59255,31,15.7
+E0431,M030,IC,Low,63997,103,18.8
+E0432,M044,Manager,Low,160627,49,19.0
+E0433,M022,IC,Low,36509,52,26.5
+E0434,M022,Manager,High,76580,78,12.8
+E0435,M037,IC,Low,35934,93,21.5
+E0436,M025,Senior IC,Medium,70850,6,23.0
+E0437,M002,Manager,Medium,69433,82,13.0
+E0438,M011,IC,High,69382,13,21.1
+E0439,M028,Senior IC,High,84391,106,11.3
+E0440,M002,Director,Medium,125617,32,16.4
+E0441,M008,Senior IC,Medium,55382,48,19.6
+E0442,M043,IC,Medium,83084,18,23.2
+E0443,M036,Senior IC,Medium,118100,34,17.8
+E0444,M040,IC,High,64468,75,13.3
+E0445,M019,Manager,High,150694,19,19.7
+E0446,M019,IC,Medium,46693,24,16.0
+E0447,M001,Senior IC,High,59943,7,15.9
+E0448,M047,Manager,Medium,148702,88,11.6
+E0449,M030,Director,Medium,155302,12,25.7
+E0450,M007,Senior IC,Medium,111321,103,13.7
+E0451,M023,Senior IC,High,87169,108,8.7
+E0452,M030,IC,Low,47699,37,28.8
+E0453,M008,Senior IC,Low,59523,21,31.8
+E0454,M012,Senior IC,Medium,69713,75,9.9
+E0455,M031,Manager,High,72213,110,11.2
+E0456,M043,Manager,Medium,76773,105,13.5
+E0457,M031,Senior IC,Medium,60365,45,20.0
+E0458,M033,IC,Medium,32024,103,9.1
+E0459,M022,Senior IC,High,52084,116,7.1
+E0460,M006,Senior IC,Medium,64965,103,14.5
+E0461,M026,Senior IC,Medium,122857,52,21.4
+E0462,M042,IC,High,31879,82,8.1
+E0463,M022,IC,Low,41526,69,15.4
+E0464,M001,Manager,Medium,71879,44,11.2
+E0465,M003,Senior IC,Low,114102,108,24.9
+E0466,M026,IC,Medium,87082,30,16.3
+E0467,M041,Manager,Low,163685,102,16.8
+E0468,M001,IC,High,48049,66,15.1
+E0469,M045,Senior IC,Medium,59209,72,14.9
+E0470,M027,Senior IC,High,62056,117,6.4
+E0471,M029,Director,High,160292,97,11.7
+E0472,M046,Senior IC,Low,84774,90,13.3
+E0473,M044,Manager,Low,113011,21,32.6
+E0474,M036,Manager,Medium,108184,61,16.1
+E0475,M028,Manager,Medium,103397,98,16.7
+E0476,M019,Manager,High,79265,84,9.9
+E0477,M023,IC,High,94363,98,8.6
+E0478,M033,Senior IC,Low,56809,96,22.6
+E0479,M027,Director,High,114032,115,8.5
+E0480,M015,Senior IC,Medium,68316,110,9.8
+E0481,M050,Senior IC,High,60087,88,10.2
+E0482,M025,Manager,Medium,139827,10,26.3
+E0483,M022,Manager,Medium,158209,58,21.6
+E0484,M032,Senior IC,Medium,93738,96,13.6
+E0485,M034,Senior IC,Medium,51933,13,22.7
+E0486,M022,IC,Medium,70426,46,22.9
+E0487,M008,Director,Low,207438,82,14.8
+E0488,M025,Senior IC,Medium,90724,110,13.0
+E0489,M033,IC,Medium,70194,97,15.6
+E0490,M050,Director,Medium,113747,67,18.1
+E0491,M007,Manager,Medium,90384,30,17.8
+E0492,M002,IC,Low,31879,58,19.1
+E0493,M037,Manager,Medium,144492,99,11.1
+E0494,M035,IC,Medium,94427,7,22.9
+E0495,M023,IC,High,94774,111,8.6
+E0496,M043,Senior IC,High,68207,9,20.8
+E0497,M041,Manager,Low,107208,22,32.4
+E0498,M008,Director,Low,111045,10,29.7
+E0499,M048,IC,Medium,32497,90,18.9
+E0500,M013,IC,Low,63761,19,27.6
+E0501,M042,Manager,Medium,84782,68,21.9
+E0502,M043,IC,High,37800,80,11.5
+E0503,M022,IC,High,43346,76,6.4
+E0504,M021,Senior IC,Medium,118466,33,22.8
+E0505,M044,Manager,Medium,75775,90,12.4
+E0506,M018,IC,High,85738,104,11.9
+E0507,M047,Manager,High,147154,14,22.9
+E0508,M036,Senior IC,High,123693,36,10.7
+E0509,M015,IC,Low,41314,108,27.4
+E0510,M043,IC,High,93314,33,11.1
+E0511,M029,Manager,Low,78480,24,26.2
+E0512,M015,Director,Medium,179892,92,16.3
+E0513,M025,Senior IC,Medium,93667,60,20.6
+E0514,M048,Senior IC,Medium,92766,36,17.5
+E0515,M034,IC,High,87210,34,8.4
+E0516,M033,Manager,High,150436,106,14.8
+E0517,M012,IC,Low,33811,24,23.4
+E0518,M031,IC,Medium,40702,30,22.8
+E0519,M009,IC,High,32760,78,11.2
+E0520,M047,Director,High,179230,88,2.4
+E0521,M031,Senior IC,Medium,60864,25,19.5
+E0522,M011,Senior IC,Low,91630,88,27.8
+E0523,M009,IC,High,41846,18,15.9
+E0524,M040,IC,High,47271,74,6.4
+E0525,M039,IC,High,34444,67,11.6
+E0526,M015,Manager,Low,82458,112,21.6
+E0527,M028,Manager,Medium,161302,21,25.5
+E0528,M001,Senior IC,Medium,50796,86,10.2
+E0529,M045,IC,Medium,33329,97,10.4
+E0530,M040,Senior IC,Medium,88438,37,13.4
+E0531,M012,Manager,Medium,88493,48,17.0
+E0532,M048,Manager,High,138008,32,5.8
+E0533,M036,Senior IC,Medium,95478,75,10.7
+E0534,M039,Manager,High,77860,55,13.8
+E0535,M026,IC,Low,47882,75,15.1
+E0536,M001,Senior IC,Low,62218,28,20.5
+E0537,M040,IC,High,38477,25,14.8
+E0538,M043,Manager,Medium,115212,51,16.1
+E0539,M036,IC,Medium,85977,38,13.5
+E0540,M030,Senior IC,High,53978,111,7.9
+E0541,M033,IC,High,95636,39,18.9
+E0542,M025,Senior IC,Medium,70996,70,13.0
+E0543,M038,Senior IC,Medium,61364,104,10.1
+E0544,M027,Manager,High,117307,115,9.0
+E0545,M026,IC,Medium,87363,82,17.1
+E0546,M012,Manager,Medium,109977,114,8.0
+E0547,M017,IC,High,32246,30,11.7
+E0548,M040,Director,High,128352,7,13.1
+E0549,M032,IC,Medium,73699,108,13.7
+E0550,M015,Senior IC,High,64001,91,11.6
+E0551,M033,Director,Medium,190691,45,16.5
+E0552,M001,IC,Medium,87508,82,15.0
+E0553,M036,Manager,High,73859,36,11.9
+E0554,M024,Senior IC,Medium,83360,103,15.9
+E0555,M007,Senior IC,Medium,58300,87,15.2
+E0556,M001,Manager,Low,90939,26,25.0
+E0557,M032,Senior IC,Low,82080,40,14.3
+E0558,M041,Manager,High,82625,16,16.7
+E0559,M023,Senior IC,High,91366,8,20.9
+E0560,M050,Senior IC,Medium,58022,38,21.2
+E0561,M025,Senior IC,Low,130285,75,27.9
+E0562,M005,Senior IC,Low,66989,15,26.2
+E0563,M018,Manager,Low,84154,106,14.0
+E0564,M009,IC,Low,93612,88,14.9
+E0565,M026,IC,High,34279,18,18.3
+E0566,M007,Manager,High,161564,36,16.6
+E0567,M048,IC,Medium,36144,38,18.4
+E0568,M031,Manager,High,111067,58,7.9
+E0569,M038,IC,Low,35976,74,17.6
+E0570,M031,IC,Medium,68120,67,14.9
+E0571,M001,IC,Medium,63116,6,22.1
+E0572,M020,Director,Medium,113549,7,25.1
+E0573,M013,IC,Low,68456,52,20.5
+E0574,M006,IC,High,75739,54,18.1
+E0575,M019,Manager,Medium,102005,80,14.4
+E0576,M040,IC,Medium,43385,57,14.7
+E0577,M012,IC,Medium,82623,116,13.6
+E0578,M022,IC,Medium,34099,54,14.6
+E0579,M022,Senior IC,Medium,121036,15,23.7
+E0580,M025,IC,High,66485,100,12.6
+E0581,M016,Manager,High,93195,90,9.5
+E0582,M021,Senior IC,Low,90892,24,13.1
+E0583,M041,IC,Medium,42623,39,14.0
+E0584,M011,Senior IC,Low,113834,96,23.5
+E0585,M045,Director,Medium,122847,74,14.7
+E0586,M004,Director,High,175080,46,16.1
+E0587,M036,Senior IC,Low,93406,96,12.2
+E0588,M017,IC,Medium,33563,108,14.3
+E0589,M037,Senior IC,Medium,59559,27,17.1
+E0590,M034,Senior IC,High,116810,24,15.2
+E0591,M047,IC,High,46989,27,13.4
+E0592,M013,Senior IC,Low,66469,66,25.1
+E0593,M008,IC,Medium,63437,16,25.7
+E0594,M007,IC,Medium,34929,9,21.7
+E0595,M004,Senior IC,Medium,89845,48,19.9
+E0596,M030,Manager,High,163147,97,10.4
+E0597,M046,Senior IC,Low,82402,13,23.4
+E0598,M007,IC,Low,90471,88,24.6
+E0599,M036,IC,Medium,34711,91,12.2
+E0600,M011,Senior IC,Low,123780,96,19.9
