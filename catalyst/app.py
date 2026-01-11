@@ -1,12 +1,11 @@
 import streamlit as st
 
 # ============================================================
-# Imports (authoritative, no duplicates)
+# Imports (authoritative)
 # ============================================================
 
 from catalyst.context_manager_v1 import get_effective_context
 from visuals.kpi_current import render_kpi_current_performance
-# from narrative_engine import generate_narrative
 from demo_loader_v1 import load_demo_context_v1
 from catalyst.file_ingest_v1 import load_workforce_file
 
@@ -15,6 +14,7 @@ from catalyst.file_ingest_v1 import load_workforce_file
 # ============================================================
 
 st.set_page_config(page_title="Catalyst", layout="wide")
+
 st.markdown(
     """
     <style>
@@ -30,6 +30,25 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
+# ============================================================
+# Session State Initialization (AUTHORITATIVE)
+# ============================================================
+
+if "context_v1" not in st.session_state:
+    st.session_state["context_v1"] = None
+
+if "demo_mode" not in st.session_state:
+    st.session_state["demo_mode"] = False
+
+if "demo_welcomed" not in st.session_state:
+    st.session_state["demo_welcomed"] = False
+
+if "workforce_df" not in st.session_state:
+    st.session_state["workforce_df"] = None
+
+if "what_if_kpis" not in st.session_state:
+    st.session_state["what_if_kpis"] = None
 
 # ============================================================
 # 🎬 DEMO ENTRY LANDING
@@ -70,16 +89,19 @@ def render_demo_entry():
 
     st.markdown("</div>", unsafe_allow_html=True)
 
-
-# # ============================================================
-# 🔒 CONTEXT ENTRY GATE (AUTHORITATIVE)
+# ============================================================
+# 🔒 CONTEXT ENTRY GATE
 # ============================================================
 
-if not isinstance(st.session_state.get("context_v1"), dict):
+if not isinstance(st.session_state["context_v1"], dict):
     render_demo_entry()
     st.stop()
 
 context = get_effective_context()
+
+# ============================================================
+# Demo Badge + Welcome
+# ============================================================
 
 st.markdown(
     """
@@ -99,16 +121,16 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-if not st.session_state.get("demo_welcomed"):
+if not st.session_state["demo_welcomed"]:
     st.toast(
-    "Welcome to the Catalyst interactive demo. "
-    + "Explore workforce risk, test what-if decisions, and understand impact.",
-    icon="🎬",
-)
-st.session_state["demo_welcomed"] = True
+        "Welcome to the Catalyst interactive demo. "
+        "Upload data to begin workforce analysis.",
+        icon="🎬",
+    )
+    st.session_state["demo_welcomed"] = True
 
 # ============================================================
-# SIDEBAR — PHASE I DEMO (AUTHORITATIVE)
+# SIDEBAR — PHASE I DEMO
 # ============================================================
 
 # ----------------------------
@@ -135,25 +157,9 @@ if uploaded_file:
     st.session_state["workforce_df"] = df
     st.sidebar.success(f"Loaded {len(df)} employee records")
 
-# --------------------------------------------------
-# KPI Derivation (Phase I – minimal & defensible)
-# --------------------------------------------------
-
-from catalyst.kpi_thresholds import classify_kpi
-
-workforce_df = st.session_state["workforce_df"]
-
-# Aggregate attrition risk from row-level signal
-attrition_risk = workforce_df["attrition_risk_score"].mean()
-
-# Ensure KPI container exists
-context.setdefault("kpis", {})
-
-context["kpis"]["attrition"] = {
-    "value": round(attrition_risk, 1),
-    "status": classify_kpi(attrition_risk),
-    "source": "workforce_file",
-}
+# ============================================================
+# EMPTY STATE (NO DATA)
+# ============================================================
 
 def render_empty_state():
     st.markdown("### No workforce data loaded yet")
@@ -178,18 +184,20 @@ def render_empty_state():
         "This is a demo environment. Uploaded data is processed in-session only "
         "and is not stored."
     )
-if "workforce_df" not in st.session_state:
+
+if st.session_state["workforce_df"] is None:
     render_empty_state()
     st.stop()
 
-# ----------------------------
+# ============================================================
 # 👤 View As (Persona)
-# ----------------------------
+# ============================================================
+
 st.sidebar.markdown("## 👤 View As")
 
 persona_options = ["CEO", "CFO", "CHRO"]
-
 current_persona = context.get("persona", "CEO")
+
 if current_persona not in persona_options:
     current_persona = "CEO"
 
@@ -199,9 +207,10 @@ context["persona"] = st.sidebar.selectbox(
     index=persona_options.index(current_persona),
 )
 
-# ----------------------------
+# ============================================================
 # 🧪 What-If Sandbox
-# ----------------------------
+# ============================================================
+
 st.sidebar.markdown("## 🧪 What-If Sandbox")
 
 attrition_reduction = st.sidebar.slider(
@@ -224,8 +233,10 @@ manager_lift = st.sidebar.slider(
 
 run_what_if = st.sidebar.button("Apply What-If")
 
-if run_what_if and "workforce_df" in st.session_state:
+if run_what_if:
     from catalyst.analytics.what_if_engine_v1 import apply_what_if
+
+    baseline_kpis = context["baseline"]["kpis"]
 
     levers = {
         "attrition_risk_reduction_pct": attrition_reduction,
@@ -235,22 +246,24 @@ if run_what_if and "workforce_df" in st.session_state:
         "risk_realization_factor": 0.6,
     }
 
-    baseline_kpis = context.get("baseline", {}).get("kpis", {})
-
-
     st.session_state["what_if_kpis"] = apply_what_if(
         baseline_kpis,
         levers
     )
 
-# ----------------------------
-# ↩ Reset What-If
-# ----------------------------
+# Reset What-If
 st.sidebar.divider()
-
 if st.sidebar.button("↩ Reset What-If"):
-    st.session_state.pop("what_if_kpis", None)
+    st.session_state["what_if_kpis"] = None
 
+# ============================================================
+# Navigation
+# ============================================================
+
+page = st.sidebar.selectbox(
+    "Navigate",
+    ["Sentiment Health", "Current KPIs"],
+)
 
 # ============================================================
 # Pages
@@ -260,26 +273,21 @@ def render_sentiment_health_page():
     st.header("Sentiment Health")
     st.caption("Narrative decision support")
 
-    kpis = context.get("kpis", {})
-
-    if "attrition" not in kpis:
-        st.info("Attrition KPI not configured.")
-        return
-
-    st.divider()
     st.info(
-        "This view summarizes workforce risk based on uploaded data. "
+        "This view summarizes workforce risk derived from uploaded data. "
         "Use the What-If Sandbox to explore how changes in attrition risk, "
         "engagement, and manager effectiveness alter outcomes."
     )
 
-    # ----------------------------
-    # KPI source selection
-    # ----------------------------
-    if "what_if_kpis" in st.session_state:
+def render_current_kpis_page():
+    st.header("Current KPI Performance")
+
+    if st.session_state["what_if_kpis"]:
         kpis = st.session_state["what_if_kpis"]
+        st.caption("Showing simulated (What-If) KPIs")
     else:
         kpis = context["baseline"]["kpis"]
+        st.caption("Showing baseline KPIs")
 
     if not kpis:
         st.info("No KPIs available.")
@@ -294,64 +302,10 @@ def render_sentiment_health_page():
         active_client=None,
     )
 
-    # ====================================================
-    # ✅ WHAT-IF NARRATIVE (INSERT HERE — AT THE BOTTOM)
-    # ====================================================
-    if "what_if_kpis" in st.session_state:
-        from catalyst.what_if_narrative_engine_v1 import generate_what_if_narrative
-
-        narrative = generate_what_if_narrative(
-            baseline_kpis=context["baseline"]["kpis"],
-            what_if_kpis=st.session_state["what_if_kpis"],
-            persona=context["persona"],
-        )
-
-        st.divider()
-        st.subheader(narrative["headline"])
-        st.markdown(narrative["summary"])
-        st.markdown(narrative["implication"])
-        st.info(narrative["recommendation"])
-
-
-page = st.sidebar.selectbox(
-    "Navigate",
-    ["Sentiment Health", "Current KPIs"],
-)    
-
-if "what_if_kpis" in st.session_state:
-    from catalyst.what_if_narrative_engine_v1 import generate_what_if_narrative
-
-    narrative = generate_what_if_narrative(
-        baseline_kpis=context["baseline"]["kpis"],
-        what_if_kpis=st.session_state["what_if_kpis"],
-        persona=context["persona"],
-        headcount=len(st.session_state["workforce_df"]),
-    )
-
-    st.divider()
-    st.subheader(narrative["headline"])
-    st.markdown(narrative["summary"])
-    st.markdown(narrative["implication"])
-    st.info(narrative["recommendation"])
-
-    # ===============================
-    # 💰 COST IMPACT CALLOUT (NEW)
-    # ===============================
-    ci = narrative["cost_impact"]
-
-    st.divider()
-    st.markdown(
-        f"""
-        ### 💰 Cost Impact ({ci['horizon_months']}-month view)
-
-        - Expected attrition reduces from **{ci['baseline_exits']}** to **{ci['what_if_exits']}** employees  
-        - Approximately **{ci['exits_avoided']} exits avoided**
-        - **~${ci['cost_protected']:,.0f} in risk-adjusted attrition cost protected**
-        """
-    )
 # ============================================================
 # Router
 # ============================================================
+
 if page == "Sentiment Health":
     render_sentiment_health_page()
 
