@@ -21,10 +21,10 @@ ROLES = ["IC", "Senior IC", "Manager", "Director"]
 LOCATIONS = ["US", "India", "Europe", "APAC"]
 
 SALARY_BANDS = {
-    "IC":       {"US": 90000,  "India": 35000, "Europe": 70000, "APAC": 45000},
-    "Senior IC":{"US": 120000, "India": 55000, "Europe": 90000, "APAC": 65000},
-    "Manager":  {"US": 150000, "India": 75000, "Europe":110000, "APAC": 85000},
-    "Director": {"US": 190000, "India":110000, "Europe":150000, "APAC":120000},
+    "IC":        {"US": 90000,  "India": 35000, "Europe": 70000, "APAC": 45000},
+    "Senior IC": {"US": 120000, "India": 55000, "Europe": 90000, "APAC": 65000},
+    "Manager":   {"US": 150000, "India": 75000, "Europe":110000, "APAC": 85000},
+    "Director":  {"US": 190000, "India":110000, "Europe":150000, "APAC":120000},
 }
 
 # --------------------------------------------------
@@ -54,14 +54,17 @@ def generate_employee(i):
     tenure_years = round(random.uniform(0.5, 10), 1)
     tenure_months = int(tenure_years * 12)
 
-    manager_effectiveness = bounded(int(random.gauss(70, 12)))
+    # --- Manager effectiveness (PRIMARY DRIVER) ---
+    manager_effectiveness_score = bounded(int(random.gauss(70, 12)))
+
+    # --- Engagement influenced by manager quality ---
     engagement_score = bounded(
-        int(manager_effectiveness + random.gauss(0, 10))
+        int(manager_effectiveness_score + random.gauss(0, 10))
     )
 
     performance_band = choose_performance_band(engagement_score)
 
-    # Base attrition risk logic
+    # --- Base attrition risk logic ---
     risk = 18
 
     if tenure_years < 2:
@@ -74,25 +77,26 @@ def generate_employee(i):
     elif engagement_score > 75:
         risk -= 5
 
-    if manager_effectiveness < 50:
+    if manager_effectiveness_score < 50:
         risk += 4
 
     attrition_risk_score = bounded(round(risk + random.gauss(0, 3), 1))
 
-    # Salary (role + geo + mild noise)
+    # --- Salary (role + geo + mild noise) ---
     base_salary = SALARY_BANDS[role][location]
     salary = int(base_salary * random.uniform(0.9, 1.1))
 
     return {
-    "employee_id": f"E{i:04d}",
-    "manager_id": manager_id,
-    "role": role,
-    "performance_band": performance_band,
-    "salary": salary,
-    "tenure_months": tenure_months,
-    "engagement_score": engagement_score,          # ✅ ADD THIS
-    "attrition_risk_score": attrition_risk_score,
-}
+        "employee_id": f"E{i:04d}",
+        "manager_id": manager_id,
+        "role": role,
+        "performance_band": performance_band,
+        "salary": salary,
+        "tenure_months": tenure_months,
+        "engagement_score": engagement_score,
+        "manager_effectiveness_score": manager_effectiveness_score,  # ✅ FIX
+        "attrition_risk_score": attrition_risk_score,
+    }
 
 # --------------------------------------------------
 # Main
