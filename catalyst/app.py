@@ -21,22 +21,36 @@ st.set_page_config(page_title="Catalyst", layout="wide")
 # ============================================================
 
 def render_demo_entry():
-    st.title("Catalyst")
-    st.subheader("Interactive Talent Intelligence Demo")
+    st.markdown("## Catalyst")
+    st.markdown("### Interactive Talent Intelligence Demo")
 
     st.markdown(
         """
-        Explore how Catalyst helps leadership teams diagnose workforce risk,
-        evaluate scenarios, and make economically grounded people decisions.
+        Catalyst helps leadership teams:
+        - **Diagnose workforce risk** using real employee data  
+        - **Quantify attrition exposure and cost** before it materializes  
+        - **Test decisions safely** using what-if simulations  
         """
     )
 
     st.divider()
 
-if st.button("▶ Run Interactive Demo", use_container_width=True):
-    load_demo_context_v1()
-    st.session_state["demo_mode"] = True
-    st.rerun()
+    st.caption(
+        "This is a demo environment. Uploaded data is processed in-session only "
+        "and is not stored."
+    )
+
+    st.divider()
+
+    if st.button("▶ Run Interactive Demo", use_container_width=True):
+        load_demo_context_v1()
+        st.session_state["demo_mode"] = True
+        st.rerun()
+
+    st.caption(
+        "You will be prompted to upload a simple workforce snapshot (CSV or Excel)."
+    )
+
 
 
 # # ============================================================
