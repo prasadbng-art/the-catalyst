@@ -12,6 +12,7 @@ from catalyst.analytics.baseline_kpi_builder_v1 import build_baseline_kpis
 from catalyst.analytics.cost_framing_v1 import compute_cost_framing
 from catalyst.analytics.cost_narrative_v1 import generate_cost_narrative
 from catalyst.analytics.cost_confidence_bands_v1 import compute_cost_confidence_bands
+from catalyst.analytics.cost_narrative_cfo_v1 import generate_cfo_cost_narrative
 
 # ============================================================
 # App setup
@@ -310,6 +311,23 @@ costs = compute_cost_framing(
     st.caption(
         "Confidence bands reflect sensitivity to attrition realization and intervention effectiveness."
     )
+
+    # --------------------------------------------------
+    # 🧮 CFO Cost Narrative
+    # --------------------------------------------------
+
+    if context.get("persona") == "CFO":
+        cfo_narrative = generate_cfo_cost_narrative(
+            costs=costs,
+            bands=bands,
+        )
+
+        st.divider()
+        st.subheader("🧮 CFO Interpretation")
+
+        st.markdown(f"**{cfo_narrative['headline']}**")
+        st.markdown(cfo_narrative["body"])
+        st.info(f"**Capital posture:** {cfo_narrative['posture']}")
 
 # ============================================================
 # Navigation
