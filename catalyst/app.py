@@ -135,6 +135,26 @@ if uploaded_file:
     st.session_state["workforce_df"] = df
     st.sidebar.success(f"Loaded {len(df)} employee records")
 
+# --------------------------------------------------
+# KPI Derivation (Phase I – minimal & defensible)
+# --------------------------------------------------
+
+from catalyst.kpi_thresholds import classify_kpi
+
+workforce_df = st.session_state["workforce_df"]
+
+# Aggregate attrition risk from row-level signal
+attrition_risk = workforce_df["attrition_risk_score"].mean()
+
+# Ensure KPI container exists
+context.setdefault("kpis", {})
+
+context["kpis"]["attrition"] = {
+    "value": round(attrition_risk, 1),
+    "status": classify_kpi(attrition_risk),
+    "source": "workforce_file",
+}
+
 def render_empty_state():
     st.markdown("### No workforce data loaded yet")
 
