@@ -1,19 +1,25 @@
-def generate_what_if_narrative(baseline_kpis, what_if_kpis, persona):
+from catalyst.cost_framing_v1 import compute_attrition_cost_impact
+
+
+def generate_what_if_narrative(baseline_kpis, what_if_kpis, persona, headcount):
     baseline_risk = baseline_kpis["attrition"]["value"]
     what_if_risk = what_if_kpis["attrition"]["value"]
 
     delta = baseline_risk - what_if_risk
 
+    # ----------------------------
+    # Core narrative logic
+    # ----------------------------
     if delta > 2:
         headline = "Attrition risk meaningfully reduced under proposed actions"
         implication = (
             "The modeled interventions materially lower workforce exit risk, "
-            "suggesting a defensible reduction in attrition exposure."
+            "indicating a defensible reduction in attrition exposure."
         )
     elif delta > 0.5:
         headline = "Incremental improvement in attrition risk observed"
         implication = (
-            "The proposed changes yield modest improvements, "
+            "The proposed actions yield modest gains, "
             "but may not fully offset underlying attrition drivers."
         )
     else:
@@ -39,7 +45,16 @@ def generate_what_if_narrative(baseline_kpis, what_if_kpis, persona):
 
     summary = (
         f"Attrition risk shifts from {baseline_risk:.1f}% to {what_if_risk:.1f}% "
-        f"under the modeled scenario."
+        f"under the modeled actions."
+    )
+
+    # ----------------------------
+    # 💰 COST FRAMING (NEW)
+    # ----------------------------
+    cost_impact = compute_attrition_cost_impact(
+        baseline_attrition_risk=baseline_risk,
+        what_if_attrition_risk=what_if_risk,
+        headcount=headcount,
     )
 
     return {
@@ -47,4 +62,5 @@ def generate_what_if_narrative(baseline_kpis, what_if_kpis, persona):
         "summary": summary,
         "implication": implication,
         "recommendation": recommendation,
+        "cost_impact": cost_impact,   # ← NEW
     }

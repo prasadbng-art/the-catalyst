@@ -297,6 +297,38 @@ page = st.sidebar.selectbox(
     "Navigate",
     ["Sentiment Health", "Current KPIs"],
 )    
+
+if "what_if_kpis" in st.session_state:
+    from catalyst.what_if_narrative_engine_v1 import generate_what_if_narrative
+
+    narrative = generate_what_if_narrative(
+        baseline_kpis=context["baseline"]["kpis"],
+        what_if_kpis=st.session_state["what_if_kpis"],
+        persona=context["persona"],
+        headcount=len(st.session_state["workforce_df"]),
+    )
+
+    st.divider()
+    st.subheader(narrative["headline"])
+    st.markdown(narrative["summary"])
+    st.markdown(narrative["implication"])
+    st.info(narrative["recommendation"])
+
+    # ===============================
+    # 💰 COST IMPACT CALLOUT (NEW)
+    # ===============================
+    ci = narrative["cost_impact"]
+
+    st.divider()
+    st.markdown(
+        f"""
+        ### 💰 Cost Impact ({ci['horizon_months']}-month view)
+
+        - Expected attrition reduces from **{ci['baseline_exits']}** to **{ci['what_if_exits']}** employees  
+        - Approximately **{ci['exits_avoided']} exits avoided**
+        - **~${ci['cost_protected']:,.0f} in risk-adjusted attrition cost protected**
+        """
+    )
 # ============================================================
 # Router
 # ============================================================
