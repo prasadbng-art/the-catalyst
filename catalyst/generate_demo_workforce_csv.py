@@ -1,82 +1,102 @@
 """
 generate_demo_workforce_csv.py
 
-Generates a realistic demo workforce dataset for Catalyst Phase I.
+Generates an ingestion-compliant demo workforce dataset for Catalyst Phase I.
 """
 
 import random
 import csv
 
-# ----------------------------
+# --------------------------------------------------
 # Configuration
-# ----------------------------
+# --------------------------------------------------
 OUTPUT_FILE = "demo_workforce.csv"
 NUM_EMPLOYEES = 600
+NUM_MANAGERS = 50
 RANDOM_SEED = 42
 
 random.seed(RANDOM_SEED)
 
-ROLE_LEVELS = ["IC", "Senior IC", "Manager", "Senior Manager", "Director"]
-FUNCTIONS = ["Engineering", "Sales", "HR", "Finance", "Operations", "Marketing"]
+ROLES = ["IC", "Senior IC", "Manager", "Director"]
 LOCATIONS = ["US", "India", "Europe", "APAC"]
 
-# ----------------------------
-# Helper functions
-# ----------------------------
-def bounded(value, low=0, high=100):
-    return max(low, min(high, value))
+SALARY_BANDS = {
+    "IC":       {"US": 90000,  "India": 35000, "Europe": 70000, "APAC": 45000},
+    "Senior IC":{"US": 120000, "India": 55000, "Europe": 90000, "APAC": 65000},
+    "Manager":  {"US": 150000, "India": 75000, "Europe":110000, "APAC": 85000},
+    "Director": {"US": 190000, "India":110000, "Europe":150000, "APAC":120000},
+}
+
+# --------------------------------------------------
+# Helpers
+# --------------------------------------------------
+def bounded(val, low=0, high=100):
+    return max(low, min(high, val))
+
+
+def choose_performance_band(engagement):
+    if engagement >= 75:
+        return "High"
+    elif engagement >= 55:
+        return "Medium"
+    return "Low"
 
 
 def generate_employee(i):
     role = random.choices(
-        ROLE_LEVELS,
-        weights=[30, 25, 20, 15, 10],
+        ROLES,
+        weights=[40, 30, 20, 10],
     )[0]
 
-    function = random.choice(FUNCTIONS)
     location = random.choice(LOCATIONS)
+    manager_id = f"M{random.randint(1, NUM_MANAGERS):03d}"
 
     tenure_years = round(random.uniform(0.5, 10), 1)
+    tenure_months = int(tenure_years * 12)
 
-    # Engagement and manager effectiveness are correlated but imperfect
     manager_effectiveness = bounded(int(random.gauss(70, 12)))
     engagement_score = bounded(
         int(manager_effectiveness + random.gauss(0, 10))
     )
 
-    # Attrition risk logic (simple, believable)
-    base_risk = 18
+    performance_band = choose_performance_band(engagement_score)
+
+    # Base attrition risk logic
+    risk = 18
 
     if tenure_years < 2:
-        base_risk += 5
+        risk += 6
     elif tenure_years > 6:
-        base_risk -= 4
+        risk -= 4
 
     if engagement_score < 50:
-        base_risk += 6
+        risk += 7
     elif engagement_score > 75:
-        base_risk -= 5
+        risk -= 5
 
     if manager_effectiveness < 50:
-        base_risk += 4
+        risk += 4
 
-    attrition_risk = bounded(round(base_risk + random.gauss(0, 3), 1))
+    attrition_risk_score = bounded(round(risk + random.gauss(0, 3), 1))
+
+    # Salary (role + geo + mild noise)
+    base_salary = SALARY_BANDS[role][location]
+    salary = int(base_salary * random.uniform(0.9, 1.1))
 
     return {
         "employee_id": f"E{i:04d}",
-        "role_level": role,
-        "function": function,
-        "location": location,
-        "tenure_years": tenure_years,
-        "manager_effectiveness": manager_effectiveness,
-        "engagement_score": engagement_score,
-        "attrition_risk": attrition_risk,
+        "manager_id": manager_id,
+        "role": role,
+        "performance_band": performance_band,
+        "salary": salary,
+        "tenure_months": tenure_months,
+        "attrition_risk_score": attrition_risk_score,
     }
 
 
-# ----------------------------
-# Main generator
-# ----------------------------
+# --------------------------------------------------
+# Main
+# --------------------------------------------------
 def generate_demo_workforce():
     rows = [generate_employee(i) for i in range(1, NUM_EMPLOYEES + 1)]
 
@@ -85,8 +105,10 @@ def generate_demo_workforce():
         writer.writeheader()
         writer.writerows(rows)
 
-    print(f"Demo workforce file generated: {OUTPUT_FILE}")
-    print(f"Employees: {NUM_EMPLOYEES}")
+    print("✅ Demo workforce file generated")
+    print(f"📄 File: {OUTPUT_FILE}")
+    print(f"👥 Employees: {NUM_EMPLOYEES}")
+    print(f"🧑‍💼 Managers: {NUM_MANAGERS}")
 
 
 if __name__ == "__main__":
