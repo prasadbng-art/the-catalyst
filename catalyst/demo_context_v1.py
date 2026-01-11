@@ -19,7 +19,7 @@ DEMO_BASELINE_CONTEXT = {
     },
 
     "kpis": {
-        "attrition": {
+        "attrition_risk": {
             "value": 18.4,
             "status": "red"
         },
