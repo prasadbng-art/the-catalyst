@@ -1,7 +1,11 @@
-KPI_REGISTRY = {
-    
-    # --- existing KPIs ---
+# catalyst/kpi_registry.py
 
+"""
+Authoritative KPI Registry for Catalyst Phase I
+All KPIs rendered in visuals and narratives must be declared here.
+"""
+
+KPI_REGISTRY = {
     "attrition_risk": {
         "label": "Attrition Risk",
         "unit": "%",
@@ -17,41 +21,20 @@ KPI_REGISTRY = {
         "direction": "lower_is_better",
         "format": "integer",
     },
-}
 
-    "attrition": {
-        "label": "Attrition Intelligence",
-        "metrics": [
-            "eNPS",
-            "sentiment_score",
-            "manager_effectiveness",
-            "quiet_quitting",
-            "cost_of_attrition"
-        ],
-        "has_prediction": True,
-        "has_financial_impact": True,
-        "has_prescriptions": True
+    "engagement_index": {
+        "label": "Engagement Index",
+        "unit": "index",
+        "description": "Aggregate employee engagement score",
+        "direction": "higher_is_better",
+        "format": "score",
     },
-    "engagement": {
-        "label": "Engagement Intelligence",
-        "metrics": [
-            "eNPS",
-            "sentiment_score",
-            "internal_mobility",
-            "time_since_promotion"
-        ],
-        "has_prediction": False,
-        "has_financial_impact": False,
-        "has_prescriptions": False
+
+    "manager_effectiveness": {
+        "label": "Manager Effectiveness",
+        "unit": "index",
+        "description": "Average manager effectiveness score",
+        "direction": "higher_is_better",
+        "format": "score",
     },
-    "sentiment": {
-        "label": "Sentiment Intelligence",
-        "metrics": [
-            "sentiment_score",
-            "top_negative_themes"
-        ],
-        "has_prediction": False,
-        "has_financial_impact": False,
-        "has_prescriptions": False
-    }
 }
