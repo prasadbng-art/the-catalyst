@@ -102,8 +102,7 @@ st.markdown(
 if not st.session_state.get("demo_welcomed"):
     st.toast(
         "Welcome to the Catalyst interactive demo. "
-        ""Explore workforce risk, test what-if decisions, and understand impact."
-.",
+        ""Explore workforce risk, test what-if decisions, and understand impact."",
         icon="🎬",
     )
     st.session_state["demo_welcomed"] = True
