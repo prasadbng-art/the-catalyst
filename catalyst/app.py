@@ -150,7 +150,6 @@ if uploaded_file:
 # ----------------------------
 # Derive baseline KPIs from workforce data
 # ----------------------------
-attrition_risk = round(df["attrition_risk_score"].mean(), 2)
 
 baseline_kpis = {
     "attrition_risk": {
