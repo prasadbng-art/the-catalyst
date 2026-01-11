@@ -13,6 +13,7 @@ from catalyst.analytics.cost_framing_v1 import compute_cost_framing
 from catalyst.analytics.cost_narrative_v1 import generate_cost_narrative
 from catalyst.analytics.cost_confidence_bands_v1 import compute_cost_confidence_bands
 from catalyst.analytics.cost_narrative_cfo_v1 import generate_cfo_cost_narrative
+from catalyst.analytics.board_summary_v1 import generate_board_summary
 
 # ============================================================
 # App setup
@@ -328,6 +329,26 @@ costs = compute_cost_framing(
         st.markdown(f"**{cfo_narrative['headline']}**")
         st.markdown(cfo_narrative["body"])
         st.info(f"**Capital posture:** {cfo_narrative['posture']}")
+
+    # --------------------------------------------------
+    # 🧾 Board-Ready Summary
+    # --------------------------------------------------
+
+    board = generate_board_summary(
+        costs=costs,
+        bands=bands,
+        persona=context.get("persona", "CEO"),
+    )
+
+    st.divider()
+    st.subheader("🧾 Board Summary")
+
+    st.markdown(f"**{board['headline']}**")
+
+    for bullet in board["bullets"]:
+        st.markdown(f"- {bullet}")
+
+    st.info(board["implication"])
 
 # ============================================================
 # Navigation
