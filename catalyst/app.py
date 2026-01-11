@@ -11,6 +11,7 @@ from catalyst.file_ingest_v1 import load_workforce_file
 from catalyst.analytics.baseline_kpi_builder_v1 import build_baseline_kpis
 from catalyst.analytics.cost_framing_v1 import compute_cost_framing
 from catalyst.analytics.cost_narrative_v1 import generate_cost_narrative
+from catalyst.analytics.cost_confidence_bands_v1 import compute_cost_confidence_bands
 
 # ============================================================
 # App setup
@@ -270,6 +271,45 @@ costs = compute_cost_framing(
     st.markdown(f"**{narrative['headline']}**")
     st.markdown(narrative["body"])
     st.info(f"**Recommended posture:** {narrative['posture']}")
+
+    # --------------------------------------------------
+    # 📊 Confidence Bands
+    # --------------------------------------------------
+
+    bands = compute_cost_confidence_bands(
+        baseline_cost=costs["baseline_cost_exposure"],
+        preventable_cost=costs["preventable_cost"],
+    )
+
+    st.divider()
+    st.subheader("📊 Cost Exposure — Confidence Bands")
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.metric(
+            "Conservative",
+            f"₹{bands['conservative']['baseline_cost'] / 1e7:.1f} Cr",
+        )
+        st.caption(bands["conservative"]["assumption"])
+
+    with col2:
+        st.metric(
+            "Base Case",
+            f"₹{bands['base']['baseline_cost'] / 1e7:.1f} Cr",
+        )
+        st.caption(bands["base"]["assumption"])
+
+    with col3:
+        st.metric(
+            "Aggressive",
+            f"₹{bands['aggressive']['baseline_cost'] / 1e7:.1f} Cr",
+        )
+        st.caption(bands["aggressive"]["assumption"])
+
+    st.caption(
+        "Confidence bands reflect sensitivity to attrition realization and intervention effectiveness."
+    )
 
 # ============================================================
 # Navigation
