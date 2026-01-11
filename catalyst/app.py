@@ -102,7 +102,8 @@ st.markdown(
 if not st.session_state.get("demo_welcomed"):
     st.toast(
         "Welcome to the Catalyst interactive demo. "
-        "Explore baseline risk, apply scenarios, and simulate outcomes.",
+        ""Explore workforce risk, test what-if decisions, and understand impact."
+.",
         icon="🎬",
     )
     st.session_state["demo_welcomed"] = True
@@ -134,6 +135,33 @@ if uploaded_file:
 
     st.session_state["workforce_df"] = df
     st.sidebar.success(f"Loaded {len(df)} employee records")
+
+def render_empty_state():
+    st.markdown("### No workforce data loaded yet")
+
+    st.markdown(
+        """
+        Upload a simple workforce snapshot to begin your analysis.
+
+        Once uploaded, Catalyst will:
+        - Calculate **attrition risk and exposure**
+        - Surface **key workforce KPIs**
+        - Enable **what-if simulations** to test decisions safely
+        """
+    )
+
+    st.info(
+        "Upload a CSV or Excel file using the **Upload Workforce Data** section "
+        "in the sidebar to get started."
+    )
+
+    st.caption(
+        "This is a demo environment. Uploaded data is processed in-session only "
+        "and is not stored."
+    )
+if "workforce_df" not in st.session_state:
+    render_empty_state()
+    st.stop()
 
 # ----------------------------
 # 👤 View As (Persona)
@@ -188,7 +216,8 @@ if run_what_if and "workforce_df" in st.session_state:
         "risk_realization_factor": 0.6,
     }
 
-    baseline_kpis = context["baseline"]["kpis"]
+    baseline_kpis = context.get("baseline", {}).get("kpis", {})
+
 
     st.session_state["what_if_kpis"] = apply_what_if(
         baseline_kpis,
@@ -227,21 +256,23 @@ def render_sentiment_health_page():
     "engagement, and manager effectiveness alter outcomes."
 )
 
-    st.divider()
-    st.info(
-    "This view reflects workforce risk derived from uploaded data. "
-    "Use the What-If Sandbox to explore how changes in attrition risk, "
-    "engagement, and manager effectiveness alter outcomes."
-)
-
-def render_current_kpis_page():
+    def render_current_kpis_page():
     st.header("Current KPI Performance")
 
-    kpi = st.selectbox("Select KPI", list(kpi.keys()))
-    kpi_state = kpi[kpi]
+    if "what_if_kpis" in st.session_state:
+        kpis = st.session_state["what_if_kpis"]
+    else:
+        kpis = context["baseline"]["kpis"]
+
+    if not kpis:
+        st.info("No KPIs available.")
+        return
+
+    selected_kpi = st.selectbox("Select KPI", list(kpis.keys()))
+    kpi_state = kpis[selected_kpi]
 
     render_kpi_current_performance(
-        kpi=kpi,
+        kpi=selected_kpi,
         current_value=kpi_state.get("value", 0.0),
         active_client=None,
     )
