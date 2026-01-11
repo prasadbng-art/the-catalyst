@@ -172,9 +172,9 @@ baseline_kpis = {
 st.session_state["context_v1"]["baseline"]["kpis"] = baseline_kpis
 
 
-    if errors:
-        for e in errors:
-            st.sidebar.error(e)
+if errors:
+    for e in errors:
+        st.sidebar.error(e)
         st.stop()
 
     for w in warnings:
@@ -182,7 +182,7 @@ st.session_state["context_v1"]["baseline"]["kpis"] = baseline_kpis
 
     st.session_state["workforce_df"] = df
     st.sidebar.success(f"Loaded {len(df)} employee records")
-    
+
 # ---------------------------------
 # Build baseline KPIs from workforce
 # ---------------------------------
