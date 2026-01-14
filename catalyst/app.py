@@ -273,14 +273,6 @@ page = st.sidebar.selectbox(
 # Pages
 # ============================================================
 
-def render_sentiment_health_page():
-    st.header("Sentiment Health")
-    st.caption(
-        "Workforce risk summary derived from uploaded data. "
-        "Use the What-If Sandbox to explore mitigation strategies."
-    )
-
-
 def render_current_kpis_page():
     st.header("Current KPI Performance")
     st.caption(
@@ -288,11 +280,18 @@ def render_current_kpis_page():
         "based on uploaded data and selected interventions."
     )
 
+    # --------------------------------------------------
+    # Resolve KPI source (baseline vs what-if)
+    # --------------------------------------------------
     kpis = (
         st.session_state["what_if_kpis"]
-        if st.session_state["what_if_kpis"]
+        if st.session_state.get("what_if_kpis")
         else context["baseline"]["kpis"]
     )
+
+    if not kpis:
+        st.info("No KPIs available to display.")
+        return
 
     kpi_list = list(kpis.keys())
     default_index = (
@@ -308,11 +307,64 @@ def render_current_kpis_page():
         help="Select the KPI you want to examine in detail",
     )
 
+    # --------------------------------------------------
+    # Layer 1 — KPI Signal
+    # --------------------------------------------------
+    st.markdown("### 📌 Current Signal")
+
     render_kpi_current_performance(
         kpi=selected_kpi,
         current_value=kpis[selected_kpi].get("value", 0.0),
         active_client=None,
     )
+
+    # --------------------------------------------------
+    # Layer 2 — Economic Framing (only if attrition-related)
+    # --------------------------------------------------
+    if selected_kpi == "attrition_risk":
+        costs = compute_cost_framing(
+            baseline_kpis=context["baseline"]["kpis"],
+            workforce_df=st.session_state["workforce_df"],
+            financials=context.get("financials", {}),
+            what_if_kpis=st.session_state.get("what_if_kpis"),
+        )
+
+        st.markdown("### 💰 Economic Impact")
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.metric(
+                "Baseline Attrition Cost Exposure",
+                f"₹{costs['baseline_cost_exposure'] / 1e7:.1f} Cr",
+            )
+
+        with col2:
+            st.metric(
+                "Preventable Cost (Estimated)",
+                f"₹{costs['preventable_cost'] / 1e7:.1f} Cr",
+            )
+
+        if costs.get("what_if_cost_impact"):
+            st.success(
+                f"This scenario avoids approximately "
+                f"₹{costs['what_if_cost_impact'] / 1e7:.1f} Cr in attrition cost."
+            )
+
+        # --------------------------------------------------
+        # Layer 3 — Executive Interpretation
+        # --------------------------------------------------
+        narrative = generate_cost_narrative(
+            costs=costs,
+            persona=context.get("persona", "CEO"),
+        )
+
+        st.markdown("### 🧠 Interpretation")
+
+        st.markdown(f"**{narrative['headline']}**")
+        st.markdown(narrative["body"])
+        st.info(f"**Recommended posture:** {narrative['posture']}")
+
 
     # ========================================================
     # 💰 Economic Impact
@@ -354,23 +406,45 @@ def render_current_kpis_page():
     st.markdown(narrative["body"])
     st.info(f"**Recommended posture:** {narrative['posture']}")
 
-    # ========================================================
-    # 📊 Confidence Bands (Collapsed)
-    # ========================================================
-
+            # --------------------------------------------------
+        # 📊 Confidence Bands — Risk Envelope
+        # --------------------------------------------------
     bands = compute_cost_confidence_bands(
-        baseline_cost=costs["baseline_cost_exposure"],
-        preventable_cost=costs["preventable_cost"],
-    )
+            baseline_cost=costs["baseline_cost_exposure"],
+            preventable_cost=costs["preventable_cost"],
+        )
 
-    with st.expander("📊 View confidence bands", expanded=False):
-        c1, c2, c3 = st.columns(3)
-        c1.metric("Conservative", f"₹{bands['conservative']['baseline_cost']/1e7:.1f} Cr")
-        c2.metric("Base Case", f"₹{bands['base']['baseline_cost']/1e7:.1f} Cr")
-        c3.metric("Aggressive", f"₹{bands['aggressive']['baseline_cost']/1e7:.1f} Cr")
-        st.caption(
-            "Confidence bands reflect sensitivity to attrition realization "
-            "and intervention effectiveness."
+    st.markdown("### 📊 Risk Envelope (Confidence Bands)")
+    st.caption(
+            "Cost exposure under different realization and intervention-effectiveness assumptions."
+        )
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+            st.metric(
+                "Conservative",
+                f"₹{bands['conservative']['baseline_cost'] / 1e7:.1f} Cr",
+            )
+            st.caption(bands["conservative"]["assumption"])
+
+    with col2:
+            st.metric(
+                "Base Case",
+                f"₹{bands['base']['baseline_cost'] / 1e7:.1f} Cr",
+            )
+            st.caption(bands["base"]["assumption"])
+
+    with col3:
+            st.metric(
+                "Aggressive",
+                f"₹{bands['aggressive']['baseline_cost'] / 1e7:.1f} Cr",
+            )
+            st.caption(bands["aggressive"]["assumption"])
+
+    st.caption(
+            "Bands reflect uncertainty in attrition realization and effectiveness of mitigation actions. "
+            "They are intended for directional decision support, not forecasting precision."
         )
 
     # ========================================================
@@ -411,6 +485,14 @@ def render_current_kpis_page():
             c2.metric("Cost Avoided", f"₹{roi['cost_avoided']/1e7:.1f} Cr")
             c3.metric("Net Benefit", f"₹{roi['net_benefit']/1e7:.1f} Cr")
             c4.metric("ROI", f"{roi['roi']:.1f}×")
+
+def render_sentiment_health_page():
+    st.header("Sentiment Health")
+    st.caption(
+        "Workforce risk summary derived from uploaded data. "
+        "Use the What-If Sandbox to explore mitigation strategies."
+    )
+
 
 # ============================================================
 # Router
