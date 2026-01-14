@@ -406,9 +406,9 @@ def render_current_kpis_page():
     st.markdown(narrative["body"])
     st.info(f"**Recommended posture:** {narrative['posture']}")
 
-            # --------------------------------------------------
-        # 📊 Confidence Bands — Risk Envelope
-        # --------------------------------------------------
+    # --------------------------------------------------
+    # 📊 Confidence Bands — Risk Envelope
+    # --------------------------------------------------
     bands = compute_cost_confidence_bands(
             baseline_cost=costs["baseline_cost_exposure"],
             preventable_cost=costs["preventable_cost"],
