@@ -2,26 +2,6 @@ import streamlit as st
 from supabase import create_client
 
 # ============================================================
-# Imports (authoritative)
-# ============================================================
-
-from catalyst.context_manager_v1 import get_effective_context
-from visuals.kpi_current import render_kpi_current_performance
-from demo_loader_v1 import load_demo_context_v1
-from catalyst.file_ingest_v1 import load_workforce_file
-
-from catalyst.analytics.baseline_kpi_builder_v1 import build_baseline_kpis
-from catalyst.analytics.what_if_engine_v1 import apply_what_if
-
-from catalyst.analytics.cost_framing_v1 import compute_cost_framing
-from catalyst.analytics.cost_narrative_v1 import generate_cost_narrative
-from catalyst.analytics.cost_confidence_bands_v1 import compute_cost_confidence_bands
-from catalyst.analytics.cost_narrative_cfo_v1 import generate_cfo_cost_narrative
-from catalyst.analytics.board_summary_v1 import generate_board_summary
-from catalyst.analytics.roi_lens_v1 import compute_roi_lens
-
-
-# ============================================================
 # 🔐 Authentication (Bolt / Supabase Gateway)
 # ============================================================
 
@@ -51,6 +31,24 @@ if not st.session_state.get("authenticated"):
     st.error("Please log in through the HR Decision Engine.")
     st.stop()
 
+# ============================================================
+# Imports (authoritative)
+# ============================================================
+
+from catalyst.context_manager_v1 import get_effective_context
+from visuals.kpi_current import render_kpi_current_performance
+from demo_loader_v1 import load_demo_context_v1
+from catalyst.file_ingest_v1 import load_workforce_file
+
+from catalyst.analytics.baseline_kpi_builder_v1 import build_baseline_kpis
+from catalyst.analytics.what_if_engine_v1 import apply_what_if
+
+from catalyst.analytics.cost_framing_v1 import compute_cost_framing
+from catalyst.analytics.cost_narrative_v1 import generate_cost_narrative
+from catalyst.analytics.cost_confidence_bands_v1 import compute_cost_confidence_bands
+from catalyst.analytics.cost_narrative_cfo_v1 import generate_cfo_cost_narrative
+from catalyst.analytics.board_summary_v1 import generate_board_summary
+from catalyst.analytics.roi_lens_v1 import compute_roi_lens
 
 # ============================================================
 # App setup
@@ -123,7 +121,6 @@ def render_demo_entry():
 
     st.markdown("</div>", unsafe_allow_html=True)
 
-
 # ============================================================
 # 🔒 Context Gate
 # ============================================================
@@ -189,7 +186,6 @@ if uploaded_file:
     st.sidebar.success(f"Loaded {len(df)} employee records")
 
     baseline_kpis = build_baseline_kpis(df)
-
     context.setdefault("baseline", {})
     context["baseline"]["kpis"] = baseline_kpis
     context["kpis"] = baseline_kpis
@@ -203,7 +199,7 @@ if st.session_state["workforce_df"] is None:
     st.stop()
 
 # ============================================================
-# Persona Selector
+# Sidebar — Persona
 # ============================================================
 
 st.sidebar.markdown("## 👤 View As")
@@ -218,7 +214,7 @@ context["persona"] = st.sidebar.selectbox(
 )
 
 # ============================================================
-# What-If Sandbox
+# Sidebar — What-If Sandbox
 # ============================================================
 
 st.sidebar.markdown("## 🧪 What-If Sandbox")
@@ -227,7 +223,11 @@ attrition_reduction = st.sidebar.slider("Reduce attrition risk (%)", 0, 30, 0)
 engagement_lift = st.sidebar.slider("Increase engagement (points)", 0, 20, 0)
 manager_lift = st.sidebar.slider("Improve manager effectiveness (points)", 0, 20, 0)
 
-if st.sidebar.button("Apply What-If"):
+st.sidebar.caption(
+    "These controls simulate the impact of targeted retention and capability actions."
+)
+
+if st.sidebar.button("Apply intervention scenario"):
     st.session_state["what_if_kpis"] = apply_what_if(
         context["baseline"]["kpis"],
         {
@@ -277,9 +277,9 @@ def render_sentiment_health_page():
 def render_current_kpis_page():
     st.header("Current KPI Performance")
     st.caption(
-    "This view summarizes workforce risk and its economic implications, "
-    "based on uploaded data and selected interventions."
-)
+        "This view summarizes workforce risk and its economic implications "
+        "based on uploaded data and selected interventions."
+    )
 
     kpis = (
         st.session_state["what_if_kpis"]
@@ -287,17 +287,28 @@ def render_current_kpis_page():
         else context["baseline"]["kpis"]
     )
 
-    selected_kpi = st.selectbox("Select KPI", list(kpis.keys()))
-    kpi_state = kpis[selected_kpi]
+    kpi_list = list(kpis.keys())
+    default_index = (
+        kpi_list.index("attrition_risk")
+        if "attrition_risk" in kpi_list
+        else 0
+    )
+
+    selected_kpi = st.selectbox(
+        "Focus KPI",
+        kpi_list,
+        index=default_index,
+        help="Select the KPI you want to examine in detail",
+    )
 
     render_kpi_current_performance(
         kpi=selected_kpi,
-        current_value=kpi_state.get("value", 0.0),
+        current_value=kpis[selected_kpi].get("value", 0.0),
         active_client=None,
     )
 
     # ========================================================
-    # 💰 Cost Framing
+    # 💰 Economic Impact
     # ========================================================
 
     costs = compute_cost_framing(
@@ -307,10 +318,29 @@ def render_current_kpis_page():
         what_if_kpis=st.session_state.get("what_if_kpis"),
     )
 
-    narrative = generate_cost_narrative(
-        costs=costs,
-        persona=context["persona"],
+    st.markdown("## 💰 Economic Impact")
+
+    col1, col2 = st.columns(2)
+    col1.metric(
+        "Baseline Attrition Cost Exposure",
+        f"₹{costs['baseline_cost_exposure']/1e7:.1f} Cr",
     )
+    col2.metric(
+        "Preventable Cost (Estimated)",
+        f"₹{costs['preventable_cost']/1e7:.1f} Cr",
+    )
+
+    if costs.get("what_if_cost_impact"):
+        st.success(
+            f"This intervention scenario avoids approximately "
+            f"₹{costs['what_if_cost_impact']/1e7:.1f} Cr annually."
+        )
+
+    # ========================================================
+    # 🧠 Interpretation & Risk
+    # ========================================================
+
+    narrative = generate_cost_narrative(costs, context["persona"])
 
     st.markdown("## 🧠 Interpretation & Risk")
     st.markdown(f"**{narrative['headline']}**")
@@ -318,7 +348,7 @@ def render_current_kpis_page():
     st.info(f"**Recommended posture:** {narrative['posture']}")
 
     # ========================================================
-    # 📊 Confidence Bands
+    # 📊 Confidence Bands (Collapsed)
     # ========================================================
 
     bands = compute_cost_confidence_bands(
@@ -326,46 +356,40 @@ def render_current_kpis_page():
         preventable_cost=costs["preventable_cost"],
     )
 
-    st.markdown("## 🧠 Interpretation & Risk")
-
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        st.metric("Conservative", f"₹{bands['conservative']['baseline_cost']/1e7:.1f} Cr")
-        st.caption(bands["conservative"]["assumption"])
-
-    with col2:
-        st.metric("Base Case", f"₹{bands['base']['baseline_cost']/1e7:.1f} Cr")
-        st.caption(bands["base"]["assumption"])
-
-    with col3:
-        st.metric("Aggressive", f"₹{bands['aggressive']['baseline_cost']/1e7:.1f} Cr")
-        st.caption(bands["aggressive"]["assumption"])
+    with st.expander("📊 View confidence bands", expanded=False):
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Conservative", f"₹{bands['conservative']['baseline_cost']/1e7:.1f} Cr")
+        c2.metric("Base Case", f"₹{bands['base']['baseline_cost']/1e7:.1f} Cr")
+        c3.metric("Aggressive", f"₹{bands['aggressive']['baseline_cost']/1e7:.1f} Cr")
+        st.caption(
+            "Confidence bands reflect sensitivity to attrition realization "
+            "and intervention effectiveness."
+        )
 
     # ========================================================
-    # 🧮 CFO Narrative
+    # 🧮 CFO Interpretation
     # ========================================================
 
     if context["persona"] == "CFO":
         cfo = generate_cfo_cost_narrative(costs, bands)
-        st.markdown("## 📊 Cost Exposure (Confidence)")
+        st.markdown("## 🧮 CFO Interpretation")
         st.markdown(f"**{cfo['headline']}**")
         st.markdown(cfo["body"])
         st.info(f"**Capital posture:** {cfo['posture']}")
 
     # ========================================================
-    # 🧾 Board Summary
+    # 🧾 Board Summary (Expanded)
     # ========================================================
 
-    board = generate_board_summary(costs, bands, context["persona"])
-    st.markdown("## 🧮 CFO Interpretation")
-    st.markdown(f"**{board['headline']}**")
-    for bullet in board["bullets"]:
-        st.markdown(f"- {bullet}")
-    st.info(board["implication"])
+    with st.expander("🧾 Board-ready summary", expanded=True):
+        board = generate_board_summary(costs, bands, context["persona"])
+        st.markdown(f"**{board['headline']}**")
+        for bullet in board["bullets"]:
+            st.markdown(f"- {bullet}")
+        st.info(board["implication"])
 
     # ========================================================
-    # 📈 ROI Lens
+    # 📈 ROI Lens (Collapsed)
     # ========================================================
 
     roi = compute_roi_lens(
@@ -374,13 +398,12 @@ def render_current_kpis_page():
     )
 
     if roi:
-        st.markdown("## 🧾 Board-Ready Summary")
-        col1, col2, col3, col4 = st.columns(4)
-        col1.metric("Intervention Cost", f"₹{roi['intervention_cost']/1e7:.1f} Cr")
-        col2.metric("Cost Avoided", f"₹{roi['cost_avoided']/1e7:.1f} Cr")
-        col3.metric("Net Benefit", f"₹{roi['net_benefit']/1e7:.1f} Cr")
-        col4.metric("ROI", f"{roi['roi']:.1f}×")
-
+        with st.expander("📈 ROI lens (intervention economics)", expanded=False):
+            c1, c2, c3, c4 = st.columns(4)
+            c1.metric("Intervention Cost", f"₹{roi['intervention_cost']/1e7:.1f} Cr")
+            c2.metric("Cost Avoided", f"₹{roi['cost_avoided']/1e7:.1f} Cr")
+            c3.metric("Net Benefit", f"₹{roi['net_benefit']/1e7:.1f} Cr")
+            c4.metric("ROI", f"{roi['roi']:.1f}×")
 
 # ============================================================
 # Router
