@@ -1,6 +1,13 @@
 import streamlit as st
 from supabase import create_client
 
+# ------------------------------------------------------------
+# 🔐 Auth Stub (disabled for local dev)
+# ------------------------------------------------------------
+
+st.session_state["authenticated"] = True
+st.session_state["email"] = "demo@catalyst.ai"
+
 # ============================================================
 # 🔐 Authentication (Bolt / Supabase Gateway)
 # ============================================================
