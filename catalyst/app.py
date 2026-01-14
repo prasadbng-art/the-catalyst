@@ -241,36 +241,13 @@ page = st.sidebar.selectbox(
 )
 
 # ============================================================
-# Pages
+# KPI Signal Layer
 # ============================================================
 
-def render_sentiment_health_page():
-    st.header("Sentiment Health")
-    st.caption(
-        "Workforce risk summary derived from uploaded data. "
-        "Use the What-If Sandbox to explore mitigation strategies."
-    )
-
-def render_current_kpis_page():
-    st.header("Current KPI Performance")
-    st.caption(
-        "This view summarizes workforce risk and its economic implications "
-        "based on uploaded data and selected interventions."
-    )
-
-    # --------------------------------------------------
-    # Resolve KPI source
-    # --------------------------------------------------
-
-    kpis = (
-        st.session_state["what_if_kpis"]
-        if st.session_state.get("what_if_kpis")
-        else context["baseline"]["kpis"]
-    )
-
+def render_kpi_selector_and_signal(kpis):
     if not kpis:
         st.info("No KPIs available to display.")
-        return
+        return None
 
     kpi_list = list(kpis.keys())
     default_index = kpi_list.index("attrition_risk") if "attrition_risk" in kpi_list else 0
@@ -281,10 +258,6 @@ def render_current_kpis_page():
         index=default_index,
     )
 
-    # --------------------------------------------------
-    # Layer 1 — KPI Signal
-    # --------------------------------------------------
-
     st.markdown("### 📌 Current Signal")
 
     render_kpi_current_performance(
@@ -293,22 +266,19 @@ def render_current_kpis_page():
         active_client=None,
     )
 
-    # --------------------------------------------------
-    # Layers 2–6 only for attrition
-    # --------------------------------------------------
+    return selected_kpi
 
-    if selected_kpi != "attrition_risk":
-        return
 
-    # --------------------------------------------------
-    # Layer 2 — Economic Framing
-    # --------------------------------------------------
+# ============================================================
+# Economic Impact Layer (Attrition only)
+# ============================================================
 
+def render_attrition_economic_layer(context, workforce_df, what_if_kpis):
     costs = compute_cost_framing(
         baseline_kpis=context["baseline"]["kpis"],
-        workforce_df=st.session_state["workforce_df"],
+        workforce_df=workforce_df,
         financials=context.get("financials", {}),
-        what_if_kpis=st.session_state.get("what_if_kpis"),
+        what_if_kpis=what_if_kpis,
     )
 
     st.markdown("## 💰 Economic Impact")
@@ -328,10 +298,6 @@ def render_current_kpis_page():
             f"~₹{costs['what_if_cost_impact']/1e7:.1f} Cr."
         )
 
-    # --------------------------------------------------
-    # Layer 3 — Executive Interpretation
-    # --------------------------------------------------
-
     narrative = generate_cost_narrative(costs, context["persona"])
 
     st.markdown("## 🧠 Interpretation & Risk")
@@ -339,10 +305,14 @@ def render_current_kpis_page():
     st.markdown(narrative["body"])
     st.info(f"**Recommended posture:** {narrative['posture']}")
 
-    # --------------------------------------------------
-    # Layer 4 — Confidence Bands
-    # --------------------------------------------------
+    return costs
 
+
+# ============================================================
+# Confidence Bands Layer
+# ============================================================
+
+def render_confidence_bands_layer(costs):
     bands = compute_cost_confidence_bands(
         baseline_cost=costs["baseline_cost_exposure"],
         preventable_cost=costs["preventable_cost"],
@@ -353,35 +323,52 @@ def render_current_kpis_page():
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.metric("Conservative", f"₹{bands['conservative']['baseline_cost']/1e7:.1f} Cr")
+        st.metric(
+            "Conservative",
+            f"₹{bands['conservative']['baseline_cost']/1e7:.1f} Cr",
+        )
         st.caption(bands["conservative"]["assumption"])
 
     with col2:
-        st.metric("Base Case", f"₹{bands['base']['baseline_cost']/1e7:.1f} Cr")
+        st.metric(
+            "Base Case",
+            f"₹{bands['base']['baseline_cost']/1e7:.1f} Cr",
+        )
         st.caption(bands["base"]["assumption"])
 
     with col3:
-        st.metric("Aggressive", f"₹{bands['aggressive']['baseline_cost']/1e7:.1f} Cr")
+        st.metric(
+            "Aggressive",
+            f"₹{bands['aggressive']['baseline_cost']/1e7:.1f} Cr",
+        )
         st.caption(bands["aggressive"]["assumption"])
 
-    # --------------------------------------------------
-    # Layer 5 — CFO Interpretation (guarded)
-    # --------------------------------------------------
+    return bands
 
-    if context.get("persona") == "CFO":
-        st.divider()
-        st.subheader("🧮 CFO Interpretation")
 
-        cfo_narrative = generate_cfo_cost_narrative(costs, bands)
+# ============================================================
+# CFO Layer (Guarded)
+# ============================================================
 
-        st.markdown(f"**{cfo_narrative['headline']}**")
-        st.markdown(cfo_narrative["body"])
-        st.info(f"**Capital posture:** {cfo_narrative['posture']}")
+def render_cfo_layer(context, costs, bands):
+    if context.get("persona") != "CFO":
+        return
 
-    # --------------------------------------------------
-    # Layer 6 — Board Summary + ROI
-    # --------------------------------------------------
+    st.divider()
+    st.subheader("🧮 CFO Interpretation")
 
+    cfo_narrative = generate_cfo_cost_narrative(costs, bands)
+
+    st.markdown(f"**{cfo_narrative['headline']}**")
+    st.markdown(cfo_narrative["body"])
+    st.info(f"**Capital posture:** {cfo_narrative['posture']}")
+
+
+# ============================================================
+# Board + ROI Layer
+# ============================================================
+
+def render_board_and_roi_layer(context, costs, bands, intervention_cost):
     with st.expander("🧾 Board-ready summary", expanded=True):
         board = generate_board_summary(costs, bands, context["persona"])
         st.markdown(f"**{board['headline']}**")
@@ -401,6 +388,55 @@ def render_current_kpis_page():
             c2.metric("Cost Avoided", f"₹{roi['cost_avoided']/1e7:.1f} Cr")
             c3.metric("Net Benefit", f"₹{roi['net_benefit']/1e7:.1f} Cr")
             c4.metric("ROI", f"{roi['roi']:.1f}×")
+
+# ============================================================
+# Pages
+# ============================================================
+
+def render_sentiment_health_page():
+    st.header("Sentiment Health")
+    st.caption(
+        "Workforce risk summary derived from uploaded data. "
+        "Use the What-If Sandbox to explore mitigation strategies."
+    )
+
+def render_current_kpis_page():
+    st.header("Current KPI Performance")
+    st.caption(
+        "This view summarizes workforce risk and its economic implications "
+        "based on uploaded data and selected interventions."
+    )
+
+    kpis = (
+        st.session_state["what_if_kpis"]
+        if st.session_state.get("what_if_kpis")
+        else context["baseline"]["kpis"]
+    )
+
+    selected_kpi = render_kpi_selector_and_signal(kpis)
+    if not selected_kpi:
+        return
+
+    if selected_kpi != "attrition_risk":
+        return
+
+    costs = render_attrition_economic_layer(
+        context=context,
+        workforce_df=st.session_state["workforce_df"],
+        what_if_kpis=st.session_state.get("what_if_kpis"),
+    )
+
+    bands = render_confidence_bands_layer(costs)
+
+    render_cfo_layer(context, costs, bands)
+
+    render_board_and_roi_layer(
+        context=context,
+        costs=costs,
+        bands=bands,
+        intervention_cost=intervention_cost,
+    )
+
 
 # ============================================================
 # Router (top-level, deterministic)
