@@ -1,4 +1,5 @@
 import streamlit as st
+from supabase import create_client
 
 # ============================================================
 # Imports (authoritative)
@@ -8,13 +9,48 @@ from catalyst.context_manager_v1 import get_effective_context
 from visuals.kpi_current import render_kpi_current_performance
 from demo_loader_v1 import load_demo_context_v1
 from catalyst.file_ingest_v1 import load_workforce_file
+
 from catalyst.analytics.baseline_kpi_builder_v1 import build_baseline_kpis
+from catalyst.analytics.what_if_engine_v1 import apply_what_if
+
 from catalyst.analytics.cost_framing_v1 import compute_cost_framing
 from catalyst.analytics.cost_narrative_v1 import generate_cost_narrative
 from catalyst.analytics.cost_confidence_bands_v1 import compute_cost_confidence_bands
 from catalyst.analytics.cost_narrative_cfo_v1 import generate_cfo_cost_narrative
 from catalyst.analytics.board_summary_v1 import generate_board_summary
 from catalyst.analytics.roi_lens_v1 import compute_roi_lens
+
+
+# ============================================================
+# 🔐 Authentication (Bolt / Supabase Gateway)
+# ============================================================
+
+SUPABASE_URL = "https://zgdodfbhvtumiqgwedgx.supabase.co"
+SUPABASE_ANON_KEY = "YOUR_PUBLIC_KEY"
+
+
+def verify_token(token: str):
+    try:
+        supabase = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
+        res = supabase.auth.get_user(token)
+        return res.user if res else None
+    except Exception:
+        return None
+
+
+query_params = st.query_params
+
+if "token" in query_params:
+    user = verify_token(query_params["token"])
+    if user:
+        st.session_state["authenticated"] = True
+        st.session_state["user"] = user
+        st.session_state["email"] = query_params.get("email")
+
+if not st.session_state.get("authenticated"):
+    st.error("Please log in through the HR Decision Engine.")
+    st.stop()
+
 
 # ============================================================
 # App setup
@@ -39,7 +75,7 @@ st.markdown(
 )
 
 # ============================================================
-# Session State Initialization (AUTHORITATIVE)
+# Session State Initialization
 # ============================================================
 
 st.session_state.setdefault("context_v1", None)
@@ -49,7 +85,7 @@ st.session_state.setdefault("workforce_df", None)
 st.session_state.setdefault("what_if_kpis", None)
 
 # ============================================================
-# 🎬 DEMO ENTRY LANDING
+# 🎬 Demo Entry Landing
 # ============================================================
 
 def render_demo_entry():
@@ -87,8 +123,9 @@ def render_demo_entry():
 
     st.markdown("</div>", unsafe_allow_html=True)
 
+
 # ============================================================
-# 🔒 CONTEXT ENTRY GATE
+# 🔒 Context Gate
 # ============================================================
 
 if not isinstance(st.session_state["context_v1"], dict):
@@ -98,7 +135,7 @@ if not isinstance(st.session_state["context_v1"], dict):
 context = get_effective_context()
 
 # ============================================================
-# Demo Badge + Welcome
+# Demo Badge
 # ============================================================
 
 st.markdown(
@@ -121,14 +158,13 @@ st.markdown(
 
 if not st.session_state["demo_welcomed"]:
     st.toast(
-        "Welcome to the Catalyst interactive demo. "
-        "Upload data to begin workforce analysis.",
+        "Welcome to the Catalyst interactive demo. Upload data to begin.",
         icon="🎬",
     )
     st.session_state["demo_welcomed"] = True
 
 # ============================================================
-# SIDEBAR — DATA INGESTION
+# Sidebar — Data Ingestion
 # ============================================================
 
 st.sidebar.markdown("## 📄 Upload Workforce Data")
@@ -152,68 +188,28 @@ if uploaded_file:
     st.session_state["workforce_df"] = df
     st.sidebar.success(f"Loaded {len(df)} employee records")
 
-    # ---------------------------------
-    # Build baseline KPIs (ONLY place)
-    # ---------------------------------
     baseline_kpis = build_baseline_kpis(df)
 
     context.setdefault("baseline", {})
     context["baseline"]["kpis"] = baseline_kpis
     context["kpis"] = baseline_kpis
 
-st.sidebar.markdown("## 💼 Intervention Economics")
-
-intervention_cost = st.sidebar.number_input(
-    "Estimated annual intervention cost (₹)",
-    min_value=0,
-    value=2_000_000,
-    step=500_000,
-    help="Estimated annual cost of retention programs, capability building, etc.",
-)
-
 # ============================================================
-# EMPTY STATE (NO DATA)
+# Empty State
 # ============================================================
-
-def render_empty_state():
-    st.markdown("### No workforce data loaded yet")
-
-    st.markdown(
-        """
-        Upload a simple workforce snapshot to begin your analysis.
-
-        Once uploaded, Catalyst will:
-        - Calculate **attrition risk and exposure**
-        - Surface **key workforce KPIs**
-        - Enable **what-if simulations** to test decisions safely
-        """
-    )
-
-    st.info(
-        "Upload a CSV or Excel file using the **Upload Workforce Data** section "
-        "in the sidebar to get started."
-    )
-
-    st.caption(
-        "This is a demo environment. Uploaded data is processed in-session only "
-        "and is not stored."
-    )
 
 if st.session_state["workforce_df"] is None:
-    render_empty_state()
+    st.info("Upload workforce data to begin analysis.")
     st.stop()
 
 # ============================================================
-# 👤 View As (Persona)
+# Persona Selector
 # ============================================================
 
 st.sidebar.markdown("## 👤 View As")
 
 persona_options = ["CEO", "CFO", "CHRO"]
 current_persona = context.get("persona", "CEO")
-
-if current_persona not in persona_options:
-    current_persona = "CEO"
 
 context["persona"] = st.sidebar.selectbox(
     "Persona",
@@ -222,39 +218,25 @@ context["persona"] = st.sidebar.selectbox(
 )
 
 # ============================================================
-# 🧪 What-If Sandbox
+# What-If Sandbox
 # ============================================================
 
 st.sidebar.markdown("## 🧪 What-If Sandbox")
 
-attrition_reduction = st.sidebar.slider(
-    "Reduce attrition risk (%)", 0, 30, 0
-)
+attrition_reduction = st.sidebar.slider("Reduce attrition risk (%)", 0, 30, 0)
+engagement_lift = st.sidebar.slider("Increase engagement (points)", 0, 20, 0)
+manager_lift = st.sidebar.slider("Improve manager effectiveness (points)", 0, 20, 0)
 
-engagement_lift = st.sidebar.slider(
-    "Increase engagement (points)", 0, 20, 0
-)
-
-manager_lift = st.sidebar.slider(
-    "Improve manager effectiveness (points)", 0, 20, 0
-)
-
-run_what_if = st.sidebar.button("Apply What-If")
-
-if run_what_if:
-    from catalyst.analytics.what_if_engine_v1 import apply_what_if
-
-    levers = {
-        "attrition_risk_reduction_pct": attrition_reduction,
-        "engagement_lift": engagement_lift,
-        "manager_effectiveness_lift": manager_lift,
-        "headcount": len(st.session_state["workforce_df"]),
-        "risk_realization_factor": 0.6,
-    }
-
+if st.sidebar.button("Apply What-If"):
     st.session_state["what_if_kpis"] = apply_what_if(
         context["baseline"]["kpis"],
-        levers,
+        {
+            "attrition_risk_reduction_pct": attrition_reduction,
+            "engagement_lift": engagement_lift,
+            "manager_effectiveness_lift": manager_lift,
+            "headcount": len(st.session_state["workforce_df"]),
+            "risk_realization_factor": 0.6,
+        },
     )
 
 st.sidebar.divider()
@@ -262,135 +244,20 @@ st.sidebar.divider()
 if st.sidebar.button("↩ Reset What-If"):
     st.session_state["what_if_kpis"] = None
 
-costs = compute_cost_framing(
-    baseline_kpis=context["baseline"]["kpis"],
-    workforce_df=st.session_state["workforce_df"],
-    financials=context.get("financials", {}),
-    what_if_kpis=st.session_state.get("what_if_kpis"),
+st.sidebar.markdown("## 💼 Intervention Economics")
+
+intervention_cost = st.sidebar.number_input(
+    "Estimated annual intervention cost (₹)",
+    min_value=0,
+    value=2_000_000,
+    step=500_000,
 )
-
-    # --------------------------------------------------
-    # 🧠 Cost Narrative
-    # --------------------------------------------------
-
-    narrative = generate_cost_narrative(
-        costs=costs,
-        persona=context.get("persona", "CEO"),
-    )
-
-    st.divider()
-    st.subheader("🧠 Interpretation")
-
-    st.markdown(f"**{narrative['headline']}**")
-    st.markdown(narrative["body"])
-    st.info(f"**Recommended posture:** {narrative['posture']}")
-
-    # --------------------------------------------------
-    # 📊 Confidence Bands
-    # --------------------------------------------------
-
-    bands = compute_cost_confidence_bands(
-        baseline_cost=costs["baseline_cost_exposure"],
-        preventable_cost=costs["preventable_cost"],
-    )
-
-    st.divider()
-    st.subheader("📊 Cost Exposure — Confidence Bands")
-
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        st.metric(
-            "Conservative",
-            f"₹{bands['conservative']['baseline_cost'] / 1e7:.1f} Cr",
-        )
-        st.caption(bands["conservative"]["assumption"])
-
-    with col2:
-        st.metric(
-            "Base Case",
-            f"₹{bands['base']['baseline_cost'] / 1e7:.1f} Cr",
-        )
-        st.caption(bands["base"]["assumption"])
-
-    with col3:
-        st.metric(
-            "Aggressive",
-            f"₹{bands['aggressive']['baseline_cost'] / 1e7:.1f} Cr",
-        )
-        st.caption(bands["aggressive"]["assumption"])
-
-    st.caption(
-        "Confidence bands reflect sensitivity to attrition realization and intervention effectiveness."
-    )
-
-    # --------------------------------------------------
-    # 🧮 CFO Cost Narrative
-    # --------------------------------------------------
-
-    if context.get("persona") == "CFO":
-        cfo_narrative = generate_cfo_cost_narrative(
-            costs=costs,
-            bands=bands,
-        )
-
-        st.divider()
-        st.subheader("🧮 CFO Interpretation")
-
-        st.markdown(f"**{cfo_narrative['headline']}**")
-        st.markdown(cfo_narrative["body"])
-        st.info(f"**Capital posture:** {cfo_narrative['posture']}")
-
-    # --------------------------------------------------
-    # 🧾 Board-Ready Summary
-    # --------------------------------------------------
-
-    board = generate_board_summary(
-        costs=costs,
-        bands=bands,
-        persona=context.get("persona", "CEO"),
-    )
-
-    st.divider()
-    st.subheader("🧾 Board Summary")
-
-    st.markdown(f"**{board['headline']}**")
-
-    for bullet in board["bullets"]:
-        st.markdown(f"- {bullet}")
-
-    st.info(board["implication"])
-
-    # --------------------------------------------------
-    # 📈 ROI Lens
-    # --------------------------------------------------
-
-    roi = compute_roi_lens(
-        what_if_cost_impact=costs.get("what_if_cost_impact"),
-        intervention_cost=intervention_cost,
-    )
-
-    if roi:
-        st.divider()
-        st.subheader("📈 ROI Lens")
-
-        col1, col2, col3, col4 = st.columns(4)
-
-        col1.metric("Intervention Cost", f"₹{roi['intervention_cost']/1e7:.1f} Cr")
-        col2.metric("Cost Avoided", f"₹{roi['cost_avoided']/1e7:.1f} Cr")
-        col3.metric("Net Benefit", f"₹{roi['net_benefit']/1e7:.1f} Cr")
-        col4.metric("ROI", f"{roi['roi']:.1f}×")
-
-        st.caption(
-            "ROI reflects estimated annual net benefit relative to intervention cost. "
-            "Figures are indicative and intended for directional decision support."
-        )
 
 # ============================================================
 # Navigation
 # ============================================================
 
-    page = st.sidebar.selectbox(
+page = st.sidebar.selectbox(
     "Navigate",
     ["Sentiment Health", "Current KPIs"],
 )
@@ -406,15 +273,15 @@ def render_sentiment_health_page():
         "Use the What-If Sandbox to explore mitigation strategies."
     )
 
+
 def render_current_kpis_page():
     st.header("Current KPI Performance")
 
-    if st.session_state["what_if_kpis"]:
-        kpis = st.session_state["what_if_kpis"]
-        st.caption("Showing simulated (What-If) KPIs")
-    else:
-        kpis = context["baseline"]["kpis"]
-        st.caption("Showing baseline KPIs")
+    kpis = (
+        st.session_state["what_if_kpis"]
+        if st.session_state["what_if_kpis"]
+        else context["baseline"]["kpis"]
+    )
 
     selected_kpi = st.selectbox("Select KPI", list(kpis.keys()))
     kpi_state = kpis[selected_kpi]
@@ -425,9 +292,9 @@ def render_current_kpis_page():
         active_client=None,
     )
 
-    # --------------------------------------------------
-    # 💰 Cost Framing (Phase I)
-    # --------------------------------------------------
+    # ========================================================
+    # 💰 Cost Framing
+    # ========================================================
 
     costs = compute_cost_framing(
         baseline_kpis=context["baseline"]["kpis"],
@@ -436,24 +303,84 @@ def render_current_kpis_page():
         what_if_kpis=st.session_state.get("what_if_kpis"),
     )
 
+    narrative = generate_cost_narrative(
+        costs=costs,
+        persona=context["persona"],
+    )
+
     st.divider()
-    st.subheader("💰 Economic Impact")
+    st.subheader("🧠 Interpretation")
+    st.markdown(f"**{narrative['headline']}**")
+    st.markdown(narrative["body"])
+    st.info(f"**Recommended posture:** {narrative['posture']}")
 
-    st.metric(
-        "Baseline Attrition Cost Exposure",
-        f"₹{costs['baseline_cost_exposure'] / 1e7:.1f} Cr",
+    # ========================================================
+    # 📊 Confidence Bands
+    # ========================================================
+
+    bands = compute_cost_confidence_bands(
+        baseline_cost=costs["baseline_cost_exposure"],
+        preventable_cost=costs["preventable_cost"],
     )
 
-    st.metric(
-        "Preventable Cost (Estimated)",
-        f"₹{costs['preventable_cost'] / 1e7:.1f} Cr",
+    st.divider()
+    st.subheader("📊 Cost Exposure — Confidence Bands")
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.metric("Conservative", f"₹{bands['conservative']['baseline_cost']/1e7:.1f} Cr")
+        st.caption(bands["conservative"]["assumption"])
+
+    with col2:
+        st.metric("Base Case", f"₹{bands['base']['baseline_cost']/1e7:.1f} Cr")
+        st.caption(bands["base"]["assumption"])
+
+    with col3:
+        st.metric("Aggressive", f"₹{bands['aggressive']['baseline_cost']/1e7:.1f} Cr")
+        st.caption(bands["aggressive"]["assumption"])
+
+    # ========================================================
+    # 🧮 CFO Narrative
+    # ========================================================
+
+    if context["persona"] == "CFO":
+        cfo = generate_cfo_cost_narrative(costs, bands)
+        st.divider()
+        st.subheader("🧮 CFO Interpretation")
+        st.markdown(f"**{cfo['headline']}**")
+        st.markdown(cfo["body"])
+        st.info(f"**Capital posture:** {cfo['posture']}")
+
+    # ========================================================
+    # 🧾 Board Summary
+    # ========================================================
+
+    board = generate_board_summary(costs, bands, context["persona"])
+    st.divider()
+    st.subheader("🧾 Board Summary")
+    st.markdown(f"**{board['headline']}**")
+    for bullet in board["bullets"]:
+        st.markdown(f"- {bullet}")
+    st.info(board["implication"])
+
+    # ========================================================
+    # 📈 ROI Lens
+    # ========================================================
+
+    roi = compute_roi_lens(
+        what_if_cost_impact=costs.get("what_if_cost_impact"),
+        intervention_cost=intervention_cost,
     )
 
-    if costs["what_if_cost_impact"]:
-        st.success(
-            f"This What-If scenario avoids approximately "
-            f"₹{costs['what_if_cost_impact'] / 1e7:.1f} Cr in attrition cost."
-        )
+    if roi:
+        st.divider()
+        st.subheader("📈 ROI Lens")
+        col1, col2, col3, col4 = st.columns(4)
+        col1.metric("Intervention Cost", f"₹{roi['intervention_cost']/1e7:.1f} Cr")
+        col2.metric("Cost Avoided", f"₹{roi['cost_avoided']/1e7:.1f} Cr")
+        col3.metric("Net Benefit", f"₹{roi['net_benefit']/1e7:.1f} Cr")
+        col4.metric("ROI", f"{roi['roi']:.1f}×")
 
 
 # ============================================================
@@ -462,6 +389,5 @@ def render_current_kpis_page():
 
 if page == "Sentiment Health":
     render_sentiment_health_page()
-
-elif page == "Current KPIs":
+else:
     render_current_kpis_page()
