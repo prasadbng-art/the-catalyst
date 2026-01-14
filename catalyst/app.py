@@ -498,11 +498,11 @@ def render_sentiment_health_page():
         "Use the What-If Sandbox to explore mitigation strategies."
     )
 
-    # ============================================================
-    # Router
-    # ============================================================
+# ============================================================
+# Router
+# ============================================================
 
-    if page == "Sentiment Health":
-        render_sentiment_health_page()
-    else:
-        render_current_kpis_page()
+if page == "Sentiment Health":
+    render_sentiment_health_page()
+else:
+    render_current_kpis_page()
