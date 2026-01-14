@@ -349,7 +349,7 @@ def render_current_kpis_page():
             st.success(
                 f"This scenario avoids approximately "
                 f"₹{costs['what_if_cost_impact'] / 1e7:.1f} Cr in attrition cost."
-            )
+            )   
 
         # --------------------------------------------------
         # Layer 3 — Executive Interpretation
@@ -371,28 +371,27 @@ def render_current_kpis_page():
     # ========================================================
 
     costs = compute_cost_framing(
-        baseline_kpis=context["baseline"]["kpis"],
-        workforce_df=st.session_state["workforce_df"],
-        financials=context.get("financials", {}),
-        what_if_kpis=st.session_state.get("what_if_kpis"),
-    )
+    baseline_kpis=context["baseline"]["kpis"],
+    workforce_df=st.session_state["workforce_df"],
+    financials=context.get("financials", {}),
+    what_if_kpis=st.session_state.get("what_if_kpis"),
+)
 
     st.markdown("## 💰 Economic Impact")
 
-    col1, col2 = st.columns(2)
-    col1.metric(
+    st.metric(
         "Baseline Attrition Cost Exposure",
         f"₹{costs['baseline_cost_exposure']/1e7:.1f} Cr",
     )
-    col2.metric(
+    st.metric(
         "Preventable Cost (Estimated)",
         f"₹{costs['preventable_cost']/1e7:.1f} Cr",
     )
 
     if costs.get("what_if_cost_impact"):
         st.success(
-            f"This intervention scenario avoids approximately "
-            f"₹{costs['what_if_cost_impact']/1e7:.1f} Cr annually."
+            f"Under this scenario, estimated annual attrition cost reduces by "
+            f"~₹{costs['what_if_cost_impact']/1e7:.1f} Cr."
         )
 
     # ========================================================
@@ -448,15 +447,21 @@ def render_current_kpis_page():
         )
 
     # ========================================================
-    # 🧮 CFO Interpretation
+    # 🧮 CFO Interpretation (Persona-Aware)
     # ========================================================
 
-    if context["persona"] == "CFO":
-        cfo = generate_cfo_cost_narrative(costs, bands)
-        st.markdown("## 🧮 CFO Interpretation")
-        st.markdown(f"**{cfo['headline']}**")
-        st.markdown(cfo["body"])
-        st.info(f"**Capital posture:** {cfo['posture']}")
+    if context.get("persona") == "CFO":
+        cfo_narrative = generate_cfo_cost_narrative(
+            costs=costs,
+            bands=bands,
+        )
+    st.divider()
+    st.subheader("🧮 CFO Interpretation")
+
+    st.markdown(f"**{cfo_narrative['headline']}**")
+    st.markdown(cfo_narrative["body"])
+    st.info(f"**Capital posture:** {cfo_narrative['posture']}")
+
 
     # ========================================================
     # 🧾 Board Summary (Expanded)
@@ -493,12 +498,11 @@ def render_sentiment_health_page():
         "Use the What-If Sandbox to explore mitigation strategies."
     )
 
+    # ============================================================
+    # Router
+    # ============================================================
 
-# ============================================================
-# Router
-# ============================================================
-
-if page == "Sentiment Health":
-    render_sentiment_health_page()
-else:
-    render_current_kpis_page()
+    if page == "Sentiment Health":
+        render_sentiment_health_page()
+    else:
+        render_current_kpis_page()
