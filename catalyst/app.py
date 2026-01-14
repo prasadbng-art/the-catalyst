@@ -276,6 +276,10 @@ def render_sentiment_health_page():
 
 def render_current_kpis_page():
     st.header("Current KPI Performance")
+    st.caption(
+    "This view summarizes workforce risk and its economic implications, "
+    "based on uploaded data and selected interventions."
+)
 
     kpis = (
         st.session_state["what_if_kpis"]
@@ -308,8 +312,7 @@ def render_current_kpis_page():
         persona=context["persona"],
     )
 
-    st.divider()
-    st.subheader("🧠 Interpretation")
+    st.markdown("## 🧠 Interpretation & Risk")
     st.markdown(f"**{narrative['headline']}**")
     st.markdown(narrative["body"])
     st.info(f"**Recommended posture:** {narrative['posture']}")
@@ -323,8 +326,7 @@ def render_current_kpis_page():
         preventable_cost=costs["preventable_cost"],
     )
 
-    st.divider()
-    st.subheader("📊 Cost Exposure — Confidence Bands")
+    st.markdown("## 🧠 Interpretation & Risk")
 
     col1, col2, col3 = st.columns(3)
 
@@ -346,8 +348,7 @@ def render_current_kpis_page():
 
     if context["persona"] == "CFO":
         cfo = generate_cfo_cost_narrative(costs, bands)
-        st.divider()
-        st.subheader("🧮 CFO Interpretation")
+        st.markdown("## 📊 Cost Exposure (Confidence)")
         st.markdown(f"**{cfo['headline']}**")
         st.markdown(cfo["body"])
         st.info(f"**Capital posture:** {cfo['posture']}")
@@ -357,8 +358,7 @@ def render_current_kpis_page():
     # ========================================================
 
     board = generate_board_summary(costs, bands, context["persona"])
-    st.divider()
-    st.subheader("🧾 Board Summary")
+    st.markdown("## 🧮 CFO Interpretation")
     st.markdown(f"**{board['headline']}**")
     for bullet in board["bullets"]:
         st.markdown(f"- {bullet}")
@@ -374,8 +374,7 @@ def render_current_kpis_page():
     )
 
     if roi:
-        st.divider()
-        st.subheader("📈 ROI Lens")
+        st.markdown("## 🧾 Board-Ready Summary")
         col1, col2, col3, col4 = st.columns(4)
         col1.metric("Intervention Cost", f"₹{roi['intervention_cost']/1e7:.1f} Cr")
         col2.metric("Cost Avoided", f"₹{roi['cost_avoided']/1e7:.1f} Cr")
