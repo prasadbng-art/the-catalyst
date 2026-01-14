@@ -5,31 +5,31 @@ from supabase import create_client
 # 🔐 Authentication (Bolt / Supabase Gateway)
 # ============================================================
 
-SUPABASE_URL = "https://zgdodfbhvtumiqgwedgx.supabase.co"
-SUPABASE_ANON_KEY = "YOUR_PUBLIC_KEY"
+# SUPABASE_URL = "https://zgdodfbhvtumiqgwedgx.supabase.co"
+# SUPABASE_ANON_KEY = "YOUR_PUBLIC_KEY"
 
 
-def verify_token(token: str):
-    try:
-        supabase = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
-        res = supabase.auth.get_user(token)
-        return res.user if res else None
-    except Exception:
-        return None
+#def verify_token(token: str):
+#    try:
+#        supabase = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
+#        res = supabase.auth.get_user(token)
+#        return res.user if res else None
+#   except Exception:
+#        return None
 
 
-query_params = st.query_params
+# query_params = st.query_params
 
-if "token" in query_params:
-    user = verify_token(query_params["token"])
-    if user:
-        st.session_state["authenticated"] = True
-        st.session_state["user"] = user
-        st.session_state["email"] = query_params.get("email")
+# if "token" in query_params:
+#    user = verify_token(query_params["token"])
+#    if user:
+#        st.session_state["authenticated"] = True
+#        st.session_state["user"] = user
+#        st.session_state["email"] = query_params.get("email")
 
-if not st.session_state.get("authenticated"):
-    st.error("Please log in through the HR Decision Engine.")
-    st.stop()
+#if not st.session_state.get("authenticated"):
+#    st.error("Please log in through the HR Decision Engine.")
+#    st.stop()
 
 # ============================================================
 # Imports (authoritative)
