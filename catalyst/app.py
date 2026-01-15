@@ -179,7 +179,8 @@ if st.session_state["workforce_df"] is None:
 # Sidebar — Persona
 # ============================================================
 
-st.sidebar.markdown("## 👤 View As")
+st.sidebar.markdown("## 👤 Perspective")
+st.sidebar.caption("Adjusts interpretation, not underlying data.")
 
 persona_options = ["CEO", "CFO", "CHRO"]
 current_persona = context.get("persona", "CEO")
@@ -199,9 +200,13 @@ st.session_state["context_v1"]["persona"] = selected_persona
 
 st.sidebar.markdown("## 🧪 What-If Sandbox")
 
-attrition_reduction = st.sidebar.slider("Reduce attrition risk (%)", 0, 30, 0)
-engagement_lift = st.sidebar.slider("Increase engagement (points)", 0, 20, 0)
-manager_lift = st.sidebar.slider("Improve manager effectiveness (points)", 0, 20, 0)
+if st.session_state["workforce_df"] is None:
+    st.sidebar.caption("Upload workforce data to enable simulations.")
+
+else:
+    attrition_reduction = st.sidebar.slider("Effectiveness of retention actions (%)", 0, 30, 0)
+    engagement_lift = st.sidebar.slider("Increase engagement (points)", 0, 20, 0)
+    manager_lift = st.sidebar.slider("Improve manager effectiveness (points)", 0, 20, 0)
 
 st.sidebar.caption(
     "These controls simulate the impact of targeted retention and capability actions."
@@ -224,9 +229,9 @@ st.sidebar.divider()
 if st.sidebar.button("↩ Reset What-If"):
     st.session_state["what_if_kpis"] = None
 
-st.sidebar.markdown("## 💼 Intervention Economics")
+with st.sidebar.expander("## 💼 Intervention Economics",expanded=False):
 
-intervention_cost = st.sidebar.number_input(
+    intervention_cost = st.sidebar.number_input(
     "Estimated annual intervention cost (₹)",
     min_value=0,
     value=2_000_000,
