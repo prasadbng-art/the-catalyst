@@ -251,13 +251,17 @@ st.session_state["context_v1"]["persona"] = selected_persona
 # Sidebar — What-If Sandbox
 # ============================================================
 
-st.sidebar.markdown("## 🧪 What-If Sandbox")
+if st.session_state["journey_state"] == "simulation":
+    st.sidebar.markdown("## 🧪 Simulate a leadership decision")
+    st.sidebar.caption(
+        "Adjust assumptions below and apply the simulation to explore potential outcomes."
+    )
 
 attrition_reduction = st.sidebar.slider("Effectiveness of retention actions (%)", 0, 30, 0)
 engagement_lift = st.sidebar.slider("Engagement uplift (points)", 0, 20, 0)
 manager_lift = st.sidebar.slider("Manager capability uplift (points)", 0, 20, 0)
 
-if st.sidebar.button("Simulate this decision"):
+if st.sidebar.button("Apply Simulation"):
     st.session_state["what_if_kpis"] = apply_what_if(
         context["baseline"]["kpis"],
         {
@@ -271,6 +275,11 @@ if st.sidebar.button("Simulate this decision"):
 
 st.sidebar.divider()
 
+if st.sidebar.button("Return to baseline view"):
+    st.session_state["what_if_kpis"] = None
+    st.session_state["journey_state"] = "baseline"
+    st.rerun()
+
 if st.sidebar.button("Clear simulation"):
     st.session_state["what_if_kpis"] = None
 
@@ -279,10 +288,10 @@ if st.sidebar.button("Clear simulation"):
 # ============================================================
 
 intervention_cost = 2_000_000
-
-with st.sidebar.expander("💼 Intervention economics", expanded=False):
-    intervention_cost = st.sidebar.number_input(
-        "Estimated annual intervention cost (USD)",
+if st.session_state["journey_state"] == "simulation":
+    with st.sidebar.expander("💼 Intervention economics", expanded=False):
+        intervention_cost = st.sidebar.number_input(
+            "Estimated annual intervention cost (USD)",
         min_value=0,
         value=intervention_cost,
         step=500_000,
@@ -291,6 +300,16 @@ with st.sidebar.expander("💼 Intervention economics", expanded=False):
 # ============================================================
 # Pages
 # ============================================================
+if st.session_state["journey_state"] == "simulation":
+    st.warning(
+        "⚠️ **Simulation mode** — The results below reflect hypothetical leadership actions, "
+        "not the current baseline."
+    )
+else:
+    st.info(
+        "You are viewing the **current (baseline) state** based on uploaded data. "
+        "No simulated interventions are applied."
+    )
 
 def render_sentiment_health_page():
     st.header("Sentiment Health")
@@ -300,11 +319,14 @@ def render_current_kpis_page():
     st.header("What workforce risk are we carrying right now?")
     st.caption("All financial figures shown in USD.")
 
-    kpis = (
-        st.session_state["what_if_kpis"]
-        if st.session_state.get("what_if_kpis")
-        else context["baseline"]["kpis"]
-    )
+# --------------------------------------------------
+# Phase 3C — Resolve KPI source (baseline vs simulation)
+# --------------------------------------------------
+    if st.session_state["journey_state"] == "simulation" and st.session_state.get("what_if_kpis"):
+        kpis = st.session_state["what_if_kpis"]
+        st.caption("Showing simulated outcomes based on the selected leadership actions.")
+    else:
+        kpis = context["baseline"]["kpis"]
 
     selected_kpi = list(kpis.keys())[0]
 
@@ -378,7 +400,11 @@ def render_current_kpis_page():
         st.markdown(cfo["body"])
 
     roi = compute_roi_lens(costs.get("what_if_cost_impact"), intervention_cost)
-
+    if (
+        st.session_state["journey_state"] == "simulation"
+        and st.session_state.get("what_if_kpis")
+    ):
+        roi = compute_roi_lens(costs.get("what_if_cost_impact"), intervention_cost)
     if roi:
         with st.expander("Does this intervention economically justify itself?"):
             st.metric("Intervention cost", format_usd(roi["intervention_cost"]))
