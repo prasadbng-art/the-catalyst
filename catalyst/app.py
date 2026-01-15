@@ -371,7 +371,7 @@ def render_cfo_layer(context, costs, bands):
 # ============================================================
 
 def render_board_and_roi_layer(context, costs, bands, intervention_cost):
-    with st.expander("🧾 Board-ready summary", expanded=True):
+    with st.expander("🧾 Board-ready summary", expanded=False):
         board = generate_board_summary(costs, bands, context["persona"])
         st.markdown(f"**{board['headline']}**")
         for bullet in board["bullets"]:
@@ -428,7 +428,8 @@ def render_current_kpis_page():
         what_if_kpis=st.session_state.get("what_if_kpis"),
     )
 
-    bands = render_confidence_bands_layer(costs)
+    with st.expander("How uncertain is this exposure?", expanded=False):
+        bands = render_confidence_bands_layer(costs)
 
     render_cfo_layer(context, costs, bands)
 
@@ -438,7 +439,6 @@ def render_current_kpis_page():
         bands=bands,
         intervention_cost=intervention_cost,
     )
-
 
 # ============================================================
 # Router (top-level, deterministic)
