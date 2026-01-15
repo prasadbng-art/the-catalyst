@@ -26,6 +26,18 @@ from catalyst.analytics.cost_narrative_cfo_v1 import generate_cfo_cost_narrative
 from catalyst.analytics.board_summary_v1 import generate_board_summary
 from catalyst.analytics.roi_lens_v1 import compute_roi_lens
 
+def format_usd(value: float, millions: bool = True) -> str:
+    """
+    Format currency values consistently in USD.
+    """
+    if value is None:
+        return "—"
+
+    if millions:
+        return f"${value / 1e6:,.1f}M"
+    return f"${value:,.0f}"
+
+
 # ============================================================
 # App setup
 # ============================================================
@@ -229,12 +241,14 @@ st.sidebar.divider()
 if st.sidebar.button("↩ Reset What-If"):
     st.session_state["what_if_kpis"] = None
 
+intervention_cost=2_000_000
+
 with st.sidebar.expander("## 💼 Intervention Economics",expanded=False):
 
     intervention_cost = st.sidebar.number_input(
-    "Estimated annual intervention cost (₹)",
+    "Estimated annual intervention cost ($)",
     min_value=0,
-    value=2_000_000,
+    value=intervention_cost,
     step=500_000,
 )
 
@@ -293,17 +307,17 @@ def render_attrition_economic_layer(context, workforce_df, what_if_kpis):
 
     st.metric(
         "Annual Attrition Cost Exposure",
-        f"₹{costs['baseline_cost_exposure']/1e7:.1f} Cr",
+        f"${costs['baseline_cost_exposure']/1e7:.1f}",
     )
     st.metric(
         "Cost realistically preventable",
-        f"₹{costs['preventable_cost']/1e7:.1f} Cr",
+        f"${costs['preventable_cost']/1e7:.1f}",
     )
 
     if costs.get("what_if_cost_impact"):
         st.success(
             f"With effective action, approximately "
-            f"~₹{costs['what_if_cost_impact']/1e7:.1f} Cr."
+            f"~${costs['what_if_cost_impact']/1e7:.1f}."
         )
 
     narrative = generate_cost_narrative(costs, context["persona"])
@@ -337,21 +351,21 @@ def render_confidence_bands_layer(costs):
     with col1:
         st.metric(
             "Conservative",
-            f"₹{bands['conservative']['baseline_cost']/1e7:.1f} Cr",
+            f"${bands['conservative']['baseline_cost']/1e7:.1f}",
         )
         st.caption(bands["conservative"]["assumption"])
 
     with col2:
         st.metric(
             "Base Case",
-            f"₹{bands['base']['baseline_cost']/1e7:.1f} Cr",
+            f"${bands['base']['baseline_cost']/1e7:.1f}",
         )
         st.caption(bands["base"]["assumption"])
 
     with col3:
         st.metric(
             "Aggressive",
-            f"₹{bands['aggressive']['baseline_cost']/1e7:.1f} Cr",
+            f"${bands['aggressive']['baseline_cost']/1e7:.1f}",
         )
         st.caption(bands["aggressive"]["assumption"])
 
@@ -395,9 +409,9 @@ def render_board_and_roi_layer(context, costs, bands, intervention_cost):
     if roi:
         with st.expander("📈 Does this intervention economically justify itself?", expanded=False):
             c1, c2, c3, c4 = st.columns(4)
-            c1.metric("Intervention Cost", f"₹{roi['intervention_cost']/1e7:.1f} Cr")
-            c2.metric("Cost Avoided", f"₹{roi['cost_avoided']/1e7:.1f} Cr")
-            c3.metric("Net Benefit", f"₹{roi['net_benefit']/1e7:.1f} Cr")
+            c1.metric("Intervention Cost", f"${roi['intervention_cost']/1e7:.1f}")
+            c2.metric("Cost Avoided", f"${roi['cost_avoided']/1e7:.1f}")
+            c3.metric("Net Benefit", f"${roi['net_benefit']/1e7:.1f}")
             c4.metric("ROI", f"{roi['roi']:.1f}×")
 
 # ============================================================
