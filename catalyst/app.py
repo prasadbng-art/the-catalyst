@@ -315,6 +315,9 @@ def render_current_kpis_page():
     )
 
     if selected_kpi != "attrition_risk":
+        st.info(
+            "This demo currently focuses on **Attrition Risk** and its economic impact."
+        )
         return
 
     costs = compute_cost_framing(
@@ -324,8 +327,36 @@ def render_current_kpis_page():
         what_if_kpis=st.session_state.get("what_if_kpis"),
     )
 
-    st.metric("Annual attrition cost exposure", format_usd(costs["baseline_cost_exposure"]))
-    st.metric("Cost realistically preventable", format_usd(costs["preventable_cost"]))
+    st.metric(
+         "Annual attrition cost exposure (direct + hidden costs)",
+    format_usd(costs["baseline_cost_exposure"])
+)
+    st.metric(
+        "Cost realistically preventable",
+    format_usd(costs["preventable_cost"])
+)
+
+    with st.expander("What’s included in this cost estimate?"):
+        st.markdown(
+        """
+            This estimate reflects the **full business cost of attrition**, not just
+            hiring or replacement expenses.
+
+        It includes:
+        - Hiring and onboarding costs  
+        - Productivity loss during vacancy periods  
+        - Ramp-up inefficiency for new hires  
+        - Manager time diverted to backfilling and coaching  
+        - Team disruption and engagement drag  
+
+        These factors are modeled conservatively to reflect realistic
+        operating impact, not worst-case assumptions.
+        """
+    )
+
+    narrative = generate_cost_narrative(costs, context["persona"])
+    st.markdown(f"**{narrative['headline']}**")
+    st.markdown(narrative["body"])
 
     narrative = generate_cost_narrative(costs, context["persona"])
     st.markdown(f"**{narrative['headline']}**")
