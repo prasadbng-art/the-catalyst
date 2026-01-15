@@ -255,12 +255,13 @@ def render_kpi_selector_and_signal(kpis):
     default_index = kpi_list.index("attrition_risk") if "attrition_risk" in kpi_list else 0
 
     selected_kpi = st.selectbox(
-        "Focus KPI",
+        "Which risk signal should we examine?",
         kpi_list,
         index=default_index,
     )
 
-    st.markdown("### 📌 Current Signal")
+    st.markdown("### The signal leadership should pay attention to")
+    st.caption("This reflects the current state of workforce risk based on the uploaded snapshot")
 
     render_kpi_current_performance(
         kpi=selected_kpi,
@@ -286,26 +287,26 @@ def render_attrition_economic_layer(context, workforce_df, what_if_kpis):
     st.markdown("## 💰 Economic Impact")
 
     st.metric(
-        "Baseline Attrition Cost Exposure",
+        "Annual Attrition Cost Exposure",
         f"₹{costs['baseline_cost_exposure']/1e7:.1f} Cr",
     )
     st.metric(
-        "Preventable Cost (Estimated)",
+        "Cost realistically preventable",
         f"₹{costs['preventable_cost']/1e7:.1f} Cr",
     )
 
     if costs.get("what_if_cost_impact"):
         st.success(
-            f"Under this scenario, estimated annual attrition cost reduces by "
+            f"With effective action, approximately "
             f"~₹{costs['what_if_cost_impact']/1e7:.1f} Cr."
         )
 
     narrative = generate_cost_narrative(costs, context["persona"])
 
-    st.markdown("## 🧠 Interpretation & Risk")
+    st.markdown("## 🧠 What this means for leadership")
     st.markdown(f"**{narrative['headline']}**")
     st.markdown(narrative["body"])
-    st.info(f"**Recommended posture:** {narrative['posture']}")
+    st.info(f"**Suggested Leadership posture:** {narrative['posture']}")
 
     return costs
 
@@ -320,7 +321,11 @@ def render_confidence_bands_layer(costs):
         preventable_cost=costs["preventable_cost"],
     )
 
-    st.markdown("### 📊 Risk Envelope (Confidence Bands)")
+    st.markdown("### 📊How uncertain is this exposure?")
+    st.caption(
+        "These ranges show how outcomes vary under different but realistic assumptions."
+        "Use them to understand downside risk and planning buffers, not as point forecasts."
+    )
 
     col1, col2, col3 = st.columns(3)
 
@@ -357,13 +362,13 @@ def render_cfo_layer(context, costs, bands):
         return
 
     st.divider()
-    st.subheader("🧮 CFO Interpretation")
+    st.subheader("🧮 Financial Lens: CFO View")
 
     cfo_narrative = generate_cfo_cost_narrative(costs, bands)
 
     st.markdown(f"**{cfo_narrative['headline']}**")
     st.markdown(cfo_narrative["body"])
-    st.info(f"**Capital posture:** {cfo_narrative['posture']}")
+    st.info(f"**Capital posture implication:** {cfo_narrative['posture']}")
 
 
 # ============================================================
@@ -371,7 +376,7 @@ def render_cfo_layer(context, costs, bands):
 # ============================================================
 
 def render_board_and_roi_layer(context, costs, bands, intervention_cost):
-    with st.expander("🧾 Board-ready summary", expanded=False):
+    with st.expander("🧾 What the Board needs to know", expanded=False):
         board = generate_board_summary(costs, bands, context["persona"])
         st.markdown(f"**{board['headline']}**")
         for bullet in board["bullets"]:
@@ -384,7 +389,7 @@ def render_board_and_roi_layer(context, costs, bands, intervention_cost):
     )
 
     if roi:
-        with st.expander("📈 ROI lens (intervention economics)", expanded=False):
+        with st.expander("📈 Does this intervention economically justify itself?", expanded=False):
             c1, c2, c3, c4 = st.columns(4)
             c1.metric("Intervention Cost", f"₹{roi['intervention_cost']/1e7:.1f} Cr")
             c2.metric("Cost Avoided", f"₹{roi['cost_avoided']/1e7:.1f} Cr")
@@ -403,12 +408,11 @@ def render_sentiment_health_page():
     )
 
 def render_current_kpis_page():
-    st.header("Current KPI Performance")
+    st.header("What workforce risk are we carrying right now?")
     st.caption(
-        "This view summarizes workforce risk and its economic implications "
-        "based on uploaded data and selected interventions."
-    )
-
+        "This briefing translates current people signals into business and financial exposure, "
+        "and shows how leadership actions can change the outcome."
+)
     kpis = (
         st.session_state["what_if_kpis"]
         if st.session_state.get("what_if_kpis")
