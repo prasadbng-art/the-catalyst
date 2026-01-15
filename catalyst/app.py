@@ -53,6 +53,12 @@ st.session_state.setdefault("workforce_df", None)
 st.session_state.setdefault("what_if_kpis", None)
 
 # ============================================================
+# Journey State (Phase 3)
+# ============================================================
+
+st.session_state.setdefault("journey_state", "entry")
+
+# ============================================================
 # 🎬 Demo Entry Landing
 # ============================================================
 
@@ -72,6 +78,98 @@ def render_demo_entry():
         load_demo_context_v1()
         st.rerun()
 
+def render_entry_screen():
+    st.header("Catalyst — Executive Workforce Risk Sandbox")
+    st.subheader("A guided decision environment for leadership teams")
+
+    st.markdown(
+        """
+        This sandbox demonstrates how Catalyst helps leaders:
+        - Understand **attrition risk**
+        - Quantify **financial exposure**
+        - Safely **simulate leadership decisions**
+
+        **Scope note:**  
+        This demo focuses on *attrition risk and its economic impact only*.
+        """
+    )
+
+    st.divider()
+
+    if st.button("Enter demo", use_container_width=True):
+        st.session_state["journey_state"] = "intro"
+        st.rerun()
+
+def render_intro_screen():
+    st.header("What you’ll see in this demo")
+
+    st.markdown(
+        """
+        In the next few steps, Catalyst will guide you through:
+
+        **1. Upload a workforce snapshot**  
+        A simple CSV or Excel file.
+
+        **2. Review current attrition risk**  
+        Including estimated financial exposure.
+
+        **3. Simulate leadership actions**  
+        And see how outcomes could change.
+
+        No data is stored. Everything runs in-session.
+        """
+    )
+
+    st.divider()
+
+    if st.button("Upload workforce snapshot", use_container_width=True):
+        st.session_state["journey_state"] = "upload"
+        st.rerun()
+
+def render_upload_screen():
+    st.header("Step 1 of 3 — Upload workforce data")
+
+    st.markdown(
+        """
+        Upload a workforce snapshot (CSV or Excel).  
+        This data is used to compute attrition risk for this session only.
+        """
+    )
+
+    uploaded_file = st.file_uploader(
+        "Upload CSV or Excel",
+        type=["csv", "xlsx"],
+    )
+
+    if not uploaded_file:
+        st.info("Please upload a file to continue.")
+        return
+
+    df, errors, warnings = load_workforce_file(uploaded_file)
+
+    if errors:
+        for e in errors:
+            st.error(e)
+        return
+
+    for w in warnings:
+        st.warning(w)
+
+    st.success(f"Loaded {len(df)} employee records")
+
+    # Persist data (same logic you already have)
+    st.session_state["workforce_df"] = df
+
+    baseline_kpis = build_baseline_kpis(df)
+    context.setdefault("baseline", {})
+    context["baseline"]["kpis"] = baseline_kpis
+
+    st.divider()
+
+    if st.button("Continue to attrition briefing", use_container_width=True):
+        st.session_state["journey_state"] = "baseline"
+        st.rerun()
+
 # ============================================================
 # 🔒 Context Gate
 # ============================================================
@@ -81,6 +179,27 @@ if not isinstance(st.session_state.get("context_v1"), dict):
     st.stop()
 
 context = get_effective_context()
+
+# ============================================================
+# Phase 3A — Journey Router (Entry → Intro → Upload)
+# ============================================================
+
+state = st.session_state.get("journey_state", "entry")
+
+if state == "entry":
+    render_entry_screen()
+    st.stop()
+
+if state == "intro":
+    render_intro_screen()
+    st.stop()
+
+if state == "upload":
+    render_upload_screen()
+    st.stop()
+
+# From here onward:
+# state == "baseline" (existing app behavior)
 
 # ============================================================
 # Sidebar — Upload
@@ -107,9 +226,10 @@ if uploaded_file:
     context.setdefault("baseline", {})
     context["baseline"]["kpis"] = baseline_kpis
 
-if st.session_state["workforce_df"] is None:
+if st.session_state["journey_state"] == "baseline" and st.session_state["workforce_df"] is None:
     st.info("Upload workforce data to begin analysis.")
     st.stop()
+
 
 # ============================================================
 # Sidebar — Persona
