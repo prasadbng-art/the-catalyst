@@ -101,10 +101,12 @@ def render_demo_entry():
 # 🔒 Context Gate (authoritative)
 # ============================================================
 
-context = get_effective_context()
-if not isinstance(context, dict):
+if not isinstance(st.session_state.get("context_v1"), dict):
     render_demo_entry()
     st.stop()
+
+context = get_effective_context()
+
 
 # ============================================================
 # Demo Badge + Welcome
