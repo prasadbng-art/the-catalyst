@@ -360,7 +360,11 @@ def render_current_kpis_page():
 # Router
 # ============================================================
 
-page = st.sidebar.selectbox("Navigate", ["Sentiment Health", "Current KPIs"])
+page = st.sidebar.selectbox(
+    "Navigate",
+    ["Current KPIs", "Sentiment Health"],
+    index=0
+)
 
 if page == "Sentiment Health":
     render_sentiment_health_page()
