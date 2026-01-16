@@ -74,6 +74,10 @@ def generate_attrition_risk(sentiment_score, engagement_index, tenure_years):
     )
     return risk
 
+def generate_manager_effectiveness(engagement_score):
+    base = 55 + (engagement_score - 50) * 0.4
+    noise = np.random.normal(0, 8)
+    return int(np.clip(base + noise, 30, 95))
 
 # ------------------------------------------------------------
 # Generate employees
@@ -97,6 +101,8 @@ for i in range(N_EMPLOYEES):
 
     sentiment_score, sentiment_band = generate_sentiment()
     engagement_score, engagement_band = generate_engagement(sentiment_score)
+    manager_effectiveness_score = generate_manager_effectiveness(engagement_score)
+
 
     survey_response_count = int(np.clip(np.random.poisson(6), 1, 20))
 
@@ -132,6 +138,7 @@ for i in range(N_EMPLOYEES):
         "engagement_index": engagement_score,
         "engagement_band": engagement_band,
         "performance_band": engagement_band,
+        "manager_effectiveness_score": manager_effectiveness_score,
 
         # --- Sentiment (Phase 4) ---
         "sentiment_score": round(sentiment_score, 3),
