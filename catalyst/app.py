@@ -242,6 +242,15 @@ else:
         "No simulated interventions are applied."
     )
 
+with st.expander("Contextual note on sentiment", expanded=False):
+    st.markdown(
+        """
+        In organisations where sentiment signals are available, elevated attrition risk is often accompanied by uneven sentiment patterns across teams or locations.
+
+        The sentiment context shown in this demo is **synthetically generated** and is intended to illustrate how such signals can add texture to attrition discussions. It does not replace core attrition and cost metrics, nor does it imply causality or required action.
+        """
+    )
+
 def render_sentiment_health_page():
     st.header("Sentiment Health")
     st.caption("High-level workforce risk summary.")
