@@ -22,7 +22,7 @@ from catalyst.analytics.what_if_engine_v1 import apply_what_if
 from catalyst.analytics.cost_framing_v1 import compute_cost_framing
 from catalyst.analytics.cost_narrative_v1 import generate_cost_narrative
 from catalyst.analytics.cost_confidence_bands_v1 import compute_cost_confidence_bands
-from catalyst.analytics.cost_narrative_cfo_v1 import generate_cfo_cost_narrative
+from catalyst.analytics.cost_narrative_cfo_v1 import generate_cost_narrative
 from catalyst.analytics.board_summary_v1 import generate_board_summary
 from catalyst.analytics.roi_lens_v1 import compute_roi_lens
 
@@ -395,7 +395,7 @@ def render_current_kpis_page():
         st.metric("Aggressive", format_usd(bands["aggressive"]["baseline_cost"]))
 
     if context["persona"] == "CFO":
-        cfo = generate_cfo_cost_narrative(costs, bands)
+        cfo = generate_cost_narrative(costs, bands)
         st.subheader("Financial lens (CFO view)")
         st.markdown(cfo["body"])
 
