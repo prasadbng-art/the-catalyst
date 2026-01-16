@@ -114,28 +114,45 @@ for i in range(N_EMPLOYEES):
     )
 
     rows.append({
-        "employee_id": employee_id,
-        "department": department,
-        "location": location,
-        "level": level,
-        "manager_id": manager_id,
-        "tenure_years": tenure_years,
-        "role_family": role_family,
-        "annual_salary_usd": annual_salary,
-        "attrition_flag": attrition_flag,
-        "attrition_risk_score": round(attrition_risk, 3),
-        "risk_band": risk_band,
-        "sentiment_score": round(sentiment_score, 3),
-        "sentiment_band": sentiment_band,
-        "survey_response_count": survey_response_count,
-        "sentiment_source": "synthetic_demo",
-        "engagement_index": engagement_index,
-        "engagement_band": engagement_band,
-        "manager_sentiment_avg": None,  # populated downstream if needed
-        "team_size": None,               # populated downstream if needed
-        "data_provenance": "synthetic_demo_v2",
-        "confidence_note": "Simulated for demonstration purposes only",
-    })
+    "employee_id": employee_id,
+
+    # --- Core identity ---
+    "department": department,
+    "location": location,
+    "role": role_family,                  # legacy compatibility
+    "level": level,
+    "manager_id": manager_id,
+
+    # --- Tenure ---
+    "tenure_years": tenure_years,
+    "tenure_months": int(tenure_years * 12),  # legacy compatibility
+
+    # --- Compensation ---
+    "annual_salary_usd": annual_salary,
+    "salary": annual_salary,               # legacy compatibility
+
+    # --- Performance / engagement (legacy expectations) ---
+    "engagement_score": engagement_index,  # legacy name
+    "performance_band": engagement_band,   # placeholder, synthetic
+
+    # --- Phase 4 sentiment ---
+    "sentiment_score": round(sentiment_score, 3),
+    "sentiment_band": sentiment_band,
+    "survey_response_count": survey_response_count,
+    "sentiment_source": "synthetic_demo",
+
+    # --- Attrition ---
+    "attrition_flag": attrition_flag,
+    "attrition_risk_score": round(attrition_risk, 3),
+    "risk_band": risk_band,
+
+    # --- Metadata ---
+    "engagement_index": engagement_index,
+    "engagement_band": engagement_band,
+    "data_provenance": "synthetic_demo_v2",
+    "confidence_note": "Simulated for demonstration purposes only",
+})
+
 
 df = pd.DataFrame(rows)
 
