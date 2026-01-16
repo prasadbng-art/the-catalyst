@@ -51,6 +51,10 @@ st.session_state.setdefault("context_v1", {})
 st.session_state.setdefault("demo_welcomed", False)
 st.session_state.setdefault("workforce_df", None)
 st.session_state.setdefault("what_if_kpis", None)
+st.session_state.setdefault("attrition_reduction", 0)
+st.session_state.setdefault("engagement_lift", 0)
+st.session_state.setdefault("manager_lift", 0)
+
 
 # ============================================================
 # Context Resolution (Authoritative)
@@ -184,9 +188,9 @@ if st.session_state.get("journey_state") == "simulation":
         "Adjust assumptions below and apply the simulation to explore potential outcomes."
     )
 
-attrition_reduction = st.sidebar.slider("Effectiveness of retention actions (%)", 0, 30, 0)
-engagement_lift = st.sidebar.slider("Engagement uplift (points)", 0, 20, 0)
-manager_lift = st.sidebar.slider("Manager capability uplift (points)", 0, 20, 0)
+attrition_reduction = st.sidebar.slider("Effectiveness of retention actions (%)", 0, 30, key="attrition_reduction",)
+engagement_lift = st.sidebar.slider("Engagement uplift (points)", 0, 20, key="engagement_lift",)
+manager_lift = st.sidebar.slider("Manager capability uplift (points)", 0, 20, "manager_lift",)
 
 if st.sidebar.button("Apply Simulation"):
     st.session_state["what_if_kpis"] = apply_what_if(
