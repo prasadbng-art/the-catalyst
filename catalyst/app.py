@@ -196,7 +196,7 @@ if st.session_state.get("journey_state") == "simulation":
 
 attrition_reduction = st.sidebar.slider("Effectiveness of retention actions (%)", 0, 30, key="attrition_reduction",)
 engagement_lift = st.sidebar.slider("Engagement uplift (points)", 0, 20, key="engagement_lift",)
-manager_lift = st.sidebar.slider("Manager capability uplift (points)", 0, 20, "manager_lift",)
+manager_lift = st.sidebar.slider("Manager capability uplift (points)", 0, 20, key="manager_lift",)
 
 if st.sidebar.button("Apply Simulation"):
     st.session_state["what_if_kpis"] = apply_what_if(
