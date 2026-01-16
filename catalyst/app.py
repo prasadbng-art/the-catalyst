@@ -53,153 +53,83 @@ st.session_state.setdefault("workforce_df", None)
 st.session_state.setdefault("what_if_kpis", None)
 
 # ============================================================
+# Context Resolution (Authoritative)
+# ============================================================
+
+context = get_effective_context()
+
+# ============================================================
 # Journey State (Phase 3)
 # ============================================================
 
 st.session_state.setdefault("journey_state", "entry")
 
 # ============================================================
-# 🎬 Demo Entry Landing
+# Phase 3A — Simplified Startup & Routing (Authoritative)
 # ============================================================
 
-def render_demo_entry():
+# Canonical defaults
+st.session_state.setdefault("journey_state", "baseline")
+st.session_state.setdefault("what_if_kpis", None)
+
+# ------------------------------------------------------------
+# Minimal entry: only when no data exists
+# ------------------------------------------------------------
+
+def render_minimal_upload():
     st.markdown("## Catalyst")
-    st.markdown("### Interactive Talent Intelligence Demo")
+    st.markdown("### Executive Attrition Risk Briefing")
 
     st.markdown(
         """
-        - Diagnose workforce risk  
-        - Quantify attrition exposure and cost  
-        - Test decisions safely using what-if simulations  
-        """
-    )
-
-    if st.button("▶ Run Interactive Demo", use_container_width=True):
-        load_demo_context_v1()
-        st.rerun()
-
-def render_entry_screen():
-    st.header("Catalyst — Executive Workforce Risk Sandbox")
-    st.subheader("A guided decision environment for leadership teams")
-
-    st.markdown(
-        """
-        This sandbox demonstrates how Catalyst helps leaders:
-        - Understand **attrition risk**
-        - Quantify **financial exposure**
-        - Safely **simulate leadership decisions**
-
-        **Scope note:**  
-        This demo focuses on *attrition risk and its economic impact only*.
-        """
-    )
-
-    st.divider()
-
-    if st.button("Enter demo", use_container_width=True):
-        st.session_state["journey_state"] = "intro"
-        st.rerun()
-
-def render_intro_screen():
-    st.header("What you’ll see in this demo")
-
-    st.markdown(
-        """
-        In the next few steps, Catalyst will guide you through:
-
-        **1. Upload a workforce snapshot**  
-        A simple CSV or Excel file.
-
-        **2. Review current attrition risk**  
-        Including estimated financial exposure.
-
-        **3. Simulate leadership actions**  
-        And see how outcomes could change.
-
-        No data is stored. Everything runs in-session.
-        """
-    )
-
-    st.divider()
-
-    if st.button("Upload workforce snapshot", use_container_width=True):
-        st.session_state["journey_state"] = "upload"
-        st.rerun()
-
-def render_upload_screen():
-    st.header("Step 1 of 3 — Upload workforce data")
-
-    st.markdown(
-        """
-        Upload a workforce snapshot (CSV or Excel).  
-        This data is used to compute attrition risk for this session only.
+        Upload a workforce snapshot (CSV or Excel) to view:
+        - Current attrition exposure
+        - Estimated financial impact
+        - Decision simulations (optional)
         """
     )
 
     uploaded_file = st.file_uploader(
-        "Upload CSV or Excel",
+        "Upload workforce data",
         type=["csv", "xlsx"],
+        use_container_width=True,
     )
 
     if not uploaded_file:
-        st.info("Please upload a file to continue.")
-        return
+        st.info("Upload a file to begin.")
+        st.stop()
 
     df, errors, warnings = load_workforce_file(uploaded_file)
 
     if errors:
         for e in errors:
             st.error(e)
-        return
+        st.stop()
 
     for w in warnings:
         st.warning(w)
 
-    st.success(f"Loaded {len(df)} employee records")
-
-    # Persist data (same logic you already have)
     st.session_state["workforce_df"] = df
 
     baseline_kpis = build_baseline_kpis(df)
     context.setdefault("baseline", {})
     context["baseline"]["kpis"] = baseline_kpis
 
-    st.divider()
+    st.session_state["journey_state"] = "baseline"
+    st.rerun()
 
-    if st.button("Continue to attrition briefing", use_container_width=True):
-        st.session_state["journey_state"] = "baseline"
-        st.rerun()
 
-# ============================================================
-# 🔒 Context Gate
-# ============================================================
+# ------------------------------------------------------------
+# Routing guard
+# ------------------------------------------------------------
 
-if not isinstance(st.session_state.get("context_v1"), dict):
-    render_demo_entry()
-    st.stop()
-
-context = get_effective_context()
-
-# ============================================================
-# Phase 3A — Journey Router (Entry → Intro → Upload)
-# ============================================================
-
-state = st.session_state.get("journey_state", "entry")
-
-if state == "entry":
-    render_entry_screen()
-    st.stop()
-
-if state == "intro":
-    render_intro_screen()
-    st.stop()
-
-if state == "upload":
-    render_upload_screen()
+if st.session_state.get("workforce_df") is None:
+    render_minimal_upload()
     st.stop()
 
 # From here onward:
-# state == "baseline" (existing app behavior)
+# → Baseline Attrition Briefing is ALWAYS the default
+
 
 # ============================================================
 # Sidebar — Upload
