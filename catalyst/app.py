@@ -239,6 +239,88 @@ def render_sentiment_health_page():
     st.header("Sentiment Health")
     st.caption("High-level workforce risk summary.")
 
+    # --------------------------------------------------
+    # Phase 3B — Mandatory framing (authoritative)
+    # --------------------------------------------------
+    st.info(
+        """
+        **Sentiment Health is a contextual signal, not a KPI.**
+
+        The demo dataset used in Catalyst does **not** include direct measures of
+        employee sentiment (such as engagement surveys, pulse scores, or text feedback).
+
+        This view exists to explain **how sentiment typically interacts with attrition risk**
+        — not to present measured outcomes, predictions, or scores.
+        """
+    )
+
+    st.divider()
+
+    # --------------------------------------------------
+    # What sentiment health usually reflects
+    # --------------------------------------------------
+    st.subheader("What sentiment health typically reflects")
+    st.caption("Qualitative patterns commonly observed in organisations")
+
+    st.markdown(
+        """
+        In production environments, sentiment health is usually informed by signals such as:
+
+        - Employee engagement or pulse survey results  
+        - eNPS or qualitative feedback trends  
+        - Manager effectiveness feedback  
+        - Collaboration or network friction  
+        - Indicators of burnout or disengagement  
+
+        These signals help explain *why* attrition pressure may emerge over time,
+        but they do not, by themselves, determine outcomes.
+        """
+    )
+
+    st.divider()
+
+    # --------------------------------------------------
+    # How to use this lens alongside KPIs
+    # --------------------------------------------------
+    st.subheader("How to use this lens alongside attrition KPIs")
+    st.caption("Interpretive guidance for executives")
+
+    st.markdown(
+        """
+        Use Sentiment Health as a **supporting lens** when reviewing attrition exposure:
+
+        - Attrition KPIs answer: **“How much risk are we carrying?”**  
+        - Sentiment context helps explore: **“What conditions may be contributing?”**
+
+        Importantly:
+        - Sentiment signals are **directional**, not deterministic  
+        - They should **inform inquiry**, not trigger action by themselves  
+        - Financial exposure should always be assessed through the KPI view  
+        """
+    )
+
+    st.divider()
+
+    # --------------------------------------------------
+    # Explicit non-claims (trust reinforcement)
+    # --------------------------------------------------
+    st.subheader("What this view does not claim")
+    st.caption("To avoid misinterpretation")
+
+    st.markdown(
+        """
+        This view does **not**:
+
+        - Assign a sentiment score  
+        - Predict attrition outcomes  
+        - Quantify financial impact  
+        - Recommend interventions  
+        - Replace KPI-based decision-making  
+
+        It exists purely to provide **interpretive context**.
+        """
+    )
+
 def render_current_kpis_page():
     st.header("What workforce risk are we carrying right now?")
     st.caption("All financial figures shown in USD.")
