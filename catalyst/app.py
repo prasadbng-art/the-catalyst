@@ -92,7 +92,6 @@ def render_minimal_upload():
     uploaded_file = st.file_uploader(
         "Upload workforce data",
         type=["csv", "xlsx"],
-        use_container_width=True,
     )
 
     if not uploaded_file:
