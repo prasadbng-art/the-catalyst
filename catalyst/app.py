@@ -118,7 +118,6 @@ def render_minimal_upload():
     st.session_state["journey_state"] = "baseline"
     st.rerun()
 
-
 # ------------------------------------------------------------
 # Routing guard
 # ------------------------------------------------------------
@@ -129,7 +128,6 @@ if st.session_state.get("workforce_df") is None:
 
 # From here onward:
 # → Baseline Attrition Briefing is ALWAYS the default
-
 
 # ============================================================
 # Sidebar — Upload
@@ -181,7 +179,7 @@ st.session_state["context_v1"]["persona"] = selected_persona
 # Sidebar — What-If Sandbox
 # ============================================================
 
-if st.session_state["journey_state"] == "simulation":
+if st.session_state.get["journey_state"] == "simulation":
     st.sidebar.markdown("## 🧪 Simulate a leadership decision")
     st.sidebar.caption(
         "Adjust assumptions below and apply the simulation to explore potential outcomes."
@@ -202,16 +200,13 @@ if st.sidebar.button("Apply Simulation"):
             "risk_realization_factor": 0.6,
         },
     )
+    st.rerun()
 
 st.sidebar.divider()
 
-if st.sidebar.button("Return to baseline view"):
-    st.session_state["what_if_kpis"] = None
-    st.session_state["journey_state"] = "baseline"
-    st.rerun()
-
 if st.sidebar.button("Clear simulation"):
     st.session_state["what_if_kpis"] = None
+    st.rerun()
 
 # ============================================================
 # Sidebar — Intervention Economics
@@ -249,10 +244,12 @@ def render_current_kpis_page():
     st.header("What workforce risk are we carrying right now?")
     st.caption("All financial figures shown in USD.")
 
-# --------------------------------------------------
-# Phase 3C — Resolve KPI source (baseline vs simulation)
-# --------------------------------------------------
-    if st.session_state["journey_state"] == "simulation" and st.session_state.get("what_if_kpis"):
+    # --------------------------------------------------
+    # Resolve KPI source (baseline vs simulation)
+    # --------------------------------------------------
+    is_simulation = st.session_state.get("what_if_kpis") is not None
+
+    if is_simulation:
         kpis = st.session_state["what_if_kpis"]
         st.caption("Showing simulated outcomes based on the selected leadership actions.")
     else:
@@ -272,6 +269,9 @@ def render_current_kpis_page():
         )
         return
 
+    # --------------------------------------------------
+    # Cost framing (authoritative engine)
+    # --------------------------------------------------
     costs = compute_cost_framing(
         baseline_kpis=context["baseline"]["kpis"],
         workforce_df=st.session_state["workforce_df"],
@@ -280,40 +280,53 @@ def render_current_kpis_page():
     )
 
     st.metric(
-         "Annual attrition cost exposure (direct + hidden costs)",
-    format_usd(costs["baseline_cost_exposure"])
-)
+        "Annual attrition cost exposure (direct + hidden costs)",
+        format_usd(costs["baseline_cost_exposure"]),
+    )
     st.metric(
         "Cost realistically preventable",
-    format_usd(costs["preventable_cost"])
-)
+        format_usd(costs["preventable_cost"]),
+    )
 
     with st.expander("What’s included in this cost estimate?"):
         st.markdown(
-        """
+            """
             This estimate reflects the **full business cost of attrition**, not just
             hiring or replacement expenses.
 
-        It includes:
-        - Hiring and onboarding costs  
-        - Productivity loss during vacancy periods  
-        - Ramp-up inefficiency for new hires  
-        - Manager time diverted to backfilling and coaching  
-        - Team disruption and engagement drag  
+            It includes:
+            - Hiring and onboarding costs  
+            - Productivity loss during vacancy periods  
+            - Ramp-up inefficiency for new hires  
+            - Manager time diverted to backfilling and coaching  
+            - Team disruption and engagement drag  
 
-        These factors are modeled conservatively to reflect realistic
-        operating impact, not worst-case assumptions.
-        """
-    )
+            These factors are modeled conservatively to reflect realistic
+            operating impact, not worst-case assumptions.
+            """
+        )
 
+    # --------------------------------------------------
+    # Narrative calibration (Phase 3A)
+    # --------------------------------------------------
     narrative = generate_cost_narrative(costs, context["persona"])
+
+    if is_simulation:
+        narrative["headline"] = "Scenario view — hypothetical outcomes"
+        narrative["body"] = (
+            "The following reflects a **simulated scenario** based on the assumptions applied. "
+            "These outcomes are **not predictions**, but illustrations of directional impact.\n\n"
+            + narrative["body"]
+        )
+    else:
+        narrative["headline"] = "Current exposure — baseline view"
+
     st.markdown(f"**{narrative['headline']}**")
     st.markdown(narrative["body"])
 
-    narrative = generate_cost_narrative(costs, context["persona"])
-    st.markdown(f"**{narrative['headline']}**")
-    st.markdown(narrative["body"])
-
+    # --------------------------------------------------
+    # Confidence bands
+    # --------------------------------------------------
     bands = compute_cost_confidence_bands(
         costs["baseline_cost_exposure"],
         costs["preventable_cost"],
@@ -324,23 +337,25 @@ def render_current_kpis_page():
         st.metric("Base case", format_usd(bands["base"]["baseline_cost"]))
         st.metric("Aggressive", format_usd(bands["aggressive"]["baseline_cost"]))
 
+    # --------------------------------------------------
+    # CFO lens (persona-aware)
+    # --------------------------------------------------
     if context["persona"] == "CFO":
         cfo = generate_cost_narrative(costs, bands)
         st.subheader("Financial lens (CFO view)")
         st.markdown(cfo["body"])
 
-    roi = compute_roi_lens(costs.get("what_if_cost_impact"), intervention_cost)
-    if (
-        st.session_state["journey_state"] == "simulation"
-        and st.session_state.get("what_if_kpis")
-    ):
+    # --------------------------------------------------
+    # ROI lens (only meaningful during simulation)
+    # --------------------------------------------------
+    if is_simulation:
         roi = compute_roi_lens(costs.get("what_if_cost_impact"), intervention_cost)
-    if roi:
-        with st.expander("Does this intervention economically justify itself?"):
-            st.metric("Intervention cost", format_usd(roi["intervention_cost"]))
-            st.metric("Annual cost avoided", format_usd(roi["cost_avoided"]))
-            st.metric("Net benefit", format_usd(roi["net_benefit"]))
-            st.metric("Return multiple", f"{roi['roi']:.1f}×")
+        if roi:
+            with st.expander("Does this intervention economically justify itself?"):
+                st.metric("Intervention cost", format_usd(roi["intervention_cost"]))
+                st.metric("Annual cost avoided", format_usd(roi["cost_avoided"]))
+                st.metric("Net benefit", format_usd(roi["net_benefit"]))
+                st.metric("Return multiple", f"{roi['roi']:.1f}×")
 
 # ============================================================
 # Router
