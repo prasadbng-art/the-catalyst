@@ -63,6 +63,12 @@ st.session_state.setdefault("manager_lift", 0)
 context = get_effective_context()
 
 # ============================================================
+# Simulation state (derived, authoritative)
+# ============================================================
+
+is_simulation = st.session_state.get("what_if_kpis") is not None
+
+# ============================================================
 # Journey State (Phase 3)
 # ============================================================
 
@@ -424,8 +430,7 @@ def render_current_kpis_page():
     # --------------------------------------------------
     # Resolve KPI source (baseline vs simulation)
     # --------------------------------------------------
-    is_simulation = st.session_state.get("what_if_kpis") is not None
-
+    
     if is_simulation:
         kpis = st.session_state["what_if_kpis"]
         st.caption("Showing simulated outcomes based on the selected leadership actions.")
@@ -445,6 +450,106 @@ def render_current_kpis_page():
             "This demo currently focuses on **Attrition Risk** and its economic impact."
         )
         return
+
+def render_location_diagnostics():
+    st.header("Attrition Risk — Location View")
+    st.caption("Descriptive variation across locations. No causality implied.")
+
+    df = st.session_state.get("workforce_df")
+    if df is None:
+        st.warning("No workforce data available.")
+        return
+
+    required_cols = {
+        "location",
+        "attrition_flag",
+        "attrition_risk_score",
+        "sentiment_score",
+        "employee_id",
+    }
+
+    missing = required_cols - set(df.columns)
+    if missing:
+        st.warning(
+            f"Required fields not available for diagnostics: {', '.join(missing)}"
+        )
+        return
+
+    # --------------------------------------------------
+    # Aggregate by location (read-only diagnostics)
+    # --------------------------------------------------
+
+    location_summary = (
+        df.groupby("location")
+        .agg(
+            recent_attrition=("attrition_flag", "mean"),
+            avg_attrition_risk=("attrition_risk_score", "mean"),
+            sentiment_context=("sentiment_score", "mean"),
+            headcount=("employee_id", "count"),
+        )
+        .reset_index()
+    )
+
+    # Convert to percentages where appropriate
+    location_summary["recent_attrition"] = (
+        location_summary["recent_attrition"] * 100
+    ).round(1)
+
+    location_summary["avg_attrition_risk"] = (
+        location_summary["avg_attrition_risk"] * 100
+    ).round(1)
+
+    location_summary["sentiment_context"] = (
+        location_summary["sentiment_context"]
+    ).round(2)
+
+    # Sort by headcount to avoid league-table bias
+    location_summary = location_summary.sort_values(
+        "headcount", ascending=False
+    )
+
+    # --------------------------------------------------
+    # Display table
+    # --------------------------------------------------
+
+    st.subheader("Location-level overview")
+
+    display_df = location_summary.rename(
+        columns={
+            "location": "Location",
+            "recent_attrition": "Recent Attrition (Observed) %",
+            "avg_attrition_risk": "Avg Attrition Risk (Forward-looking) %",
+            "sentiment_context": "Sentiment (Context)",
+            "headcount": "Headcount",
+        }
+    )
+
+    st.dataframe(
+        display_df,
+        use_container_width=True,
+        hide_index=True,
+    )
+
+    # --------------------------------------------------
+    # Interpretive guardrails
+    # --------------------------------------------------
+
+    st.caption(
+        """
+        Recent attrition reflects observed outcomes over the data period, while attrition risk represents a
+        forward-looking estimate under current conditions. These measures describe different time horizons
+        and should be interpreted together as context, not as validation or contradiction of one another.
+        """
+    )
+
+    st.info(
+        """
+        **Interpretation note**  
+        This view highlights *where* attrition risk varies, not *why*.  
+        Differences across locations reflect a combination of market conditions, organisational structure,
+        and workforce composition, and should not be used to infer root causes or required actions.
+        """
+    )
 
     # --------------------------------------------------
     # Cost framing (authoritative engine)
@@ -540,12 +645,14 @@ def render_current_kpis_page():
 
 page = st.sidebar.selectbox(
     "Navigate",
-    ["Current KPIs", "Pulse Canvas", "Sentiment Health"],
+    ["Current KPIs", "Pulse Canvas", "Diagnostics", "Sentiment Health"],
     index=0
 )
 
 if page == "Pulse Canvas":
     render_pulse_canvas_lite()
+elif page == "Diagnostics":
+    render_location_diagnostics()
 elif page == "Sentiment Health":
     render_sentiment_health_page()
 else:
