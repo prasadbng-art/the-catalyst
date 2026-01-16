@@ -178,7 +178,7 @@ st.session_state["context_v1"]["persona"] = selected_persona
 # Sidebar — What-If Sandbox
 # ============================================================
 
-if st.session_state.get["journey_state"] == "simulation":
+if st.session_state.get("journey_state") == "simulation":
     st.sidebar.markdown("## 🧪 Simulate a leadership decision")
     st.sidebar.caption(
         "Adjust assumptions below and apply the simulation to explore potential outcomes."
