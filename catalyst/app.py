@@ -47,7 +47,7 @@ st.set_page_config(page_title="Catalyst", layout="wide")
 # Session State Initialization
 # ============================================================
 
-st.session_state.setdefault("context_v1", None)
+st.session_state.setdefault("context_v1", {})
 st.session_state.setdefault("demo_welcomed", False)
 st.session_state.setdefault("workforce_df", None)
 st.session_state.setdefault("what_if_kpis", None)
