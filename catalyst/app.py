@@ -301,6 +301,86 @@ def render_sentiment_health_page():
 
     st.divider()
 
+def render_pulse_canvas_lite():
+    st.header("Pulse Canvas (Contextual View)")
+    st.caption("A high-level view of workforce sentiment patterns (illustrative).")
+
+    # --------------------------------------------------
+    # Mandatory provenance disclosure (Phase 4)
+    # --------------------------------------------------
+    st.info(
+        """
+        **Data note:**  
+        Sentiment values shown here are *synthetically generated for demonstration purposes*.  
+        They illustrate how Catalyst would integrate sentiment signals when available in production.
+        """
+    )
+
+    df = st.session_state.get("workforce_df")
+    if df is None or "sentiment_score" not in df.columns:
+        st.warning("Sentiment data is not available in this dataset.")
+        return
+
+    st.divider()
+
+    # --------------------------------------------------
+    # Overall sentiment (aggregate)
+    # --------------------------------------------------
+    overall_sentiment = df["sentiment_score"].mean()
+
+    st.metric(
+        "Overall Sentiment (Synthetic)",
+        f"{overall_sentiment:+.2f}"
+    )
+
+    st.caption(
+        "This aggregate value summarizes simulated sentiment across the workforce. "
+        "It is not a performance score or prediction."
+    )
+
+    st.divider()
+
+    # --------------------------------------------------
+    # Sentiment band distribution
+    # --------------------------------------------------
+    st.subheader("Sentiment distribution")
+    band_dist = (
+        df["sentiment_band"]
+        .value_counts(normalize=True)
+        .rename_axis("Sentiment band")
+        .reset_index(name="Share")
+    )
+
+    for _, row in band_dist.iterrows():
+        st.write(f"- **{row['Sentiment band']}**: {row['Share']*100:.1f}%")
+
+    st.caption(
+        "Neutral responses are common in most sentiment instruments and do not indicate disengagement."
+    )
+
+    st.divider()
+
+    # --------------------------------------------------
+    # Sentiment by location (aggregate only)
+    # --------------------------------------------------
+    st.subheader("Sentiment by location (aggregate)")
+
+    sentiment_by_location = (
+        df.groupby("location", as_index=False)["sentiment_score"]
+        .mean()
+        .sort_values("sentiment_score", ascending=False)
+    )
+
+    for _, row in sentiment_by_location.iterrows():
+        st.write(
+            f"- **{row['location']}**: {row['sentiment_score']:+.2f}"
+        )
+
+    st.caption(
+        "Variation across locations illustrates how sentiment may differ within an organisation. "
+        "Differences are descriptive, not diagnostic."
+    )
+
     # --------------------------------------------------
     # Explicit non-claims (trust reinforcement)
     # --------------------------------------------------
@@ -444,11 +524,13 @@ def render_current_kpis_page():
 
 page = st.sidebar.selectbox(
     "Navigate",
-    ["Current KPIs", "Sentiment Health"],
+    ["Current KPIs", "Pulse Canvas", "Sentiment Health"],
     index=0
 )
 
-if page == "Sentiment Health":
+if page == "Pulse Canvas":
+    render_pulse_canvas_lite()
+elif page == "Sentiment Health":
     render_sentiment_health_page()
 else:
     render_current_kpis_page()
