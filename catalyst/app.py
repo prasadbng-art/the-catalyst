@@ -430,6 +430,53 @@ def render_current_kpis_page():
     st.header("What workforce risk are we carrying right now?")
     st.caption("All financial figures shown in USD.")
 
+    with st.expander("Presenter notes (internal)", expanded=False):
+        st.markdown(
+        """
+    ### Opening frame
+        - This is an **executive attrition risk briefing**, not a diagnostic deep dive.
+        - Focus is on exposure, cost, and safe exploration — not causes or prescriptions.
+
+---
+
+    ### Current state
+        - Attrition risk is **forward-looking likelihood of exit**, not performance or engagement.
+        - This is a **risk exposure lens**, not a judgement.
+
+---
+
+    ### Financial framing
+        - Costs shown reflect **full business impact**, not just hiring costs.
+        - Figures are **structured estimates**, designed for decision support.
+
+---
+
+    ### Simulation
+        - What-if scenarios are **hypothetical**, not predictions.
+        - Baseline is always preserved and reversible.
+
+---
+
+    ### Sentiment context
+        - Sentiment is **contextual**, not a KPI.
+        - Synthetic in demo; illustrative of production capability.
+
+---
+
+    ### Diagnostics (Location)
+        - This view answers *where risk varies*, not *why*.
+        - Recent attrition = observed past.
+        - Attrition risk = possible future.
+        - These are **different time horizons**, not validations.
+
+---
+
+    ### Close
+        - Catalyst supports executive reasoning.
+        - It does not replace leadership judgement.
+        """
+    )
+
     # --------------------------------------------------
     # Resolve KPI source (baseline vs simulation)
     # --------------------------------------------------
