@@ -209,6 +209,9 @@ st.sidebar.divider()
 
 if st.sidebar.button("Clear simulation"):
     st.session_state["what_if_kpis"] = None
+    st.session_state["attrition_reduction"] = 0
+    st.session_state["engagement_lift"] = 0
+    st.session_state["manager_lift"] = 0
     st.rerun()
 
 # ============================================================
