@@ -212,13 +212,16 @@ if st.sidebar.button("Apply Simulation"):
     st.rerun()
 
 st.sidebar.divider()
-
-if st.sidebar.button("Clear simulation"):
+def reset_simulation():
     st.session_state["what_if_kpis"] = None
     st.session_state["attrition_reduction"] = 0
     st.session_state["engagement_lift"] = 0
     st.session_state["manager_lift"] = 0
-    st.rerun()
+
+st.sidebar.button(
+    "Clear simulation",
+    on_click=reset_simulation,
+)
 
 # ============================================================
 # Sidebar — Intervention Economics
