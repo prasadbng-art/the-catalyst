@@ -428,6 +428,8 @@ def render_pulse_canvas_lite():
 
 def render_current_kpis_page():
     st.header("What workforce risk are we carrying right now?")
+    st.caption("Insight type: Descriptive (Observe)")
+    st.caption("A consolidated view of current attrition exposure and its financial implications.")
     st.caption("All financial figures shown in USD.")
 
     with st.expander("Presenter notes (internal)", expanded=False):
@@ -467,8 +469,6 @@ def render_current_kpis_page():
         - This view answers *where risk varies*, not *why*.
         - Recent attrition = observed past.
         - Attrition risk = possible future.
-        - These are **different time horizons**, not validations.
-
 ---
 
     ### Close
@@ -501,9 +501,74 @@ def render_current_kpis_page():
         )
         return
 
+def render_pulse_canvas_lite():
+    st.header("Pulse Canvas (Contextual View)")
+    st.caption("Insight type: Contextual (Observe)")
+    st.caption("Qualitative texture to complement attrition metrics.")
+
+    st.info(
+        """
+        **Data note:**  
+        Sentiment values shown here are *synthetically generated for demonstration purposes*.  
+        They illustrate how Catalyst would integrate sentiment signals when available in production.
+        """
+    )
+
+    df = st.session_state.get("workforce_df")
+    if df is None or "sentiment_score" not in df.columns:
+        st.warning("Sentiment data is not available in this dataset.")
+        return
+
+    overall_sentiment = df["sentiment_score"].mean()
+    st.metric("Overall Sentiment (Synthetic)", f"{overall_sentiment:+.2f}")
+
+    st.caption(
+        "This aggregate value summarizes simulated sentiment across the workforce. "
+        "It is not a performance score or prediction."
+    )
+
+    st.subheader("Sentiment distribution")
+    band_dist = (
+        df["sentiment_band"]
+        .value_counts(normalize=True)
+        .rename_axis("Sentiment band")
+        .reset_index(name="Share")
+    )
+
+    for _, row in band_dist.iterrows():
+        st.write(f"- **{row['Sentiment band']}**: {row['Share']*100:.1f}%")
+
+    st.caption("Neutral responses are common in most sentiment instruments.")
+
+    st.subheader("Sentiment by location (aggregate)")
+    sentiment_by_location = (
+        df.groupby("location", as_index=False)["sentiment_score"]
+        .mean()
+        .sort_values("sentiment_score", ascending=False)
+    )
+
+    for _, row in sentiment_by_location.iterrows():
+        st.write(f"- **{row['location']}**: {row['sentiment_score']:+.2f}")
+
+    st.caption("Differences are descriptive, not diagnostic.")
+
+    st.subheader("What this view does not claim")
+    st.markdown(
+        """
+        This view does **not**:
+        - Predict attrition outcomes  
+        - Quantify financial impact  
+        - Recommend interventions  
+        - Replace KPI-based decision-making  
+
+        It exists purely to provide **interpretive context**.
+        """
+    )
+
 def render_location_diagnostics():
     st.header("Attrition Risk — Location View")
-    st.caption("Descriptive variation across locations. No causality implied.")
+    st.caption("Insight type: Descriptive (Observe)")
+    st.caption("Distributional context across locations. No causality implied.")
 
     df = st.session_state.get("workforce_df")
     if df is None:
@@ -586,7 +651,7 @@ def render_location_diagnostics():
 
     st.caption(
         """
-        Recent attrition reflects observed outcomes over the data period, while attrition risk represents a
+        Observed attrition reflects observed outcomes over the data period, while attrition risk represents a
         forward-looking estimate under current conditions. These measures describe different time horizons
         and should be interpreted together as context, not as validation or contradiction of one another.
         """
