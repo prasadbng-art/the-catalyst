@@ -1,4 +1,6 @@
 import streamlit as st
+from catalyst.analytics.what_if_engine_v1 import apply_what_if
+from catalyst.analytics.roi_lens_v1 import compute_roi_lens
 
 # ============================================================
 # 🔐 Auth Stub (demo only)
@@ -10,6 +12,15 @@ st.session_state.setdefault("email", "demo@catalyst.ai")
 # 🧭 App Setup
 # ============================================================
 st.set_page_config(page_title="Catalyst", layout="wide")
+# ============================================================
+# 💲 USD Formatter (Canonical)
+# ============================================================
+def format_usd(value: float, millions: bool = True) -> str:
+    if value is None:
+        return "—"
+    if millions:
+        return f"${value / 1e6:,.1f}M"
+    return f"${value:,.0f}"
 
 # ============================================================
 # 🧠 Session State — Canonical
@@ -102,6 +113,20 @@ def clear_simulation():
     st.session_state["attrition_reduction"] = 0
     st.session_state["engagement_lift"] = 0
     st.session_state["manager_lift"] = 0
+
+# ============================================================
+# 🟪 Context Sidebar (Persona only)
+# ============================================================
+def render_context_sidebar():
+    st.sidebar.divider()
+    st.sidebar.markdown("## Perspective")
+
+    persona = st.sidebar.selectbox(
+        "Persona",
+        ["CEO", "CFO", "CHRO"],
+        index=["CEO", "CFO", "CHRO"].index(st.session_state["persona"]),
+    )
+    st.session_state["persona"] = persona
 
 # ============================================================
 # 📄 Page Renderers (Empty by Design)
