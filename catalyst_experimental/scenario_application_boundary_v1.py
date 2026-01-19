@@ -7,7 +7,7 @@ against Context v1.
 This version EXACTLY matches the Context v1 function signatures.
 """
 
-from catalyst.context_manager_v1 import (
+from catalyst_experimental.context_manager_v1 import (
     get_effective_context,
     apply_override,
     remove_override,

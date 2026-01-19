@@ -4,7 +4,7 @@ import streamlit as st
 import yaml
 from pathlib import Path
 from copy import deepcopy
-from catalyst.context_manager_v1 import create_context
+from catalyst_experimental.context_manager_v1 import create_context
 
 from .steps import (
     step_client_identity,

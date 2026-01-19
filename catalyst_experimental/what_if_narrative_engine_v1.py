@@ -1,4 +1,4 @@
-from catalyst.cost_framing_v1 import compute_attrition_cost_impact
+from catalyst_experimental.cost_framing_v1 import compute_attrition_cost_impact
 
 
 def generate_what_if_narrative(baseline_kpis, what_if_kpis, persona, headcount):

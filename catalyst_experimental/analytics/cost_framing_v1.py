@@ -5,7 +5,7 @@ Cost Framing Engine — Catalyst Phase I
 Transforms attrition KPIs into executive financial insight.
 """
 
-from catalyst.cost_framing_v1 import compute_attrition_cost_impact
+from catalyst_experimental.cost_framing_v1 import compute_attrition_cost_impact
 
 
 def compute_cost_framing(

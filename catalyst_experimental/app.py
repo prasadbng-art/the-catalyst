@@ -1,7 +1,7 @@
 import streamlit as st
-from catalyst.analytics.what_if_engine_v1 import apply_what_if
-from catalyst.analytics.roi_lens_v1 import compute_roi_lens
-from catalyst.file_ingest_v1 import load_workforce_file
+from catalyst_experimental.analytics.what_if_engine_v1 import apply_what_if
+from catalyst_experimental.analytics.roi_lens_v1 import compute_roi_lens
+from catalyst_experimental.file_ingest_v1 import load_workforce_file
 
 # ============================================================
 # 🔐 Auth Stub (demo only)
@@ -157,9 +157,9 @@ def render_context_sidebar():
 # ============================================================
 # 📊 Briefing — Baseline Only
 # ============================================================
-from catalyst.file_ingest_v1 import load_workforce_file
-from catalyst.analytics.baseline_kpi_builder_v1 import build_baseline_kpis
-from catalyst.analytics.cost_framing_v1 import compute_cost_framing
+from catalyst_experimental.file_ingest_v1 import load_workforce_file
+from catalyst_experimental.analytics.baseline_kpi_builder_v1 import build_baseline_kpis
+from catalyst_experimental.analytics.cost_framing_v1 import compute_cost_framing
 from visuals.kpi_current import render_kpi_current_performance
 
 def render_briefing_page():
