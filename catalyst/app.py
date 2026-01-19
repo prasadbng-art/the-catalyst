@@ -1,6 +1,7 @@
 import streamlit as st
 from catalyst.analytics.what_if_engine_v1 import apply_what_if
 from catalyst.analytics.roi_lens_v1 import compute_roi_lens
+from catalyst.file_ingest_v1 import load_workforce_file
 
 # ============================================================
 # 🔐 Auth Stub (demo only)
@@ -64,7 +65,27 @@ def render_navigation_sidebar():
 
     st.sidebar.divider()
     st.sidebar.markdown("## Data")
-    st.sidebar.file_uploader("Upload workforce file", type=["csv", "xlsx"])
+    uploaded_file = st.sidebar.file_uploader(
+    "Upload workforce file",
+    type=["csv", "xlsx"],
+)
+
+    if uploaded_file:
+        df, errors, warnings = load_workforce_file(uploaded_file)
+
+    if errors:
+        for e in errors:
+            st.sidebar.error(e)
+        st.stop()
+
+    for w in warnings:
+        st.sidebar.warning(w)
+
+    st.session_state["workforce_df"] = df
+
+    # Invalidate derived state safely
+    st.session_state.pop("baseline_kpis", None)
+    st.session_state.pop("what_if_kpis", None)
 
 # ============================================================
 # 🟧 Simulation Sidebar
