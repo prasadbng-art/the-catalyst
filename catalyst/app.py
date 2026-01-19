@@ -43,7 +43,6 @@ st.session_state.setdefault("workforce_df", None)
 # ============================================================
 PAGES = {
     "briefing": "Current KPIs",
-    "diagnostics": "Diagnostics",
     "simulation": "Simulation",
     "context": "Context",
 }
@@ -127,8 +126,18 @@ def render_simulation_sidebar():
     )
 
     if st.sidebar.button("Apply Simulation"):
-        st.session_state["apply_simulation_trigger"] = True
-        st.rerun()
+        st.session_state["what_if_kpis"] = apply_what_if(
+        st.session_state["baseline_kpis"],
+        {
+            "attrition_risk_reduction_pct": st.session_state["attrition_reduction"],
+            "engagement_lift": st.session_state["engagement_lift"],
+            "manager_effectiveness_lift": st.session_state["manager_lift"],
+            "headcount": len(st.session_state["workforce_df"]),
+            "risk_realization_factor": 0.6,
+        },
+    )
+    st.rerun()
+
 
     if st.sidebar.button("Clear Simulation"):
         clear_simulation()
@@ -154,9 +163,6 @@ def render_context_sidebar():
     )
     st.session_state["persona"] = persona
 
-# ============================================================
-# 📄 Page Renderers (Empty by Design)
-# ============================================================
 # ============================================================
 # 📊 Briefing — Baseline Only
 # ============================================================
@@ -213,11 +219,7 @@ def render_briefing_page():
         "Annual attrition cost exposure",
         format_usd(costs["baseline_cost_exposure"]),
     )
-    st.metric(
-        "Cost realistically preventable",
-        format_usd(costs["preventable_cost"]),
-    )
-
+    
     st.divider()
 
     # -------------------------------
@@ -281,6 +283,18 @@ def render_diagnostics_page():
     st.info("Distributional views only. No interpretation.")
 
 def render_simulation_page():
+    df = st.session_state.get("workforce_df")
+
+    if df is None:
+        st.info("Upload workforce data before running simulations.")
+    return
+
+# Ensure baseline exists
+    if "baseline_kpis" not in st.session_state:
+        st.session_state["baseline_kpis"] = build_baseline_kpis(df)
+
+    baseline_kpis = st.session_state["baseline_kpis"]
+
     st.header("Simulation")
     st.caption("Insight type: Counterfactual (Explore)")
     st.caption("Hypothetical scenarios only. Baseline remains intact.")
@@ -290,7 +304,7 @@ def render_simulation_page():
 
     if df is None or baseline_kpis is None:
         st.info("Upload workforce data and review baseline KPIs before running simulations.")
-        return
+    return
 
     # --------------------------------------------------
     # Apply Simulation (triggered from sidebar button)
@@ -309,6 +323,11 @@ def render_simulation_page():
         st.session_state["apply_simulation_trigger"] = False
 
     is_simulation = st.session_state.get("what_if_kpis") is not None
+    
+    st.metric(
+        "Estimated cost realistically addressable (scenario)",
+        format_usd(costs["preventable_cost"]),  
+    )
 
     # --------------------------------------------------
     # KPI Contrast
@@ -368,8 +387,7 @@ def render_simulation_page():
     # --------------------------------------------------
     # ROI Lens (only if simulation exists)
     # --------------------------------------------------
-    if is_simulation:
-        intervention_cost = st.session_state.get("intervention_cost", 2_000_000)
+    if is_simulation and costs.get("what_if_cost_impact") is not None:
 
         roi = compute_roi_lens(
             costs.get("what_if_cost_impact"),
@@ -471,13 +489,13 @@ def render_context_page():
     # Persona-aware framing (non-causal)
     # --------------------------------------------------
     persona = st.session_state.get("persona", "CEO")
-    st.subheader("How to Read This Context")
+    st.subheader(f"Interpretive Lens — {persona}")
 
     if persona == "CFO":
         st.markdown(
-            "- Use sentiment context as **early orientation**, not validation.\n"
-            "- It does **not** quantify financial exposure.\n"
-            "- Financial decisions should remain anchored in KPI and cost views."
+            "- This view provides **contextual orientation**, not financial validation.\n"
+            "- Signals here should not be translated directly into cost or ROI assumptions.\n"
+            "- Use alongside baseline exposure, not in place of it."
         )
     elif persona == "CHRO":
         st.markdown(
