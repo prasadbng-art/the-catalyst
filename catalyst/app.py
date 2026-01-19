@@ -65,13 +65,17 @@ def render_navigation_sidebar():
 
     st.sidebar.divider()
     st.sidebar.markdown("## Data")
-    uploaded_file = st.sidebar.file_uploader(
+
+# ============================================================
+# 🟧 Load Dataset Sidebar
+# ============================================================    
+uploaded_file = st.sidebar.file_uploader(
     "Upload workforce file",
     type=["csv", "xlsx"],
 )
 
-    if uploaded_file:
-        df, errors, warnings = load_workforce_file(uploaded_file)
+if uploaded_file is not None:
+    df, errors, warnings = load_workforce_file(uploaded_file)
 
     if errors:
         for e in errors:
