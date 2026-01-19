@@ -24,7 +24,7 @@ def format_usd(value: float, millions: bool = True) -> str:
     return f"${value:,.0f}"
 
 def clear_simulation():
-        st.session_state.pop("what_if_kpis") = None
+        st.session_state.pop("what_if_kpis") == None
         st.session_state["attrition_reduction"] = 0
         st.session_state["engagement_lift"] = 0
         st.session_state["manager_lift"] = 0
