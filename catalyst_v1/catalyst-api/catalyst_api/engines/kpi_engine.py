@@ -1,6 +1,6 @@
 import pandas as pd
 from catalyst_api.schemas.common import KPIValue
-from schemas.baseline import BaselineKPIs, Diagnostics, LocationDiagnostic
+from catalyst_api.schemas.baseline import BaselineKPIs, Diagnostics, LocationDiagnostic
 
 def compute_baseline(df: pd.DataFrame) -> BaselineKPIs:
     attrition_risk = df["attrition_risk_score"].mean() * 100
