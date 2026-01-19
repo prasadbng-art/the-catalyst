@@ -138,7 +138,6 @@ def render_simulation_sidebar():
     )
     st.rerun()
 
-
     if st.sidebar.button("Clear Simulation"):
         clear_simulation()
         st.rerun()
