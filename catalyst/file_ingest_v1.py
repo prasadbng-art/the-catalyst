@@ -1,14 +1,29 @@
 import pandas as pd
 
+# ============================================================
+# Phase I / POC Required Columns (Authoritative)
+# ============================================================
+
 REQUIRED_COLUMNS = {
     "employee_id",
-    "role",
-    "manager_id",
+    "location",
+    "function",
     "tenure_months",
-    "salary",
-    "performance_band",
-    "engagement_score",
+    "attrition_flag",
     "attrition_risk_score",
+}
+
+# ============================================================
+# Optional / Future Columns (Allowed but not required)
+# ============================================================
+OPTIONAL_COLUMNS = {
+    "sentiment_score",
+    "sentiment_band",
+    "engagement_score",
+    "manager_id",
+    "performance_band",
+    "role",
+    "salary",
 }
 
 def load_workforce_file(uploaded_file):
