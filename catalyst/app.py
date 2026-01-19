@@ -43,9 +43,16 @@ st.session_state.setdefault("manager_lift", 0)
 # Context (authoritative)
 # ============================================================
 
-context = get_effective_context()
+# Hydrate context (side-effect driven)
+get_effective_context()
+
+# Authoritative context object
+context = st.session_state.setdefault("context_v1", {})
+
+# Guaranteed keys
 context.setdefault("baseline", {})
 context.setdefault("persona", "CEO")
+
 
 # ============================================================
 # Utilities
