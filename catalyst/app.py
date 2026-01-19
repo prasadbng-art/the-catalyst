@@ -69,6 +69,7 @@ def render_navigation_sidebar():
 # ============================================================
 # 🟧 Load Dataset Sidebar
 # ============================================================    
+
 uploaded_file = st.sidebar.file_uploader(
     "Upload workforce file",
     type=["csv", "xlsx"],
