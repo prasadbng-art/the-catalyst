@@ -3,243 +3,481 @@ import streamlit as st
 # ============================================================
 # 🔐 Auth Stub (demo only)
 # ============================================================
-
-st.session_state["authenticated"] = True
-st.session_state["email"] = "demo@catalyst.ai"
-
-# ============================================================
-# Imports
-# ============================================================
-
-from catalyst.context_manager_v1 import get_effective_context
-from catalyst.file_ingest_v1 import load_workforce_file
-
-from catalyst.analytics.baseline_kpi_builder_v1 import build_baseline_kpis
-from catalyst.analytics.what_if_engine_v1 import apply_what_if
-from catalyst.analytics.cost_framing_v1 import compute_cost_framing
-from catalyst.analytics.cost_narrative_v1 import generate_cost_narrative
-from catalyst.analytics.cost_confidence_bands_v1 import compute_cost_confidence_bands
-from catalyst.analytics.roi_lens_v1 import compute_roi_lens
-
-from visuals.kpi_current import render_kpi_current_performance
+st.session_state.setdefault("authenticated", True)
+st.session_state.setdefault("email", "demo@catalyst.ai")
 
 # ============================================================
-# App setup
+# 🧭 App Setup
 # ============================================================
-
 st.set_page_config(page_title="Catalyst", layout="wide")
 
 # ============================================================
-# Session state defaults
+# 🧠 Session State — Canonical
 # ============================================================
+st.session_state.setdefault("active_page", "briefing")
+st.session_state.setdefault("persona", "CEO")
 
-st.session_state.setdefault("workforce_df", None)
+# Simulation-related (owned by Simulation page only)
 st.session_state.setdefault("what_if_kpis", None)
 st.session_state.setdefault("attrition_reduction", 0)
 st.session_state.setdefault("engagement_lift", 0)
 st.session_state.setdefault("manager_lift", 0)
 
-# ============================================================
-# Context (authoritative)
-# ============================================================
-
-# Hydrate context (side-effect driven)
-get_effective_context()
-
-# Authoritative context object
-context = st.session_state.setdefault("context_v1", {})
-
-# Guaranteed keys
-context.setdefault("baseline", {})
-context.setdefault("persona", "CEO")
-
+# Data (global, upload-only mutation)
+st.session_state.setdefault("workforce_df", None)
 
 # ============================================================
-# Utilities
+# 🧭 Page Registry
 # ============================================================
-
-def format_usd(value: float, millions: bool = True) -> str:
-    if value is None:
-        return "—"
-    return f"${value/1e6:,.1f}M" if millions else f"${value:,.0f}"
-
-# ============================================================
-# GLOBAL SIDEBAR — DATA INGEST (ONCE)
-# ============================================================
-
-st.sidebar.markdown("## Data")
-
-uploaded_file = st.sidebar.file_uploader(
-    "Upload workforce data",
-    ["csv", "xlsx"],
-    key="global_uploader"
-)
-
-if uploaded_file:
-    df, errors, warnings = load_workforce_file(uploaded_file)
-
-    if errors:
-        for e in errors:
-            st.sidebar.error(e)
-        st.stop()
-
-    for w in warnings:
-        st.sidebar.warning(w)
-
-    st.session_state["workforce_df"] = df
-    context["baseline"]["kpis"] = build_baseline_kpis(df)
-
-if st.session_state["workforce_df"] is None:
-    st.info("Upload workforce data to begin.")
-    st.stop()
+PAGES = {
+    "briefing": "Current KPIs",
+    "diagnostics": "Diagnostics",
+    "simulation": "Simulation",
+    "context": "Context",
+}
 
 # ============================================================
-# GLOBAL SIDEBAR — MODE SELECTOR
+# 📌 Global Navigation Sidebar
 # ============================================================
+def render_navigation_sidebar():
+    st.sidebar.markdown("## Catalyst")
 
-mode = st.sidebar.radio(
-    "Mode",
-    ["Briefing", "Explore", "Context"],
-    key="mode_selector"
-)
+    page = st.sidebar.radio(
+        "Navigation",
+        options=list(PAGES.keys()),
+        format_func=lambda k: PAGES[k],
+        index=list(PAGES.keys()).index(st.session_state["active_page"]),
+    )
 
-# ============================================================
-# GLOBAL SIDEBAR — PERSONA
-# ============================================================
+    st.session_state["active_page"] = page
 
-st.sidebar.markdown("## Perspective")
-
-persona = st.sidebar.selectbox(
-    "Persona",
-    ["CEO", "CFO", "CHRO"],
-    index=["CEO", "CFO", "CHRO"].index(context["persona"]),
-    key="persona_selector"
-)
-
-context["persona"] = persona
+    st.sidebar.divider()
+    st.sidebar.markdown("## Data")
+    st.sidebar.file_uploader("Upload workforce file", type=["csv", "xlsx"])
 
 # ============================================================
-# MODE: BRIEFING (OBSERVE)
+# 🟧 Simulation Sidebar
 # ============================================================
 
-def render_briefing():
-    st.header("What workforce risk are we carrying right now?")
+def render_simulation_sidebar():
+    st.sidebar.divider()
+    st.sidebar.markdown("## Perspective")
+
+    persona = st.sidebar.selectbox(
+        "Persona",
+        ["CEO", "CFO", "CHRO"],
+        index=["CEO", "CFO", "CHRO"].index(st.session_state["persona"]),
+    )
+    st.session_state["persona"] = persona
+
+    st.sidebar.divider()
+    st.sidebar.markdown("## Simulate")
+
+    st.sidebar.slider(
+        "Effectiveness of retention actions (%)",
+        0, 30,
+        key="attrition_reduction",
+    )
+    st.sidebar.slider(
+        "Engagement uplift (points)",
+        0, 20,
+        key="engagement_lift",
+    )
+    st.sidebar.slider(
+        "Manager capability uplift (points)",
+        0, 20,
+        key="manager_lift",
+    )
+
+    if st.sidebar.button("Apply Simulation"):
+        st.session_state["apply_simulation_trigger"] = True
+        st.rerun()
+
+    if st.sidebar.button("Clear Simulation"):
+        clear_simulation()
+        st.rerun()
+
+def clear_simulation():
+    st.session_state["what_if_kpis"] = None
+    st.session_state["attrition_reduction"] = 0
+    st.session_state["engagement_lift"] = 0
+    st.session_state["manager_lift"] = 0
+
+# ============================================================
+# 📄 Page Renderers (Empty by Design)
+# ============================================================
+# ============================================================
+# 📊 Briefing — Baseline Only
+# ============================================================
+from catalyst.file_ingest_v1 import load_workforce_file
+from catalyst.analytics.baseline_kpi_builder_v1 import build_baseline_kpis
+from catalyst.analytics.cost_framing_v1 import compute_cost_framing
+from visuals.kpi_current import render_kpi_current_performance
+
+def render_briefing_page():
+    st.header("Current Workforce KPIs")
     st.caption("Insight type: Descriptive (Observe)")
+    st.caption("Baseline view only. No simulation. No persona.")
 
-    kpis = context["baseline"]["kpis"]
-    selected_kpi = list(kpis.keys())[0]
+    # -------------------------------
+    # Data guard
+    # -------------------------------
+    df = st.session_state.get("workforce_df")
+    if df is None:
+        st.info("Upload a workforce file to view baseline KPIs.")
+        return
 
+    # -------------------------------
+    # Baseline KPI build (one-time)
+    # -------------------------------
+    if "baseline_kpis" not in st.session_state:
+        st.session_state["baseline_kpis"] = build_baseline_kpis(df)
+
+    baseline_kpis = st.session_state["baseline_kpis"]
+
+    # -------------------------------
+    # KPI Display (single KPI focus)
+    # -------------------------------
+    st.subheader("Attrition Risk — Current Exposure")
     render_kpi_current_performance(
-        kpi=selected_kpi,
-        current_value=kpis[selected_kpi]["value"],
+        kpi="attrition_risk",
+        current_value=baseline_kpis["attrition_risk"]["value"],
         active_client=None,
     )
 
+    st.divider()
+
+    # -------------------------------
+    # Cost Exposure (baseline only)
+    # -------------------------------
+    st.subheader("Financial Exposure (Baseline)")
     costs = compute_cost_framing(
-        baseline_kpis=kpis,
-        workforce_df=st.session_state["workforce_df"],
-        financials=context.get("financials", {}),
-        what_if_kpis=None,
+        baseline_kpis=baseline_kpis,
+        workforce_df=df,
+        financials={},
+        what_if_kpis=None,  # explicitly forbidden
     )
 
     st.metric(
         "Annual attrition cost exposure",
-        format_usd(costs["baseline_cost_exposure"])
+        format_usd(costs["baseline_cost_exposure"]),
+    )
+    st.metric(
+        "Cost realistically preventable",
+        format_usd(costs["preventable_cost"]),
     )
 
-    narrative = generate_cost_narrative(costs, context["persona"])
-    st.markdown(f"**{narrative['headline']}**")
-    st.markdown(narrative["body"])
+    st.divider()
 
-# ============================================================
-# MODE: EXPLORE (SIMULATE)
-# ============================================================
+    # -------------------------------
+    # Diagnostics (Where, not Why)
+    # -------------------------------
+    render_location_diagnostics_baseline(df)
 
-def render_explore():
-    st.header("What could change if leadership intervenes?")
-    st.caption("Insight type: Infer & Simulate")
 
-    st.sidebar.markdown("## Simulation controls")
+def render_location_diagnostics_baseline(df):
+    st.subheader("Diagnostics — Location View")
+    st.caption("Distributional context only. No causality implied.")
 
-    attr = st.sidebar.slider(
-        "Retention effectiveness (%)",
-        0, 30,
-        key="attrition_reduction"
+    required_cols = {
+        "location",
+        "attrition_flag",
+        "attrition_risk_score",
+        "employee_id",
+    }
+    missing = required_cols - set(df.columns)
+    if missing:
+        st.warning(
+            f"Required fields not available for diagnostics: {', '.join(missing)}"
+        )
+        return
+
+    summary = (
+        df.groupby("location")
+        .agg(
+            recent_attrition=("attrition_flag", "mean"),
+            avg_attrition_risk=("attrition_risk_score", "mean"),
+            headcount=("employee_id", "count"),
+        )
+        .reset_index()
     )
 
-    eng = st.sidebar.slider(
-        "Engagement uplift (points)",
-        0, 20,
-        key="engagement_lift"
+    summary["recent_attrition"] = (summary["recent_attrition"] * 100).round(1)
+    summary["avg_attrition_risk"] = (summary["avg_attrition_risk"] * 100).round(1)
+
+    summary = summary.sort_values("headcount", ascending=False)
+
+    display_df = summary.rename(
+        columns={
+            "location": "Location",
+            "recent_attrition": "Recent Attrition (Observed) %",
+            "avg_attrition_risk": "Avg Attrition Risk (Forward-looking) %",
+            "headcount": "Headcount",
+        }
     )
 
-    mgr = st.sidebar.slider(
-        "Manager capability uplift (points)",
-        0, 20,
-        key="manager_lift"
+    st.dataframe(display_df, use_container_width=True, hide_index=True)
+
+    st.caption(
+        "Observed attrition reflects past outcomes; attrition risk reflects forward-looking exposure. "
+        "These describe different time horizons and should be read together."
     )
 
-    if st.sidebar.button("Apply simulation"):
+
+def render_diagnostics_page():
+    st.header("Diagnostics")
+    st.caption("Insight type: Descriptive (Where, not why)")
+    st.info("Distributional views only. No interpretation.")
+
+def render_simulation_page():
+    st.header("Simulation")
+    st.caption("Insight type: Counterfactual (Explore)")
+    st.caption("Hypothetical scenarios only. Baseline remains intact.")
+
+    df = st.session_state.get("workforce_df")
+    baseline_kpis = st.session_state.get("baseline_kpis")
+
+    if df is None or baseline_kpis is None:
+        st.info("Upload workforce data and review baseline KPIs before running simulations.")
+        return
+
+    # --------------------------------------------------
+    # Apply Simulation (triggered from sidebar button)
+    # --------------------------------------------------
+    if st.session_state.get("apply_simulation_trigger"):
         st.session_state["what_if_kpis"] = apply_what_if(
-            context["baseline"]["kpis"],
+            baseline_kpis,
             {
-                "attrition_risk_reduction_pct": attr,
-                "engagement_lift": eng,
-                "manager_effectiveness_lift": mgr,
-                "headcount": len(st.session_state["workforce_df"]),
+                "attrition_risk_reduction_pct": st.session_state["attrition_reduction"],
+                "engagement_lift": st.session_state["engagement_lift"],
+                "manager_effectiveness_lift": st.session_state["manager_lift"],
+                "headcount": len(df),
                 "risk_realization_factor": 0.6,
             },
         )
+        st.session_state["apply_simulation_trigger"] = False
 
-    if st.sidebar.button("Clear simulation"):
-        st.session_state["what_if_kpis"] = None
-        st.session_state["attrition_reduction"] = 0
-        st.session_state["engagement_lift"] = 0
-        st.session_state["manager_lift"] = 0
+    is_simulation = st.session_state.get("what_if_kpis") is not None
 
-    if st.session_state["what_if_kpis"] is None:
-        st.info("Apply a simulation to explore outcomes.")
-        return
+    # --------------------------------------------------
+    # KPI Contrast
+    # --------------------------------------------------
+    st.subheader("Attrition Risk — Baseline vs Scenario")
 
-    kpis = st.session_state["what_if_kpis"]
-    selected_kpi = list(kpis.keys())[0]
+    col1, col2 = st.columns(2)
 
-    render_kpi_current_performance(
-        kpi=selected_kpi,
-        current_value=kpis[selected_kpi]["value"],
-        active_client=None,
+    with col1:
+        st.caption("Baseline")
+        render_kpi_current_performance(
+            kpi="attrition_risk",
+            current_value=baseline_kpis["attrition_risk"]["value"],
+            active_client=None,
+        )
+
+    with col2:
+        st.caption("Scenario (Simulated)")
+        if is_simulation:
+            render_kpi_current_performance(
+                kpi="attrition_risk",
+                current_value=st.session_state["what_if_kpis"]["attrition_risk"]["value"],
+                active_client=None,
+            )
+        else:
+            st.info("Apply a simulation to view scenario outcomes.")
+
+    st.divider()
+
+    # --------------------------------------------------
+    # Cost Impact (Scenario-aware)
+    # --------------------------------------------------
+    costs = compute_cost_framing(
+        baseline_kpis=baseline_kpis,
+        workforce_df=df,
+        financials={},
+        what_if_kpis=st.session_state.get("what_if_kpis"),
     )
 
-# ============================================================
-# MODE: CONTEXT (QUALITATIVE)
-# ============================================================
-
-def render_context():
-    st.header("Workforce context")
-    st.caption("Insight type: Contextual (Sensemaking)")
-
-    df = st.session_state["workforce_df"]
-
-    if "sentiment_score" not in df.columns:
-        st.warning("Sentiment data not available in this dataset.")
-        return
+    st.subheader("Financial Impact (Scenario View)")
 
     st.metric(
-        "Overall sentiment (synthetic)",
-        f"{df['sentiment_score'].mean():+.2f}"
+        "Baseline annual attrition cost exposure",
+        format_usd(costs["baseline_cost_exposure"]),
     )
+
+    if is_simulation:
+        st.metric(
+            "Annual cost avoided (scenario)",
+            format_usd(costs["preventable_cost"]),
+        )
+    else:
+        st.caption("Scenario cost impact will appear after simulation is applied.")
+
+    st.divider()
+
+    # --------------------------------------------------
+    # ROI Lens (only if simulation exists)
+    # --------------------------------------------------
+    if is_simulation:
+        intervention_cost = st.session_state.get("intervention_cost", 2_000_000)
+
+        roi = compute_roi_lens(
+            costs.get("what_if_cost_impact"),
+            intervention_cost,
+        )
+
+        if roi:
+            st.subheader("Economic Lens (ROI)")
+            col1, col2, col3, col4 = st.columns(4)
+
+            col1.metric("Intervention cost", format_usd(roi["intervention_cost"]))
+            col2.metric("Annual cost avoided", format_usd(roi["cost_avoided"]))
+            col3.metric("Net benefit", format_usd(roi["net_benefit"]))
+            col4.metric("Return multiple", f"{roi['roi']:.1f}×")
+
+
+def render_context_page():
+    st.header("Context — Pulse & Sentiment")
+    st.caption("Insight type: Contextual (Interpretive)")
+    st.caption("These signals provide texture, not decisions.")
+
+    # --------------------------------------------------
+    # Mandatory provenance disclosure
+    # --------------------------------------------------
+    st.info(
+        "**Data note:** Sentiment values shown here are *synthetically generated for demonstration purposes*. "
+        "They illustrate how Catalyst would integrate sentiment signals when available in production."
+    )
+
+    df = st.session_state.get("workforce_df")
+    if df is None:
+        st.info("Upload workforce data to view contextual signals.")
+        return
+
+    # --------------------------------------------------
+    # Guardrails: required columns
+    # --------------------------------------------------
+    required_cols = {"sentiment_score", "sentiment_band", "location"}
+    missing = required_cols - set(df.columns)
+    if missing:
+        st.warning(
+            f"Sentiment context is not available in this dataset. Missing fields: {', '.join(missing)}"
+        )
+        return
+
+    # --------------------------------------------------
+    # Aggregate sentiment (descriptive only)
+    # --------------------------------------------------
+    st.subheader("Overall Sentiment (Aggregate)")
+    overall = df["sentiment_score"].mean()
+    st.metric("Aggregate sentiment (synthetic)", f"{overall:+.2f}")
+    st.caption(
+        "This aggregate summarizes simulated sentiment across the workforce. "
+        "It is not a performance score, prediction, or KPI."
+    )
+
+    st.divider()
+
+    # --------------------------------------------------
+    # Distribution (bands)
+    # --------------------------------------------------
+    st.subheader("Sentiment Distribution")
+    band_dist = (
+        df["sentiment_band"]
+        .value_counts(normalize=True)
+        .rename_axis("Sentiment band")
+        .reset_index(name="Share")
+    )
+
+    for _, row in band_dist.iterrows():
+        st.write(f"- **{row['Sentiment band']}**: {row['Share'] * 100:.1f}%")
 
     st.caption(
-        "Sentiment is contextual — not a KPI, not a prediction, and not a prescription."
+        "Neutral responses are common in most sentiment instruments and do not imply disengagement."
     )
 
-# ============================================================
-# ROUTER
-# ============================================================
+    st.divider()
 
-if mode == "Briefing":
-    render_briefing()
-elif mode == "Explore":
-    render_explore()
-else:
-    render_context()
+    # --------------------------------------------------
+    # By location (aggregate only)
+    # --------------------------------------------------
+    st.subheader("Sentiment by Location (Aggregate)")
+    by_loc = (
+        df.groupby("location", as_index=False)["sentiment_score"]
+        .mean()
+        .sort_values("sentiment_score", ascending=False)
+    )
+
+    for _, row in by_loc.iterrows():
+        st.write(f"- **{row['location']}**: {row['sentiment_score']:+.2f}")
+
+    st.caption(
+        "Variation across locations is descriptive. Differences should not be treated as diagnostic."
+    )
+
+    st.divider()
+
+    # --------------------------------------------------
+    # Persona-aware framing (non-causal)
+    # --------------------------------------------------
+    persona = st.session_state.get("persona", "CEO")
+    st.subheader("How to Read This Context")
+
+    if persona == "CFO":
+        st.markdown(
+            "- Use sentiment context as **early orientation**, not validation.\n"
+            "- It does **not** quantify financial exposure.\n"
+            "- Financial decisions should remain anchored in KPI and cost views."
+        )
+    elif persona == "CHRO":
+        st.markdown(
+            "- Use sentiment context to **frame inquiry**, not action.\n"
+            "- Signals are directional and require corroboration.\n"
+            "- Avoid translating patterns directly into interventions."
+        )
+    else:  # CEO default
+        st.markdown(
+            "- Use sentiment context to **sense conditions**, not outcomes.\n"
+            "- It complements risk exposure without implying causality.\n"
+            "- Decisions should integrate multiple lenses."
+        )
+
+    st.divider()
+
+    # --------------------------------------------------
+    # Explicit non-claims (trust reinforcement)
+    # --------------------------------------------------
+    st.subheader("What This View Does Not Claim")
+    st.markdown(
+        "- It does **not** predict attrition\n"
+        "- It does **not** assign performance scores\n"
+        "- It does **not** quantify financial impact\n"
+        "- It does **not** recommend interventions\n\n"
+        "This view exists purely to provide interpretive context."
+    )
+
+
+# ============================================================
+# 🧭 Main Router
+# ============================================================
+def render_main():
+    page = st.session_state["active_page"]
+
+    if page == "briefing":
+        render_briefing_page()
+
+    elif page == "diagnostics":
+        render_diagnostics_page()
+
+    elif page == "simulation":
+        render_simulation_page()
+        render_simulation_sidebar()
+
+    elif page == "context":
+        render_context_page()
+        render_context_sidebar()
+
+# ============================================================
+# 🚀 App Entry
+# ============================================================
+render_navigation_sidebar()
+render_main()
