@@ -102,7 +102,7 @@ def render_simulation_sidebar():
     persona = st.sidebar.selectbox(
         "Persona",
         ["CEO", "CFO", "CHRO"],
-        index=["CEO", "CFO", "CHRO"].index(st.session_state["persona"]),
+        index=["CEO", "CFO", "CHRO"].index(st.session_state.get("persona", "CEO")),
     )
     st.session_state["persona"] = persona
 
@@ -126,27 +126,17 @@ def render_simulation_sidebar():
     )
 
     if st.sidebar.button("Apply Simulation"):
-        st.session_state["what_if_kpis"] = apply_what_if(
-        st.session_state["baseline_kpis"],
-        {
-            "attrition_risk_reduction_pct": st.session_state["attrition_reduction"],
-            "engagement_lift": st.session_state["engagement_lift"],
-            "manager_effectiveness_lift": st.session_state["manager_lift"],
-            "headcount": len(st.session_state["workforce_df"]),
-            "risk_realization_factor": 0.6,
-        },
-    )
-    st.rerun()
+        st.session_state["run_simulation"] = True
 
     if st.sidebar.button("Clear Simulation"):
         clear_simulation()
         st.rerun()
 
-def clear_simulation():
-    st.session_state["what_if_kpis"] = None
-    st.session_state["attrition_reduction"] = 0
-    st.session_state["engagement_lift"] = 0
-    st.session_state["manager_lift"] = 0
+    def clear_simulation():
+        st.session_state["what_if_kpis"] = None
+        st.session_state["attrition_reduction"] = 0
+        st.session_state["engagement_lift"] = 0
+        st.session_state["manager_lift"] = 0
 
 # ============================================================
 # 🟪 Context Sidebar (Persona only)
@@ -275,7 +265,6 @@ def render_location_diagnostics_baseline(df):
         "These describe different time horizons and should be read together."
     )
 
-
 def render_diagnostics_page():
     st.header("Diagnostics")
     st.caption("Insight type: Descriptive (Where, not why)")
@@ -286,13 +275,26 @@ def render_simulation_page():
 
     if df is None:
         st.info("Upload workforce data before running simulations.")
-    return
+        return
 
 # Ensure baseline exists
     if "baseline_kpis" not in st.session_state:
         st.session_state["baseline_kpis"] = build_baseline_kpis(df)
 
     baseline_kpis = st.session_state["baseline_kpis"]
+
+    if st.session_state.get("run_simulation"):
+        st.session_state["what_if_kpis"] = apply_what_if(
+        baseline_kpis,
+        {
+            "attrition_risk_reduction_pct": st.session_state["attrition_reduction"],
+            "engagement_lift": st.session_state["engagement_lift"],
+            "manager_effectiveness_lift": st.session_state["manager_lift"],
+            "headcount": len(df),
+            "risk_realization_factor": 0.6,
+        },
+    )
+    st.session_state["run_simulation"] = False
 
     st.header("Simulation")
     st.caption("Insight type: Counterfactual (Explore)")
