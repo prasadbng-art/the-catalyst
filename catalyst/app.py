@@ -145,14 +145,15 @@ if st.session_state.get("workforce_df") is None:
 # → Baseline Attrition Briefing is ALWAYS the default
 
 # ============================================================
-# Sidebar — Mode Selector
+# Sidebar — Mode Selector (Authoritative)
 # ============================================================
 
 mode_label = st.sidebar.radio(
     "Mode",
     ["Briefing", "Explore", "Context"],
+    key="mode_selector",
     index=["briefing", "explore", "context"].index(
-        st.session_state["active_mode"]
+        st.session_state.get("active_mode", "briefing")
     ),
 )
 
@@ -196,11 +197,6 @@ if st.session_state["journey_state"] == "baseline" and st.session_state["workfor
 # ============================================================
 # Sidebar — Top (mode selector)
 # ============================================================
-mode = st.sidebar.radio(
-    "Mode",
-    ["Briefing", "Explore", "Context"],
-    index=0
-)
 
 mode_map = {
     "Briefing": "briefing",
