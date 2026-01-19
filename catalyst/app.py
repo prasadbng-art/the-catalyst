@@ -166,35 +166,6 @@ mode_map = {
 st.session_state["active_mode"] = mode_map[mode_label]
 
 # ============================================================
-# Sidebar — Upload
-# ============================================================
-
-st.sidebar.markdown("## Data")
-
-uploaded_file = st.sidebar.file_uploader("Upload workforce data", ["csv", "xlsx"])
-
-if uploaded_file:
-    df, errors, warnings = load_workforce_file(uploaded_file)
-
-    if errors:
-        for e in errors:
-            st.sidebar.error(e)
-        st.stop()
-
-    for w in warnings:
-        st.sidebar.warning(w)
-
-    st.session_state["workforce_df"] = df
-
-    baseline_kpis = build_baseline_kpis(df)
-    context.setdefault("baseline", {})
-    context["baseline"]["kpis"] = baseline_kpis
-
-if st.session_state["journey_state"] == "baseline" and st.session_state["workforce_df"] is None:
-    st.info("Upload workforce data to begin analysis.")
-    st.stop()
-
-# ============================================================
 # Sidebar — Top (mode selector)
 # ============================================================
 
@@ -461,7 +432,7 @@ def render_current_kpis_page():
 def render_briefing_mode():
     render_current_kpis_page()
     render_location_diagnostics()
-
+    
 
     if is_simulation:
         kpis = st.session_state["what_if_kpis"]
