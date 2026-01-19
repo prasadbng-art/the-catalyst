@@ -55,6 +55,12 @@ st.session_state.setdefault("attrition_reduction", 0)
 st.session_state.setdefault("engagement_lift", 0)
 st.session_state.setdefault("manager_lift", 0)
 
+# ============================================================
+# Mode State (Authoritative)
+# ============================================================
+
+st.session_state.setdefault("active_mode", "briefing")
+
 
 # ============================================================
 # Context Resolution (Authoritative)
@@ -139,12 +145,32 @@ if st.session_state.get("workforce_df") is None:
 # → Baseline Attrition Briefing is ALWAYS the default
 
 # ============================================================
+# Sidebar — Mode Selector
+# ============================================================
+
+mode_label = st.sidebar.radio(
+    "Mode",
+    ["Briefing", "Explore", "Context"],
+    index=["briefing", "explore", "context"].index(
+        st.session_state["active_mode"]
+    ),
+)
+
+mode_map = {
+    "Briefing": "briefing",
+    "Explore": "explore",
+    "Context": "context",
+}
+
+st.session_state["active_mode"] = mode_map[mode_label]
+
+# ============================================================
 # Sidebar — Upload
 # ============================================================
 
-st.sidebar.markdown("## 📄 Upload Workforce Data")
+st.sidebar.markdown("## Data")
 
-uploaded_file = st.sidebar.file_uploader("Upload CSV or Excel", ["csv", "xlsx"])
+uploaded_file = st.sidebar.file_uploader("Upload workforce data", ["csv", "xlsx"])
 
 if uploaded_file:
     df, errors, warnings = load_workforce_file(uploaded_file)
@@ -167,62 +193,20 @@ if st.session_state["journey_state"] == "baseline" and st.session_state["workfor
     st.info("Upload workforce data to begin analysis.")
     st.stop()
 
-
 # ============================================================
-# Sidebar — Persona
+# Sidebar — Top (mode selector)
 # ============================================================
-
-st.sidebar.markdown("## 👤 Perspective")
-persona_options = ["CEO", "CFO", "CHRO"]
-
-selected_persona = st.sidebar.selectbox(
-    "Persona",
-    persona_options,
-    index=persona_options.index(context.get("persona", "CEO")),
+mode = st.sidebar.radio(
+    "Mode",
+    ["Briefing", "Explore", "Context"],
+    index=0
 )
 
-context["persona"] = selected_persona
-st.session_state["context_v1"]["persona"] = selected_persona
-
-# ============================================================
-# Sidebar — What-If Sandbox
-# ============================================================
-st.sidebar.caption("Scenario exploration (hypothetical)")
-
-if st.session_state.get("journey_state") == "simulation":
-    st.sidebar.markdown("## 🧪 Simulate a leadership decision")
-    st.sidebar.caption(
-        "Adjust assumptions below and apply the simulation to explore potential outcomes."
-    )
-
-attrition_reduction = st.sidebar.slider("Effectiveness of retention actions (%)", 0, 30, key="attrition_reduction",)
-engagement_lift = st.sidebar.slider("Engagement uplift (points)", 0, 20, key="engagement_lift",)
-manager_lift = st.sidebar.slider("Manager capability uplift (points)", 0, 20, key="manager_lift",)
-
-if st.sidebar.button("Apply Simulation"):
-    st.session_state["what_if_kpis"] = apply_what_if(
-        context["baseline"]["kpis"],
-        {
-            "attrition_risk_reduction_pct": attrition_reduction,
-            "engagement_lift": engagement_lift,
-            "manager_effectiveness_lift": manager_lift,
-            "headcount": len(st.session_state["workforce_df"]),
-            "risk_realization_factor": 0.6,
-        },
-    )
-    st.rerun()
-
-st.sidebar.divider()
-def reset_simulation():
-    st.session_state["what_if_kpis"] = None
-    st.session_state["attrition_reduction"] = 0
-    st.session_state["engagement_lift"] = 0
-    st.session_state["manager_lift"] = 0
-
-st.sidebar.button(
-    "Clear simulation",
-    on_click=reset_simulation,
-)
+mode_map = {
+    "Briefing": "briefing",
+    "Explore": "explore",
+    "Context": "context",
+}
 
 # ============================================================
 # Sidebar — Intervention Economics
@@ -326,10 +310,6 @@ def render_sentiment_health_page():
     )
 
     st.divider()
-
-def render_pulse_canvas_lite():
-    st.header("Pulse Canvas (Contextual View)")
-    st.caption("A high-level view of workforce sentiment patterns (illustrative).")
 
     # --------------------------------------------------
     # Mandatory provenance disclosure (Phase 4)
@@ -481,7 +461,12 @@ def render_current_kpis_page():
     # --------------------------------------------------
     # Resolve KPI source (baseline vs simulation)
     # --------------------------------------------------
-    
+
+def render_briefing_mode():
+    render_current_kpis_page()
+    render_location_diagnostics()
+
+
     if is_simulation:
         kpis = st.session_state["what_if_kpis"]
         st.caption("Showing simulated outcomes based on the selected leadership actions.")
@@ -755,21 +740,109 @@ def render_location_diagnostics():
                 st.metric("Net benefit", format_usd(roi["net_benefit"]))
                 st.metric("Return multiple", f"{roi['roi']:.1f}×")
 
-# ============================================================
-# Router
-# ============================================================
+def persona_selector(context_only=False):
+    st.sidebar.markdown("## 👤 Perspective")
+    persona = st.sidebar.selectbox(
+        "Persona",
+        ["CEO", "CFO", "CHRO"],
+        index=["CEO", "CFO", "CHRO"].index(
+            st.session_state.get("persona", "CEO")
+        ),
+    )
+    st.session_state["persona"] = persona
+    context["persona"] = persona
 
-page = st.sidebar.selectbox(
-    "Navigate",
-    ["Current KPIs", "Pulse Canvas", "Diagnostics", "Sentiment Health"],
-    index=0
-)
+    if context_only:
+        st.sidebar.caption("Perspective influences interpretation only.")
 
-if page == "Pulse Canvas":
-    render_pulse_canvas_lite()
-elif page == "Diagnostics":
-    render_location_diagnostics()
-elif page == "Sentiment Health":
-    render_sentiment_health_page()
-else:
+def simulation_sidebar():
+    st.sidebar.markdown("## Scenario exploration")
+    st.sidebar.caption("Hypothetical — not predictive")
+
+    attrition_reduction = st.sidebar.slider(
+        "Effectiveness of retention actions (%)",
+        0, 30, key="attrition_reduction"
+    )
+    engagement_lift = st.sidebar.slider(
+        "Engagement uplift (points)",
+        0, 20, key="engagement_lift"
+    )
+    manager_lift = st.sidebar.slider(
+        "Manager capability uplift (points)",
+        0, 20, key="manager_lift"
+    )
+
+    if st.sidebar.button("Apply simulation"):
+        st.session_state["what_if_kpis"] = apply_what_if(
+            context["baseline"]["kpis"],
+            {
+                "attrition_risk_reduction_pct": attrition_reduction,
+                "engagement_lift": engagement_lift,
+                "manager_effectiveness_lift": manager_lift,
+                "headcount": len(st.session_state["workforce_df"]),
+                "risk_realization_factor": 0.6,
+            },
+        )
+        st.rerun()
+
+    st.sidebar.divider()
+
+    if st.sidebar.button("Clear simulation"):
+        st.session_state["what_if_kpis"] = None
+        st.session_state["attrition_reduction"] = 0
+        st.session_state["engagement_lift"] = 0
+        st.session_state["manager_lift"] = 0
+        st.rerun()
+
+def render_briefing_mode():
+    # Sidebar: data only
+    st.sidebar.markdown("## Data")
+    uploaded_file = st.sidebar.file_uploader(
+        "Upload workforce data", ["csv", "xlsx"]
+    )
+
+    if uploaded_file:
+        df, errors, warnings = load_workforce_file(uploaded_file)
+        if errors:
+            for e in errors:
+                st.sidebar.error(e)
+            st.stop()
+
+        st.session_state["workforce_df"] = df
+        context.setdefault("baseline", {})
+        context["baseline"]["kpis"] = build_baseline_kpis(df)
+
+    # Main content
     render_current_kpis_page()
+    render_location_diagnostics()
+
+def render_exploration_mode():
+    persona_selector()
+    simulation_sidebar()
+
+    st.warning(
+        "⚠️ Scenario view — outcomes shown are hypothetical and not predictions."
+    )
+
+    render_current_kpis_page()
+
+def render_context_mode():
+    persona_selector(context_only=True)
+
+    render_pulse_canvas_lite()
+    render_sentiment_health_page()
+
+# ============================================================
+# Router (Mode-aware)
+# ============================================================
+
+mode = st.session_state["active_mode"]
+
+if mode == "briefing":
+    render_briefing_mode()
+
+elif mode == "explore":
+    render_exploration_mode()
+
+elif mode == "context":
+    render_context_mode()
