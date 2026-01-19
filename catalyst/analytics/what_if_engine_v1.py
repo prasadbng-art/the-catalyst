@@ -1,45 +1,80 @@
+# catalyst/analytics/what_if_engine_v1.py
+
 def apply_what_if(baseline_kpis, levers):
     """
-    Applies what-if adjustments to baseline KPIs.
-    Returns adjusted KPI dict.
+    Apply hypothetical (what-if) adjustments to baseline KPIs.
+
+    Design principles:
+    - Baseline KPIs are descriptive and minimal
+    - Engagement / manager improvements are assumptions, not baseline facts
+    - Engine must not depend on optional or removed KPIs
+    - No simulation runs without attrition risk as a base
     """
 
     adjusted = {}
 
-    # Copy baseline
+    # --------------------------------------------------
+    # Copy baseline KPIs (shallow copy, values overridden selectively)
+    # --------------------------------------------------
     for kpi, state in baseline_kpis.items():
         adjusted[kpi] = state.copy()
 
-    # --- Attrition risk reduction ---
-    if "attrition_risk_reduction_pct" in levers:
-        reduction = levers["attrition_risk_reduction_pct"] / 100
-        base = baseline_kpis["attrition_risk"]["value"]
-        adjusted_value = base * (1 - reduction)
+    # --------------------------------------------------
+    # Attrition risk reduction (core simulation effect)
+    # --------------------------------------------------
+    if "attrition_risk" not in baseline_kpis:
+        raise ValueError("Baseline KPIs must include 'attrition_risk' for simulation.")
 
-        adjusted["attrition_risk"]["value"] = round(adjusted_value, 1)
+    base_risk_pct = baseline_kpis["attrition_risk"]["value"]
+    reduction_pct = levers.get("attrition_risk_reduction_pct", 0)
 
-    # --- Engagement improvement ---
-    if "engagement_lift" in levers:
-        base = baseline_kpis["engagement_index"]["value"]
-        adjusted["engagement_index"]["value"] = min(
-            round(base + levers["engagement_lift"], 1), 100
-        )
+    simulated_risk_pct = max(
+        base_risk_pct * (1 - reduction_pct / 100),
+        0.1,  # floor to avoid absurd zero-risk scenarios
+    )
 
-    # --- Manager effectiveness lift ---
-    if "manager_effectiveness_lift" in levers:
-        base = baseline_kpis["manager_effectiveness"]["value"]
-        adjusted["manager_effectiveness"]["value"] = min(
-            round(base + levers["manager_effectiveness_lift"], 1), 100
-        )
+    adjusted["attrition_risk"] = {
+        "value": round(simulated_risk_pct, 1),
+        "unit": "%",
+        "description": "Simulated attrition risk under applied assumptions.",
+    }
 
-    # --- Recompute predicted attrition ---
-    headcount = levers["headcount"]
-    realization = levers["risk_realization_factor"]
+    # --------------------------------------------------
+    # Assumed engagement uplift (contextual, not measured)
+    # --------------------------------------------------
+    if levers.get("engagement_lift", 0) > 0:
+        adjusted["engagement_uplift_assumed"] = {
+            "value": levers["engagement_lift"],
+            "unit": "points",
+            "description": "Assumed engagement uplift applied in this scenario.",
+        }
 
-    risk = adjusted["attrition_risk"]["value"] / 100
+    # --------------------------------------------------
+    # Assumed manager capability uplift (contextual)
+    # --------------------------------------------------
+    if levers.get("manager_effectiveness_lift", 0) > 0:
+        adjusted["manager_capability_uplift_assumed"] = {
+            "value": levers["manager_effectiveness_lift"],
+            "unit": "points",
+            "description": "Assumed manager capability uplift applied in this scenario.",
+        }
 
-    predicted = headcount * risk * realization
+    # --------------------------------------------------
+    # Predicted attrition (derived, scenario-only)
+    # --------------------------------------------------
+    headcount = levers.get("headcount")
+    realization = levers.get("risk_realization_factor", 0.6)
 
-    adjusted["predicted_attrition_12m"]["value"] = round(predicted, 1)
+    if headcount is not None:
+        predicted_exits = headcount * (simulated_risk_pct / 100) * realization
+
+        adjusted["predicted_attrition_12m"] = {
+            "value": round(predicted_exits, 1),
+            "unit": "employees",
+            "description": (
+                "Estimated number of exits over 12 months under this scenario. "
+                "Derived from simulated risk and realization assumptions."
+            ),
+        }
 
     return adjusted
