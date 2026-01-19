@@ -23,6 +23,13 @@ def format_usd(value: float, millions: bool = True) -> str:
         return f"${value / 1e6:,.1f}M"
     return f"${value:,.0f}"
 
+def clear_simulation():
+        st.session_state.pop("what_if_kpis") = None
+        st.session_state["attrition_reduction"] = 0
+        st.session_state["engagement_lift"] = 0
+        st.session_state["manager_lift"] = 0
+        st.session_state["run_simulation"]=False
+
 # ============================================================
 # 🧠 Session State — Canonical
 # ============================================================
@@ -41,6 +48,7 @@ st.session_state.setdefault("workforce_df", None)
 # ============================================================
 # 🧭 Page Registry
 # ============================================================
+
 PAGES = {
     "briefing": "Current KPIs",
     "simulation": "Simulation",
@@ -131,12 +139,6 @@ def render_simulation_sidebar():
     if st.sidebar.button("Clear Simulation"):
         clear_simulation()
         st.rerun()
-
-    def clear_simulation():
-        st.session_state["what_if_kpis"] = None
-        st.session_state["attrition_reduction"] = 0
-        st.session_state["engagement_lift"] = 0
-        st.session_state["manager_lift"] = 0
 
 # ============================================================
 # 🟪 Context Sidebar (Persona only)
@@ -272,7 +274,6 @@ def render_diagnostics_page():
 
 def render_simulation_page():
     df = st.session_state.get("workforce_df")
-
     if df is None:
         st.info("Upload workforce data before running simulations.")
         return
