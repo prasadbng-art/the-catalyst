@@ -297,6 +297,30 @@ def render_simulation_page():
     )
     st.session_state["run_simulation"] = False
 
+    st.divider()
+
+    if "what_if_kpis" not in st.session_state:
+        st.info("Adjust assumptions and apply a simulation to view outcomes.")
+    return
+
+    sim_kpis = st.session_state["what_if_kpis"]
+
+    st.subheader("Scenario outcomes")
+
+# --- Attrition Risk ---
+    if "attrition_risk" in sim_kpis:
+        st.metric(
+        "Simulated attrition risk",
+        f"{sim_kpis['attrition_risk']['value']}%",
+    )
+
+# --- Predicted Attrition ---
+    if "predicted_attrition_12m" in sim_kpis:
+        st.metric(
+        "Estimated exits over 12 months (scenario)",
+        sim_kpis["predicted_attrition_12m"]["value"],
+    )
+
     st.header("Simulation")
     st.caption("Insight type: Counterfactual (Explore)")
     st.caption("Hypothetical scenarios only. Baseline remains intact.")
@@ -363,28 +387,30 @@ def render_simulation_page():
     # Cost Impact (Scenario-aware)
     # --------------------------------------------------
     costs = compute_cost_framing(
-        baseline_kpis=baseline_kpis,
-        workforce_df=df,
-        financials={},
-        what_if_kpis=st.session_state.get("what_if_kpis"),
-    )
+    baseline_kpis=baseline_kpis,
+    workforce_df=df,
+    what_if_kpis=sim_kpis,
+)
 
-    st.subheader("Financial Impact (Scenario View)")
+    st.subheader("Economic impact")
 
     st.metric(
-        "Baseline annual attrition cost exposure",
-        format_usd(costs["baseline_cost_exposure"]),
-    )
+    "Estimated annual cost avoided (scenario)",
+    format_usd(costs["what_if_cost_impact"]),
+)
 
-    if is_simulation:
-        st.metric(
-            "Annual cost avoided (scenario)",
-            format_usd(costs["preventable_cost"]),
-        )
-    else:
-        st.caption("Scenario cost impact will appear after simulation is applied.")
+    roi = compute_roi_lens(
+    costs["what_if_cost_impact"],
+    intervention_cost=2_000_000,  # or from sidebar input
+)
 
-    st.divider()
+    if roi:
+     st.subheader("ROI lens")
+    st.metric("Intervention cost", format_usd(roi["intervention_cost"]))
+    st.metric("Cost avoided", format_usd(roi["cost_avoided"]))
+    st.metric("Net benefit", format_usd(roi["net_benefit"]))
+    st.metric("Return multiple", f"{roi['roi']:.1f}×")
+
 
     # --------------------------------------------------
     # ROI Lens (only if simulation exists)
