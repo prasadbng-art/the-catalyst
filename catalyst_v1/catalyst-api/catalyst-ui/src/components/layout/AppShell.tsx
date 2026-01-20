@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export default function AppShell({ children }: { children: ReactNode }) {
   return <div style={{ padding: 24 }}>{children}</div>;
