@@ -10,7 +10,7 @@ export default function BaselinePage() {
   useEffect(() => {
     fetchBaseline()
       .then(setData)
-      .catch(e => setError(e.message));
+      .catch(() => setError("Failed to load baseline"));
   }, []);
 
   if (error) return <p>Error: {error}</p>;
