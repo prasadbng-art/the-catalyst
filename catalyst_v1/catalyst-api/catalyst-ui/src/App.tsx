@@ -1,10 +1,10 @@
-import AppShell from "./components/layout/appshell.tsx";
+import AppShell from "./components/layout/AppShell.tsx";
+import BaselinePage from "./pages/baseline";
 
 export default function App() {
   return (
     <AppShell>
-      <h1>Catalyst UI</h1>
-      <p>Baseline → Persona → Simulation</p>
+      <BaselinePage />
     </AppShell>
   );
 }
