@@ -5,6 +5,11 @@ class SimulationRequest(BaseModel):
     engagement_uplift_points: float = Field(..., ge=0)
     manager_effectiveness_uplift_points: float = Field(..., ge=0)
 
+intervention_cost: float = Field(
+        default=5_000_000,
+        ge=0,
+        description="Annual cost of proposed intervention"
+    )
 
 class SimulationBaseline(BaseModel):
     attrition_risk: float
@@ -20,3 +25,12 @@ class SimulationResponse(BaseModel):
     baseline: SimulationBaseline
     simulated: SimulationBaseline
     impact: SimulationImpact
+    roi: ROIImpact
+
+class ROIImpact(BaseModel):
+    intervention_cost: float
+    cost_avoided: float
+    roi_multiple: float | None
+    net_benefit: float
+    payback_period_months: float | None
+

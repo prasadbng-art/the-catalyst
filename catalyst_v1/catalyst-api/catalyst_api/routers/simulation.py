@@ -27,3 +27,14 @@ def simulate(request: SimulationRequest):
         headcount=headcount,
         cost_per_exit=cost_per_exit,
     )
+    simulation_result = run_simulation(
+        baseline_kpis=baseline_kpis,
+        levers=request.dict(exclude={"intervention_cost"}),
+        headcount=headcount,
+        cost_per_exit=cost_per_exit,
+    )
+
+    roi = compute_roi(
+        cost_avoided=simulation_result["impact"]["cost_avoided"],
+        intervention_cost=intervention_cost,
+    )
