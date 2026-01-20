@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from catalyst_api.routers import baseline, health, diagnostics
+from catalyst_api.routers import baseline, health, diagnostics, simulation
 
 app = FastAPI(
     title="Catalyst API",
@@ -9,3 +9,4 @@ app = FastAPI(
 app.include_router(health)
 app.include_router(baseline)
 app.include_router(diagnostics)
+app.include_router(simulation)
