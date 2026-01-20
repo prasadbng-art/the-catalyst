@@ -21,3 +21,4 @@ def get_baseline():
         kpis=compute_baseline(df),
         diagnostics=compute_diagnostics(df),
     )
+    
