@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import AppShell from "./components/layout/AppShell";
+import AppShell from "./components/layout/appshell.tsx";
 import Baseline from "./pages/baseline";
 import Simulate from "./pages/simulate";
 import Persona from "./pages/persona";
