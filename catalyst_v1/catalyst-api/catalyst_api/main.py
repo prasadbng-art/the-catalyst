@@ -1,10 +1,11 @@
 from fastapi import FastAPI
-from catalyst_api.routers import baseline
 
-app = FastAPI(title="Catalyst API v1")
+from catalyst_api.routers import baseline, health
 
-app.include_router(baseline.router)
+app = FastAPI(
+    title="Catalyst API",
+    version="v1",
+)
 
-@app.get("/")
-def health():
-    return {"status": "ok"}
+app.include_router(health)
+app.include_router(baseline)
