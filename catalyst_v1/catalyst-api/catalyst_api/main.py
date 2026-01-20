@@ -5,7 +5,13 @@ app = FastAPI(
     title="Catalyst API",
     version="v1",
 )
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.include_router(health)
 app.include_router(baseline)
 app.include_router(diagnostics)
