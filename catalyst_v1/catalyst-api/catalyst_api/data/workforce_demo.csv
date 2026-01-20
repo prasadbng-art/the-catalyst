@@ -1,0 +1,9 @@
+employee_id,location,attrition_flag,attrition_risk_score
+1,Bangalore,0,0.22
+2,Bangalore,1,0.31
+3,Pune,0,0.18
+4,Pune,1,0.27
+5,Chennai,0,0.15
+6,Chennai,1,0.33
+7,Hyderabad,0,0.19
+8,Hyderabad,1,0.29
