@@ -26,3 +26,14 @@ export type BaselineResponse = {
   };
   diagnostics: Diagnostics;
 };
+
+export type SimulationRequest = {
+  risk_reduction_pct: number;
+};
+
+export type SimulationResponse = {
+  kpis: {
+    attrition_risk: KPIValue;
+    annual_attrition_cost_exposure: KPIValue;
+  };
+};

@@ -4,6 +4,11 @@ import AppShell from "./components/layout/AppShell";
 import BaselinePage from "./pages/baseline";
 import PersonaPage from "./pages/persona";
 
+import SimulationPage from "./pages/simulate";
+
+// inside <Routes>
+<Route path="/simulation" element={<SimulationPage />} />
+
 export default function App() {
   return (
     <BrowserRouter>
