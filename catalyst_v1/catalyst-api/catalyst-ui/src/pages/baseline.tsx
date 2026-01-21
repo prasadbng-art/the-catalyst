@@ -44,6 +44,18 @@ export default function BaselinePage() {
           unit={kpis.headcount.unit ?? undefined}
         />
 
+  <h1>Baseline</h1>
+
+  <div style={{ display: "flex", gap: "20px", marginBottom: "32px" }}>
+    {/* KPI cards */}
+  </div>
+
+  <h2 style={{ marginTop: "40px", marginBottom: "16px" }}>
+    Diagnostics by Location
+  </h2>
+
+  <DiagnosticsTable rows={data.diagnostics.by_location} />
+
         <KpiCard
           title="Annual Attrition Cost Exposure"
           value={kpis.annual_attrition_cost_exposure.value.toLocaleString()}
