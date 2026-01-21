@@ -5,9 +5,7 @@ import "./index.css";
 const root = document.getElementById("root");
 
 if (!root) {
-  throw new Error("ROOT ELEMENT NOT FOUND");
+  throw new Error("ROOT NOT FOUND");
 }
 
-ReactDOM.createRoot(root).render(
-  <App />
-);
+ReactDOM.createRoot(root).render(<App />);
