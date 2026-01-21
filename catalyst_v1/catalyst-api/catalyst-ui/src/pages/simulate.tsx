@@ -258,7 +258,7 @@ export default function SimulatePage() {
 
               return (
                 <KpiCard
-                  key={key}
+                  key={key} 
                   title={kpi.title}
                   value={kpi.format(kpi.value)}
                 />
