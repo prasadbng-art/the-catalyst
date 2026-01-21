@@ -1,9 +1,9 @@
 from pydantic import BaseModel, Field
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 
 
 # ============================================================
-# Simulation Request
+# Request
 # ============================================================
 
 class SimulationRequest(BaseModel):
@@ -11,46 +11,55 @@ class SimulationRequest(BaseModel):
         ...,
         ge=0,
         le=100,
-        description="Expected percentage reduction in attrition risk due to intervention",
+        description="Expected percentage reduction in attrition risk",
         example=25,
+    )
+
+    intervention_cost: float = Field(
+        ...,
+        ge=0,
+        description="Estimated annual cost of the intervention",
+        example=120000,
     )
 
 
 # ============================================================
-# Simulation Response
+# CFO Impact
+# ============================================================
+
+class CFOImpact(BaseModel):
+    intervention_cost: float
+    cost_avoided: float
+    net_roi: float
+    roi_multiple: Optional[float]
+
+
+# ============================================================
+# Confidence Band
+# ============================================================
+
+class ConfidenceBand(BaseModel):
+    low: float
+    high: float
+    confidence_level: float = Field(
+        ...,
+        description="Confidence level for the estimated range",
+        example=0.8,
+    )
+
+
+# ============================================================
+# Response
 # ============================================================
 
 class SimulationResponse(BaseModel):
-    baseline_cost: float = Field(
-        ...,
-        description="Estimated annual attrition cost under baseline conditions",
-        example=1940,
-    )
+    baseline_cost: float
+    simulated_cost: float
+    avoided_cost: float
+    risk_reduction_pct: float
 
-    simulated_cost: float = Field(
-        ...,
-        description="Estimated annual attrition cost after applying risk reduction",
-        example=1455,
-    )
+    cfo_impact: CFOImpact
+    confidence: ConfidenceBand
 
-    avoided_cost: float = Field(
-        ...,
-        description="Annual cost avoided due to the simulated intervention",
-        example=485,
-    )
-
-    risk_reduction_pct: float = Field(
-        ...,
-        description="Applied attrition risk reduction percentage",
-        example=25,
-    )
-
-    simulated_kpis: Dict[str, Any] = Field(
-        ...,
-        description="KPI values after applying the simulation scenario",
-    )
-
-    diagnostics: Dict[str, Any] = Field(
-        ...,
-        description="Diagnostic breakdown (e.g., by location) under simulated conditions",
-    )
+    simulated_kpis: Dict[str, Any]
+    diagnostics: Dict[str, Any]
