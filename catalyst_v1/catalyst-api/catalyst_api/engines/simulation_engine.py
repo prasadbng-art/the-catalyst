@@ -10,14 +10,14 @@ def run_simulation(
     """
 
     # --------------------------------------------------
-    # 1. Extract baseline values (OBJECT access, not dict)
+    # 1. Extract baseline KPI values (object access)
     # --------------------------------------------------
 
     baseline_risk_pct = baseline_kpis.attrition_risk.value
     baseline_cost = baseline_kpis.annual_attrition_cost_exposure.value
 
     # --------------------------------------------------
-    # 2. Apply lever
+    # 2. Apply simulation lever
     # --------------------------------------------------
 
     risk_reduction_pct = levers.get("risk_reduction_pct", 0)
@@ -25,14 +25,14 @@ def run_simulation(
     simulated_risk_pct = baseline_risk_pct * (1 - risk_reduction_pct / 100)
 
     # --------------------------------------------------
-    # 3. Cost impact (simple, demo-grade)
+    # 3. Cost impact (demo-grade, proportional)
     # --------------------------------------------------
 
     simulated_cost = baseline_cost * (simulated_risk_pct / baseline_risk_pct)
     avoided_cost = baseline_cost - simulated_cost
 
     # --------------------------------------------------
-    # 4. Simulated KPIs (clone + override)
+    # 4. Simulated KPIs (explicit, clean)
     # --------------------------------------------------
 
     simulated_kpis = {
@@ -49,13 +49,7 @@ def run_simulation(
     }
 
     # --------------------------------------------------
-    # 5. Diagnostics (pass-through for demo)
-    # --------------------------------------------------
-
-    diagnostics = baseline_kpis.diagnostics
-
-    # --------------------------------------------------
-    # 6. Return canonical structure
+    # 5. Return canonical simulation output
     # --------------------------------------------------
 
     return {
@@ -63,5 +57,5 @@ def run_simulation(
         "simulated_cost": round(simulated_cost, 0),
         "avoided_cost": round(avoided_cost, 0),
         "simulated_kpis": simulated_kpis,
-        "diagnostics": diagnostics,
+        # diagnostics intentionally excluded here
     }
