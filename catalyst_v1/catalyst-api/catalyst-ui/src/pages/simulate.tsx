@@ -23,6 +23,12 @@ export default function SimulatePage() {
   const baselineAttritionRisk = 24.2;
   const baselineAnnualCost = 1940;
 
+// -----------------------------
+// Simulation constants (v1 scenario-level)
+// -----------------------------
+  const headcount = 8;
+  const costPerExit = 1_500_000;
+
   // -----------------------------
   // Run simulation (debounced)
   // -----------------------------
@@ -64,6 +70,19 @@ export default function SimulatePage() {
     simulatedCost !== undefined
       ? Math.round(baselineAnnualCost - simulatedCost)
       : undefined;
+
+// -----------------------------
+// Simulation driver breakdown (v1)
+// -----------------------------
+  const exitsAvoided =
+    riskDelta !== undefined
+    ? Math.round((riskDelta / 100) * headcount)
+    : undefined;
+
+  const savingsFromExits =
+    exitsAvoided !== undefined
+    ? exitsAvoided * costPerExit
+    : undefined;
 
   // -----------------------------
   // KPI Definitions
@@ -206,6 +225,18 @@ export default function SimulatePage() {
               }
             />
           </div>
+          {savingsFromExits !== undefined && (
+           <div
+            style={{
+              fontSize: 13,
+              color: "#9ca3af",
+              marginBottom: 24,
+            }}
+         >
+            Implied savings from exits avoided: ₹
+            {savingsFromExits.toLocaleString()}
+          </div>
+        )}
 
           {/* Narrative Insight */}
           <div
@@ -266,7 +297,50 @@ export default function SimulatePage() {
             })}
 
           </div>
+{simulation && (  
+  <>
+    <h3 style={{ marginTop: 32 }}>What Drove This Outcome</h3>
 
+    <div
+      style={{
+        background: "#0f172a",
+        border: "1px solid #1e293b",
+        padding: 16,
+        borderRadius: 6,
+        fontSize: 14,
+        color: "#e5e7eb",
+        lineHeight: 1.6,
+      }}
+    >
+      <ul style={{ margin: 0, paddingLeft: 18 }}>
+        <li>
+          Attrition risk reduced by{" "}
+          <strong>{riskReductionPct}%</strong>, lowering the probability of
+          regretted exits.
+        </li>
+
+        <li>
+          Total estimated cost avoided:{" "}
+          <strong>
+            ₹{simulation.cfo_impact.cost_avoided.toLocaleString()}
+          </strong>.
+        </li>
+
+        <li>
+          Intervention investment of{" "}
+          <strong>
+            ₹{simulation.cfo_impact.intervention_cost.toLocaleString()}
+          </strong>{" "}
+          yields a net ROI of{" "}
+          <strong>
+            ₹{simulation.cfo_impact.net_roi.toLocaleString()}
+          </strong>.
+        </li>
+      </ul>
+    </div>
+  </>
+)}
+      
           {/* Confidence */}
           <p
             style={{
