@@ -1,27 +1,56 @@
-from pydantic import BaseModel
-from typing import Optional
+from pydantic import BaseModel, Field
+from typing import Dict, Any
 
 
-# ---------- Request ----------
+# ============================================================
+# Simulation Request
+# ============================================================
 
 class SimulationRequest(BaseModel):
-    persona: str
-    intervention_cost: float
-    scenario: Optional[str] = "default"
+    risk_reduction_pct: float = Field(
+        ...,
+        ge=0,
+        le=100,
+        description="Expected percentage reduction in attrition risk due to intervention",
+        example=25,
+    )
 
 
-# ---------- ROI ----------
-
-class ROIImpact(BaseModel):
-    intervention_cost: float
-    savings: float
-    net_roi: float
-    roi_ratio: float
-
-
-# ---------- Response ----------
+# ============================================================
+# Simulation Response
+# ============================================================
 
 class SimulationResponse(BaseModel):
-    scenario: str
-    roi: ROIImpact
-    confidence: Optional[float] = None
+    baseline_cost: float = Field(
+        ...,
+        description="Estimated annual attrition cost under baseline conditions",
+        example=1940,
+    )
+
+    simulated_cost: float = Field(
+        ...,
+        description="Estimated annual attrition cost after applying risk reduction",
+        example=1455,
+    )
+
+    avoided_cost: float = Field(
+        ...,
+        description="Annual cost avoided due to the simulated intervention",
+        example=485,
+    )
+
+    risk_reduction_pct: float = Field(
+        ...,
+        description="Applied attrition risk reduction percentage",
+        example=25,
+    )
+
+    simulated_kpis: Dict[str, Any] = Field(
+        ...,
+        description="KPI values after applying the simulation scenario",
+    )
+
+    diagnostics: Dict[str, Any] = Field(
+        ...,
+        description="Diagnostic breakdown (e.g., by location) under simulated conditions",
+    )
