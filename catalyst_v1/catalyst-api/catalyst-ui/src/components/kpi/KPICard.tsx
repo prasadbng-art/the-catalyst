@@ -3,6 +3,8 @@ type KpiCardProps = {
   value: string | number;
   unit?: string;
   description?: string | null;
+  delta?: number;          // % or absolute delta
+  deltaDirection?: "up" | "down" | "neutral";
 };
 
 export default function KpiCard({
