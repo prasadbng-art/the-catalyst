@@ -66,21 +66,73 @@ export default function SimulatePage() {
       : undefined;
 
   // -----------------------------
+  // KPI Definitions
+  // -----------------------------
+  const kpiDefinitions = {
+    net_roi: {
+      title: "Net ROI",
+      value: simulation?.cfo_impact.net_roi,
+      format: (v: number) => `₹${v.toLocaleString()}`,
+    },
+    roi_multiple: {
+      title: "ROI Multiple",
+      value: simulation?.cfo_impact.roi_multiple,
+      format: (v: number) => `${v}×`,
+    },
+    cost_avoided: {
+      title: "Cost Avoided",
+      value: simulation?.cfo_impact.cost_avoided,
+      format: (v: number) => `₹${v.toLocaleString()}`,
+    },
+    intervention_cost: {
+      title: "Intervention Cost",
+      value: simulation?.cfo_impact.intervention_cost,
+      format: (v: number) => `₹${v.toLocaleString()}`,
+    },
+    risk_reduction: {
+      title: "Risk Reduction",
+      value: riskDelta,
+      format: (v: number) => `${v}%`,
+    },
+  };
+
+  const kpiOrderByPersona: Record<
+    "CFO" | "CHRO",
+    (keyof typeof kpiDefinitions)[]
+  > = {
+    CFO: [
+      "net_roi",
+      "roi_multiple",
+      "cost_avoided",
+      "intervention_cost",
+    ],
+    CHRO: [
+      "risk_reduction",
+      "cost_avoided",
+      "net_roi",
+    ],
+  };
+
+  // -----------------------------
   // Render
   // -----------------------------
   return (
     <div>
       <h1>Simulation</h1>
-    <div style={{ marginBottom: 16 }}>
-  <label style={{ marginRight: 12 }}>View as:</label>
-  <select
-    value={persona}
-    onChange={(e) => setPersona(e.target.value as "CHRO" | "CFO")}
-  >
-    <option value="CFO">CFO</option>
-    <option value="CHRO">CHRO</option>
-  </select>
-</div>
+
+      {/* Persona selector */}
+      <div style={{ marginBottom: 16 }}>
+        <label style={{ marginRight: 12 }}>View as:</label>
+        <select
+          value={persona}
+          onChange={(e) =>
+            setPersona(e.target.value as "CHRO" | "CFO")
+          }
+        >
+          <option value="CFO">CFO</option>
+          <option value="CHRO">CHRO</option>
+        </select>
+      </div>
 
       {/* Controls */}
       <div style={{ display: "flex", gap: 24, marginBottom: 24 }}>
@@ -89,7 +141,9 @@ export default function SimulatePage() {
           <input
             type="number"
             value={riskReductionPct}
-            onChange={(e) => setRiskReductionPct(Number(e.target.value))}
+            onChange={(e) =>
+              setRiskReductionPct(Number(e.target.value))
+            }
           />
         </div>
 
@@ -98,7 +152,9 @@ export default function SimulatePage() {
           <input
             type="number"
             value={interventionCost}
-            onChange={(e) => setInterventionCost(Number(e.target.value))}
+            onChange={(e) =>
+              setInterventionCost(Number(e.target.value))
+            }
           />
         </div>
       </div>
@@ -106,7 +162,7 @@ export default function SimulatePage() {
       {/* Loading */}
       {loading && <p>Running simulation…</p>}
 
-      {/* Simulation KPIs */}
+      {/* Simulation Output */}
       {simulation && (
         <>
           <h3>Workforce Impact</h3>
@@ -150,76 +206,75 @@ export default function SimulatePage() {
               }
             />
           </div>
-{simulation && (
-  <div
-    style={{
-      background: "#111827",
-      border: "1px solid #1f2937",
-      padding: 16,
-      marginBottom: 24,
-      borderRadius: 6,
-      fontSize: 14,
-      color: "#d1d5db",
-    }}
-  >
-    {persona === "CFO" ? (
-      <>
-        <strong>Executive Insight:</strong>{" "}
-        This intervention is projected to avoid{" "}
-        <strong>
-          ₹{simulation.cfo_impact.cost_avoided.toLocaleString()}
-        </strong>{" "}
-        in attrition-related losses, delivering a net ROI of{" "}
-        <strong>
-          ₹{simulation.cfo_impact.net_roi.toLocaleString()}
-        </strong>{" "}
-        with a confidence level of{" "}
-        {Math.round(
-          simulation.confidence.confidence_level * 100
-        )}
-        %.
-      </>
-    ) : (
-      <>
-        <strong>People Insight:</strong>{" "}
-        Attrition risk is projected to decline by{" "}
-        <strong>{riskDelta}%</strong>, indicating improved workforce
-        stability and reduced likelihood of regretted exits under the
-        proposed intervention.
-      </>
-    )}
-  </div>
-)}
-      
+
+          {/* Narrative Insight */}
+          <div
+            style={{
+              background: "#111827",
+              border: "1px solid #1f2937",
+              padding: 16,
+              marginBottom: 24,
+              borderRadius: 6,
+              fontSize: 14,
+              color: "#d1d5db",
+            }}
+          >
+            {persona === "CFO" ? (
+              <>
+                <strong>Executive Insight:</strong>{" "}
+                This intervention is projected to avoid{" "}
+                <strong>
+                  ₹{simulation.cfo_impact.cost_avoided.toLocaleString()}
+                </strong>{" "}
+                in attrition-related losses, delivering a net ROI of{" "}
+                <strong>
+                  ₹{simulation.cfo_impact.net_roi.toLocaleString()}
+                </strong>{" "}
+                with a confidence level of{" "}
+                {Math.round(
+                  simulation.confidence.confidence_level * 100
+                )}
+                %.
+              </>
+            ) : (
+              <>
+                <strong>People Insight:</strong>{" "}
+                Attrition risk is projected to decline by{" "}
+                <strong>{riskDelta}%</strong>, indicating improved
+                workforce stability and reduced likelihood of
+                regretted exits under the proposed intervention.
+              </>
+            )}
+          </div>
+
+          {/* Persona-ordered KPIs */}
           <h3>CFO Impact</h3>
 
           <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-            <KpiCard
-              title="Net ROI"
-              value={`₹${simulation.cfo_impact.net_roi.toLocaleString()}`}
-            />
+            {kpiOrderByPersona[persona].map((key) => {
+              const kpi = kpiDefinitions[key];
 
-            <KpiCard
-              title="ROI Multiple"
-              value={
-                simulation.cfo_impact.roi_multiple
-                  ? `${simulation.cfo_impact.roi_multiple}×`
-                  : "—"
-              }
-            />
+              if (!kpi || typeof kpi.value !== "number") return null;
 
-            <KpiCard
-              title="Cost Avoided"
-              value={`₹${simulation.cfo_impact.cost_avoided.toLocaleString()}`}
-            />
+              return (
+                <KpiCard
+                  key={key}
+                  title={kpi.title}
+                  value={kpi.format(kpi.value)}
+                />
+              );
+            })}
 
-            <KpiCard
-              title="Intervention Cost"
-              value={`₹${simulation.cfo_impact.intervention_cost.toLocaleString()}`}
-            />
           </div>
 
-          <p style={{ marginTop: 16, fontSize: 13, color: "#6b7280" }}>
+          {/* Confidence */}
+          <p
+            style={{
+              marginTop: 16,
+              fontSize: 13,
+              color: "#6b7280",
+            }}
+          >
             Estimated confidence range: ₹
             {simulation.confidence.low.toLocaleString()} – ₹
             {simulation.confidence.high.toLocaleString()} (
