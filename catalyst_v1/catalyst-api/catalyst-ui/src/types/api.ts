@@ -1,7 +1,9 @@
-export interface KPIValue {
+export type KPIValue = {
   value: number;
-  description?: string;
-}
+  unit?: string | null;
+  description?: string | null;
+};
+
 
 export interface BaselineResponse {
   kpis: Record<string, KPIValue>;
