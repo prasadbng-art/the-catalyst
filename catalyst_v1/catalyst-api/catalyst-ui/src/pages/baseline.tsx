@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchBaseline } from "../api/baseline";
 import type { BaselineResponse } from "../types/api";
-import KpiCard from "../components/kpi/KPICard";
+import KpiCard from "../components/kpi/KpiCard.tsx";
 import DiagnosticsTable from "../components/diagnostics/DiagnosticsTable.tsx";
 
 export default function BaselinePage() {
