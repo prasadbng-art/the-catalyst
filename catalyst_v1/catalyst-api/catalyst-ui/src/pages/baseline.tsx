@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { fetchBaseline } from "../api/baseline";
 import type { BaselineResponse } from "../types/api";
 import KpiCard from "../components/kpi/KPICard";
+import DiagnosticsTable from "../components/diagnostics/DiagnosticsTable.tsx";
 
 export default function BaselinePage() {
   const [data, setData] = useState<BaselineResponse | null>(null);
@@ -49,6 +50,13 @@ export default function BaselinePage() {
           unit={kpis.annual_attrition_cost_exposure.unit ?? undefined}
           description={kpis.annual_attrition_cost_exposure.description}
         />
+
+  {/* Diagnostics Section */}
+  <div style={{ marginTop: "40px" }}>
+    <h2>Diagnostics by Location</h2>
+
+    <DiagnosticsTable rows={data.diagnostics.by_location} />
+  </div>
 
       </div>
     </div>
