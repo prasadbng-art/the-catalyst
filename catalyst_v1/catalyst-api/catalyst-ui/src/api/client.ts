@@ -1,9 +1,13 @@
-const API_BASE = "http://127.0.0.1:8000";
+// src/api/client.ts
+
+const API_BASE_URL = "http://127.0.0.1:8000";
 
 export async function apiGet<T>(path: string): Promise<T> {
-  const res = await fetch(`${API_BASE}${path}`);
-  if (!res.ok) {
-    throw new Error(`API error ${res.status}`);
+  const response = await fetch(`${API_BASE_URL}${path}`);
+
+  if (!response.ok) {
+    throw new Error(`API error: ${response.status}`);
   }
-  return res.json();
+
+  return response.json();
 }

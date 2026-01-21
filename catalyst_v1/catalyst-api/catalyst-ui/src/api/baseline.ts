@@ -1,6 +1,6 @@
 import { apiGet } from "./client";
-import type { BaselineResponse } from "../types/api.ts";
+import type { BaselineResponse } from "../types/api";
 
-export function fetchBaseline() {
+export function fetchBaseline(): Promise<BaselineResponse> {
   return apiGet<BaselineResponse>("/intelligence/baseline");
 }

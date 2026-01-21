@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchBaseline } from "../api/baseline";
 import type { BaselineResponse } from "../types/api";
-import KPIGrid from "../components/kpi/KPIGrid";
 
 export default function BaselinePage() {
   const [data, setData] = useState<BaselineResponse | null>(null);
@@ -10,16 +9,16 @@ export default function BaselinePage() {
   useEffect(() => {
     fetchBaseline()
       .then(setData)
-      .catch(() => setError("Failed to load baseline"));
+      .catch((err) => setError(err.message));
   }, []);
 
-  if (error) return <p>Error: {error}</p>;
-  if (!data) return <p>Loading baseline…</p>;
+  if (error) return <div>Error: {error}</div>;
+  if (!data) return <div>Loading baseline…</div>;
 
   return (
-    <>
-      <h1>Baseline KPIs</h1>
-      <KPIGrid kpis={data.kpis} />
-    </>
+    <div>
+      <h1>Baseline</h1>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
+    </div>
   );
 }
