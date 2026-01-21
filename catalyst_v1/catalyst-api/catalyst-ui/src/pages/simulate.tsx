@@ -1,86 +1,108 @@
-import { useEffect, useState } from "react";
-import { fetchBaseline } from "../api/baseline";
-import { simulate } from "../api/simulation";
-import type { BaselineResponse, SimulationResponse } from "../types/api";
-import KpiCard from "../components/kpi/KpiCard";
+import { useState } from "react";
+import { runSimulation } from "../api/simulation";
 
 export default function SimulationPage() {
-  const [baseline, setBaseline] = useState<BaselineResponse | null>(null);
-  const [result, setResult] = useState<SimulationResponse | null>(null);
-  const [riskReduction, setRiskReduction] = useState<number>(5);
+  const [riskReduction, setRiskReduction] = useState(20);
+  const [interventionCost, setInterventionCost] = useState(120000);
+  const [result, setResult] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    fetchBaseline().then(setBaseline);
-  }, []);
-
-  if (!baseline) return <div>Loading…</div>;
-
-  const runSimulation = async () => {
-    const res = await simulate({ risk_reduction_pct: riskReduction });
+  const handleSimulate = async () => {
+    setLoading(true);
+    const res = await runSimulation({
+      risk_reduction_pct: riskReduction,
+      intervention_cost: interventionCost,
+    });
     setResult(res);
+    setLoading(false);
   };
 
-  const baseRisk = baseline.kpis.attrition_risk.value;
-  const baseCost = baseline.kpis.annual_attrition_cost_exposure.value;
-
   return (
-    <div>
-      <h1>Simulation</h1>
+    <div style={{ display: "grid", gridTemplateColumns: "280px 1fr 320px", gap: "24px" }}>
+      
+      {/* CONTROLS */}
+      <div>
+        <h3>Intervention</h3>
 
-      {/* Controls */}
-      <div style={{ margin: "16px 0" }}>
-        <label>
-          Reduce attrition risk by: <strong>{riskReduction}%</strong>
-        </label>
+        <label>Risk Reduction (%)</label>
         <input
           type="range"
           min={0}
-          max={20}
-          step={1}
+          max={40}
           value={riskReduction}
           onChange={(e) => setRiskReduction(Number(e.target.value))}
-          style={{ width: "320px", display: "block", marginTop: "8px" }}
         />
-        <button onClick={runSimulation} style={{ marginTop: "12px" }}>
-          Run simulation
+        <div>{riskReduction}%</div>
+
+        <label style={{ marginTop: "16px" }}>Intervention Cost</label>
+        <input
+          type="number"
+          value={interventionCost}
+          onChange={(e) => setInterventionCost(Number(e.target.value))}
+        />
+
+        <button onClick={handleSimulate} disabled={loading} style={{ marginTop: "16px" }}>
+          {loading ? "Running..." : "Run Simulation"}
         </button>
       </div>
 
-      {/* Baseline */}
-      <h3>Baseline</h3>
-      <div style={{ display: "flex", gap: "16px" }}>
-        <KpiCard title="Attrition Risk" value={baseRisk} unit="%" />
-        <KpiCard
-          title="Annual Attrition Cost Exposure"
-          value={baseCost.toLocaleString()}
-          unit="USD"
-        />
+      {/* BEFORE vs AFTER */}
+      <div>
+        <h2>Impact</h2>
+
+        {!result && <p>Run a simulation to see impact.</p>}
+
+        {result && (
+          <table width="100%">
+            <tbody>
+              <Row
+                label="Attrition Risk"
+                baseline={`${result.baseline_kpis.attrition_risk.value}%`}
+                simulated={`${result.simulated_kpis.attrition_risk.value}%`}
+              />
+              <Row
+                label="Annual Attrition Cost"
+                baseline={`$${result.baseline_cost.toLocaleString()}`}
+                simulated={`$${result.simulated_cost.toLocaleString()}`}
+              />
+            </tbody>
+          </table>
+        )}
       </div>
 
-      {/* Results */}
-      {result && (
-        <>
-          <h3 style={{ marginTop: "24px" }}>After Simulation</h3>
-          <div style={{ display: "flex", gap: "16px" }}>
-            <KpiCard
-              title="Attrition Risk"
-              value={result.kpis.attrition_risk.value}
-              unit="%"
-              description={`Δ ${(
-                result.kpis.attrition_risk.value - baseRisk
-              ).toFixed(1)}%`}
+      {/* ROI VERDICT */}
+      <div>
+        <h3>ROI</h3>
+
+        {result && (
+          <>
+            <BigNumber value={`$${result.avoided_cost.toLocaleString()}`} label="Cost Avoided" />
+            <BigNumber
+              value={`${(result.avoided_cost / interventionCost).toFixed(1)}×`}
+              label="ROI Multiple"
             />
-            <KpiCard
-              title="Annual Attrition Cost Exposure"
-              value={result.kpis.annual_attrition_cost_exposure.value.toLocaleString()}
-              unit="USD"
-              description={`Δ ${(
-                result.kpis.annual_attrition_cost_exposure.value - baseCost
-              ).toLocaleString()} USD`}
-            />
-          </div>
-        </>
-      )}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Row({ label, baseline, simulated }: any) {
+  return (
+    <tr>
+      <td>{label}</td>
+      <td>{baseline}</td>
+      <td>{simulated}</td>
+    </tr>
+  );
+}
+
+function BigNumber({ value, label }: any) {
+  return (
+    <div style={{ marginBottom: "16px" }}>
+      <div style={{ fontSize: "28px", fontWeight: 600 }}>{value}</div>
+      <div style={{ fontSize: "13px", color: "#9ca3af" }}>{label}</div>
     </div>
   );
 }
