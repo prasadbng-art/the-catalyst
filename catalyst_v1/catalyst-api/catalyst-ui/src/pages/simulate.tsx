@@ -3,7 +3,7 @@ import { runSimulation } from "../api/simulation";
 
 export default function SimulationPage() {
   const [riskReduction, setRiskReduction] = useState(20);
-  const [interventionCost, setInterventionCost] = useState(120000);
+    const [interventionCost, setInterventionCost] = useState(120000);
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
 
@@ -17,7 +17,7 @@ export default function SimulationPage() {
     setLoading(false);
   };
 
-  return (
+    return (
     <div style={{ display: "grid", gridTemplateColumns: "280px 1fr 320px", gap: "24px" }}>
       
       {/* CONTROLS */}
