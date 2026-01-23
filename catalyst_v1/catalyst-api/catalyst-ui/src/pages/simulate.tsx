@@ -232,6 +232,49 @@ export default function SimulatePage() {
   )}
 </div>
 
+{/* Scenario Comparison */}
+<div style={{ marginBottom: 32 }}>
+  <h3>Scenario Comparison</h3>
+
+  <div
+    style={{
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr 1fr",
+      gap: 12,
+      fontSize: 14,
+      color: "#e5e7eb",
+    }}
+  >
+    {/* Header */}
+    <div></div>
+    <div style={{ fontWeight: 600 }}>Baseline</div>
+    <div style={{ fontWeight: 600 }}>Simulated</div>
+
+    {/* Attrition Risk */}
+    <div>Attrition Risk</div>
+    <div>{baselineAttritionRisk}%</div>
+    <div>
+      {simulatedRisk !== undefined ? `${simulatedRisk}%` : "—"}
+    </div>
+
+    {/* Annual Cost */}
+    <div>Annual Attrition Cost</div>
+    <div>₹{baselineAnnualCost.toLocaleString()}</div>
+    <div>
+      {simulatedCost !== undefined
+        ? `₹${simulatedCost.toLocaleString()}`
+        : "—"}
+    </div>
+
+    {/* Financial Impact */}
+    <div>Net Financial Impact</div>
+    <div>—</div>
+    <div>
+      ₹{simulation.cfo_impact.net_roi.toLocaleString()}
+    </div>
+  </div>
+</div>
+
           <h3>Workforce Impact</h3>
 
           <div style={{ display: "flex", gap: 16, marginBottom: 24 }}>
