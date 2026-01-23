@@ -297,9 +297,9 @@ export default function SimulatePage() {
             })}
 
           </div>
-{simulation && (  
-  <>
-    <h3 style={{ marginTop: 32 }}>What Drove This Outcome</h3>
+{simulation && (
+  <div style={{ marginTop: 32 }}>
+    <h3>Simulation Driver Breakdown</h3>
 
     <div
       style={{
@@ -312,33 +312,73 @@ export default function SimulatePage() {
         lineHeight: 1.6,
       }}
     >
-      <ul style={{ margin: 0, paddingLeft: 18 }}>
-        <li>
+      {/* Driver 1 */}
+      <div style={{ marginBottom: 12 }}>
+        <strong>Risk Reduction Applied</strong>
+        <div>
           Attrition risk reduced by{" "}
-          <strong>{riskReductionPct}%</strong>, lowering the probability of
-          regretted exits.
-        </li>
+          <strong>{riskReductionPct}%</strong> through the simulated
+          intervention.
+        </div>
+      </div>
 
-        <li>
-          Total estimated cost avoided:{" "}
+      {/* Driver 2 */}
+      <div style={{ marginBottom: 12 }}>
+        <strong>Estimated Exits Avoided</strong>
+        <div>
+          This reduction in risk corresponds to approximately{" "}
+          <strong>{exitsAvoided} fewer employee exits</strong> across the
+          modeled workforce.
+        </div>
+      </div>
+
+      {/* Driver 3 */}
+      <div style={{ marginBottom: 12 }}>
+        <strong>Cost Avoided</strong>
+        <div>
+          Preventing these exits avoids approximately{" "}
           <strong>
             ₹{simulation.cfo_impact.cost_avoided.toLocaleString()}
+          </strong>{" "}
+          in attrition-related costs, reducing annual exposure to{" "}
+          <strong>
+            ₹{simulatedCost?.toLocaleString()}
           </strong>.
-        </li>
+        </div>
+      </div>
 
-        <li>
-          Intervention investment of{" "}
+      {/* Driver 4 */}
+      <div>
+        <strong>ROI Outcome</strong>
+        <div>
+          Against an intervention cost of{" "}
           <strong>
             ₹{simulation.cfo_impact.intervention_cost.toLocaleString()}
-          </strong>{" "}
-          yields a net ROI of{" "}
+          </strong>
+          , this scenario yields a net ROI of{" "}
           <strong>
             ₹{simulation.cfo_impact.net_roi.toLocaleString()}
-          </strong>.
-        </li>
-      </ul>
+          </strong>{" "}
+          (ROI multiple:{" "}
+          <strong>{simulation.cfo_impact.roi_multiple}×</strong>).
+        </div>
+
+        {persona === "CHRO" && (
+          <div
+            style={{
+              marginTop: 6,
+              fontSize: 13,
+              color: "#9ca3af",
+              fontStyle: "italic",
+            }}
+          >
+            Financial ROI reflects modeled cost timing; workforce stability
+            benefits may extend beyond the simulated period.
+          </div>
+        )}
+      </div>
     </div>
-  </>
+  </div>
 )}
       
           {/* Confidence */}
