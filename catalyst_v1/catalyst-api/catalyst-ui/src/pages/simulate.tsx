@@ -184,6 +184,54 @@ export default function SimulatePage() {
       {/* Simulation Output */}
       {simulation && (
         <>
+        {/* Executive Summary */}
+<div
+  style={{
+    background: "#020617",
+    border: "1px solid #1e293b",
+    padding: 16,
+    marginBottom: 24,
+    borderRadius: 6,
+    fontSize: 14,
+    color: "#e5e7eb",
+    lineHeight: 1.6,
+  }}
+>
+  <strong>Executive Summary:</strong>{" "}
+  {persona === "CFO" ? (
+    <>
+      Under a{" "}
+      <strong>{riskReductionPct}%</strong> attrition risk reduction
+      scenario, Catalyst estimates{" "}
+      <strong>
+        ₹{simulation.cfo_impact.cost_avoided.toLocaleString()}
+      </strong>{" "}
+      in avoided attrition costs, resulting in a net ROI of{" "}
+      <strong>
+        ₹{simulation.cfo_impact.net_roi.toLocaleString()}
+      </strong>{" "}
+      at{" "}
+      <strong>
+        {Math.round(
+          simulation.confidence.confidence_level * 100
+        )}
+        %
+      </strong>{" "}
+      confidence.
+    </>
+  ) : (
+    <>
+      A{" "}
+      <strong>{riskReductionPct}%</strong> reduction in attrition risk
+      is projected to improve workforce stability and avoid{" "}
+      <strong>
+        ₹{simulation.cfo_impact.cost_avoided.toLocaleString()}
+      </strong>{" "}
+      in attrition-related losses under the simulated intervention.
+    </>
+  )}
+</div>
+
           <h3>Workforce Impact</h3>
 
           <div style={{ display: "flex", gap: 16, marginBottom: 24 }}>
