@@ -3,35 +3,35 @@ import { runSimulation, type SimulationResponse } from "../api/simulation";
 import KpiCard from "../components/kpi/KpiCard";
 
 export default function SimulatePage() {
-  // -----------------------------
+  // =========================================================
   // Controls
-  // -----------------------------
+  // =========================================================
   const [riskReductionPct, setRiskReductionPct] = useState<number>(25);
   const [interventionCost, setInterventionCost] = useState<number>(120000);
-  const [persona, setPersona] = useState<"CHRO" | "CFO">("CFO");
+  const [persona, setPersona] = useState<"CFO" | "CHRO">("CFO");
 
-  // -----------------------------
+  // =========================================================
   // State
-  // -----------------------------
+  // =========================================================
   const [simulation, setSimulation] =
     useState<SimulationResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  // -----------------------------
-  // Baseline references
-  // -----------------------------
+  // =========================================================
+  // Baseline references (v1 – hardcoded)
+  // =========================================================
   const baselineAttritionRisk = 24.2;
   const baselineAnnualCost = 1940;
 
-  // -----------------------------
-  // Simulation constants
-  // -----------------------------
+  // =========================================================
+  // Scenario constants (v1)
+  // =========================================================
   const headcount = 8;
   const costPerExit = 1_500_000;
 
-  // -----------------------------
-  // Run simulation
-  // -----------------------------
+  // =========================================================
+  // Run simulation (debounced)
+  // =========================================================
   useEffect(() => {
     const timeout = setTimeout(async () => {
       setLoading(true);
@@ -49,9 +49,9 @@ export default function SimulatePage() {
     return () => clearTimeout(timeout);
   }, [riskReductionPct, interventionCost]);
 
-  // -----------------------------
+  // =========================================================
   // Derived values
-  // -----------------------------
+  // =========================================================
   const simulatedRisk =
     simulation?.simulated_kpis?.attrition_risk?.value;
 
@@ -78,9 +78,35 @@ export default function SimulatePage() {
       ? exitsAvoided * costPerExit
       : undefined;
 
-  // -----------------------------
-  // Copy / Save / Load helpers
-  // -----------------------------
+  // =========================================================
+  // Visual diff helper
+  // =========================================================
+  const renderDelta = (
+    delta: number | undefined,
+    goodDirection: "up" | "down"
+  ) => {
+    if (!delta || delta === 0) return null;
+
+    const isPositive =
+      (goodDirection === "down" && delta > 0) ||
+      (goodDirection === "up" && delta < 0);
+
+    return (
+      <span
+        style={{
+          marginLeft: 6,
+          fontSize: 12,
+          color: isPositive ? "#22c55e" : "#ef4444",
+        }}
+      >
+        {isPositive ? "▲" : "▼"} {Math.abs(delta)}
+      </span>
+    );
+  };
+
+  // =========================================================
+  // Copy / Save / Load / Export helpers
+  // =========================================================
   const copyExecutiveSummary = () => {
     if (!simulation) return;
 
@@ -121,35 +147,40 @@ Confidence: ${Math.round(
     setSimulation(parsed.simulation);
   };
 
-  // -----------------------------
-// Visual diff helpers
-// -----------------------------
-const renderDelta = (
-  delta: number | undefined,
-  direction: "up" | "down"
-) => {
-  if (delta === undefined || delta === 0) return null;
+  const exportForEmail = () => {
+    if (!simulation) return;
 
-  const isPositive =
-    (direction === "down" && delta > 0) ||
-    (direction === "up" && delta < 0);
+    const text = `
+Subject: Catalyst Simulation Summary (${persona})
 
-  return (
-    <span
-      style={{
-        marginLeft: 6,
-        fontSize: 12,
-        color: isPositive ? "#22c55e" : "#ef4444",
-      }}
-    >
-      {isPositive ? "▲" : "▼"} {Math.abs(delta)}
-    </span>
-  );
-};
+Under a ${riskReductionPct}% attrition risk reduction scenario, Catalyst estimates ₹${simulation.cfo_impact.cost_avoided.toLocaleString()} in avoided attrition-related costs, resulting in a net ROI of ₹${simulation.cfo_impact.net_roi.toLocaleString()} at ${Math.round(
+      simulation.confidence.confidence_level * 100
+    )}% confidence.
+`.trim();
 
-  // -----------------------------
+    navigator.clipboard.writeText(text);
+  };
+
+  const exportForSlides = () => {
+    if (!simulation) return;
+
+    const text = `
+CATALYST — SIMULATION SUMMARY
+
+• Risk reduction: ${riskReductionPct}%
+• Cost avoided: ₹${simulation.cfo_impact.cost_avoided.toLocaleString()}
+• Net ROI: ₹${simulation.cfo_impact.net_roi.toLocaleString()}
+• Confidence: ${Math.round(
+      simulation.confidence.confidence_level * 100
+    )}%
+`.trim();
+
+    navigator.clipboard.writeText(text);
+  };
+
+  // =========================================================
   // Render
-  // -----------------------------
+  // =========================================================
   return (
     <div>
       <h1>Simulation</h1>
@@ -160,7 +191,7 @@ const renderDelta = (
         <select
           value={persona}
           onChange={(e) =>
-            setPersona(e.target.value as "CHRO" | "CFO")
+            setPersona(e.target.value as "CFO" | "CHRO")
           }
         >
           <option value="CFO">CFO</option>
@@ -196,7 +227,7 @@ const renderDelta = (
       {loading && <p>Running simulation…</p>}
 
       {simulation && (
-        <div>
+        <>
           {/* Executive Summary */}
           <div
             style={{
@@ -225,69 +256,87 @@ const renderDelta = (
               </span>
             )}
 
-            <div style={{ marginTop: 10, display: "flex", gap: 8 }}>
-              <button onClick={copyExecutiveSummary}>Copy</button>
+            <div
+              style={{
+                marginTop: 10,
+                display: "flex",
+                gap: 8,
+                flexWrap: "wrap",
+              }}
+            >
+              <button onClick={copyExecutiveSummary}>
+                Copy Summary
+              </button>
+              <button onClick={exportForEmail}>
+                Export Email
+              </button>
+              <button onClick={exportForSlides}>
+                Export Slides
+              </button>
               <button onClick={saveScenario}>Save</button>
               <button onClick={loadScenario}>Load</button>
             </div>
           </div>
 
           {/* Scenario Comparison */}
-          
           <h3>Scenario Comparison</h3>
 
-<table style={{ marginBottom: 24 }}>
-  <tbody>
-    <tr>
-      <td></td>
-      <td><strong>Baseline</strong></td>
-      <td><strong>Simulated</strong></td>
-    </tr>
+          <table style={{ marginBottom: 24 }}>
+            <tbody>
+              <tr>
+                <td></td>
+                <td>
+                  <strong>Baseline</strong>
+                </td>
+                <td>
+                  <strong>Simulated</strong>
+                </td>
+              </tr>
 
-    {/* Attrition Risk */}
-    <tr>
-      <td>Attrition Risk</td>
-      <td>{baselineAttritionRisk}%</td>
-      <td>
-        {simulatedRisk}%
-        {renderDelta(riskDelta, "down")}
-      </td>
-    </tr>
+              <tr>
+                <td>Attrition Risk</td>
+                <td>{baselineAttritionRisk}%</td>
+                <td>
+                  {simulatedRisk}%{" "}
+                  {renderDelta(riskDelta, "down")}
+                </td>
+              </tr>
 
-    {/* Annual Cost */}
-    <tr>
-      <td>Annual Attrition Cost</td>
-      <td>₹{baselineAnnualCost.toLocaleString()}</td>
-      <td>
-        ₹{simulatedCost?.toLocaleString()}
-        {renderDelta(costDelta, "down")}
-      </td>
-    </tr>
+              <tr>
+                <td>Annual Attrition Cost</td>
+                <td>
+                  ₹{baselineAnnualCost.toLocaleString()}
+                </td>
+                <td>
+                  ₹{simulatedCost?.toLocaleString()}{" "}
+                  {renderDelta(costDelta, "down")}
+                </td>
+              </tr>
 
-    {/* Net Impact */}
-    <tr>
-      <td>
-        {persona === "CFO"
-          ? "Net Capital Impact"
-          : "Net Workforce Cost Impact"}
-      </td>
-      <td>—</td>
-      <td
-        style={{
-          color:
-            simulation.cfo_impact.net_roi >= 0
-              ? "#22c55e"
-              : "#ef4444",
-        }}
-      >
-        ₹{simulation.cfo_impact.net_roi.toLocaleString()}
-      </td>
-    </tr>
-  </tbody>
-</table>
+              <tr>
+                <td>
+                  {persona === "CFO"
+                    ? "Net Capital Impact"
+                    : "Net Workforce Cost Impact"}
+                </td>
+                <td>—</td>
+                <td
+                  style={{
+                    color:
+                      simulation.cfo_impact.net_roi >= 0
+                        ? "#22c55e"
+                        : "#ef4444",
+                  }}
+                >
+                  ₹{simulation.cfo_impact.net_roi.toLocaleString()}
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
-          {/* KPIs */}
+          {/* Workforce KPIs */}
           <h3>Workforce Impact</h3>
+
           <div style={{ display: "flex", gap: 16 }}>
             <KpiCard
               title="Attrition Risk"
@@ -310,15 +359,15 @@ const renderDelta = (
 
           {/* Confidence */}
           <p style={{ marginTop: 16, color: "#6b7280" }}>
-            Confidence range: ₹
+            Estimated confidence range: ₹
             {simulation.confidence.low.toLocaleString()} – ₹
             {simulation.confidence.high.toLocaleString()} (
             {Math.round(
               simulation.confidence.confidence_level * 100
             )}
-            %)
+            % confidence)
           </p>
-        </div>
+        </>
       )}
     </div>
   );
