@@ -23,9 +23,9 @@ export default function SimulatePage() {
   const baselineAttritionRisk = 24.2;
   const baselineAnnualCost = 1940;
 
-// -----------------------------
-// Simulation constants (v1 scenario-level)
-// -----------------------------
+  // -----------------------------
+  // Simulation constants
+  // -----------------------------
   const headcount = 8;
   const costPerExit = 1_500_000;
 
@@ -58,9 +58,6 @@ export default function SimulatePage() {
   const simulatedCost =
     simulation?.simulated_kpis?.annual_attrition_cost_exposure?.value;
 
-  // -----------------------------
-  // Deltas (directional intelligence)
-  // -----------------------------
   const riskDelta =
     simulatedRisk !== undefined
       ? Math.round(baselineAttritionRisk - simulatedRisk)
@@ -71,18 +68,39 @@ export default function SimulatePage() {
       ? Math.round(baselineAnnualCost - simulatedCost)
       : undefined;
 
-// -----------------------------
-// Simulation driver breakdown (v1)
-// -----------------------------
   const exitsAvoided =
     riskDelta !== undefined
-    ? Math.round((riskDelta / 100) * headcount)
-    : undefined;
+      ? Math.round((riskDelta / 100) * headcount)
+      : undefined;
 
   const savingsFromExits =
     exitsAvoided !== undefined
-    ? exitsAvoided * costPerExit
-    : undefined;
+      ? exitsAvoided * costPerExit
+      : undefined;
+
+  // -----------------------------
+  // Copy Executive Summary
+  // -----------------------------
+  const copyExecutiveSummary = () => {
+    if (!simulation) return;
+
+    const text = `
+Executive Summary (${persona})
+
+Risk Reduction: ${riskReductionPct}%
+Cost Avoided: ₹${simulation.cfo_impact.cost_avoided.toLocaleString()}
+Net ROI: ₹${simulation.cfo_impact.net_roi.toLocaleString()}
+Confidence: ${Math.round(
+      simulation.confidence.confidence_level * 100
+    )}%
+
+Baseline → Simulated
+Attrition Risk: ${baselineAttritionRisk}% → ${simulatedRisk}%
+Annual Cost: ₹${baselineAnnualCost.toLocaleString()} → ₹${simulatedCost}
+`.trim();
+
+    navigator.clipboard.writeText(text);
+  };
 
   // -----------------------------
   // KPI Definitions
@@ -119,17 +137,8 @@ export default function SimulatePage() {
     "CFO" | "CHRO",
     (keyof typeof kpiDefinitions)[]
   > = {
-    CFO: [
-      "net_roi",
-      "roi_multiple",
-      "cost_avoided",
-      "intervention_cost",
-    ],
-    CHRO: [
-      "risk_reduction",
-      "cost_avoided",
-      "net_roi",
-    ],
+    CFO: ["net_roi", "roi_multiple", "cost_avoided", "intervention_cost"],
+    CHRO: ["risk_reduction", "cost_avoided", "net_roi"],
   };
 
   // -----------------------------
@@ -178,323 +187,105 @@ export default function SimulatePage() {
         </div>
       </div>
 
-      {/* Loading */}
       {loading && <p>Running simulation…</p>}
 
-      {/* Simulation Output */}
       {simulation && (
         <>
-        {/* Executive Summary */}
-<div
-  style={{
-    background: "#020617",
-    border: "1px solid #1e293b",
-    padding: 16,
-    marginBottom: 24,
-    borderRadius: 6,
-    fontSize: 14,
-    color: "#e5e7eb",
-    lineHeight: 1.6,
-  }}
->
-  <strong>Executive Summary:</strong>{" "}
-  {persona === "CFO" ? (
-  <>
-    Under a <strong>{riskReductionPct}%</strong> attrition risk reduction
-    scenario, Catalyst estimates{" "}
-    <strong>
-      ₹{simulation.cfo_impact.cost_avoided.toLocaleString()}
-    </strong>{" "}
-    in reduced attrition-related cost exposure, resulting in a net
-    capital impact of{" "}
-    <strong>
-      ₹{simulation.cfo_impact.net_roi.toLocaleString()}
-    </strong>{" "}
-    at{" "}
-    <strong>
-      {Math.round(
-        simulation.confidence.confidence_level * 100
-      )}
-      %
-    </strong>{" "}
-    confidence.
-  </>
-) : (
-  <>
-    A <strong>{riskReductionPct}%</strong> reduction in attrition risk is
-    projected to improve workforce stability and reduce the likelihood
-    of regretted exits, avoiding{" "}
-    <strong>
-      ₹{simulation.cfo_impact.cost_avoided.toLocaleString()}
-    </strong>{" "}
-    in attrition-related losses.
-  </>
-)}
-
-</div>
-
-{/* Scenario Comparison */}
-<div style={{ marginBottom: 32 }}>
-  <h3>Scenario Comparison</h3>
-
-  <div
-    style={{
-      display: "grid",
-      gridTemplateColumns: "1fr 1fr 1fr",
-      gap: 12,
-      fontSize: 14,
-      color: "#e5e7eb",
-    }}
-  >
-    {/* Header */}
-    <div></div>
-    <div style={{ fontWeight: 600 }}>Baseline</div>
-    <div style={{ fontWeight: 600 }}>Simulated</div>
-
-    {/* Attrition Risk */}
-    <div>Attrition Risk</div>
-    <div>{baselineAttritionRisk}%</div>
-    <div>
-      {simulatedRisk !== undefined ? `${simulatedRisk}%` : "—"}
-    </div>
-
-    {/* Annual Cost */}
-    <div>Annual Attrition Cost</div>
-    <div>₹{baselineAnnualCost.toLocaleString()}</div>
-    <div>
-      {simulatedCost !== undefined
-        ? `₹${simulatedCost.toLocaleString()}`
-        : "—"}
-    </div>
-
-    {/* Financial Impact */}
-    <div>
-  {persona === "CFO"
-    ? "Net Capital Impact"
-    : "Net Workforce Cost Impact"}
-</div>
-
-    <div>—</div>
-    <div>
-      ₹{simulation.cfo_impact.net_roi.toLocaleString()}
-    </div>
-  </div>
-</div>
-
-          <h3>Workforce Impact</h3>
-
-          <div style={{ display: "flex", gap: 16, marginBottom: 24 }}>
-            <KpiCard
-              title="Attrition Risk"
-              value={
-                simulatedRisk !== undefined
-                  ? `${simulatedRisk}%`
-                  : "—"
-              }
-              delta={riskDelta}
-              deltaDirection={
-                riskDelta === undefined
-                  ? undefined
-                  : riskDelta > 0
-                  ? "down"
-                  : riskDelta < 0
-                  ? "up"
-                  : "neutral"
-              }
-            />
-
-            <KpiCard
-              title="Annual Attrition Cost"
-              value={
-                simulatedCost !== undefined
-                  ? `₹${simulatedCost.toLocaleString()}`
-                  : "—"
-              }
-              delta={costDelta}
-              deltaDirection={
-                costDelta === undefined
-                  ? undefined
-                  : costDelta > 0
-                  ? "down"
-                  : costDelta < 0
-                  ? "up"
-                  : "neutral"
-              }
-            />
-          </div>
-          {savingsFromExits !== undefined && (
-           <div
-            style={{
-              fontSize: 13,
-              color: "#9ca3af",
-              marginBottom: 24,
-            }}
-         >
-            Implied savings from exits avoided: ₹
-            {savingsFromExits.toLocaleString()}
-          </div>
-        )}
-
-          {/* Narrative Insight */}
+          {/* Executive Summary */}
           <div
             style={{
-              background: "#111827",
-              border: "1px solid #1f2937",
+              background: "#020617",
+              border: "1px solid #1e293b",
               padding: 16,
               marginBottom: 24,
               borderRadius: 6,
-              fontSize: 14,
-              color: "#d1d5db",
+              color: "#e5e7eb",
             }}
           >
+            <strong>Executive Summary:</strong>{" "}
             {persona === "CFO" ? (
               <>
-                <strong>
-                  {persona === "CFO" ? "Executive Insight:" : "People Insight:"}
-                </strong>
-                {" "}
-                This intervention is projected to avoid{" "}
+                Under a <strong>{riskReductionPct}%</strong> attrition risk
+                reduction scenario, Catalyst estimates{" "}
                 <strong>
                   ₹{simulation.cfo_impact.cost_avoided.toLocaleString()}
                 </strong>{" "}
-                in attrition-related losses, delivering a net ROI of{" "}
+                in reduced attrition-related cost exposure, resulting in a
+                net capital impact of{" "}
                 <strong>
                   ₹{simulation.cfo_impact.net_roi.toLocaleString()}
                 </strong>{" "}
-                with a confidence level of{" "}
-                {Math.round(
-                  simulation.confidence.confidence_level * 100
-                )}
-                %.
+                at{" "}
+                <strong>
+                  {Math.round(
+                    simulation.confidence.confidence_level * 100
+                  )}
+                  %
+                </strong>{" "}
+                confidence.
               </>
             ) : (
               <>
-                <strong>People Insight:</strong>{" "}
-                Attrition risk is projected to decline by{" "}
-                <strong>{riskDelta}%</strong>, indicating improved
-                workforce stability and reduced likelihood of
-                regretted exits under the proposed intervention.
+                A <strong>{riskReductionPct}%</strong> reduction in
+                attrition risk is projected to improve workforce
+                stability and reduce the likelihood of regretted exits,
+                avoiding{" "}
+                <strong>
+                  ₹{simulation.cfo_impact.cost_avoided.toLocaleString()}
+                </strong>{" "}
+                in attrition-related losses.
               </>
             )}
+
+            <div style={{ marginTop: 10 }}>
+              <button onClick={copyExecutiveSummary}>
+                Copy Summary
+              </button>
+            </div>
           </div>
 
-          {/* Persona-ordered KPIs */}
-          <h3>CFO Impact</h3>
+          {/* Scenario Comparison */}
+          <h3>Scenario Comparison</h3>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 12 }}>
+            <div></div>
+            <div><strong>Baseline</strong></div>
+            <div><strong>Simulated</strong></div>
 
-          <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
-            {kpiOrderByPersona[persona].map((key) => {
-              const kpi = kpiDefinitions[key];
+            <div>Attrition Risk</div>
+            <div>{baselineAttritionRisk}%</div>
+            <div>{simulatedRisk}%</div>
 
-              if (!kpi || typeof kpi.value !== "number") return null;
+            <div>Annual Attrition Cost</div>
+            <div>₹{baselineAnnualCost.toLocaleString()}</div>
+            <div>₹{simulatedCost?.toLocaleString()}</div>
 
-              return (
-                <KpiCard
-                  key={key} 
-                  title={kpi.title}
-                  value={kpi.format(kpi.value)}
-                />
-              );
-            })}
-
+            <div>{persona === "CFO" ? "Net Capital Impact" : "Net Workforce Cost Impact"}</div>
+            <div>—</div>
+            <div>₹{simulation.cfo_impact.net_roi.toLocaleString()}</div>
           </div>
-{simulation && (
-  <div style={{ marginTop: 32 }}>
-    <h3>Simulation Driver Breakdown</h3>
 
-    <div
-      style={{
-        background: "#0f172a",
-        border: "1px solid #1e293b",
-        padding: 16,
-        borderRadius: 6,
-        fontSize: 14,
-        color: "#e5e7eb",
-        lineHeight: 1.6,
-      }}
-    >
-      {/* Driver 1 */}
-      <div style={{ marginBottom: 12 }}>
-        <strong>Risk Reduction Applied</strong>
-        <div>
-          Attrition risk reduced by{" "}
-          <strong>{riskReductionPct}%</strong> through the simulated
-          intervention.
-        </div>
-      </div>
-
-      {/* Driver 2 */}
-      <div style={{ marginBottom: 12 }}>
-        <strong>Estimated Exits Avoided</strong>
-        <div>
-          This reduction in risk corresponds to approximately{" "}
-          <strong>{exitsAvoided} avoided exits</strong> lowering financial exposure.
-        </div>
-      </div>
-
-      {/* Driver 3 */}
-      <div style={{ marginBottom: 12 }}>
-        <strong>Cost Avoided</strong>
-        <div>
-          Preventing these exits avoids approximately{" "}
-          <strong>
-            ₹{simulation.cfo_impact.cost_avoided.toLocaleString()}
-          </strong>{" "}
-          in attrition-related costs, reducing annual exposure to{" "}
-          <strong>
-            ₹{simulatedCost?.toLocaleString()}
-          </strong>.
-        </div>
-      </div>
-
-      {/* Driver 4 */}
-      <div>
-        <strong>ROI Outcome</strong>
-        <div>
-          Against an intervention cost of{" "}
-          <strong>
-            ₹{simulation.cfo_impact.intervention_cost.toLocaleString()}
-          </strong>
-          , this scenario yields a net ROI of{" "}
-          <strong>
-            ₹{simulation.cfo_impact.net_roi.toLocaleString()}
-          </strong>{" "}
-          (ROI multiple:{" "}
-          <strong>{simulation.cfo_impact.roi_multiple}×</strong>).
-        </div>
-
-        {persona === "CHRO" && (
-          <div
-            style={{
-              marginTop: 6,
-              fontSize: 13,
-              color: "#9ca3af",
-              fontStyle: "italic",
-            }}
-          >
-            Financial ROI reflects modeled cost timing; workforce stability
-            benefits may extend beyond the simulated period.
+          {/* Workforce KPIs */}
+          <h3>Workforce Impact</h3>
+          <div style={{ display: "flex", gap: 16 }}>
+            <KpiCard title="Attrition Risk" value={`${simulatedRisk}%`} delta={riskDelta} />
+            <KpiCard title="Annual Attrition Cost" value={`₹${simulatedCost?.toLocaleString()}`} delta={costDelta} />
           </div>
-        )}
-      </div>
-    </div>
-  </div>
-)}
-      
+
+          {savingsFromExits && (
+            <p>Implied savings from exits avoided: ₹{savingsFromExits.toLocaleString()}</p>
+          )}
+
+          {/* Driver Breakdown */}
+          <h3>Simulation Driver Breakdown</h3>
+          <p>Risk reduction → exits avoided → cost avoided → ROI impact.</p>
+
           {/* Confidence */}
-          <p
-            style={{
-              marginTop: 16,
-              fontSize: 13,
-              color: "#6b7280",
-            }}
-          >
+          <p style={{ marginTop: 16, color: "#6b7280" }}>
             Estimated confidence range: ₹
             {simulation.confidence.low.toLocaleString()} – ₹
             {simulation.confidence.high.toLocaleString()} (
-            {Math.round(
-              simulation.confidence.confidence_level * 100
-            )}
-            % confidence)
+            {Math.round(simulation.confidence.confidence_level * 100)}%
+            confidence)
           </p>
         </>
       )}
