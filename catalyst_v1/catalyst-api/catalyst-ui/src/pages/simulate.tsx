@@ -122,6 +122,32 @@ Confidence: ${Math.round(
   };
 
   // -----------------------------
+// Visual diff helpers
+// -----------------------------
+const renderDelta = (
+  delta: number | undefined,
+  direction: "up" | "down"
+) => {
+  if (delta === undefined || delta === 0) return null;
+
+  const isPositive =
+    (direction === "down" && delta > 0) ||
+    (direction === "up" && delta < 0);
+
+  return (
+    <span
+      style={{
+        marginLeft: 6,
+        fontSize: 12,
+        color: isPositive ? "#22c55e" : "#ef4444",
+      }}
+    >
+      {isPositive ? "▲" : "▼"} {Math.abs(delta)}
+    </span>
+  );
+};
+
+  // -----------------------------
   // Render
   // -----------------------------
   return (
@@ -207,31 +233,58 @@ Confidence: ${Math.round(
           </div>
 
           {/* Scenario Comparison */}
+          
           <h3>Scenario Comparison</h3>
-          <table style={{ marginBottom: 24 }}>
-            <tbody>
-              <tr>
-                <td></td>
-                <td><strong>Baseline</strong></td>
-                <td><strong>Simulated</strong></td>
-              </tr>
-              <tr>
-                <td>Attrition Risk</td>
-                <td>{baselineAttritionRisk}%</td>
-                <td>{simulatedRisk}%</td>
-              </tr>
-              <tr>
-                <td>Annual Cost</td>
-                <td>₹{baselineAnnualCost.toLocaleString()}</td>
-                <td>₹{simulatedCost?.toLocaleString()}</td>
-              </tr>
-              <tr>
-                <td>Net Impact</td>
-                <td>—</td>
-                <td>₹{simulation.cfo_impact.net_roi.toLocaleString()}</td>
-              </tr>
-            </tbody>
-          </table>
+
+<table style={{ marginBottom: 24 }}>
+  <tbody>
+    <tr>
+      <td></td>
+      <td><strong>Baseline</strong></td>
+      <td><strong>Simulated</strong></td>
+    </tr>
+
+    {/* Attrition Risk */}
+    <tr>
+      <td>Attrition Risk</td>
+      <td>{baselineAttritionRisk}%</td>
+      <td>
+        {simulatedRisk}%
+        {renderDelta(riskDelta, "down")}
+      </td>
+    </tr>
+
+    {/* Annual Cost */}
+    <tr>
+      <td>Annual Attrition Cost</td>
+      <td>₹{baselineAnnualCost.toLocaleString()}</td>
+      <td>
+        ₹{simulatedCost?.toLocaleString()}
+        {renderDelta(costDelta, "down")}
+      </td>
+    </tr>
+
+    {/* Net Impact */}
+    <tr>
+      <td>
+        {persona === "CFO"
+          ? "Net Capital Impact"
+          : "Net Workforce Cost Impact"}
+      </td>
+      <td>—</td>
+      <td
+        style={{
+          color:
+            simulation.cfo_impact.net_roi >= 0
+              ? "#22c55e"
+              : "#ef4444",
+        }}
+      >
+        ₹{simulation.cfo_impact.net_roi.toLocaleString()}
+      </td>
+    </tr>
+  </tbody>
+</table>
 
           {/* KPIs */}
           <h3>Workforce Impact</h3>
