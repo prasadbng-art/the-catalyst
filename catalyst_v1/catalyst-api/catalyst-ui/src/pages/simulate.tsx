@@ -269,21 +269,46 @@ CATALYST — SIMULATION SUMMARY
             {persona === "CFO" && (
               <>
                 <p>
-                  This intervention reduces attrition exposure but does
-                  not achieve positive ROI within the modeled period.
+                  Under current assumptions, this intervention reduces
+                  attrition-related cost exposure but does not generate
+                  a positive net return within the modeled period.
                 </p>
+
                 <p>
-                  Financial justification improves only if risk
-                  reduction exceeds current assumptions or cost per
-                  exit is materially higher.
+                  The primary constraint is <strong>scale</strong>:
+                  financial returns remain negative because avoided
+                  attrition costs do not yet offset the fixed
+                  intervention investment.
                 </p>
+
+                <p>
+                  <strong>Break-even improves materially</strong> if
+                  one or more of the following conditions are met:
+                </p>
+
                 <ul>
-                  <li>Downside risk remains bounded</li>
-                  <li>Returns are timing-sensitive</li>
-                  <li>Cost discipline is critical</li>
+                  <li>
+                    Risk reduction exceeds the current scenario
+                    assumptions
+                  </li>
+                  <li>
+                    Cost per regretted exit is higher than modeled
+                  </li>
+                  <li>
+                    Intervention costs can be staged or targeted
+                  </li>
                 </ul>
+
+                <p>
+                  <strong>CFO Guidance:</strong> This scenario is best
+                  treated as a <em>risk containment investment</em>
+                  rather than a near-term cost recovery initiative.
+                  Financial viability improves with tighter targeting
+                  and phased deployment.
+                </p>
               </>
             )}
+
 
             {persona === "CHRO" && (
               <>
