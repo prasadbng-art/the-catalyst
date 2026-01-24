@@ -1,43 +1,47 @@
-type StressProfile = {
-  peopleRisk: number;
-  costPressure: number;
-  executionStrain: number;
-  macroVolatility: number;
-};
+import {
+  computeMotionState,
+  type MotionState,
+  type StressProfile,
+} from "./motion";
 
-export default function StaticMagicCube({
-  stress,
-  size = 240,
-}: {
+type MagicCubeProps = {
   stress: StressProfile;
   size?: number;
-}) {
+};
+
+export default function MagicCube({
+  stress,
+  size = 240,
+}: MagicCubeProps) {
+  // =====================================================
+  // Motion state (semantic, not animated yet)
+  // =====================================================
+  const motionState: MotionState = computeMotionState(stress);
+
+  // =====================================================
+  // Geometry
+  // =====================================================
   const center = size / 2;
   const radius = size * 0.35;
 
-  // Convert normalized stress (0–1) into radial points
   const points = [
     {
       label: "People",
-      value: stress.peopleRisk,
       x: center,
       y: center - radius * stress.peopleRisk,
     },
     {
       label: "Cost",
-      value: stress.costPressure,
       x: center + radius * stress.costPressure,
       y: center,
     },
     {
       label: "Execution",
-      value: stress.executionStrain,
       x: center,
       y: center + radius * stress.executionStrain,
     },
     {
       label: "Macro",
-      value: stress.macroVolatility,
       x: center - radius * stress.macroVolatility,
       y: center,
     },
@@ -47,6 +51,9 @@ export default function StaticMagicCube({
     .map((p) => `${p.x},${p.y}`)
     .join(" ");
 
+  // =====================================================
+  // Render
+  // =====================================================
   return (
     <svg width={size} height={size}>
       {/* Axes */}
@@ -99,6 +106,17 @@ export default function StaticMagicCube({
           {p.label}
         </text>
       ))}
+
+      {/* Motion state (temporary dev visibility) */}
+      <text
+        x={center}
+        y={size - 8}
+        fontSize="10"
+        fill="#94a3b8"
+        textAnchor="middle"
+      >
+        State: {motionState.toUpperCase()}
+      </text>
     </svg>
   );
 }
