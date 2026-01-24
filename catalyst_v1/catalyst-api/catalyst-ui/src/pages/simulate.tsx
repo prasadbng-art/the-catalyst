@@ -387,7 +387,10 @@ CATALYST — SIMULATION SUMMARY
                   USD.format{baselineAnnualCost.toLocaleString()}
                 </td>
                 <td>
-                  USD.format{simulatedCost?.toLocaleString()}{" "}
+                  {simulatedCost !== undefined
+                    ? USD.format(simulatedCost)
+                    : "—"}
+
                   {renderDelta(costDelta, "down")}
                 </td>
               </tr>
