@@ -2,10 +2,8 @@
 // Motion State Model — Catalyst Visual Intelligence
 // =======================================================
 
-import type { Persona } from "../../types/persona";
-
+export type Persona = "CEO" | "CFO" | "CHRO";
 export type MotionState = "stable" | "tension" | "overload";
-
 export type StressProfile = {
   people: number;     // People / talent pressure (0–100)
   cost: number;       // Cost rigidity / margin pressure (0–100)
@@ -20,7 +18,7 @@ export type StressProfile = {
  * This logic is intentionally simple, explainable,
  * and executive-auditable.
  */
-export function computeMotionState(
+export function getMotionState(
   stress: StressProfile
 ): MotionState {
   const max  = Math.max(
