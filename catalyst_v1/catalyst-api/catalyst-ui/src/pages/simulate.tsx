@@ -384,10 +384,10 @@ CATALYST — SIMULATION SUMMARY
               <tr>
                 <td>Annual Attrition Cost</td>
                 <td>
-                  ₹{baselineAnnualCost.toLocaleString()}
+                  USD.format{baselineAnnualCost.toLocaleString()}
                 </td>
                 <td>
-                  ₹{simulatedCost?.toLocaleString()}{" "}
+                  USD.format{simulatedCost?.toLocaleString()}{" "}
                   {renderDelta(costDelta, "down")}
                 </td>
               </tr>
@@ -419,12 +419,12 @@ CATALYST — SIMULATION SUMMARY
           <div style={{ display: "flex", gap: 16 }}>
             <KpiCard
               title="Attrition Risk"
-              value={`${simulatedRisk}%`}
+              value={`USD.format{simulatedRisk}%`}
               delta={riskDelta}
             />
             <KpiCard
               title="Annual Attrition Cost"
-              value={`₹${simulatedCost?.toLocaleString()}`}
+              value={`USD.format{simulatedCost?.toLocaleString()}`}
               delta={costDelta}
             />
           </div>
