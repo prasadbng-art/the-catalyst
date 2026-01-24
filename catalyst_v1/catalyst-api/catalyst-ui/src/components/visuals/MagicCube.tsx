@@ -13,13 +13,14 @@ type MagicCubeProps = {
 
 export default function MagicCube({
   stress,
+  persona,
   size = 220,
 }: MagicCubeProps) {
   // =====================================================
   // Motion semantics
   // =====================================================
   const motionState: MotionState = computeMotionState(stress);
-  const annotation = getMotionAnnotation(motionState,persona);
+  const annotation = getMotionAnnotation(motionState, persona);
 
   // =====================================================
   // Geometry
