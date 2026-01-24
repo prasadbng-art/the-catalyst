@@ -8,7 +8,8 @@ export default function SimulatePage() {
   // =========================================================
   const [riskReductionPct, setRiskReductionPct] = useState<number>(25);
   const [interventionCost, setInterventionCost] = useState<number>(120000);
-  const [persona, setPersona] = useState<"CFO" | "CHRO">("CFO");
+  const [persona, setPersona] =
+    useState<"CEO" | "CFO" | "CHRO">("CFO");
 
   // =========================================================
   // State
@@ -113,12 +114,10 @@ export default function SimulatePage() {
     const text = `
 Executive Summary (${persona})
 
-Risk Reduction: ${riskReductionPct}%
-Cost Avoided: ₹${simulation.cfo_impact.cost_avoided.toLocaleString()}
-Net ROI: ₹${simulation.cfo_impact.net_roi.toLocaleString()}
-Confidence: ${Math.round(
-      simulation.confidence.confidence_level * 100
-    )}%
+This scenario improves workforce stability but does not materially improve
+near-term financial returns under current assumptions.
+
+Primary trade-off: reduced people risk in exchange for higher execution load.
 `.trim();
 
     navigator.clipboard.writeText(text);
@@ -153,9 +152,8 @@ Confidence: ${Math.round(
     const text = `
 Subject: Catalyst Simulation Summary (${persona})
 
-Under a ${riskReductionPct}% attrition risk reduction scenario, Catalyst estimates ₹${simulation.cfo_impact.cost_avoided.toLocaleString()} in avoided attrition-related costs, resulting in a net ROI of ₹${simulation.cfo_impact.net_roi.toLocaleString()} at ${Math.round(
-      simulation.confidence.confidence_level * 100
-    )}% confidence.
+This scenario improves workforce stability by reducing attrition risk.
+Financial outcomes remain sensitive to execution quality and scale.
 `.trim();
 
     navigator.clipboard.writeText(text);
@@ -167,12 +165,9 @@ Under a ${riskReductionPct}% attrition risk reduction scenario, Catalyst estimat
     const text = `
 CATALYST — SIMULATION SUMMARY
 
-• Risk reduction: ${riskReductionPct}%
-• Cost avoided: ₹${simulation.cfo_impact.cost_avoided.toLocaleString()}
-• Net ROI: ₹${simulation.cfo_impact.net_roi.toLocaleString()}
-• Confidence: ${Math.round(
-      simulation.confidence.confidence_level * 100
-    )}%
+• Risk reduction target: ${riskReductionPct}%
+• Strategic intent: Improve resilience
+• Key trade-off: Execution capacity vs people risk
 `.trim();
 
     navigator.clipboard.writeText(text);
@@ -191,9 +186,12 @@ CATALYST — SIMULATION SUMMARY
         <select
           value={persona}
           onChange={(e) =>
-            setPersona(e.target.value as "CFO" | "CHRO")
+            setPersona(
+              e.target.value as "CEO" | "CFO" | "CHRO"
+            )
           }
         >
+          <option value="CEO">CEO</option>
           <option value="CFO">CFO</option>
           <option value="CHRO">CHRO</option>
         </select>
@@ -239,21 +237,71 @@ CATALYST — SIMULATION SUMMARY
               color: "#e5e7eb",
             }}
           >
-            <strong>Executive Summary:</strong>{" "}
-            {persona === "CFO" ? (
-              <span>
-                Under a {riskReductionPct}% attrition risk reduction
-                scenario, Catalyst estimates ₹
-                {simulation.cfo_impact.cost_avoided.toLocaleString()} in
-                avoided costs, resulting in a net ROI of ₹
-                {simulation.cfo_impact.net_roi.toLocaleString()}.
-              </span>
-            ) : (
-              <span>
-                A {riskReductionPct}% reduction in attrition risk is
-                projected to improve workforce stability and reduce
-                regretted exits.
-              </span>
+            <h3>Executive Summary</h3>
+
+            {persona === "CEO" && (
+              <>
+                <p>
+                  This scenario improves workforce stability but does
+                  not materially improve near-term financial returns
+                  under current assumptions.
+                </p>
+                <p>
+                  The intervention redistributes organizational
+                  pressure away from people-related risk and toward
+                  execution capacity.
+                </p>
+                <p>
+                  <strong>
+                    Directionally sound
+                  </strong>{" "}
+                  if leadership bandwidth is available and resilience
+                  is the primary objective.
+                </p>
+                <ul>
+                  <li>Benefits accrue gradually</li>
+                  <li>Execution strain increases</li>
+                  <li>Value improves beyond higher thresholds</li>
+                </ul>
+              </>
+            )}
+
+            {persona === "CFO" && (
+              <>
+                <p>
+                  This intervention reduces attrition exposure but does
+                  not achieve positive ROI within the modeled period.
+                </p>
+                <p>
+                  Financial justification improves only if risk
+                  reduction exceeds current assumptions or cost per
+                  exit is materially higher.
+                </p>
+                <ul>
+                  <li>Downside risk remains bounded</li>
+                  <li>Returns are timing-sensitive</li>
+                  <li>Cost discipline is critical</li>
+                </ul>
+              </>
+            )}
+
+            {persona === "CHRO" && (
+              <>
+                <p>
+                  Attrition risk declines meaningfully, indicating
+                  improved workforce stability under the proposed
+                  intervention.
+                </p>
+                <p>
+                  The impact is strongest in high-risk segments,
+                  suggesting targeted rather than broad deployment.
+                </p>
+                <ul>
+                  <li>Regretted exits reduced</li>
+                  <li>Stability improves before cost recovery</li>
+                  <li>Phased rollout recommended</li>
+                </ul>
+              </>
             )}
 
             <div
