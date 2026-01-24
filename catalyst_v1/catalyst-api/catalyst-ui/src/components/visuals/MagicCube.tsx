@@ -1,144 +1,104 @@
-type StressVector = {
-  PS: number;
-  TME: number;
-  CR: number;
-  EL: number;
-  PE: number;
+type StressProfile = {
+  peopleRisk: number;
+  costPressure: number;
+  executionStrain: number;
+  macroVolatility: number;
 };
 
-type MagicCubeProps = {
-  stress: StressVector;
-};
+export default function StaticMagicCube({
+  stress,
+  size = 240,
+}: {
+  stress: StressProfile;
+  size?: number;
+}) {
+  const center = size / 2;
+  const radius = size * 0.35;
 
-export default function MagicCube({ stress }: MagicCubeProps) {
-  // -----------------------------
-  // Geometry parameters
-  // -----------------------------
-  const base = {
-    frontLeft: { x: 90, y: 110 },
-    frontRight: { x: 210, y: 110 },
-    backRight: { x: 230, y: 60 },
-    backLeft: { x: 110, y: 60 },
-  };
+  // Convert normalized stress (0–1) into radial points
+  const points = [
+    {
+      label: "People",
+      value: stress.peopleRisk,
+      x: center,
+      y: center - radius * stress.peopleRisk,
+    },
+    {
+      label: "Cost",
+      value: stress.costPressure,
+      x: center + radius * stress.costPressure,
+      y: center,
+    },
+    {
+      label: "Execution",
+      value: stress.executionStrain,
+      x: center,
+      y: center + radius * stress.executionStrain,
+    },
+    {
+      label: "Macro",
+      value: stress.macroVolatility,
+      x: center - radius * stress.macroVolatility,
+      y: center,
+    },
+  ];
 
-  const depth = 50;
-  const maxPull = 30;
+  const polygonPoints = points
+    .map((p) => `${p.x},${p.y}`)
+    .join(" ");
 
-  // -----------------------------
-  // Apply stress distortion
-  // -----------------------------
-  const fl = {
-    x: base.frontLeft.x - stress.PS * maxPull,
-    y: base.frontLeft.y + stress.PE * maxPull,
-  };
-
-  const fr = {
-    x: base.frontRight.x + stress.TME * maxPull,
-    y: base.frontRight.y + stress.PE * maxPull,
-  };
-
-  const br = {
-    x: base.backRight.x + stress.CR * maxPull,
-    y: base.backRight.y - stress.PE * maxPull,
-  };
-
-  const bl = {
-    x: base.backLeft.x - stress.EL * maxPull,
-    y: base.backLeft.y - stress.PE * maxPull,
-  };
-
-  // -----------------------------
-  // Color intensity (risk proxy)
-  // -----------------------------
-  const avgStress =
-    (stress.PS +
-      stress.TME +
-      stress.CR +
-      stress.EL +
-      stress.PE) /
-    5;
-
-  const fillColor =
-    avgStress > 0.75
-      ? "#dc2626"
-      : avgStress > 0.5
-      ? "#f59e0b"
-      : "#16a34a";
-
-  // -----------------------------
-  // Render
-  // -----------------------------
   return (
-    <svg
-      width="360"
-      height="300"
-      viewBox="0 0 360 300"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      {/* Background */}
-      <rect width="360" height="300" fill="#020617" />
-
-      {/* Back face */}
-      <polygon
-        points={`${bl.x + depth},${bl.y - depth}
-                 ${br.x + depth},${br.y - depth}
-                 ${br.x},${br.y}
-                 ${bl.x},${bl.y}`}
-        fill={fillColor}
-        opacity="0.25"
+    <svg width={size} height={size}>
+      {/* Axes */}
+      <line
+        x1={center}
+        y1={0}
+        x2={center}
+        y2={size}
+        stroke="#334155"
+        strokeDasharray="4"
+      />
+      <line
+        x1={0}
+        y1={center}
+        x2={size}
+        y2={center}
+        stroke="#334155"
+        strokeDasharray="4"
       />
 
-      {/* Left face */}
+      {/* Stress polygon */}
       <polygon
-        points={`${bl.x},${bl.y}
-                 ${bl.x + depth},${bl.y - depth}
-                 ${fl.x + depth},${fl.y - depth}
-                 ${fl.x},${fl.y}`}
-        fill={fillColor}
-        opacity="0.35"
+        points={polygonPoints}
+        fill="rgba(56,189,248,0.15)"
+        stroke="#38bdf8"
+        strokeWidth={2}
       />
 
-      {/* Right face */}
-      <polygon
-        points={`${br.x},${br.y}
-                 ${br.x + depth},${br.y - depth}
-                 ${fr.x + depth},${fr.y - depth}
-                 ${fr.x},${fr.y}`}
-        fill={fillColor}
-        opacity="0.35"
-      />
+      {/* Vertices */}
+      {points.map((p, i) => (
+        <circle
+          key={i}
+          cx={p.x}
+          cy={p.y}
+          r={4}
+          fill="#38bdf8"
+        />
+      ))}
 
-      {/* Top face */}
-      <polygon
-        points={`${bl.x + depth},${bl.y - depth}
-                 ${br.x + depth},${br.y - depth}
-                 ${fr.x + depth},${fr.y - depth}
-                 ${fl.x + depth},${fl.y - depth}`}
-        fill={fillColor}
-        opacity="0.3"
-      />
-
-      {/* Front face */}
-      <polygon
-        points={`${fl.x},${fl.y}
-                 ${fr.x},${fr.y}
-                 ${br.x},${br.y}
-                 ${bl.x},${bl.y}`}
-        fill={fillColor}
-        opacity="0.45"
-      />
-
-      {/* Title */}
-      <text
-        x="180"
-        y="24"
-        textAnchor="middle"
-        fill="#f9fafb"
-        fontSize="14"
-        fontWeight="600"
-      >
-        Organizational Stress Profile
-      </text>
+      {/* Labels */}
+      {points.map((p, i) => (
+        <text
+          key={i}
+          x={p.x}
+          y={p.y - 8}
+          fontSize="10"
+          fill="#cbd5f5"
+          textAnchor="middle"
+        >
+          {p.label}
+        </text>
+      ))}
     </svg>
   );
 }
