@@ -7,18 +7,19 @@ import {
 
 type MagicCubeProps = {
   stress: StressProfile;
+  persona: "CEO" | "CFO";
   size?: number;
 };
 
 export default function MagicCube({
   stress,
-  size = 240,
+  size = 220,
 }: MagicCubeProps) {
   // =====================================================
   // Motion semantics
   // =====================================================
   const motionState: MotionState = computeMotionState(stress);
-  const annotation = getMotionAnnotation(motionState);
+  const annotation = getMotionAnnotation(motionState,persona);
 
   // =====================================================
   // Geometry

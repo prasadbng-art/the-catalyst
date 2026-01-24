@@ -92,7 +92,7 @@ function BaselineCanvas({
         }}
       >
         <div style={{ flex: "0 0 360px" }}>
-          <StaticMagicCube stress={stress} />
+          <StaticMagicCube stress={stress} persona={persona} />
         </div>
 
         {/* Stress annotations */}
