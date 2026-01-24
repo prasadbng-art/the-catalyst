@@ -57,7 +57,15 @@ export default function MagicCube({
   // Render
   // =====================================================
   return (
-    <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
+    <div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "260px 1fr",
+    gap: 32,
+    alignItems: "center",
+  }}
+>
+
       <svg width={size} height={size}>
         {/* Axes */}
         <line
