@@ -1,12 +1,44 @@
 import { useState } from "react";
 import KpiCard from "../components/kpi/KpiCard";
 
+/* =========================================================
+   Baseline stress model (Phase III – explicit & deterministic)
+========================================================= */
+
+type BaselineStressProfile = {
+  peopleRisk: number;
+  costPressure: number;
+  executionStrain: number;
+  macroVolatility: number;
+};
+
+const baselineStress: BaselineStressProfile = {
+  peopleRisk: 0.65,
+  costPressure: 0.7,
+  executionStrain: 0.4,
+  macroVolatility: 0.6,
+};
+
+/* =========================================================
+   Page
+========================================================= */
+
 export default function BaselinePage() {
+  // Canonical baseline values (must match Simulation assumptions)
+  const baselineAttritionRisk = 24.2;
+  const baselineAnnualCost = 1.94; // $M
+
   return (
     <div style={{ maxWidth: 1100 }}>
       <BaselineHeader />
-      <BaselineCanvas />
-      <BaselineIndicators />
+
+      <BaselineCanvas stress={baselineStress} />
+
+      <BaselineIndicators
+        baselineAttritionRisk={baselineAttritionRisk}
+        baselineAnnualCost={baselineAnnualCost}
+      />
+
       <PersonaAdvisoryPanel />
     </div>
   );
@@ -28,10 +60,14 @@ function BaselineHeader() {
 }
 
 /* =========================================================
-   Main Canvas (Magic Cube placeholder)
+   Main Canvas (Magic Cube placeholder, stress-wired)
 ========================================================= */
 
-function BaselineCanvas() {
+function BaselineCanvas({
+  stress,
+}: {
+  stress: BaselineStressProfile;
+}) {
   return (
     <section
       style={{
@@ -67,9 +103,12 @@ function BaselineCanvas() {
               justifyContent: "center",
               color: "#64748b",
               fontSize: 13,
+              textAlign: "center",
+              padding: 12,
             }}
           >
-            Magic Cube (Baseline)
+            Magic Cube<br />
+            (Baseline Stress State)
           </div>
         </div>
 
@@ -78,24 +117,35 @@ function BaselineCanvas() {
           <ul style={{ margin: 0, paddingLeft: 18, lineHeight: 1.6 }}>
             <li>
               <strong>Primary stress driver:</strong>{" "}
-              Elevated cost rigidity under external economic pressure
+              People risk ({Math.round(stress.peopleRisk * 100)}%) and
+              cost pressure ({Math.round(stress.costPressure * 100)}%)
+              are jointly constraining organizational flexibility.
             </li>
             <li>
               <strong>Risk implication:</strong>{" "}
-              Increased sensitivity to attrition-related cost shocks
+              Elevated macro volatility ({Math.round(
+                stress.macroVolatility * 100
+              )}%) increases sensitivity to attrition-related shocks.
             </li>
           </ul>
         </div>
+
       </div>
     </section>
   );
 }
 
 /* =========================================================
-   Baseline Indicators
+   Baseline Indicators (real data wired)
 ========================================================= */
 
-function BaselineIndicators() {
+function BaselineIndicators({
+  baselineAttritionRisk,
+  baselineAnnualCost,
+}: {
+  baselineAttritionRisk: number;
+  baselineAnnualCost: number;
+}) {
   return (
     <section
       style={{
@@ -120,12 +170,12 @@ function BaselineIndicators() {
       >
         <KpiCard
           title="Baseline Attrition Risk"
-          value="24.2%"
+          value={`${baselineAttritionRisk}%`}
         />
 
         <KpiCard
           title="Annual Attrition Cost Exposure"
-          value="$1.94M"
+          value={`$${baselineAnnualCost.toLocaleString()}M`}
         />
 
         <KpiCard
@@ -138,7 +188,7 @@ function BaselineIndicators() {
 }
 
 /* =========================================================
-   Persona Advisory Panel
+   Persona Advisory Panel (lens, not data)
 ========================================================= */
 
 function PersonaAdvisoryPanel() {
@@ -184,13 +234,13 @@ function PersonaAdvisoryPanel() {
           <>
             <h4>Organizational Resilience Snapshot</h4>
             <p>
-              Pressure is currently concentrated around cost
-              rigidity and talent exposure, reducing flexibility
-              under external volatility.
+              Pressure is concentrated around cost rigidity and
+              talent exposure, reducing flexibility under
+              external volatility.
             </p>
             <p>
-              While surface performance may appear stable,
-              resilience is being tested beneath the system.
+              While surface performance appears stable, system
+              resilience is being tested beneath the surface.
             </p>
           </>
         )}
