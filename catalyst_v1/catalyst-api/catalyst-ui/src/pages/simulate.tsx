@@ -2,6 +2,12 @@ import { useEffect, useState } from "react";
 import { runSimulation, type SimulationResponse } from "../api/simulation";
 import KpiCard from "../components/kpi/KpiCard";
 
+const USD = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  maximumFractionDigits: 0,
+});
+
 export default function SimulatePage() {
   // =========================================================
   // Controls
@@ -401,7 +407,7 @@ CATALYST — SIMULATION SUMMARY
                         : "#ef4444",
                   }}
                 >
-                  ₹{simulation.cfo_impact.net_roi.toLocaleString()}
+                  {USD.format(simulation.cfo_impact.net_roi)}
                 </td>
               </tr>
             </tbody>
