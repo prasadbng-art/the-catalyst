@@ -28,6 +28,7 @@ export default function BaselinePage() {
   // Canonical baseline values (must match Simulation assumptions)
   const baselineAttritionRisk = 24.2;
   const baselineAnnualCost = 1.94; // $M
+  const [persona, setPersona] = useState<"CEO" | "CFO">("CEO");
 
   return (
     <div style={{ maxWidth: 1100 }}>
@@ -41,6 +42,19 @@ export default function BaselinePage() {
       />
 
       <PersonaAdvisoryPanel />
+      <div style={{ marginBottom: 12 }}>
+        <label style={{ marginRight: 8 }}>View as:</label>
+        <select
+          value={persona}
+          onChange={(e) =>
+            setPersona(e.target.value as "CEO" | "CFO")
+          }
+        >
+          <option value="CEO">CEO</option>
+          <option value="CFO">CFO</option>
+        </select>
+      </div>
+
     </div>
   );
 }
