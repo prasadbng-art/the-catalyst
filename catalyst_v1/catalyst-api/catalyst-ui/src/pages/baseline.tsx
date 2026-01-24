@@ -1,23 +1,24 @@
 import { useState } from "react";
 import KpiCard from "../components/kpi/KpiCard";
-import StaticMagicCube from "../components/visuals/MagicCube";
+import MagicCube from "../components/visuals/MagicCube";
+import type { StressProfile } from "../components/visuals/motion";
 
 /* =========================================================
-   Baseline stress model (Phase III – explicit & deterministic)
+   Canonical baseline metrics (must align with Simulation)
 ========================================================= */
 
-type BaselineStressProfile = {
-  peopleRisk: number;
-  costPressure: number;
-  executionStrain: number;
-  macroVolatility: number;
-};
+const baselineAttritionRisk = 24.2;
+const baselineAnnualCost = 1.94; // in $M
 
-const baselineStress: BaselineStressProfile = {
-  peopleRisk: 0.65,
-  costPressure: 0.7,
-  executionStrain: 0.4,
-  macroVolatility: 0.6,
+/* =========================================================
+   Baseline stress profile (single source of truth)
+========================================================= */
+
+const baselineStress: StressProfile = {
+  people: 65,
+  cost: 70,
+  macro: 60,
+  execution: 45,
 };
 
 /* =========================================================
@@ -25,36 +26,38 @@ const baselineStress: BaselineStressProfile = {
 ========================================================= */
 
 export default function BaselinePage() {
-  // Canonical baseline values (must match Simulation assumptions)
-  const baselineAttritionRisk = 24.2;
-  const baselineAnnualCost = 1.94; // $M
-  const [persona, setPersona] = useState<"CEO" | "CFO">("CEO");
+  const [persona, setPersona] = useState<"CEO" | "CFO" | "CHRO">("CEO");
 
   return (
     <div style={{ maxWidth: 1100 }}>
       <BaselineHeader />
 
-      <BaselineCanvas stress={baselineStress} />
+      {/* Persona selector (single, canonical) */}
+      <div style={{ marginBottom: 16 }}>
+        <label style={{ marginRight: 8 }}>View as:</label>
+        <select
+          value={persona}
+          onChange={(e) =>
+            setPersona(e.target.value as "CEO" | "CFO" | "CHRO")
+          }
+        >
+          <option value="CEO">CEO</option>
+          <option value="CFO">CFO</option>
+          <option value="CHRO">CHRO</option>
+        </select>
+      </div>
+
+      <BaselineCanvas
+        stress={baselineStress}
+        persona={persona}
+      />
 
       <BaselineIndicators
         baselineAttritionRisk={baselineAttritionRisk}
         baselineAnnualCost={baselineAnnualCost}
       />
 
-      <PersonaAdvisoryPanel />
-      <div style={{ marginBottom: 12 }}>
-        <label style={{ marginRight: 8 }}>View as:</label>
-        <select
-          value={persona}
-          onChange={(e) =>
-            setPersona(e.target.value as "CEO" | "CFO")
-          }
-        >
-          <option value="CEO">CEO</option>
-          <option value="CFO">CFO</option>
-        </select>
-      </div>
-
+      <PersonaAdvisoryPanel persona={persona} />
     </div>
   );
 }
@@ -75,13 +78,15 @@ function BaselineHeader() {
 }
 
 /* =========================================================
-   Main Canvas (Magic Cube placeholder, stress-wired)
+   Main Canvas (Magic Cube + stress interpretation)
 ========================================================= */
 
 function BaselineCanvas({
   stress,
+  persona,
 }: {
-  stress: BaselineStressProfile;
+  stress: StressProfile;
+  persona: "CEO" | "CFO" | "CHRO";
 }) {
   return (
     <section
@@ -101,39 +106,38 @@ function BaselineCanvas({
       <div
         style={{
           display: "flex",
-          gap: 24,
+          gap: 32,
           alignItems: "center",
         }}
       >
-        <div style={{ flex: "0 0 360px" }}>
-          <StaticMagicCube stress={stress} persona={persona} />
+        {/* Cube */}
+        <div style={{ flex: "0 0 320px" }}>
+          <MagicCube stress={stress} persona={persona} />
         </div>
 
-        {/* Stress annotations */}
+        {/* Stress interpretation */}
         <div style={{ flex: 1 }}>
           <ul style={{ margin: 0, paddingLeft: 18, lineHeight: 1.6 }}>
             <li>
               <strong>Primary stress driver:</strong>{" "}
-              People risk ({Math.round(stress.peopleRisk * 100)}%) and
-              cost pressure ({Math.round(stress.costPressure * 100)}%)
-              are jointly constraining organizational flexibility.
+              People risk ({stress.people}%) and cost pressure (
+              {stress.cost}%) are jointly constraining
+              organizational flexibility.
             </li>
             <li>
               <strong>Risk implication:</strong>{" "}
-              Elevated macro volatility ({Math.round(
-                stress.macroVolatility * 100
-              )}%) increases sensitivity to attrition-related shocks.
+              Elevated macro volatility ({stress.macro}%)
+              increases sensitivity to attrition-related shocks.
             </li>
           </ul>
         </div>
-
       </div>
     </section>
   );
 }
 
 /* =========================================================
-   Baseline Indicators (real data wired)
+   Baseline Indicators
 ========================================================= */
 
 function BaselineIndicators({
@@ -175,23 +179,21 @@ function BaselineIndicators({
           value={`$${baselineAnnualCost.toLocaleString()}M`}
         />
 
-        <KpiCard
-          title="Signal Confidence"
-          value="High"
-        />
+        <KpiCard title="Signal Confidence" value="High" />
       </div>
     </section>
   );
 }
 
 /* =========================================================
-   Persona Advisory Panel (lens, not data)
+   Persona Advisory Panel (interpretive layer only)
 ========================================================= */
 
-function PersonaAdvisoryPanel() {
-  const [persona, setPersona] =
-    useState<"CEO" | "CFO" | "CHRO">("CEO");
-
+function PersonaAdvisoryPanel({
+  persona,
+}: {
+  persona: "CEO" | "CFO" | "CHRO";
+}) {
   return (
     <section
       style={{
@@ -201,31 +203,6 @@ function PersonaAdvisoryPanel() {
         borderRadius: 8,
       }}
     >
-      {/* Persona toggle */}
-      <div
-        style={{
-          marginBottom: 12,
-          display: "flex",
-          gap: 12,
-          alignItems: "center",
-        }}
-      >
-        <strong>View as:</strong>
-        <select
-          value={persona}
-          onChange={(e) =>
-            setPersona(
-              e.target.value as "CEO" | "CFO" | "CHRO"
-            )
-          }
-        >
-          <option value="CEO">CEO</option>
-          <option value="CFO">CFO</option>
-          <option value="CHRO">CHRO</option>
-        </select>
-      </div>
-
-      {/* Advisory copy */}
       <div style={{ maxWidth: 760 }}>
         {persona === "CEO" && (
           <>

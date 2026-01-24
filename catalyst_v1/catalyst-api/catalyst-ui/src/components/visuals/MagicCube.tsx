@@ -7,7 +7,7 @@ import {
 
 type MagicCubeProps = {
   stress: StressProfile;
-  persona: "CEO" | "CFO";
+  persona: "CEO" | "CFO" | "CHRO";
   size?: number;
 };
 
@@ -32,21 +32,21 @@ export default function MagicCube({
     {
       label: "People",
       x: center,
-      y: center - radius * stress.peopleRisk,
+      y: center - radius * stress.people,
     },
     {
       label: "Cost",
-      x: center + radius * stress.costPressure,
+      x: center + radius * stress.cost,
       y: center,
     },
     {
       label: "Execution",
       x: center,
-      y: center + radius * stress.executionStrain,
+      y: center + radius * stress.execution,
     },
     {
       label: "Macro",
-      x: center - radius * stress.macroVolatility,
+      x: center - radius * stress.macro,
       y: center,
     },
   ];

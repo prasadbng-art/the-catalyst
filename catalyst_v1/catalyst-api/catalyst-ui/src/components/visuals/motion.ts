@@ -2,13 +2,15 @@
 // Motion State Model — Catalyst Visual Intelligence
 // =======================================================
 
+import type { Persona } from "../../types/persona";
+
 export type MotionState = "stable" | "tension" | "overload";
 
 export type StressProfile = {
-  peopleRisk: number;
-  costPressure: number;
-  executionStrain: number;
-  macroVolatility: number;
+  people: number;     // People / talent pressure (0–100)
+  cost: number;       // Cost rigidity / margin pressure (0–100)
+  macro: number;      // External volatility (0–100)
+  execution: number;  // Execution / operating strain (0–100)
 };
 
 /**
@@ -21,30 +23,24 @@ export type StressProfile = {
 export function computeMotionState(
   stress: StressProfile
 ): MotionState {
-  const values = Object.values(stress);
-
-  const highStressCount = values.filter(
-    (v) => v >= 0.65
-  ).length;
-
-  const maxStress = Math.max(...values);
-
-  // Overload: multiple stressors or extreme single stress
-  if (highStressCount >= 2 || maxStress >= 0.8) {
-    return "overload";
-  }
-
-  // Tension: localized pressure
-  if (highStressCount === 1) {
-    return "tension";
-  }
-
-  // Stable: stress is present but absorbed
-  return "stable";
+  const max  = Math.max(
+    stress.people,
+    stress.cost,
+    stress.macro,
+    stress.execution
+  );
+  
+  if (max<50) return "stable";
+  if (max<70) return "tension";
+  return "overload";
 }
+// =================================
+// Persona-aware Annotation
+// =================================
+
 export function getMotionAnnotation(
   state: MotionState,
-  persona: "CEO" | "CFO"
+  persona: Persona
 ): {
   title: string;
   message: string;
