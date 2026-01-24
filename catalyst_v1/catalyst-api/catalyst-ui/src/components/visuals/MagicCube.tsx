@@ -1,5 +1,6 @@
 import {
   computeMotionState,
+  getMotionAnnotation,
   type MotionState,
   type StressProfile,
 } from "./motion";
@@ -14,9 +15,10 @@ export default function MagicCube({
   size = 240,
 }: MagicCubeProps) {
   // =====================================================
-  // Motion state (semantic, not animated yet)
+  // Motion semantics
   // =====================================================
   const motionState: MotionState = computeMotionState(stress);
+  const annotation = getMotionAnnotation(motionState);
 
   // =====================================================
   // Geometry
@@ -55,68 +57,83 @@ export default function MagicCube({
   // Render
   // =====================================================
   return (
-    <svg width={size} height={size}>
-      {/* Axes */}
-      <line
-        x1={center}
-        y1={0}
-        x2={center}
-        y2={size}
-        stroke="#334155"
-        strokeDasharray="4"
-      />
-      <line
-        x1={0}
-        y1={center}
-        x2={size}
-        y2={center}
-        stroke="#334155"
-        strokeDasharray="4"
-      />
-
-      {/* Stress polygon */}
-      <polygon
-        points={polygonPoints}
-        fill="rgba(56,189,248,0.15)"
-        stroke="#38bdf8"
-        strokeWidth={2}
-      />
-
-      {/* Vertices */}
-      {points.map((p, i) => (
-        <circle
-          key={i}
-          cx={p.x}
-          cy={p.y}
-          r={4}
-          fill="#38bdf8"
+    <div style={{ display: "flex", gap: 24, alignItems: "center" }}>
+      <svg width={size} height={size}>
+        {/* Axes */}
+        <line
+          x1={center}
+          y1={0}
+          x2={center}
+          y2={size}
+          stroke="#334155"
+          strokeDasharray="4"
         />
-      ))}
+        <line
+          x1={0}
+          y1={center}
+          x2={size}
+          y2={center}
+          stroke="#334155"
+          strokeDasharray="4"
+        />
 
-      {/* Labels */}
-      {points.map((p, i) => (
-        <text
-          key={i}
-          x={p.x}
-          y={p.y - 8}
-          fontSize="10"
-          fill="#cbd5f5"
-          textAnchor="middle"
+        {/* Stress polygon */}
+        <polygon
+          points={polygonPoints}
+          fill="rgba(56,189,248,0.15)"
+          stroke="#38bdf8"
+          strokeWidth={2}
+        />
+
+        {/* Vertices */}
+        {points.map((p, i) => (
+          <circle
+            key={i}
+            cx={p.x}
+            cy={p.y}
+            r={4}
+            fill="#38bdf8"
+          />
+        ))}
+
+        {/* Axis labels */}
+        {points.map((p, i) => (
+          <text
+            key={i}
+            x={p.x}
+            y={p.y - 8}
+            fontSize="10"
+            fill="#cbd5f5"
+            textAnchor="middle"
+          >
+            {p.label}
+          </text>
+        ))}
+      </svg>
+
+      {/* Annotation Layer */}
+      <div style={{ maxWidth: 360 }}>
+        <div
+          style={{
+            fontSize: 13,
+            fontWeight: 600,
+            color: "#e5e7eb",
+            marginBottom: 6,
+          }}
         >
-          {p.label}
-        </text>
-      ))}
+          {annotation.title}
+        </div>
 
-      {/* Motion state (temporary dev visibility) */}
-      <text
-        x={center}
-        y={size - 8}
-        fontSize="10"
-        fill="#94a3b8"
-        textAnchor="middle"
-      >
-        State: {motionState.toUpperCase()}
-      </text>
-    </svg>
+        <div
+          style={{
+            fontSize: 13,
+            color: "#cbd5f5",
+            lineHeight: 1.5,
+          }}
+        >
+          {annotation.message}
+        </div>
+      </div>
+    </div>
   );
 }
