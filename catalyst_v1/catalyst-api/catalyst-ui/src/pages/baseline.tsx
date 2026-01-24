@@ -1,5 +1,6 @@
 import { useState } from "react";
 import KpiCard from "../components/kpi/KpiCard";
+import StaticMagicCube from "../components/visuals/MagicCube";
 
 /* =========================================================
    Baseline stress model (Phase III – explicit & deterministic)
@@ -90,27 +91,11 @@ function BaselineCanvas({
           alignItems: "center",
         }}
       >
-        {/* Magic Cube placeholder */}
-        <div style={{ flex: "0 0 360px" }}>
-          <div
-            style={{
-              width: 360,
-              height: 300,
-              background: "#020617",
-              border: "1px dashed #334155",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#64748b",
-              fontSize: 13,
-              textAlign: "center",
-              padding: 12,
-            }}
-          >
-            Magic Cube<br />
-            (Baseline Stress State)
-          </div>
+        <StaticMagicCube stress={stress} />
+         <div style={{ flex: "0 0 360px" }}>
+          <StaticMagicCube stress={stress} />
         </div>
+
 
         {/* Stress annotations */}
         <div style={{ flex: 1 }}>
