@@ -1,11 +1,8 @@
 import type { StressProfile, Persona } from "./motion";
-import {
-  getMotionState,
-  getMotionAnnotation,
-} from "./motion";
+import { getMotionState, getMotionAnnotation } from "./motion";
 
 /* =========================================================
-   MagicCube — Static Stress Geometry (Phase IV.2)
+   MagicCube — Stress-Weighted Geometry (Phase IV.3)
 ========================================================= */
 
 type MagicCubeProps = {
@@ -14,6 +11,12 @@ type MagicCubeProps = {
   size?: number;
 };
 
+/**
+ * Geometry model:
+ * - Center is fixed
+ * - Each vertex is pushed outward based on stress (0–100)
+ * - Shape deformation = intelligence
+ */
 export default function MagicCube({
   stress,
   persona,
@@ -26,6 +29,46 @@ export default function MagicCube({
   const annotation = getMotionAnnotation(motionState, persona);
 
   /* ---------------------------------------------
+     Geometry constants
+  --------------------------------------------- */
+  const CENTER = size / 2;
+  const BASE_RADIUS = size * 0.25;     // neutral shape
+  const MAX_DELTA = size * 0.18;       // max deformation
+
+  const radius = (value: number) =>
+    BASE_RADIUS + (value / 100) * MAX_DELTA;
+
+  /* ---------------------------------------------
+     Stress-weighted vertices
+  --------------------------------------------- */
+  const vertices = [
+    {
+      key: "people",
+      label: "People",
+      x: CENTER,
+      y: CENTER - radius(stress.people),
+    },
+    {
+      key: "cost",
+      label: "Cost",
+      x: CENTER + radius(stress.cost),
+      y: CENTER,
+    },
+    {
+      key: "execution",
+      label: "Execution",
+      x: CENTER,
+      y: CENTER + radius(stress.execution),
+    },
+    {
+      key: "macro",
+      label: "Macro",
+      x: CENTER - radius(stress.macro),
+      y: CENTER,
+    },
+  ] as const;
+
+  /* ---------------------------------------------
      Dominant stress detection
   --------------------------------------------- */
   const dominantKey = (Object.entries(stress) as [
@@ -33,16 +76,6 @@ export default function MagicCube({
     number
   ][])
     .sort((a, b) => b[1] - a[1])[0][0];
-
-  /* ---------------------------------------------
-     Geometry
-  --------------------------------------------- */
-  const vertices = [
-    { key: "people", x: size / 2, y: 28, label: "People" },
-    { key: "cost", x: size - 28, y: size / 2, label: "Cost" },
-    { key: "execution", x: size / 2, y: size - 28, label: "Execution" },
-    { key: "macro", x: 28, y: size / 2, label: "Macro" },
-  ] as const;
 
   /* =========================================================
      Render
@@ -53,23 +86,23 @@ export default function MagicCube({
       <svg width={size} height={size}>
         {/* Crosshair */}
         <line
-          x1={size / 2}
+          x1={CENTER}
           y1={0}
-          x2={size / 2}
+          x2={CENTER}
           y2={size}
           stroke="#1e293b"
           strokeDasharray="4 4"
         />
         <line
           x1={0}
-          y1={size / 2}
+          y1={CENTER}
           x2={size}
-          y2={size / 2}
+          y2={CENTER}
           stroke="#1e293b"
           strokeDasharray="4 4"
         />
 
-        {/* Polygon */}
+        {/* Deformed polygon */}
         <polygon
           points={vertices.map(v => `${v.x},${v.y}`).join(" ")}
           fill="none"
@@ -83,18 +116,18 @@ export default function MagicCube({
 
           return (
             <g key={v.key}>
-              {/* Soft glow for dominant stress */}
+              {/* Glow for dominant stress */}
               {isDominant && (
                 <circle
                   cx={v.x}
                   cy={v.y}
-                  r={12}
+                  r={14}
                   fill="#38bdf8"
                   opacity={0.25}
                 />
               )}
 
-              {/* Core dot */}
+              {/* Core point */}
               <circle
                 cx={v.x}
                 cy={v.y}
@@ -107,9 +140,9 @@ export default function MagicCube({
                 x={v.x}
                 y={
                   v.key === "people"
-                    ? v.y - 12
+                    ? v.y - 10
                     : v.key === "execution"
-                    ? v.y + 20
+                    ? v.y + 18
                     : v.y + 4
                 }
                 textAnchor="middle"
@@ -129,7 +162,7 @@ export default function MagicCube({
           marginTop: 12,
           background: "#020617",
           border: "1px solid #1e293b",
-          padding: 10,
+          padding: 12,
           borderRadius: 6,
           color: "#e5e7eb",
           fontSize: 13,
