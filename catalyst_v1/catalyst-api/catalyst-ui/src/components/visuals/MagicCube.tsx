@@ -58,14 +58,46 @@ export default function MagicCube({
   // =====================================================
   return (
     <div
-  style={{
-    display: "grid",
-    gridTemplateColumns: "260px 1fr",
-    gap: 32,
-    alignItems: "center",
-  }}
->
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: 12,
+        alignItems: "flex-start",
+        maxWidth: 260,
+      }}
+    >
+      {/* Annotation Caption */}
+      <div
+        style={{
+          background: "#020617",
+          border: "1px solid #1e293b",
+          borderRadius: 6,
+          padding: "10px 12px",
+        }}
+      >
+        <div
+          style={{
+            fontSize: 12,
+            fontWeight: 600,
+            color: "#e5e7eb",
+            marginBottom: 4,
+          }}
+        >
+          {annotation.title}
+        </div>
 
+        <div
+          style={{
+            fontSize: 12,
+            color: "#cbd5f5",
+            lineHeight: 1.4,
+          }}
+        >
+          {annotation.message}
+        </div>
+      </div>
+
+      {/* Magic Cube */}
       <svg width={size} height={size}>
         {/* Axes */}
         <line
@@ -118,30 +150,6 @@ export default function MagicCube({
           </text>
         ))}
       </svg>
-
-      {/* Annotation Layer */}
-      <div style={{ maxWidth: 360 }}>
-        <div
-          style={{
-            fontSize: 13,
-            fontWeight: 600,
-            color: "#e5e7eb",
-            marginBottom: 6,
-          }}
-        >
-          {annotation.title}
-        </div>
-
-        <div
-          style={{
-            fontSize: 13,
-            color: "#cbd5f5",
-            lineHeight: 1.5,
-          }}
-        >
-          {annotation.message}
-        </div>
-      </div>
     </div>
   );
 }
