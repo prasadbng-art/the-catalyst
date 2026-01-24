@@ -91,11 +91,9 @@ function BaselineCanvas({
           alignItems: "center",
         }}
       >
-        <StaticMagicCube stress={stress} />
-         <div style={{ flex: "0 0 360px" }}>
+        <div style={{ flex: "0 0 360px" }}>
           <StaticMagicCube stress={stress} />
         </div>
-
 
         {/* Stress annotations */}
         <div style={{ flex: 1 }}>
