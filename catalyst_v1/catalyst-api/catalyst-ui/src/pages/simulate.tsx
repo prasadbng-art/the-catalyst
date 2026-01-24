@@ -2,43 +2,43 @@ import { useEffect, useState } from "react";
 import { runSimulation, type SimulationResponse } from "../api/simulation";
 import KpiCard from "../components/kpi/KpiCard";
 
+/* =========================================================
+   Currency (US$ canonical)
+========================================================= */
 const USD = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
   maximumFractionDigits: 0,
 });
 
-export default function SimulatePage() {
-  // =========================================================
-  // Controls
-  // =========================================================
-  const [riskReductionPct, setRiskReductionPct] = useState<number>(25);
-  const [interventionCost, setInterventionCost] = useState<number>(120000);
-  const [persona, setPersona] =
-    useState<"CEO" | "CFO" | "CHRO">("CFO");
+/* =========================================================
+   Page
+========================================================= */
 
-  // =========================================================
+export default function SimulatePage() {
+  // ---------------------------------------------------------
+  // Controls
+  // ---------------------------------------------------------
+  const [riskReductionPct, setRiskReductionPct] = useState(25);
+  const [interventionCost, setInterventionCost] = useState(120000);
+  const [persona, setPersona] = useState<"CFO" | "CHRO">("CFO");
+
+  // ---------------------------------------------------------
   // State
-  // =========================================================
+  // ---------------------------------------------------------
   const [simulation, setSimulation] =
     useState<SimulationResponse | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
 
-  // =========================================================
-  // Baseline references (v1 – hardcoded)
-  // =========================================================
+  // ---------------------------------------------------------
+  // Baseline (v1 hardcoded – must match backend)
+  // ---------------------------------------------------------
   const baselineAttritionRisk = 24.2;
   const baselineAnnualCost = 1940;
 
-  // =========================================================
-  // Scenario constants (v1)
-  // =========================================================
-  const headcount = 8;
-  const costPerExit = 1_500_000;
-
-  // =========================================================
+  // ---------------------------------------------------------
   // Run simulation (debounced)
-  // =========================================================
+  // ---------------------------------------------------------
   useEffect(() => {
     const timeout = setTimeout(async () => {
       setLoading(true);
@@ -56,9 +56,9 @@ export default function SimulatePage() {
     return () => clearTimeout(timeout);
   }, [riskReductionPct, interventionCost]);
 
-  // =========================================================
+  // ---------------------------------------------------------
   // Derived values
-  // =========================================================
+  // ---------------------------------------------------------
   const simulatedRisk =
     simulation?.simulated_kpis?.attrition_risk?.value;
 
@@ -67,34 +67,24 @@ export default function SimulatePage() {
 
   const riskDelta =
     simulatedRisk !== undefined
-      ? Math.round(baselineAttritionRisk - simulatedRisk)
+      ? +(baselineAttritionRisk - simulatedRisk).toFixed(1)
       : undefined;
 
   const costDelta =
     simulatedCost !== undefined
-      ? Math.round(baselineAnnualCost - simulatedCost)
+      ? baselineAnnualCost - simulatedCost
       : undefined;
 
-  const exitsAvoided =
-    riskDelta !== undefined
-      ? Math.round((riskDelta / 100) * headcount)
-      : undefined;
-
-  const savingsFromExits =
-    exitsAvoided !== undefined
-      ? exitsAvoided * costPerExit
-      : undefined;
-
-  // =========================================================
-  // Visual diff helper
-  // =========================================================
+  // ---------------------------------------------------------
+  // Render helpers
+  // ---------------------------------------------------------
   const renderDelta = (
     delta: number | undefined,
     goodDirection: "up" | "down"
   ) => {
-    if (!delta || delta === 0) return null;
+    if (delta === undefined || delta === 0) return null;
 
-    const isPositive =
+    const positive =
       (goodDirection === "down" && delta > 0) ||
       (goodDirection === "up" && delta < 0);
 
@@ -103,53 +93,32 @@ export default function SimulatePage() {
         style={{
           marginLeft: 6,
           fontSize: 12,
-          color: isPositive ? "#22c55e" : "#ef4444",
+          color: positive ? "#22c55e" : "#ef4444",
         }}
       >
-        {isPositive ? "▲" : "▼"} {Math.abs(delta)}
+        {positive ? "▲" : "▼"} {Math.abs(delta)}
       </span>
     );
   };
 
-  // =========================================================
-  // Copy / Save / Load / Export helpers
-  // =========================================================
+  // ---------------------------------------------------------
+  // Copy / Export
+  // ---------------------------------------------------------
   const copyExecutiveSummary = () => {
     if (!simulation) return;
 
     const text = `
 Executive Summary (${persona})
 
-This scenario improves workforce stability but does not materially improve
-near-term financial returns under current assumptions.
-
-Primary trade-off: reduced people risk in exchange for higher execution load.
+Risk reduction: ${riskReductionPct}%
+Cost avoided: ${USD.format(simulation.cfo_impact.cost_avoided)}
+Net ROI: ${USD.format(simulation.cfo_impact.net_roi)}
+Confidence: ${Math.round(
+      simulation.confidence.confidence_level * 100
+    )}%
 `.trim();
 
     navigator.clipboard.writeText(text);
-  };
-
-  const saveScenario = () => {
-    if (!simulation) return;
-
-    localStorage.setItem(
-      "catalyst_saved_scenario",
-      JSON.stringify({
-        riskReductionPct,
-        interventionCost,
-        simulation,
-      })
-    );
-  };
-
-  const loadScenario = () => {
-    const saved = localStorage.getItem("catalyst_saved_scenario");
-    if (!saved) return;
-
-    const parsed = JSON.parse(saved);
-    setRiskReductionPct(parsed.riskReductionPct);
-    setInterventionCost(parsed.interventionCost);
-    setSimulation(parsed.simulation);
   };
 
   const exportForEmail = () => {
@@ -158,8 +127,13 @@ Primary trade-off: reduced people risk in exchange for higher execution load.
     const text = `
 Subject: Catalyst Simulation Summary (${persona})
 
-This scenario improves workforce stability by reducing attrition risk.
-Financial outcomes remain sensitive to execution quality and scale.
+Under a ${riskReductionPct}% attrition risk reduction scenario,
+Catalyst estimates ${USD.format(
+      simulation.cfo_impact.cost_avoided
+    )} in avoided attrition-related costs,
+resulting in a net ROI of ${USD.format(
+      simulation.cfo_impact.net_roi
+    )}.
 `.trim();
 
     navigator.clipboard.writeText(text);
@@ -171,17 +145,20 @@ Financial outcomes remain sensitive to execution quality and scale.
     const text = `
 CATALYST — SIMULATION SUMMARY
 
-• Risk reduction target: ${riskReductionPct}%
-• Strategic intent: Improve resilience
-• Key trade-off: Execution capacity vs people risk
+• Risk reduction: ${riskReductionPct}%
+• Cost avoided: ${USD.format(simulation.cfo_impact.cost_avoided)}
+• Net ROI: ${USD.format(simulation.cfo_impact.net_roi)}
+• Confidence: ${Math.round(
+      simulation.confidence.confidence_level * 100
+    )}%
 `.trim();
 
     navigator.clipboard.writeText(text);
   };
 
-  // =========================================================
+  // ---------------------------------------------------------
   // Render
-  // =========================================================
+  // ---------------------------------------------------------
   return (
     <div>
       <h1>Simulation</h1>
@@ -192,12 +169,9 @@ CATALYST — SIMULATION SUMMARY
         <select
           value={persona}
           onChange={(e) =>
-            setPersona(
-              e.target.value as "CEO" | "CFO" | "CHRO"
-            )
+            setPersona(e.target.value as "CFO" | "CHRO")
           }
         >
-          <option value="CEO">CEO</option>
           <option value="CFO">CFO</option>
           <option value="CHRO">CHRO</option>
         </select>
@@ -217,7 +191,7 @@ CATALYST — SIMULATION SUMMARY
         </div>
 
         <div>
-          <label>Intervention Cost</label>
+          <label>Intervention Cost (USD)</label>
           <input
             type="number"
             value={interventionCost}
@@ -243,106 +217,30 @@ CATALYST — SIMULATION SUMMARY
               color: "#e5e7eb",
             }}
           >
-            <h3>Executive Summary</h3>
-
-            {persona === "CEO" && (
+            <strong>Executive Summary:</strong>{" "}
+            {persona === "CFO" ? (
               <>
-                <p>
-                  This scenario improves workforce stability but does
-                  not materially improve near-term financial returns
-                  under current assumptions.
-                </p>
-                <p>
-                  The intervention redistributes organizational
-                  pressure away from people-related risk and toward
-                  execution capacity.
-                </p>
-                <p>
-                  <strong>
-                    Directionally sound
-                  </strong>{" "}
-                  if leadership bandwidth is available and resilience
-                  is the primary objective.
-                </p>
-                <ul>
-                  <li>Benefits accrue gradually</li>
-                  <li>Execution strain increases</li>
-                  <li>Value improves beyond higher thresholds</li>
-                </ul>
+                Under a <strong>{riskReductionPct}%</strong> attrition
+                risk reduction scenario, Catalyst estimates{" "}
+                <strong>
+                  {USD.format(simulation.cfo_impact.cost_avoided)}
+                </strong>{" "}
+                in avoided costs, resulting in a net ROI of{" "}
+                <strong>
+                  {USD.format(simulation.cfo_impact.net_roi)}
+                </strong>
+                .
+              </>
+            ) : (
+              <>
+                A <strong>{riskReductionPct}%</strong> reduction in
+                attrition risk is projected to improve workforce
+                stability and reduce the likelihood of regretted
+                exits.
               </>
             )}
 
-            {persona === "CFO" && (
-              <>
-                <p>
-                  Under current assumptions, this intervention reduces
-                  attrition-related cost exposure but does not generate
-                  a positive net return within the modeled period.
-                </p>
-
-                <p>
-                  The primary constraint is <strong>scale</strong>:
-                  financial returns remain negative because avoided
-                  attrition costs do not yet offset the fixed
-                  intervention investment.
-                </p>
-
-                <p>
-                  <strong>Break-even improves materially</strong> if
-                  one or more of the following conditions are met:
-                </p>
-
-                <ul>
-                  <li>
-                    Risk reduction exceeds the current scenario
-                    assumptions
-                  </li>
-                  <li>
-                    Cost per regretted exit is higher than modeled
-                  </li>
-                  <li>
-                    Intervention costs can be staged or targeted
-                  </li>
-                </ul>
-
-                <p>
-                  <strong>CFO Guidance:</strong> This scenario is best
-                  treated as a <em>risk containment investment</em>
-                  rather than a near-term cost recovery initiative.
-                  Financial viability improves with tighter targeting
-                  and phased deployment.
-                </p>
-              </>
-            )}
-
-
-            {persona === "CHRO" && (
-              <>
-                <p>
-                  Attrition risk declines meaningfully, indicating
-                  improved workforce stability under the proposed
-                  intervention.
-                </p>
-                <p>
-                  The impact is strongest in high-risk segments,
-                  suggesting targeted rather than broad deployment.
-                </p>
-                <ul>
-                  <li>Regretted exits reduced</li>
-                  <li>Stability improves before cost recovery</li>
-                  <li>Phased rollout recommended</li>
-                </ul>
-              </>
-            )}
-
-            <div
-              style={{
-                marginTop: 10,
-                display: "flex",
-                gap: 8,
-                flexWrap: "wrap",
-              }}
-            >
+            <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
               <button onClick={copyExecutiveSummary}>
                 Copy Summary
               </button>
@@ -352,8 +250,6 @@ CATALYST — SIMULATION SUMMARY
               <button onClick={exportForSlides}>
                 Export Slides
               </button>
-              <button onClick={saveScenario}>Save</button>
-              <button onClick={loadScenario}>Load</button>
             </div>
           </div>
 
@@ -364,43 +260,34 @@ CATALYST — SIMULATION SUMMARY
             <tbody>
               <tr>
                 <td></td>
-                <td>
-                  <strong>Baseline</strong>
-                </td>
-                <td>
-                  <strong>Simulated</strong>
-                </td>
+                <td><strong>Baseline</strong></td>
+                <td><strong>Simulated</strong></td>
               </tr>
 
               <tr>
                 <td>Attrition Risk</td>
                 <td>{baselineAttritionRisk}%</td>
                 <td>
-                  {simulatedRisk}%{" "}
+                  {simulatedRisk !== undefined
+                    ? `${simulatedRisk}%`
+                    : "—"}
                   {renderDelta(riskDelta, "down")}
                 </td>
               </tr>
 
               <tr>
                 <td>Annual Attrition Cost</td>
-                <td>
-                  USD.format{baselineAnnualCost.toLocaleString()}
-                </td>
+                <td>{USD.format(baselineAnnualCost)}</td>
                 <td>
                   {simulatedCost !== undefined
                     ? USD.format(simulatedCost)
                     : "—"}
-
                   {renderDelta(costDelta, "down")}
                 </td>
               </tr>
 
               <tr>
-                <td>
-                  {persona === "CFO"
-                    ? "Net Capital Impact"
-                    : "Net Workforce Cost Impact"}
-                </td>
+                <td>Net Capital Impact</td>
                 <td>—</td>
                 <td
                   style={{
@@ -416,34 +303,35 @@ CATALYST — SIMULATION SUMMARY
             </tbody>
           </table>
 
-          {/* Workforce KPIs */}
+          {/* Workforce Impact */}
           <h3>Workforce Impact</h3>
 
           <div style={{ display: "flex", gap: 16 }}>
             <KpiCard
               title="Attrition Risk"
-              value={`USD.format{simulatedRisk}%`}
+              value={
+                simulatedRisk !== undefined
+                  ? `${simulatedRisk}%`
+                  : "—"
+              }
               delta={riskDelta}
             />
             <KpiCard
               title="Annual Attrition Cost"
-              value={`USD.format{simulatedCost?.toLocaleString()}`}
+              value={
+                simulatedCost !== undefined
+                  ? USD.format(simulatedCost)
+                  : "—"
+              }
               delta={costDelta}
             />
           </div>
 
-          {savingsFromExits && (
-            <p>
-              Implied savings from exits avoided: ₹
-              {savingsFromExits.toLocaleString()}
-            </p>
-          )}
-
           {/* Confidence */}
           <p style={{ marginTop: 16, color: "#6b7280" }}>
-            Estimated confidence range: ₹
-            {simulation.confidence.low.toLocaleString()} – ₹
-            {simulation.confidence.high.toLocaleString()} (
+            Estimated confidence range:{" "}
+            {USD.format(simulation.confidence.low)} –{" "}
+            {USD.format(simulation.confidence.high)} (
             {Math.round(
               simulation.confidence.confidence_level * 100
             )}
