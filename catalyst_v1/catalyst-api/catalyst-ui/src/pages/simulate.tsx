@@ -63,13 +63,16 @@ function getCFONarrative(band: ROIBand): string {
 ================================ */
 
 export default function Simulate() {
-  // ---- Simulation Inputs ----
+
+  /* ---- Simulation Inputs ---- */
   const [attritionReduction, setAttritionReduction] = useState(10); // %
   const [programCost, setProgramCost] = useState(500000); // $
-  const [baselineAttritionCost] = useState(1940000); // from baseline page
+  const baselineAttritionCost = 1_940_000; // from baseline page
 
-  // ---- Simulation Math ----
-  const projectedBenefit = baselineAttritionCost * (attritionReduction / 100);
+  /* ---- Simulation Math ---- */
+  const projectedBenefit =
+    baselineAttritionCost * (attritionReduction / 100);
+
   const roiMultiple = getROIMultiple(projectedBenefit, programCost);
   const band = getROIBand(roiMultiple);
   const bandColor = getBandColor(band);
@@ -77,7 +80,65 @@ export default function Simulate() {
   return (
     <div style={{ padding: 24, maxWidth: 1100 }}>
 
-      {/* ================= Simulation Inputs ================= */}
+      {/* ===== Scenario Presets ===== */}
+      <section style={{ marginBottom: 24 }}>
+        <h3 style={{ marginBottom: 8 }}>Quick Scenarios</h3>
+
+        <div style={{ display: "flex", gap: 12 }}>
+          <button
+            style={{
+              padding: "8px 14px",
+              borderRadius: 6,
+              border: "1px solid #c7d2fe",
+              background: "#eef2ff",
+              fontWeight: 500,
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              setAttritionReduction(5);
+              setProgramCost(600000);
+            }}
+          >
+            Conservative
+          </button>
+
+          <button
+            style={{
+              padding: "8px 14px",
+              borderRadius: 6,
+              border: "1px solid #c7d2fe",
+              background: "#eef2ff",
+              fontWeight: 500,
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              setAttritionReduction(10);
+              setProgramCost(500000);
+            }}
+          >
+            Expected
+          </button>
+
+          <button
+            style={{
+              padding: "8px 14px",
+              borderRadius: 6,
+              border: "1px solid #c7d2fe",
+              background: "#eef2ff",
+              fontWeight: 500,
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              setAttritionReduction(18);
+              setProgramCost(450000);
+            }}
+          >
+            Aggressive
+          </button>
+        </div>
+      </section>
+
+      {/* ===== Simulation Inputs ===== */}
       <section style={{ marginBottom: 32 }}>
         <h2>Simulation Assumptions</h2>
 
@@ -88,7 +149,9 @@ export default function Simulate() {
             <input
               type="number"
               value={attritionReduction}
-              onChange={(e) => setAttritionReduction(Number(e.target.value))}
+              onChange={(e) =>
+                setAttritionReduction(Number(e.target.value))
+              }
             />
           </label>
 
@@ -98,13 +161,15 @@ export default function Simulate() {
             <input
               type="number"
               value={programCost}
-              onChange={(e) => setProgramCost(Number(e.target.value))}
+              onChange={(e) =>
+                setProgramCost(Number(e.target.value))
+              }
             />
           </label>
         </div>
       </section>
 
-      {/* ================= Financial Summary ================= */}
+      {/* ===== Financial Summary ===== */}
       <section>
         <h2>Financial Impact Summary</h2>
         <p><strong>Projected Benefit:</strong> {USD.format(projectedBenefit)}</p>
@@ -112,32 +177,46 @@ export default function Simulate() {
         <p><strong>ROI Multiple:</strong> {roiMultiple.toFixed(2)}x</p>
       </section>
 
-      {/* ================= ROI Bands ================= */}
-      <div style={{ marginTop: 40 }}>
-        <h2>CFO ROI Threshold Assessment</h2>
-
-        <div style={{ display: "flex", height: 16, borderRadius: 8, overflow: "hidden", marginBottom: 16 }}>
-          {(["Capital Destructive", "Value-Eroding", "Marginal", "Accretive", "Value-Creating"] as ROIBand[])
-            .map((b) => (
-              <div
-                key={b}
-                style={{
-                  flex: 1,
-                  background: getBandColor(b),
-                  opacity: b === band ? 1 : 0.25,
-                }}
-              />
-            ))}
-        </div>
-
-        <div style={{ fontSize: 18, fontWeight: 600, color: bandColor }}>
-          {band}
-        </div>
-
-        <p style={{ marginTop: 12, maxWidth: 720, lineHeight: 1.6 }}>
-          {getCFONarrative(band)}
-        </p>
+      {/* ===== ROI Bands ===== */}
+      <div
+        style={{
+          display: "flex",
+          height: 16,
+          borderRadius: 8,
+          overflow: "hidden",
+          marginBottom: 16,
+        }}
+      >
+        {(
+          [
+            "Capital Destructive",
+            "Value-Eroding",
+            "Marginal",
+            "Accretive",
+            "Value-Creating",
+          ] as ROIBand[]
+        ).map((b) => {
+          return (
+            <div
+              key={b}
+              style={{
+                flex: 1,
+                background: getBandColor(b),
+                opacity: b === band ? 1 : 0.25,
+              }}
+            />
+          );
+        })}
       </div>
+
+
+      <div style={{ fontSize: 18, fontWeight: 600, color: bandColor }}>
+        {band}
+      </div>
+
+      <p style={{ marginTop: 12, maxWidth: 720, lineHeight: 1.6 }}>
+        {getCFONarrative(band)}
+      </p>
     </div>
   );
 }
