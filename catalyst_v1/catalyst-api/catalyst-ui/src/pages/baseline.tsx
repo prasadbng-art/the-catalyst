@@ -65,6 +65,7 @@ export default function BaselinePage() {
       />
 
       <PersonaAdvisoryPanel persona={persona} />
+      color: "#0f172a"
     </div>
   );
 }
