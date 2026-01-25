@@ -32,7 +32,7 @@ export default function BaselinePage() {
     <div style={{ maxWidth: 1100 }}>
       <BaselineHeader />
 
-      {/* Persona selector */}
+      {/* Controls */}
       <div style={{ marginBottom: 16 }}>
         <label style={{ marginRight: 8 }}>View as:</label>
         <select value={persona} onChange={(e) => setPersona(e.target.value as Persona)}>
@@ -42,7 +42,6 @@ export default function BaselinePage() {
         </select>
       </div>
 
-      {/* Detail toggle */}
       <div style={{ marginBottom: 20 }}>
         <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <input
@@ -54,14 +53,25 @@ export default function BaselinePage() {
         </label>
       </div>
 
-      <BaselineCanvas stress={baselineStress} persona={persona} detailed={detailed} />
+      {/* ===== TOP EXECUTIVE ROW ===== */}
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1.4fr 1fr",
+          gap: 24,
+          alignItems: "stretch",
+          marginBottom: 24,
+        }}
+      >
+        <BaselineCanvas stress={baselineStress} persona={persona} detailed={detailed} />
+        <PersonaAdvisoryPanel persona={persona} detailed={detailed} />
+      </div>
 
+      {/* ===== KPI ROW ===== */}
       <BaselineIndicators
         baselineAttritionRisk={baselineAttritionRisk}
         baselineAnnualCost={baselineAnnualCost}
       />
-
-      <PersonaAdvisoryPanel persona={persona} detailed={detailed} />
     </div>
   );
 }
@@ -99,8 +109,8 @@ function BaselineCanvas({
         border: "1px solid #1e293b",
         borderRadius: 8,
         padding: 20,
-        marginBottom: 24,
         color: "#e5e7eb",
+        height: "100%",
       }}
     >
       <h3 style={{ marginBottom: 16 }}>Organizational Stress Profile</h3>
@@ -115,19 +125,19 @@ function BaselineCanvas({
             {!detailed ? (
               <>
                 <li>
-                  <strong>Main pressure:</strong> People risk ({stress.people}%) and cost pressure ({stress.cost}%) are both high. This reduces the organization’s room to adjust.
+                  <strong>Main pressure:</strong> People risk ({stress.people}%) and cost pressure ({stress.cost}%) are both high.
                 </li>
                 <li>
-                  <strong>What this means:</strong> External uncertainty ({stress.macro}%) makes the impact of employee exits harder to control.
+                  <strong>What this means:</strong> External uncertainty ({stress.macro}%) makes employee exits harder to manage.
                 </li>
               </>
             ) : (
               <>
                 <li>
-                  <strong>Primary stress concentration:</strong> Workforce exposure and structural cost pressure are simultaneously elevated, limiting operational flexibility.
+                  <strong>Primary stress concentration:</strong> Workforce exposure and structural cost pressure are both elevated.
                 </li>
                 <li>
-                  <strong>System implication:</strong> Macroeconomic volatility amplifies the downstream impact of attrition and productivity shocks.
+                  <strong>System implication:</strong> Macroeconomic volatility amplifies attrition and productivity shocks.
                 </li>
               </>
             )}
@@ -151,7 +161,6 @@ function BaselineIndicators({
   return (
     <section
       style={{
-        marginBottom: 24,
         padding: 16,
         border: "1px solid #1f2937",
         borderRadius: 6,
@@ -190,6 +199,7 @@ function PersonaAdvisoryPanel({
         borderTop: "1px solid #e5e7eb",
         padding: 20,
         borderRadius: 8,
+        height: "100%",
       }}
     >
       <div style={{ maxWidth: 760, color: "#0f172a" }}>
@@ -198,57 +208,32 @@ function PersonaAdvisoryPanel({
         {persona === "CEO" && (
           <>
             <h4>Organizational Stability</h4>
-            {!detailed ? (
-              <>
-                <p>The company is under pressure from both costs and workforce risks.</p>
-                <p>If market conditions worsen, it may be harder to respond quickly.</p>
-                <p>The organization looks stable on the surface, but hidden strain is building.</p>
-              </>
-            ) : (
-              <>
-                <p>Cost rigidity and workforce exposure are increasing systemic strain.</p>
-                <p>Reduced flexibility may limit response to external shocks.</p>
-                <p>Performance appears stable, but underlying resilience is weakening.</p>
-              </>
-            )}
+            <p>The company is under pressure from both costs and workforce risks.</p>
+            <p>If conditions worsen, responding quickly may be difficult.</p>
           </>
         )}
 
         {persona === "CFO" && (
           <>
-            <h4>Financial Risk from Workforce Pressure</h4>
-            {!detailed ? (
+            <h4>Financial Risk</h4>
+            {!detailed ?(
               <>
-                <p>Workforce pressure can create unexpected costs, even if budgets look stable.</p>
-                <p>If more employees leave, replacement and productivity costs may rise.</p>
-                <p>Financial risk increases when workforce pressure and market uncertainty occur together.</p>
-              </>
-            ) : (
-              <>
-                <p>Workforce strain introduces latent financial exposure not yet visible in budgets.</p>
-                <p>Attrition-driven costs and productivity drag may accelerate under stress.</p>
-                <p>Financial sensitivity increases when internal pressure meets macro instability.</p>
-              </>
-            )}
+              <p>Workforce pressure can create unexpected costs.</p>
+              <p>Attrition and productivity loss may increase financial strain.</p>
           </>
+        ):(
+              <>
+              <p>Elevated workforce strain introduces latent financial exposure note yet visible in budgets</p>
+              </>
         )}
+      </>
+    )}   
 
         {persona === "CHRO" && (
           <>
             <h4>Workforce Stability</h4>
-            {!detailed ? (
-              <>
-                <p>Employees are feeling higher pressure, which can increase resignations.</p>
-                <p>Key roles may be harder to retain if workload and stress stay high.</p>
-                <p>Early action can reduce exits before they become visible in the data.</p>
-              </>
-            ) : (
-              <>
-                <p>Sustained pressure raises the probability of regretted attrition in critical roles.</p>
-                <p>Workload and stress reduce engagement and retention resilience.</p>
-                <p>Proactive intervention can stabilize talent before attrition signals appear.</p>
-              </>
-            )}
+            <p>Employees are under pressure, increasing the risk of resignations.</p>
+            <p>Early action can reduce exits before they become visible.</p>
           </>
         )}
       </div>
