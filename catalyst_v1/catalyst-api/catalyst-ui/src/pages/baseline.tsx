@@ -26,6 +26,7 @@ const baselineStress: StressProfile = {
 ========================================================= */
 export default function BaselinePage() {
   const [persona, setPersona] = useState<Persona>("CEO");
+  const [detailed, setDetailed] = useState(false);
 
   return (
     <div style={{ maxWidth: 1100 }}>
@@ -41,14 +42,26 @@ export default function BaselinePage() {
         </select>
       </div>
 
-      <BaselineCanvas stress={baselineStress} persona={persona} />
+      {/* Detail toggle */}
+      <div style={{ marginBottom: 20 }}>
+        <label style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <input
+            type="checkbox"
+            checked={detailed}
+            onChange={() => setDetailed(!detailed)}
+          />
+          Detailed analysis
+        </label>
+      </div>
+
+      <BaselineCanvas stress={baselineStress} persona={persona} detailed={detailed} />
 
       <BaselineIndicators
         baselineAttritionRisk={baselineAttritionRisk}
         baselineAnnualCost={baselineAnnualCost}
       />
 
-      <PersonaAdvisoryPanel persona={persona} />
+      <PersonaAdvisoryPanel persona={persona} detailed={detailed} />
     </div>
   );
 }
@@ -70,7 +83,15 @@ function BaselineHeader() {
 /* =========================================================
    Stress Canvas
 ========================================================= */
-function BaselineCanvas({ stress, persona }: { stress: StressProfile; persona: Persona }) {
+function BaselineCanvas({
+  stress,
+  persona,
+  detailed,
+}: {
+  stress: StressProfile;
+  persona: Persona;
+  detailed: boolean;
+}) {
   return (
     <section
       style={{
@@ -91,14 +112,25 @@ function BaselineCanvas({ stress, persona }: { stress: StressProfile; persona: P
 
         <div style={{ flex: 1 }}>
           <ul style={{ margin: 0, paddingLeft: 18, lineHeight: 1.6 }}>
-            <li>
-              <strong>Primary stress driver:</strong> People risk ({stress.people}%) and cost
-              pressure ({stress.cost}%) are both high. This reduces the Organization's room to adjust.
-            </li>
-            <li>
-              <strong>What this means:</strong> External uncertainty ({stress.macro}%)
-              makes the impact of employee exits harder to control.
-            </li>
+            {!detailed ? (
+              <>
+                <li>
+                  <strong>Main pressure:</strong> People risk ({stress.people}%) and cost pressure ({stress.cost}%) are both high. This reduces the organization’s room to adjust.
+                </li>
+                <li>
+                  <strong>What this means:</strong> External uncertainty ({stress.macro}%) makes the impact of employee exits harder to control.
+                </li>
+              </>
+            ) : (
+              <>
+                <li>
+                  <strong>Primary stress concentration:</strong> Workforce exposure and structural cost pressure are simultaneously elevated, limiting operational flexibility.
+                </li>
+                <li>
+                  <strong>System implication:</strong> Macroeconomic volatility amplifies the downstream impact of attrition and productivity shocks.
+                </li>
+              </>
+            )}
           </ul>
         </div>
       </div>
@@ -144,7 +176,13 @@ function BaselineIndicators({
 /* =========================================================
    Persona Panel
 ========================================================= */
-function PersonaAdvisoryPanel({ persona }: { persona: Persona }) {
+function PersonaAdvisoryPanel({
+  persona,
+  detailed,
+}: {
+  persona: Persona;
+  detailed: boolean;
+}) {
   return (
     <section
       style={{
@@ -159,47 +197,58 @@ function PersonaAdvisoryPanel({ persona }: { persona: Persona }) {
 
         {persona === "CEO" && (
           <>
-            <h4>Organizational Resilience Snapshot</h4>
-            <p>
-              The company is under pressure from both costs and workforce risks.
-            </p>
-            <p>
-              If market conditions worsen, it may be harder to respond quickly.
-            </p>
-            <p> 
-              The organization looks stable on the surface, but hidden strain is building
-            </p>
+            <h4>Organizational Stability</h4>
+            {!detailed ? (
+              <>
+                <p>The company is under pressure from both costs and workforce risks.</p>
+                <p>If market conditions worsen, it may be harder to respond quickly.</p>
+                <p>The organization looks stable on the surface, but hidden strain is building.</p>
+              </>
+            ) : (
+              <>
+                <p>Cost rigidity and workforce exposure are increasing systemic strain.</p>
+                <p>Reduced flexibility may limit response to external shocks.</p>
+                <p>Performance appears stable, but underlying resilience is weakening.</p>
+              </>
+            )}
           </>
         )}
 
         {persona === "CFO" && (
           <>
-            <h4>Human Capital Risk Exposure</h4>
-            <p>
-             Workforce pressure can create unexpected costs, even if budgets look stable today.
-            </p>
-            <p>
-              If more employees leave, replacement and productivity costs may rise quickly.
-            </p>
-            <p>
-              Financial risk increases when people pressure and market uncertainty happen together
-            </p>
+            <h4>Financial Risk from Workforce Pressure</h4>
+            {!detailed ? (
+              <>
+                <p>Workforce pressure can create unexpected costs, even if budgets look stable.</p>
+                <p>If more employees leave, replacement and productivity costs may rise.</p>
+                <p>Financial risk increases when workforce pressure and market uncertainty occur together.</p>
+              </>
+            ) : (
+              <>
+                <p>Workforce strain introduces latent financial exposure not yet visible in budgets.</p>
+                <p>Attrition-driven costs and productivity drag may accelerate under stress.</p>
+                <p>Financial sensitivity increases when internal pressure meets macro instability.</p>
+              </>
+            )}
           </>
         )}
 
         {persona === "CHRO" && (
           <>
-            <h4>Workforce Stability Outlook</h4>
-            <p>
-              Employees are feeling higher pressure, which can increase resignations - 
-              particularly in high-demand roles.
-            </p>
-            <p>
-              Key roles might be harder to retain if workload and stress stay high
-            </p>
-            <p>
-              Early action can reduce exits before they become visible in the data
-            </p>
+            <h4>Workforce Stability</h4>
+            {!detailed ? (
+              <>
+                <p>Employees are feeling higher pressure, which can increase resignations.</p>
+                <p>Key roles may be harder to retain if workload and stress stay high.</p>
+                <p>Early action can reduce exits before they become visible in the data.</p>
+              </>
+            ) : (
+              <>
+                <p>Sustained pressure raises the probability of regretted attrition in critical roles.</p>
+                <p>Workload and stress reduce engagement and retention resilience.</p>
+                <p>Proactive intervention can stabilize talent before attrition signals appear.</p>
+              </>
+            )}
           </>
         )}
       </div>
