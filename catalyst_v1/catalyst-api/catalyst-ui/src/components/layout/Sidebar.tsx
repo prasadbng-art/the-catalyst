@@ -16,9 +16,6 @@ export default function Sidebar() {
         <Link to="/baseline" style={{ color: "#fff", textDecoration: "none" }}>
           Baseline
         </Link>
-        <Link to="/persona" style={{ color: "#fff", textDecoration: "none" }}>
-          Persona
-        </Link>
         <Link to="/simulation" style={{ color: "#fff", textDecoration: "none" }}>
           Simulation
         </Link>
