@@ -83,6 +83,7 @@ export default function BaselinePage() {
           borderRadius: 8,
           background: "#eef2ff",
           border: "1px solid #c7d2fe",
+          color: "#1e293b",
         }}
       >
         <h3 style={{ marginBottom: 8 }}>
