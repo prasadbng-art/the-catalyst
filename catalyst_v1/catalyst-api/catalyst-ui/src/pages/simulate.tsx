@@ -10,6 +10,8 @@ type ROIBand =
   | "Value-Eroding"
   | "Capital Destructive";
 
+type Scenario = "Conservative" | "Expected" | "Aggressive" | null;
+
 /* ================================
    Helpers
 ================================ */
@@ -48,13 +50,13 @@ function getCFONarrative(band: ROIBand): string {
     case "Value-Creating":
       return "This initiative is expected to create strong financial value compared to its cost.";
     case "Accretive":
-      return "Returns are higher than the investment cost and support healthy financial performance.";
+      return "Returns exceed investment cost and support disciplined capital allocation.";
     case "Marginal":
-      return "Returns are only slightly higher than the cost. Strong execution is needed to avoid losses.";
+      return "Returns marginally exceed cost. Execution quality will determine value realization.";
     case "Value-Eroding":
-      return "Financial returns are close to the investment cost. Small problems could lead to losses.";
+      return "Returns are near breakeven and highly sensitive to execution risk.";
     case "Capital Destructive":
-      return "Expected returns do not recover the investment. This would reduce financial value unless there are strong strategic reasons.";
+      return "Projected returns do not recover invested capital.";
   }
 }
 
@@ -63,19 +65,34 @@ function getCFONarrative(band: ROIBand): string {
 ================================ */
 
 export default function Simulate() {
-
   /* ---- Simulation Inputs ---- */
-  const [attritionReduction, setAttritionReduction] = useState(10); // %
-  const [programCost, setProgramCost] = useState(500000); // $
-  const baselineAttritionCost = 1_940_000; // from baseline page
+  const [attritionReduction, setAttritionReduction] = useState(10);
+  const [programCost, setProgramCost] = useState(500000);
+  const baselineAttritionCost = 1_940_000;
 
-  /* ---- Simulation Math ---- */
+  /* ---- Scenario State ---- */
+  const [activeScenario, setActiveScenario] = useState<Scenario>(null);
+
+  /* ---- Computation ---- */
   const projectedBenefit =
     baselineAttritionCost * (attritionReduction / 100);
 
   const roiMultiple = getROIMultiple(projectedBenefit, programCost);
   const band = getROIBand(roiMultiple);
   const bandColor = getBandColor(band);
+
+  /* ---- Button Style Helper ---- */
+  const scenarioButtonStyle = (active: boolean): React.CSSProperties => ({
+    padding: "8px 14px",
+    borderRadius: 6,
+    border: active ? "2px solid #1e40af" : "1px solid #c7d2fe",
+    background: active ? "#dbeafe" : "#eef2ff",
+    color: "#0f172a",
+    fontWeight: active ? 700 : 600,
+    cursor: "pointer",
+    outline: "none",
+    appearance: "none",
+  });
 
   return (
     <div style={{ padding: 24, maxWidth: 1100 }}>
@@ -86,66 +103,71 @@ export default function Simulate() {
 
         <div style={{ display: "flex", gap: 12 }}>
           <button
-            style={{
-              padding: "8px 14px",
-              borderRadius: 6,
-              border: "1px solid #c7d2fe",
-              background: "#eef2ff",
-              color: "#0f172a",        // forces visible text
-              fontWeight: 600,         // improves contrast
-              outline: "none",         // removes focus ghost styling
-              appearance: "none",      // neutralizes browser defaults
-              cursor: "pointer",
-            }}
+            style={scenarioButtonStyle(activeScenario === "Conservative")}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "#e0e7ff")}
+            onMouseLeave={(e) =>
+            (e.currentTarget.style.background =
+              activeScenario === "Conservative" ? "#dbeafe" : "#eef2ff")
+            }
             onClick={() => {
               setAttritionReduction(5);
               setProgramCost(600000);
+              setActiveScenario("Conservative");
             }}
           >
             Conservative
           </button>
 
-
           <button
-            style={{
-              padding: "8px 14px",
-              borderRadius: 6,
-              border: "1px solid #c7d2fe",
-              background: "#eef2ff",
-              color: "#0f172a",
-              fontWeight: 500,
-              outline: "none",
-              appearance: "none",
-              cursor: "pointer",
-            }}
+            style={scenarioButtonStyle(activeScenario === "Expected")}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "#e0e7ff")}
+            onMouseLeave={(e) =>
+            (e.currentTarget.style.background =
+              activeScenario === "Expected" ? "#dbeafe" : "#eef2ff")
+            }
             onClick={() => {
               setAttritionReduction(10);
               setProgramCost(500000);
+              setActiveScenario("Expected");
             }}
           >
             Expected
           </button>
 
           <button
-            style={{
-              padding: "8px 14px",
-              borderRadius: 6,
-              border: "1px solid #c7d2fe",
-              background: "#eef2ff",
-              color: "#0f172a",
-              fontWeight: 500,
-              outline: "none",
-              appearance: "none",
-              cursor: "pointer",
-            }}
+            style={scenarioButtonStyle(activeScenario === "Aggressive")}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "#e0e7ff")}
+            onMouseLeave={(e) =>
+            (e.currentTarget.style.background =
+              activeScenario === "Aggressive" ? "#dbeafe" : "#eef2ff")
+            }
             onClick={() => {
               setAttritionReduction(18);
               setProgramCost(450000);
+              setActiveScenario("Aggressive");
             }}
           >
             Aggressive
           </button>
         </div>
+
+        {activeScenario && (
+          <div style={{ marginTop: 8 }}>
+            <button
+              style={{
+                fontSize: 12,
+                background: "transparent",
+                border: "none",
+                color: "#2563eb",
+                cursor: "pointer",
+                padding: 0,
+              }}
+              onClick={() => setActiveScenario(null)}
+            >
+              Customize assumptions
+            </button>
+          </div>
+        )}
       </section>
 
       {/* ===== Simulation Inputs ===== */}
@@ -159,6 +181,7 @@ export default function Simulate() {
             <input
               type="number"
               value={attritionReduction}
+              disabled={activeScenario !== null}
               onChange={(e) =>
                 setAttritionReduction(Number(e.target.value))
               }
@@ -171,6 +194,7 @@ export default function Simulate() {
             <input
               type="number"
               value={programCost}
+              disabled={activeScenario !== null}
               onChange={(e) =>
                 setProgramCost(Number(e.target.value))
               }
@@ -188,45 +212,48 @@ export default function Simulate() {
       </section>
 
       {/* ===== ROI Bands ===== */}
-      <div
-        style={{
-          display: "flex",
-          height: 16,
-          borderRadius: 8,
-          overflow: "hidden",
-          marginBottom: 16,
-        }}
-      >
-        {(
-          [
-            "Capital Destructive",
-            "Value-Eroding",
-            "Marginal",
-            "Accretive",
-            "Value-Creating",
-          ] as ROIBand[]
-        ).map((b) => {
-          return (
-            <div
-              key={b}
-              style={{
-                flex: 1,
-                background: getBandColor(b),
-                opacity: b === band ? 1 : 0.25,
-              }}
-            />
-          );
-        })}
+      <div style={{ marginTop: 40 }}>
+        <h2>CFO ROI Threshold Assessment</h2>
+
+        <div
+          style={{
+            display: "flex",
+            height: 16,
+            borderRadius: 8,
+            overflow: "hidden",
+            marginBottom: 16,
+          }}
+        >
+          {(
+            [
+              "Capital Destructive",
+              "Value-Eroding",
+              "Marginal",
+              "Accretive",
+              "Value-Creating",
+            ] as ROIBand[]
+          ).map((b) => {
+            return (
+              <div
+                key={b}
+                style={{
+                  flex: 1,
+                  background: getBandColor(b),
+                  opacity: b === band ? 1 : 0.25,
+                }}
+              />
+            );
+          })}
+        </div>
+
+        <div style={{ fontSize: 18, fontWeight: 600, color: bandColor }}>
+          {band}
+        </div>
+
+        <p style={{ marginTop: 12, maxWidth: 720, lineHeight: 1.6 }}>
+          {getCFONarrative(band)}
+        </p>
       </div>
-
-
-      <div style={{ fontSize: 18, fontWeight: 600, color: bandColor }}>
-        {band}
-      </div>
-
-      <p style={{ marginTop: 12, maxWidth: 720, lineHeight: 1.6 }}>
-        {getCFONarrative(band)}
-      </p>
     </div>
   );
 }
