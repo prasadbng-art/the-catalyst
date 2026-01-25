@@ -213,7 +213,6 @@ export default function Simulate() {
         <p><strong>Projected Benefit:</strong> {USD.format(projectedBenefit)}</p>
         <p><strong>Investment Required:</strong> {USD.format(programCost)}</p>
         <p><strong>ROI Multiple:</strong> {roiMultiple.toFixed(2)}x</p>
-        <strong>{requiredAttritionReduction.toFixed(1)}%</strong>
 
       </section>
 
@@ -277,6 +276,43 @@ export default function Simulate() {
             </p>
           </div>
         )}
+
+        {/* ===== Sensitivity Ladder ===== */}
+        <div style={{ marginTop: 24, maxWidth: 720 }}>
+          <h4 style={{ marginBottom: 8 }}>Sensitivity Check</h4>
+
+          {[
+            { label: "Base case", factor: 1 },
+            { label: "–10% benefit", factor: 0.9 },
+            { label: "–20% benefit", factor: 0.8 },
+          ].map((s) => {
+            const adjustedBenefit = projectedBenefit * s.factor;
+            const adjustedROI = getROIMultiple(adjustedBenefit, programCost);
+            const adjustedBand = getROIBand(adjustedROI);
+
+            return (
+              <div
+                key={s.label}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "8px 12px",
+                  marginBottom: 6,
+                  background: "#f8fafc",
+                  borderLeft: `4px solid ${getBandColor(adjustedBand)}`,
+                  color: "#0f172a",
+                  fontSize: 14,
+                }}
+              >
+                <span>{s.label}</span>
+                <span style={{ fontWeight: 600 }}>
+                  {adjustedROI.toFixed(2)}× — {adjustedBand}
+                </span>
+              </div>
+            );
+          })}
+        </div>
 
         <div style={{ fontSize: 18, fontWeight: 600, color: bandColor }}>
           {band}
