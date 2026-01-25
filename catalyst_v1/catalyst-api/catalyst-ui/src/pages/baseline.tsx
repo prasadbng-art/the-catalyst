@@ -2,6 +2,7 @@ import { useState } from "react";
 import KpiCard from "../components/kpi/KpiCard";
 import MagicCube from "../components/visuals/MagicCube";
 import type { StressProfile } from "../components/visuals/motion";
+import { useNavigate } from "react-router-dom";
 
 /* =========================================================
    Types
@@ -27,6 +28,7 @@ const baselineStress: StressProfile = {
 export default function BaselinePage() {
   const [persona, setPersona] = useState<Persona>("CEO");
   const [detailed, setDetailed] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div style={{ maxWidth: 1100 }}>
@@ -72,6 +74,40 @@ export default function BaselinePage() {
         baselineAttritionRisk={baselineAttritionRisk}
         baselineAnnualCost={baselineAnnualCost}
       />
+
+      {/* ===== CTA TO SIMULATION ===== */}
+      <section
+        style={{
+          marginTop: 32,
+          padding: 20,
+          borderRadius: 8,
+          background: "#eef2ff",
+          border: "1px solid #c7d2fe",
+        }}
+      >
+        <h3 style={{ marginBottom: 8 }}>
+          Ready to quantify the financial impact?
+        </h3>
+
+        <p style={{ marginBottom: 16, maxWidth: 720 }}>
+          Use the simulation tool to estimate how reducing attrition risk could translate into financial return and ROI.
+        </p>
+
+        <button
+          onClick={() => navigate("/simulate")}
+          style={{
+            padding: "10px 18px",
+            borderRadius: 6,
+            border: "none",
+            background: "#1e40af",
+            color: "white",
+            fontWeight: 600,
+            cursor: "pointer",
+          }}
+        >
+          Model Financial Impact →
+        </button>
+      </section>
     </div>
   );
 }
@@ -124,21 +160,13 @@ function BaselineCanvas({
           <ul style={{ margin: 0, paddingLeft: 18, lineHeight: 1.6 }}>
             {!detailed ? (
               <>
-                <li>
-                  <strong>Main pressure:</strong> People risk ({stress.people}%) and cost pressure ({stress.cost}%) are both high.
-                </li>
-                <li>
-                  <strong>What this means:</strong> External uncertainty ({stress.macro}%) makes employee exits harder to manage.
-                </li>
+                <li><strong>Main pressure:</strong> People risk ({stress.people}%) and cost pressure ({stress.cost}%) are both high.</li>
+                <li><strong>What this means:</strong> External uncertainty ({stress.macro}%) makes employee exits harder to manage.</li>
               </>
             ) : (
               <>
-                <li>
-                  <strong>Primary stress concentration:</strong> Workforce exposure and structural cost pressure are both elevated.
-                </li>
-                <li>
-                  <strong>System implication:</strong> Macroeconomic volatility amplifies attrition and productivity shocks.
-                </li>
+                <li><strong>Primary stress concentration:</strong> Workforce exposure and structural cost pressure are both elevated.</li>
+                <li><strong>System implication:</strong> Macroeconomic volatility amplifies attrition and productivity shocks.</li>
               </>
             )}
           </ul>
@@ -169,13 +197,9 @@ function BaselineIndicators({
       }}
     >
       <h3 style={{ marginBottom: 12 }}>Key Baseline Indicators</h3>
-
       <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
         <KpiCard title="Baseline Attrition Risk" value={`${baselineAttritionRisk}%`} />
-        <KpiCard
-          title="Annual Attrition Cost Exposure"
-          value={`$${(baselineAnnualCost * 1_000_000).toLocaleString()}`}
-        />
+        <KpiCard title="Annual Attrition Cost Exposure" value={`$${(baselineAnnualCost * 1_000_000).toLocaleString()}`} />
         <KpiCard title="Signal Confidence" value="High" />
       </div>
     </section>
@@ -216,18 +240,18 @@ function PersonaAdvisoryPanel({
         {persona === "CFO" && (
           <>
             <h4>Financial Risk</h4>
-            {!detailed ?(
+            {!detailed ? (
               <>
-              <p>Workforce pressure can create unexpected costs.</p>
-              <p>Attrition and productivity loss may increase financial strain.</p>
-          </>
-        ):(
-              <>
-              <p>Elevated workforce strain introduces latent financial exposure note yet visible in budgets</p>
+                <p>Workforce pressure can create unexpected costs.</p>
+                <p>Attrition and productivity loss may increase financial strain.</p>
               </>
+            ) : (
+              <>
+                <p>Elevated workforce strain introduces latent financial exposure not yet visible in budgets.</p>
+              </>
+            )}
+          </>
         )}
-      </>
-    )}   
 
         {persona === "CHRO" && (
           <>
