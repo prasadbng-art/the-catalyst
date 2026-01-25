@@ -4,11 +4,23 @@ import MagicCube from "../components/visuals/MagicCube";
 import type { StressProfile } from "../components/visuals/motion";
 
 /* =========================================================
+   Types
+========================================================= */
+
+type Persona = "CEO" | "CFO" | "CHRO";
+
+/* =========================================================
    Canonical baseline metrics (must align with Simulation)
 ========================================================= */
 
 const baselineAttritionRisk = 24.2;
 const baselineAnnualCost = 1.94; // in $M
+
+const USD = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  maximumFractionDigits: 1,
+});
 
 /* =========================================================
    Baseline stress profile (single source of truth)
@@ -26,20 +38,18 @@ const baselineStress: StressProfile = {
 ========================================================= */
 
 export default function BaselinePage() {
-  const [persona, setPersona] = useState<"CEO" | "CFO" | "CHRO">("CEO");
+  const [persona, setPersona] = useState<Persona>("CEO");
 
   return (
     <div style={{ maxWidth: 1100 }}>
       <BaselineHeader />
 
-      {/* Persona selector (single, canonical) */}
+      {/* Persona selector (canonical control) */}
       <div style={{ marginBottom: 16 }}>
         <label style={{ marginRight: 8 }}>View as:</label>
         <select
           value={persona}
-          onChange={(e) =>
-            setPersona(e.target.value as "CEO" | "CFO" | "CHRO")
-          }
+          onChange={(e) => setPersona(e.target.value as Persona)}
         >
           <option value="CEO">CEO</option>
           <option value="CFO">CFO</option>
@@ -47,10 +57,7 @@ export default function BaselinePage() {
         </select>
       </div>
 
-      <BaselineCanvas
-        stress={baselineStress}
-        persona={persona}
-      />
+      <BaselineCanvas stress={baselineStress} persona={persona} />
 
       <BaselineIndicators
         baselineAttritionRisk={baselineAttritionRisk}
@@ -86,7 +93,7 @@ function BaselineCanvas({
   persona,
 }: {
   stress: StressProfile;
-  persona: "CEO" | "CFO" | "CHRO";
+  persona: Persona;
 }) {
   return (
     <section
@@ -99,9 +106,7 @@ function BaselineCanvas({
         color: "#e5e7eb",
       }}
     >
-      <h3 style={{ marginBottom: 16 }}>
-        Organizational Stress Profile
-      </h3>
+      <h3 style={{ marginBottom: 16 }}>Organizational Stress Profile</h3>
 
       <div
         style={{
@@ -119,15 +124,13 @@ function BaselineCanvas({
         <div style={{ flex: 1 }}>
           <ul style={{ margin: 0, paddingLeft: 18, lineHeight: 1.6 }}>
             <li>
-              <strong>Primary stress driver:</strong>{" "}
-              People risk ({stress.people}%) and cost pressure (
-              {stress.cost}%) are jointly constraining
+              <strong>Primary stress driver:</strong> People risk ({stress.people}
+              %) and cost pressure ({stress.cost}%) are jointly constraining
               organizational flexibility.
             </li>
             <li>
-              <strong>Risk implication:</strong>{" "}
-              Elevated macro volatility ({stress.macro}%)
-              increases sensitivity to attrition-related shocks.
+              <strong>Risk implication:</strong> Elevated macro volatility (
+              {stress.macro}%) increases sensitivity to attrition-related shocks.
             </li>
           </ul>
         </div>
@@ -158,9 +161,7 @@ function BaselineIndicators({
         color: "#e5e7eb",
       }}
     >
-      <h3 style={{ marginBottom: 12 }}>
-        Key Baseline Indicators
-      </h3>
+      <h3 style={{ marginBottom: 12 }}>Key Baseline Indicators</h3>
 
       <div
         style={{
@@ -176,7 +177,7 @@ function BaselineIndicators({
 
         <KpiCard
           title="Annual Attrition Cost Exposure"
-          value={`$${baselineAnnualCost.toLocaleString()}M`}
+          value={`${USD.format(baselineAnnualCost * 1_000_000)}`}
         />
 
         <KpiCard title="Signal Confidence" value="High" />
@@ -189,11 +190,7 @@ function BaselineIndicators({
    Persona Advisory Panel (interpretive layer only)
 ========================================================= */
 
-function PersonaAdvisoryPanel({
-  persona,
-}: {
-  persona: "CEO" | "CFO" | "CHRO";
-}) {
+function PersonaAdvisoryPanel({ persona }: { persona: Persona }) {
   return (
     <section
       style={{
@@ -208,13 +205,12 @@ function PersonaAdvisoryPanel({
           <>
             <h4>Organizational Resilience Snapshot</h4>
             <p>
-              Pressure is concentrated around cost rigidity and
-              talent exposure, reducing flexibility under
-              external volatility.
+              Pressure is concentrated around cost rigidity and talent exposure,
+              reducing flexibility under external volatility.
             </p>
             <p>
-              While surface performance appears stable, system
-              resilience is being tested beneath the surface.
+              While surface performance appears stable, system resilience is
+              being tested beneath the surface.
             </p>
           </>
         )}
@@ -223,13 +219,12 @@ function PersonaAdvisoryPanel({
           <>
             <h4>Human Capital Risk Exposure</h4>
             <p>
-              Current conditions increase sensitivity to
-              people-related cost shocks, even without immediate
-              budget overruns.
+              Current conditions increase sensitivity to people-related cost
+              shocks, even without immediate budget overruns.
             </p>
             <p>
-              Downside risk becomes less predictable if attrition
-              accelerates under stress.
+              Downside risk becomes less predictable if attrition accelerates
+              under stress.
             </p>
           </>
         )}
@@ -238,13 +233,12 @@ function PersonaAdvisoryPanel({
           <>
             <h4>Workforce Stability Outlook</h4>
             <p>
-              Elevated pressure on people systems increases the
-              likelihood of regretted exits, particularly in
-              high-demand roles.
+              Elevated pressure on people systems increases the likelihood of
+              regretted exits, particularly in high-demand roles.
             </p>
             <p>
-              Early intervention can stabilize the workforce
-              before visible attrition materializes.
+              Early intervention can stabilize the workforce before visible
+              attrition materializes.
             </p>
           </>
         )}
