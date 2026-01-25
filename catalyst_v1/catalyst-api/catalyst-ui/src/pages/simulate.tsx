@@ -1,11 +1,8 @@
+import { useState } from "react";
+
 /* ================================
    Types
 ================================ */
-type SimulationResult = {
-  totalCost: number;
-  totalBenefit: number;
-};
-
 type ROIBand =
   | "Value-Creating"
   | "Accretive"
@@ -49,15 +46,15 @@ function getBandColor(band: ROIBand): string {
 function getCFONarrative(band: ROIBand): string {
   switch (band) {
     case "Value-Creating":
-      return "This initiative generates strong economic surplus and meaningfully expands enterprise value beyond its capital at risk.";
+      return "This initiative is expected to create strong financial value compared to its cost.";
     case "Accretive":
-      return "Returns exceed cost of investment with a healthy buffer, supporting disciplined growth and capital efficiency.";
+      return "Returns are higher than the investment cost and support healthy financial performance.";
     case "Marginal":
-      return "The initiative clears minimum financial thresholds but offers limited upside. Execution discipline will determine value realization.";
+      return "Returns are only slightly higher than the cost. Strong execution is needed to avoid losses.";
     case "Value-Eroding":
-      return "Returns are near breakeven. Financial value is fragile and highly sensitive to execution and external volatility.";
+      return "Financial returns are close to the investment cost. Small problems could lead to losses.";
     case "Capital Destructive":
-      return "Projected returns do not recover invested capital. Proceeding would reduce enterprise value unless strategic non-financial factors dominate.";
+      return "Expected returns do not recover the investment. This would reduce financial value unless there are strong strategic reasons.";
   }
 }
 
@@ -65,29 +62,60 @@ function getCFONarrative(band: ROIBand): string {
    Component
 ================================ */
 
-type Props = {
-  result: SimulationResult; // already coming from your existing simulation
-};
+export default function Simulate() {
+  // ---- Simulation Inputs ----
+  const [attritionReduction, setAttritionReduction] = useState(10); // %
+  const [programCost, setProgramCost] = useState(500000); // $
+  const [baselineAttritionCost] = useState(1940000); // from baseline page
 
-export default function Simulate({ result }: Props) {
-  const roiMultiple = getROIMultiple(result.totalBenefit, result.totalCost);
+  // ---- Simulation Math ----
+  const projectedBenefit = baselineAttritionCost * (attritionReduction / 100);
+  const roiMultiple = getROIMultiple(projectedBenefit, programCost);
   const band = getROIBand(roiMultiple);
   const bandColor = getBandColor(band);
 
   return (
-    <div style={{ padding: 24 }}>
+    <div style={{ padding: 24, maxWidth: 1100 }}>
 
-      {/* Existing Financial Summary */}
-      <h2>Financial Impact Summary</h2>
-      <p><strong>Total Cost:</strong> {USD.format(result.totalCost)}</p>
-      <p><strong>Total Benefit:</strong> {USD.format(result.totalBenefit)}</p>
-      <p><strong>ROI Multiple:</strong> {roiMultiple.toFixed(2)}x</p>
+      {/* ================= Simulation Inputs ================= */}
+      <section style={{ marginBottom: 32 }}>
+        <h2>Simulation Assumptions</h2>
 
-      {/* ================= CFO ROI THRESHOLD BANDS ================= */}
+        <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
+          <label>
+            Attrition Reduction (%)
+            <br />
+            <input
+              type="number"
+              value={attritionReduction}
+              onChange={(e) => setAttritionReduction(Number(e.target.value))}
+            />
+          </label>
+
+          <label>
+            Program Cost ($)
+            <br />
+            <input
+              type="number"
+              value={programCost}
+              onChange={(e) => setProgramCost(Number(e.target.value))}
+            />
+          </label>
+        </div>
+      </section>
+
+      {/* ================= Financial Summary ================= */}
+      <section>
+        <h2>Financial Impact Summary</h2>
+        <p><strong>Projected Benefit:</strong> {USD.format(projectedBenefit)}</p>
+        <p><strong>Investment Required:</strong> {USD.format(programCost)}</p>
+        <p><strong>ROI Multiple:</strong> {roiMultiple.toFixed(2)}x</p>
+      </section>
+
+      {/* ================= ROI Bands ================= */}
       <div style={{ marginTop: 40 }}>
         <h2>CFO ROI Threshold Assessment</h2>
 
-        {/* Visual Band Bar */}
         <div style={{ display: "flex", height: 16, borderRadius: 8, overflow: "hidden", marginBottom: 16 }}>
           {(["Capital Destructive", "Value-Eroding", "Marginal", "Accretive", "Value-Creating"] as ROIBand[])
             .map((b) => (
@@ -97,36 +125,18 @@ export default function Simulate({ result }: Props) {
                   flex: 1,
                   background: getBandColor(b),
                   opacity: b === band ? 1 : 0.25,
-                  transition: "opacity 0.3s",
                 }}
               />
             ))}
         </div>
 
-        {/* Label */}
         <div style={{ fontSize: 18, fontWeight: 600, color: bandColor }}>
           {band}
         </div>
 
-        {/* CFO Narrative */}
         <p style={{ marginTop: 12, maxWidth: 720, lineHeight: 1.6 }}>
           {getCFONarrative(band)}
         </p>
-
-        {/* Board-Safe Interpretation */}
-        <div style={{
-          marginTop: 16,
-          padding: 16,
-          background: "#f5f7fa",
-          borderLeft: `6px solid ${bandColor}`,
-          maxWidth: 720
-        }}>
-          <strong>Board Interpretation:</strong>
-          <p style={{ marginTop: 8 }}>
-            This classification is derived from the ratio of projected financial benefit to required investment.
-            It does not alter simulation assumptions, only frames financial attractiveness using capital allocation logic.
-          </p>
-        </div>
       </div>
     </div>
   );
