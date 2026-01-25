@@ -6,25 +6,13 @@ import type { StressProfile } from "../components/visuals/motion";
 /* =========================================================
    Types
 ========================================================= */
-
 type Persona = "CEO" | "CFO" | "CHRO";
 
 /* =========================================================
-   Canonical baseline metrics (must align with Simulation)
+   Baseline constants
 ========================================================= */
-
 const baselineAttritionRisk = 24.2;
 const baselineAnnualCost = 1.94; // in $M
-
-const USD = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  maximumFractionDigits: 1,
-});
-
-/* =========================================================
-   Baseline stress profile (single source of truth)
-========================================================= */
 
 const baselineStress: StressProfile = {
   people: 65,
@@ -36,7 +24,6 @@ const baselineStress: StressProfile = {
 /* =========================================================
    Page
 ========================================================= */
-
 export default function BaselinePage() {
   const [persona, setPersona] = useState<Persona>("CEO");
 
@@ -44,13 +31,10 @@ export default function BaselinePage() {
     <div style={{ maxWidth: 1100 }}>
       <BaselineHeader />
 
-      {/* Persona selector (canonical control) */}
+      {/* Persona selector */}
       <div style={{ marginBottom: 16 }}>
         <label style={{ marginRight: 8 }}>View as:</label>
-        <select
-          value={persona}
-          onChange={(e) => setPersona(e.target.value as Persona)}
-        >
+        <select value={persona} onChange={(e) => setPersona(e.target.value as Persona)}>
           <option value="CEO">CEO</option>
           <option value="CFO">CFO</option>
           <option value="CHRO">CHRO</option>
@@ -65,7 +49,6 @@ export default function BaselinePage() {
       />
 
       <PersonaAdvisoryPanel persona={persona} />
-      color: "#0f172a"
     </div>
   );
 }
@@ -73,7 +56,6 @@ export default function BaselinePage() {
 /* =========================================================
    Header
 ========================================================= */
-
 function BaselineHeader() {
   return (
     <header style={{ marginBottom: 24 }}>
@@ -86,16 +68,9 @@ function BaselineHeader() {
 }
 
 /* =========================================================
-   Main Canvas (Magic Cube + stress interpretation)
+   Stress Canvas
 ========================================================= */
-
-function BaselineCanvas({
-  stress,
-  persona,
-}: {
-  stress: StressProfile;
-  persona: Persona;
-}) {
+function BaselineCanvas({ stress, persona }: { stress: StressProfile; persona: Persona }) {
   return (
     <section
       style={{
@@ -109,29 +84,20 @@ function BaselineCanvas({
     >
       <h3 style={{ marginBottom: 16 }}>Organizational Stress Profile</h3>
 
-      <div
-        style={{
-          display: "flex",
-          gap: 32,
-          alignItems: "center",
-        }}
-      >
-        {/* Cube */}
+      <div style={{ display: "flex", gap: 32, alignItems: "center" }}>
         <div style={{ flex: "0 0 320px" }}>
           <MagicCube stress={stress} persona={persona} />
         </div>
 
-        {/* Stress interpretation */}
         <div style={{ flex: 1 }}>
           <ul style={{ margin: 0, paddingLeft: 18, lineHeight: 1.6 }}>
             <li>
-              <strong>Primary stress driver:</strong> People risk ({stress.people}
-              %) and cost pressure ({stress.cost}%) are jointly constraining
-              organizational flexibility.
+              <strong>Primary stress driver:</strong> People risk ({stress.people}%) and cost
+              pressure ({stress.cost}%) are jointly constraining organizational flexibility.
             </li>
             <li>
-              <strong>Risk implication:</strong> Elevated macro volatility (
-              {stress.macro}%) increases sensitivity to attrition-related shocks.
+              <strong>Risk implication:</strong> Elevated macro volatility ({stress.macro}%)
+              increases sensitivity to attrition-related shocks.
             </li>
           </ul>
         </div>
@@ -141,9 +107,8 @@ function BaselineCanvas({
 }
 
 /* =========================================================
-   Baseline Indicators
+   Indicators
 ========================================================= */
-
 function BaselineIndicators({
   baselineAttritionRisk,
   baselineAnnualCost,
@@ -164,23 +129,12 @@ function BaselineIndicators({
     >
       <h3 style={{ marginBottom: 12 }}>Key Baseline Indicators</h3>
 
-      <div
-        style={{
-          display: "flex",
-          gap: 16,
-          flexWrap: "wrap",
-        }}
-      >
-        <KpiCard
-          title="Baseline Attrition Risk"
-          value={`${baselineAttritionRisk}%`}
-        />
-
+      <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
+        <KpiCard title="Baseline Attrition Risk" value={`${baselineAttritionRisk}%`} />
         <KpiCard
           title="Annual Attrition Cost Exposure"
-          value={`${USD.format(baselineAnnualCost * 1_000_000)}`}
+          value={`$${(baselineAnnualCost * 1_000_000).toLocaleString()}`}
         />
-
         <KpiCard title="Signal Confidence" value="High" />
       </div>
     </section>
@@ -188,9 +142,8 @@ function BaselineIndicators({
 }
 
 /* =========================================================
-   Persona Advisory Panel (interpretive layer only)
+   Persona Panel
 ========================================================= */
-
 function PersonaAdvisoryPanel({ persona }: { persona: Persona }) {
   return (
     <section
@@ -201,17 +154,19 @@ function PersonaAdvisoryPanel({ persona }: { persona: Persona }) {
         borderRadius: 8,
       }}
     >
-      <div style={{ maxWidth: 760 }}>
+      <div style={{ maxWidth: 760, color: "#0f172a" }}>
+        <h3 style={{ marginBottom: 12 }}>Executive Interpretation</h3>
+
         {persona === "CEO" && (
           <>
             <h4>Organizational Resilience Snapshot</h4>
             <p>
-              Pressure is concentrated around cost rigidity and talent exposure,
-              reducing flexibility under external volatility.
+              Pressure is concentrated around cost rigidity and talent exposure, reducing
+              flexibility under external volatility.
             </p>
             <p>
-              While surface performance appears stable, system resilience is
-              being tested beneath the surface.
+              While surface performance appears stable, system resilience is being tested
+              beneath the surface.
             </p>
           </>
         )}
@@ -220,12 +175,11 @@ function PersonaAdvisoryPanel({ persona }: { persona: Persona }) {
           <>
             <h4>Human Capital Risk Exposure</h4>
             <p>
-              Current conditions increase sensitivity to people-related cost
-              shocks, even without immediate budget overruns.
+              Current conditions increase sensitivity to people-related cost shocks, even
+              without immediate budget overruns.
             </p>
             <p>
-              Downside risk becomes less predictable if attrition accelerates
-              under stress.
+              Downside risk becomes less predictable if attrition accelerates under stress.
             </p>
           </>
         )}
@@ -234,12 +188,12 @@ function PersonaAdvisoryPanel({ persona }: { persona: Persona }) {
           <>
             <h4>Workforce Stability Outlook</h4>
             <p>
-              Elevated pressure on people systems increases the likelihood of
-              regretted exits, particularly in high-demand roles.
+              Elevated pressure on people systems increases the likelihood of regretted exits,
+              particularly in high-demand roles.
             </p>
             <p>
-              Early intervention can stabilize the workforce before visible
-              attrition materializes.
+              Early intervention can stabilize the workforce before visible attrition
+              materializes.
             </p>
           </>
         )}
