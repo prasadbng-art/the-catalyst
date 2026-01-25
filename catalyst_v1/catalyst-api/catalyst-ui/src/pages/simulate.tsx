@@ -91,7 +91,10 @@ export default function Simulate() {
               borderRadius: 6,
               border: "1px solid #c7d2fe",
               background: "#eef2ff",
-              fontWeight: 500,
+              color: "#0f172a",        // forces visible text
+              fontWeight: 600,         // improves contrast
+              outline: "none",         // removes focus ghost styling
+              appearance: "none",      // neutralizes browser defaults
               cursor: "pointer",
             }}
             onClick={() => {
@@ -102,13 +105,17 @@ export default function Simulate() {
             Conservative
           </button>
 
+
           <button
             style={{
               padding: "8px 14px",
               borderRadius: 6,
               border: "1px solid #c7d2fe",
               background: "#eef2ff",
+              color: "#0f172a",
               fontWeight: 500,
+              outline: "none",
+              appearance: "none",
               cursor: "pointer",
             }}
             onClick={() => {
@@ -125,8 +132,10 @@ export default function Simulate() {
               borderRadius: 6,
               border: "1px solid #c7d2fe",
               background: "#eef2ff",
-              color: "#1e293b",
+              color: "#0f172a",
               fontWeight: 500,
+              outline: "none",
+              appearance: "none",
               cursor: "pointer",
             }}
             onClick={() => {
