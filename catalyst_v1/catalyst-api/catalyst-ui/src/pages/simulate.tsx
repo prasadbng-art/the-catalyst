@@ -262,6 +262,7 @@ export default function Simulate() {
               maxWidth: 720,
               fontSize: 14,
               lineHeight: 1.5,
+              color: "#0f172a",
             }}
           >
             <strong>What would it take to reach “Value-Creating”?</strong>
