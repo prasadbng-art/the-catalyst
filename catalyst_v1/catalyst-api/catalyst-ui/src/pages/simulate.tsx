@@ -220,6 +220,7 @@ export default function Simulate() {
       <div style={{ marginTop: 40 }}>
         <h2>CFO ROI Threshold Assessment</h2>
 
+        {/* --- ROI Band Scale --- */}
         <div
           style={{
             display: "flex",
@@ -237,20 +238,28 @@ export default function Simulate() {
               "Accretive",
               "Value-Creating",
             ] as ROIBand[]
-          ).map((b) => {
-            return (
-              <div
-                key={b}
-                style={{
-                  flex: 1,
-                  background: getBandColor(b),
-                  opacity: b === band ? 1 : 0.25,
-                }}
-              />
-            );
-          })}
+          ).map((b) => (
+            <div
+              key={b}
+              style={{
+                flex: 1,
+                background: getBandColor(b),
+                opacity: b === band ? 1 : 0.25,
+              }}
+            />
+          ))}
         </div>
 
+        {/* --- PRIMARY INTELLIGENCE SUMMARY --- */}
+        <div style={{ fontSize: 20, fontWeight: 700, color: bandColor }}>
+          {band}
+        </div>
+
+        <p style={{ marginTop: 8, maxWidth: 720, lineHeight: 1.6 }}>
+          {getCFONarrative(band)}
+        </p>
+
+        {/* --- VALUE-CREATING GUIDANCE (conditional) --- */}
         {band !== "Value-Creating" && (
           <div
             style={{
@@ -277,9 +286,11 @@ export default function Simulate() {
           </div>
         )}
 
-        {/* ===== Sensitivity Ladder ===== */}
+        {/* --- SENSITIVITY LADDER (SECONDARY QUALIFIER) --- */}
         <div style={{ marginTop: 24, maxWidth: 720 }}>
-          <h4 style={{ marginBottom: 8 }}>Sensitivity Check</h4>
+          <h4 style={{ marginBottom: 8 }}>
+            Sensitivity Check <span style={{ fontWeight: 400 }}>(downside scenarios)</span>
+          </h4>
 
           {[
             { label: "Base case", factor: 1 },
@@ -302,7 +313,7 @@ export default function Simulate() {
                   background: "#f8fafc",
                   borderLeft: `4px solid ${getBandColor(adjustedBand)}`,
                   color: "#0f172a",
-                  fontSize: 14,
+                  fontSize: 13,
                 }}
               >
                 <span>{s.label}</span>
@@ -313,14 +324,6 @@ export default function Simulate() {
             );
           })}
         </div>
-
-        <div style={{ fontSize: 18, fontWeight: 600, color: bandColor }}>
-          {band}
-        </div>
-
-        <p style={{ marginTop: 12, maxWidth: 720, lineHeight: 1.6 }}>
-          {getCFONarrative(band)}
-        </p>
       </div>
     </div>
   );
