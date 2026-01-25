@@ -1,344 +1,133 @@
-import { useEffect, useState } from "react";
-import { runSimulation, type SimulationResponse } from "../api/simulation";
-import KpiCard from "../components/kpi/KpiCard";
+/* ================================
+   Types
+================================ */
+type SimulationResult = {
+  totalCost: number;
+  totalBenefit: number;
+};
 
-/* =========================================================
-   Currency (US$ canonical)
-========================================================= */
+type ROIBand =
+  | "Value-Creating"
+  | "Accretive"
+  | "Marginal"
+  | "Value-Eroding"
+  | "Capital Destructive";
+
+/* ================================
+   Helpers
+================================ */
+
 const USD = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
   maximumFractionDigits: 0,
 });
 
-/* =========================================================
-   Page
-========================================================= */
+function getROIMultiple(benefit: number, cost: number): number {
+  if (!cost) return 0;
+  return benefit / cost;
+}
 
-export default function SimulatePage() {
-  // ---------------------------------------------------------
-  // Controls
-  // ---------------------------------------------------------
-  const [riskReductionPct, setRiskReductionPct] = useState(25);
-  const [interventionCost, setInterventionCost] = useState(120000);
-  const [persona, setPersona] = useState<"CFO" | "CHRO">("CFO");
+function getROIBand(roiMultiple: number): ROIBand {
+  if (roiMultiple >= 3) return "Value-Creating";
+  if (roiMultiple >= 2) return "Accretive";
+  if (roiMultiple >= 1.2) return "Marginal";
+  if (roiMultiple >= 1) return "Value-Eroding";
+  return "Capital Destructive";
+}
 
-  // ---------------------------------------------------------
-  // State
-  // ---------------------------------------------------------
-  const [simulation, setSimulation] =
-    useState<SimulationResponse | null>(null);
-  const [loading, setLoading] = useState(false);
+function getBandColor(band: ROIBand): string {
+  switch (band) {
+    case "Value-Creating": return "#1b5e20";
+    case "Accretive": return "#2e7d32";
+    case "Marginal": return "#f9a825";
+    case "Value-Eroding": return "#ef6c00";
+    case "Capital Destructive": return "#b71c1c";
+  }
+}
 
-  // ---------------------------------------------------------
-  // Baseline (v1 hardcoded – must match backend)
-  // ---------------------------------------------------------
-  const baselineAttritionRisk = 24.2;
-  const baselineAnnualCost = 1940;
+function getCFONarrative(band: ROIBand): string {
+  switch (band) {
+    case "Value-Creating":
+      return "This initiative generates strong economic surplus and meaningfully expands enterprise value beyond its capital at risk.";
+    case "Accretive":
+      return "Returns exceed cost of investment with a healthy buffer, supporting disciplined growth and capital efficiency.";
+    case "Marginal":
+      return "The initiative clears minimum financial thresholds but offers limited upside. Execution discipline will determine value realization.";
+    case "Value-Eroding":
+      return "Returns are near breakeven. Financial value is fragile and highly sensitive to execution and external volatility.";
+    case "Capital Destructive":
+      return "Projected returns do not recover invested capital. Proceeding would reduce enterprise value unless strategic non-financial factors dominate.";
+  }
+}
 
-  // ---------------------------------------------------------
-  // Run simulation (debounced)
-  // ---------------------------------------------------------
-  useEffect(() => {
-    const timeout = setTimeout(async () => {
-      setLoading(true);
-      try {
-        const result = await runSimulation({
-          risk_reduction_pct: riskReductionPct,
-          intervention_cost: interventionCost,
-        });
-        setSimulation(result);
-      } finally {
-        setLoading(false);
-      }
-    }, 400);
+/* ================================
+   Component
+================================ */
 
-    return () => clearTimeout(timeout);
-  }, [riskReductionPct, interventionCost]);
+type Props = {
+  result: SimulationResult; // already coming from your existing simulation
+};
 
-  // ---------------------------------------------------------
-  // Derived values
-  // ---------------------------------------------------------
-  const simulatedRisk =
-    simulation?.simulated_kpis?.attrition_risk?.value;
+export default function Simulate({ result }: Props) {
+  const roiMultiple = getROIMultiple(result.totalBenefit, result.totalCost);
+  const band = getROIBand(roiMultiple);
+  const bandColor = getBandColor(band);
 
-  const simulatedCost =
-    simulation?.simulated_kpis?.annual_attrition_cost_exposure?.value;
-
-  const riskDelta =
-    simulatedRisk !== undefined
-      ? +(baselineAttritionRisk - simulatedRisk).toFixed(1)
-      : undefined;
-
-  const costDelta =
-    simulatedCost !== undefined
-      ? baselineAnnualCost - simulatedCost
-      : undefined;
-
-  // ---------------------------------------------------------
-  // Render helpers
-  // ---------------------------------------------------------
-  const renderDelta = (
-    delta: number | undefined,
-    goodDirection: "up" | "down"
-  ) => {
-    if (delta === undefined || delta === 0) return null;
-
-    const positive =
-      (goodDirection === "down" && delta > 0) ||
-      (goodDirection === "up" && delta < 0);
-
-    return (
-      <span
-        style={{
-          marginLeft: 6,
-          fontSize: 12,
-          color: positive ? "#22c55e" : "#ef4444",
-        }}
-      >
-        {positive ? "▲" : "▼"} {Math.abs(delta)}
-      </span>
-    );
-  };
-
-  // ---------------------------------------------------------
-  // Copy / Export
-  // ---------------------------------------------------------
-  const copyExecutiveSummary = () => {
-    if (!simulation) return;
-
-    const text = `
-Executive Summary (${persona})
-
-Risk reduction: ${riskReductionPct}%
-Cost avoided: ${USD.format(simulation.cfo_impact.cost_avoided)}
-Net ROI: ${USD.format(simulation.cfo_impact.net_roi)}
-Confidence: ${Math.round(
-      simulation.confidence.confidence_level * 100
-    )}%
-`.trim();
-
-    navigator.clipboard.writeText(text);
-  };
-
-  const exportForEmail = () => {
-    if (!simulation) return;
-
-    const text = `
-Subject: Catalyst Simulation Summary (${persona})
-
-Under a ${riskReductionPct}% attrition risk reduction scenario,
-Catalyst estimates ${USD.format(
-      simulation.cfo_impact.cost_avoided
-    )} in avoided attrition-related costs,
-resulting in a net ROI of ${USD.format(
-      simulation.cfo_impact.net_roi
-    )}.
-`.trim();
-
-    navigator.clipboard.writeText(text);
-  };
-
-  const exportForSlides = () => {
-    if (!simulation) return;
-
-    const text = `
-CATALYST — SIMULATION SUMMARY
-
-• Risk reduction: ${riskReductionPct}%
-• Cost avoided: ${USD.format(simulation.cfo_impact.cost_avoided)}
-• Net ROI: ${USD.format(simulation.cfo_impact.net_roi)}
-• Confidence: ${Math.round(
-      simulation.confidence.confidence_level * 100
-    )}%
-`.trim();
-
-    navigator.clipboard.writeText(text);
-  };
-
-  // ---------------------------------------------------------
-  // Render
-  // ---------------------------------------------------------
   return (
-    <div>
-      <h1>Simulation</h1>
+    <div style={{ padding: 24 }}>
 
-      {/* Persona selector */}
-      <div style={{ marginBottom: 16 }}>
-        <label style={{ marginRight: 12 }}>View as:</label>
-        <select
-          value={persona}
-          onChange={(e) =>
-            setPersona(e.target.value as "CFO" | "CHRO")
-          }
-        >
-          <option value="CFO">CFO</option>
-          <option value="CHRO">CHRO</option>
-        </select>
-      </div>
+      {/* Existing Financial Summary */}
+      <h2>Financial Impact Summary</h2>
+      <p><strong>Total Cost:</strong> {USD.format(result.totalCost)}</p>
+      <p><strong>Total Benefit:</strong> {USD.format(result.totalBenefit)}</p>
+      <p><strong>ROI Multiple:</strong> {roiMultiple.toFixed(2)}x</p>
 
-      {/* Controls */}
-      <div style={{ display: "flex", gap: 24, marginBottom: 24 }}>
-        <div>
-          <label>Risk Reduction (%)</label>
-          <input
-            type="number"
-            value={riskReductionPct}
-            onChange={(e) =>
-              setRiskReductionPct(Number(e.target.value))
-            }
-          />
+      {/* ================= CFO ROI THRESHOLD BANDS ================= */}
+      <div style={{ marginTop: 40 }}>
+        <h2>CFO ROI Threshold Assessment</h2>
+
+        {/* Visual Band Bar */}
+        <div style={{ display: "flex", height: 16, borderRadius: 8, overflow: "hidden", marginBottom: 16 }}>
+          {(["Capital Destructive", "Value-Eroding", "Marginal", "Accretive", "Value-Creating"] as ROIBand[])
+            .map((b) => (
+              <div
+                key={b}
+                style={{
+                  flex: 1,
+                  background: getBandColor(b),
+                  opacity: b === band ? 1 : 0.25,
+                  transition: "opacity 0.3s",
+                }}
+              />
+            ))}
         </div>
 
-        <div>
-          <label>Intervention Cost (USD)</label>
-          <input
-            type="number"
-            value={interventionCost}
-            onChange={(e) =>
-              setInterventionCost(Number(e.target.value))
-            }
-          />
+        {/* Label */}
+        <div style={{ fontSize: 18, fontWeight: 600, color: bandColor }}>
+          {band}
         </div>
-      </div>
 
-      {loading && <p>Running simulation…</p>}
+        {/* CFO Narrative */}
+        <p style={{ marginTop: 12, maxWidth: 720, lineHeight: 1.6 }}>
+          {getCFONarrative(band)}
+        </p>
 
-      {simulation && (
-        <>
-          {/* Executive Summary */}
-          <div
-            style={{
-              background: "#020617",
-              border: "1px solid #1e293b",
-              padding: 16,
-              marginBottom: 24,
-              borderRadius: 6,
-              color: "#e5e7eb",
-            }}
-          >
-            <strong>Executive Summary:</strong>{" "}
-            {persona === "CFO" ? (
-              <>
-                Under a <strong>{riskReductionPct}%</strong> attrition
-                risk reduction scenario, Catalyst estimates{" "}
-                <strong>
-                  {USD.format(simulation.cfo_impact.cost_avoided)}
-                </strong>{" "}
-                in avoided costs, resulting in a net ROI of{" "}
-                <strong>
-                  {USD.format(simulation.cfo_impact.net_roi)}
-                </strong>
-                .
-              </>
-            ) : (
-              <>
-                A <strong>{riskReductionPct}%</strong> reduction in
-                attrition risk is projected to improve workforce
-                stability and reduce the likelihood of regretted
-                exits.
-              </>
-            )}
-
-            <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
-              <button onClick={copyExecutiveSummary}>
-                Copy Summary
-              </button>
-              <button onClick={exportForEmail}>
-                Export Email
-              </button>
-              <button onClick={exportForSlides}>
-                Export Slides
-              </button>
-            </div>
-          </div>
-
-          {/* Scenario Comparison */}
-          <h3>Scenario Comparison</h3>
-
-          <table style={{ marginBottom: 24 }}>
-            <tbody>
-              <tr>
-                <td></td>
-                <td><strong>Baseline</strong></td>
-                <td><strong>Simulated</strong></td>
-              </tr>
-
-              <tr>
-                <td>Attrition Risk</td>
-                <td>{baselineAttritionRisk}%</td>
-                <td>
-                  {simulatedRisk !== undefined
-                    ? `${simulatedRisk}%`
-                    : "—"}
-                  {renderDelta(riskDelta, "down")}
-                </td>
-              </tr>
-
-              <tr>
-                <td>Annual Attrition Cost</td>
-                <td>{USD.format(baselineAnnualCost)}</td>
-                <td>
-                  {simulatedCost !== undefined
-                    ? USD.format(simulatedCost)
-                    : "—"}
-                  {renderDelta(costDelta, "down")}
-                </td>
-              </tr>
-
-              <tr>
-                <td>Net Capital Impact</td>
-                <td>—</td>
-                <td
-                  style={{
-                    color:
-                      simulation.cfo_impact.net_roi >= 0
-                        ? "#22c55e"
-                        : "#ef4444",
-                  }}
-                >
-                  {USD.format(simulation.cfo_impact.net_roi)}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          {/* Workforce Impact */}
-          <h3>Workforce Impact</h3>
-
-          <div style={{ display: "flex", gap: 16 }}>
-            <KpiCard
-              title="Attrition Risk"
-              value={
-                simulatedRisk !== undefined
-                  ? `${simulatedRisk}%`
-                  : "—"
-              }
-              delta={riskDelta}
-            />
-            <KpiCard
-              title="Annual Attrition Cost"
-              value={
-                simulatedCost !== undefined
-                  ? USD.format(simulatedCost)
-                  : "—"
-              }
-              delta={costDelta}
-            />
-          </div>
-
-          {/* Confidence */}
-          <p style={{ marginTop: 16, color: "#6b7280" }}>
-            Estimated confidence range:{" "}
-            {USD.format(simulation.confidence.low)} –{" "}
-            {USD.format(simulation.confidence.high)} (
-            {Math.round(
-              simulation.confidence.confidence_level * 100
-            )}
-            % confidence)
+        {/* Board-Safe Interpretation */}
+        <div style={{
+          marginTop: 16,
+          padding: 16,
+          background: "#f5f7fa",
+          borderLeft: `6px solid ${bandColor}`,
+          maxWidth: 720
+        }}>
+          <strong>Board Interpretation:</strong>
+          <p style={{ marginTop: 8 }}>
+            This classification is derived from the ratio of projected financial benefit to required investment.
+            It does not alter simulation assumptions, only frames financial attractiveness using capital allocation logic.
           </p>
-        </>
-      )}
+        </div>
+      </div>
     </div>
   );
 }
