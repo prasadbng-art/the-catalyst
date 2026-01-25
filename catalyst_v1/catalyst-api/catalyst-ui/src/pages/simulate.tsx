@@ -81,6 +81,10 @@ export default function Simulate() {
   const band = getROIBand(roiMultiple);
   const bandColor = getBandColor(band);
 
+  const targetROIMultiple = 3;
+  const requiredBenefitForValueCreating = programCost * targetROIMultiple;
+  const requiredAttritionReduction = (requiredBenefitForValueCreating / baselineAttritionCost) * 100;
+
   /* ---- Button Style Helper ---- */
   const scenarioButtonStyle = (active: boolean): React.CSSProperties => ({
     padding: "8px 14px",
@@ -209,6 +213,8 @@ export default function Simulate() {
         <p><strong>Projected Benefit:</strong> {USD.format(projectedBenefit)}</p>
         <p><strong>Investment Required:</strong> {USD.format(programCost)}</p>
         <p><strong>ROI Multiple:</strong> {roiMultiple.toFixed(2)}x</p>
+        <strong>{requiredAttritionReduction.toFixed(1)}%</strong>
+
       </section>
 
       {/* ===== ROI Bands ===== */}
@@ -245,6 +251,31 @@ export default function Simulate() {
             );
           })}
         </div>
+
+        {band !== "Value-Creating" && (
+          <div
+            style={{
+              marginTop: 16,
+              padding: 14,
+              background: "#f8fafc",
+              borderLeft: "4px solid #1e40af",
+              maxWidth: 720,
+              fontSize: 14,
+              lineHeight: 1.5,
+            }}
+          >
+            <strong>What would it take to reach “Value-Creating”?</strong>
+            <p style={{ marginTop: 6 }}>
+              At the current investment level, this would require approximately{" "}
+              <strong>{requiredAttritionReduction.toFixed(1)}%</strong> reduction
+              in attrition-related cost, assuming all other factors remain unchanged.
+            </p>
+            <p style={{ marginTop: 6 }}>
+              Outcomes at this level typically depend on multi-year impact,
+              targeted critical roles, or structural cost advantages.
+            </p>
+          </div>
+        )}
 
         <div style={{ fontSize: 18, fontWeight: 600, color: bandColor }}>
           {band}
