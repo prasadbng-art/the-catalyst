@@ -93,11 +93,11 @@ function BaselineCanvas({ stress, persona }: { stress: StressProfile; persona: P
           <ul style={{ margin: 0, paddingLeft: 18, lineHeight: 1.6 }}>
             <li>
               <strong>Primary stress driver:</strong> People risk ({stress.people}%) and cost
-              pressure ({stress.cost}%) are jointly constraining organizational flexibility.
+              pressure ({stress.cost}%) are both high. This reduces the Organization's room to adjust.
             </li>
             <li>
-              <strong>Risk implication:</strong> Elevated macro volatility ({stress.macro}%)
-              increases sensitivity to attrition-related shocks.
+              <strong>What this means:</strong> External uncertainty ({stress.macro}%)
+              makes the impact of employee exits harder to control.
             </li>
           </ul>
         </div>
@@ -161,12 +161,13 @@ function PersonaAdvisoryPanel({ persona }: { persona: Persona }) {
           <>
             <h4>Organizational Resilience Snapshot</h4>
             <p>
-              Pressure is concentrated around cost rigidity and talent exposure, reducing
-              flexibility under external volatility.
+              The company is under pressure from both costs and workforce risks.
             </p>
             <p>
-              While surface performance appears stable, system resilience is being tested
-              beneath the surface.
+              If market conditions worsen, it may be harder to respond quickly.
+            </p>
+            <p> 
+              The organization looks stable on the surface, but hidden strain is building
             </p>
           </>
         )}
@@ -175,11 +176,13 @@ function PersonaAdvisoryPanel({ persona }: { persona: Persona }) {
           <>
             <h4>Human Capital Risk Exposure</h4>
             <p>
-              Current conditions increase sensitivity to people-related cost shocks, even
-              without immediate budget overruns.
+             Workforce pressure can create unexpected costs, even if budgets look stable today.
             </p>
             <p>
-              Downside risk becomes less predictable if attrition accelerates under stress.
+              If more employees leave, replacement and productivity costs may rise quickly.
+            </p>
+            <p>
+              Financial risk increases when people pressure and market uncertainty happen together
             </p>
           </>
         )}
@@ -188,12 +191,14 @@ function PersonaAdvisoryPanel({ persona }: { persona: Persona }) {
           <>
             <h4>Workforce Stability Outlook</h4>
             <p>
-              Elevated pressure on people systems increases the likelihood of regretted exits,
+              Employees are feeling higher pressure, which can increase resignations - 
               particularly in high-demand roles.
             </p>
             <p>
-              Early intervention can stabilize the workforce before visible attrition
-              materializes.
+              Key roles might be harder to retain if workload and stress stay high
+            </p>
+            <p>
+              Early action can reduce exits before they become visible in the data
             </p>
           </>
         )}
