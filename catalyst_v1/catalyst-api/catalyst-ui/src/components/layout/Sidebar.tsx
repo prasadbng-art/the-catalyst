@@ -1,25 +1,89 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+
+const linkStyle = {
+  display: "block",
+  padding: "8px 12px",
+  borderRadius: 6,
+  textDecoration: "none",
+  marginBottom: 4,
+  fontSize: 14,
+};
 
 export default function Sidebar() {
+  const location = useLocation();
+
+  const isActive = (path: string) => location.pathname === path;
+
   return (
     <aside
       style={{
-        width: "220px",
-        background: "#111",
-        color: "#fff",
-        padding: "24px",
+        width: 220,
+        padding: 20,
+        borderRight: "1px solid #1f2937",
+        background: "#0f172a",
+        color: "#e5e7eb",
+        minHeight: "100vh",
       }}
     >
-      <h2 style={{ marginBottom: "24px" }}>Catalyst</h2>
+      <h2 style={{ marginBottom: 24 }}>Catalyst</h2>
 
-      <nav style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-        <Link to="/baseline" style={{ color: "#fff", textDecoration: "none" }}>
+      {/* ACTIVE MODULES */}
+      <div style={{ marginBottom: 24 }}>
+        <div style={{ fontSize: 12, opacity: 0.6, marginBottom: 8 }}>
+          ANALYSIS
+        </div>
+
+        <Link
+          to="/baseline"
+          style={{
+            ...linkStyle,
+            background: isActive("/baseline") ? "#1e293b" : "transparent",
+            color: "#e5e7eb",
+          }}
+        >
           Baseline
         </Link>
-        <Link to="/simulation" style={{ color: "#fff", textDecoration: "none" }}>
+
+        <Link
+          to="/simulate"
+          style={{
+            ...linkStyle,
+            background: isActive("/simulate") ? "#1e293b" : "transparent",
+            color: "#e5e7eb",
+          }}
+        >
           Simulation
         </Link>
-      </nav>
+      </div>
+
+      {/* FUTURE MODULES */}
+      <div>
+        <div style={{ fontSize: 12, opacity: 0.6, marginBottom: 8 }}>
+          PRODUCTION MODULES
+        </div>
+
+        {[
+          "Data Upload",
+          "Scenario Comparison",
+          "Portfolio View",
+          "Settings",
+        ].map((item) => (
+          <div
+            key={item}
+            style={{
+              ...linkStyle,
+              color: "#64748b",
+              cursor: "not-allowed",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <span>{item}</span>
+            <span style={{ fontSize: 11, opacity: 0.6 }}>Soon</span>
+          </div>
+        ))}
+      </div>
     </aside>
   );
 }
