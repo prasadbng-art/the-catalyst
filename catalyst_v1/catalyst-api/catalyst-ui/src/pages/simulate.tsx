@@ -125,6 +125,7 @@ export default function Simulate() {
               borderRadius: 6,
               border: "1px solid #c7d2fe",
               background: "#eef2ff",
+              color: "#1e293b",
               fontWeight: 500,
               cursor: "pointer",
             }}
