@@ -161,6 +161,7 @@ export default function Simulate() {
               borderRadius: 6,
               border: h === horizon ? "2px solid #1e40af" : "1px solid #c7d2fe",
               background: h === horizon ? "#dbeafe" : "#eef2ff",
+              color: h === horizon ? "#0f172a" : "#334155",
               fontWeight: 600,
               cursor: "pointer",
             }}
