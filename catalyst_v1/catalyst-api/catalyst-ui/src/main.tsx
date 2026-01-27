@@ -1,16 +1,13 @@
-import ReactDOM from "react-dom/client";
-import App from "./App";
-import "./index.css";
-import { BrowserRouter } from "react-router-dom";
-
-<BrowserRouter>
-  <App />
-</BrowserRouter>
+import { createRoot } from "react-dom/client";
 
 const root = document.getElementById("root");
 
 if (!root) {
-  throw new Error("ROOT NOT FOUND");
+  throw new Error("Root element not found");
 }
 
-ReactDOM.createRoot(root).render(<App />);
+createRoot(root).render(
+  <div style={{ color: "red", padding: 40, fontSize: 24 }}>
+    🔴 React is mounted
+  </div>
+);
