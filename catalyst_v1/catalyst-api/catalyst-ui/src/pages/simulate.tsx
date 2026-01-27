@@ -147,6 +147,24 @@ export default function Simulate() {
         </div>
       </section>
 
+      {activeScenario && (
+        <div style={{ marginTop: 8 }}>
+          <button
+            onClick={() => setActiveScenario(null)}
+            style={{
+              background: "transparent",
+              border: "none",
+              color: "#2563eb",
+              fontSize: 13,
+              cursor: "pointer",
+              padding: 0,
+            }}
+          >
+            Explore alternative scenarios
+          </button>
+        </div>
+      )}
+
       {/* ===== Simulation Controls ===== */}
       <section style={{ marginBottom: 24 }}>
         <h3>Alternative Scenarios</h3>
