@@ -11,8 +11,7 @@ type ROIBand =
   | "Capital Destructive";
 
 type Scenario = "Conservative" | "Expected" | "Aggressive" | null;
-type Horizon = 1 | 3
-const [horizon, setHorizon] = useState<Horizon>(1);
+type Horizon = 1 | 3;
 
 /* ================================
    Helpers
@@ -70,6 +69,8 @@ export default function Simulate() {
   /* ---- Simulation Inputs ---- */
   const [attritionReduction, setAttritionReduction] = useState(10);
   const [programCost, setProgramCost] = useState(500000);
+  const [horizon, setHorizon] = useState<Horizon>(1);
+
   const baselineAttritionCost = 1_940_000;
 
   /* ---- Scenario State ---- */
@@ -79,15 +80,17 @@ export default function Simulate() {
   const annualBenefit =
     baselineAttritionCost * (attritionReduction / 100);
 
-  const annualizedCost = programCost / horizon;
   const totalBenefit = annualBenefit * horizon;
-  const ROIMultiple = getROIMultiple(totalBenefit, programCost);
-  const band = getROIBand(ROIMultiple);
+  const annualizedCost = programCost / horizon;
+
+  const roiMultiple = getROIMultiple(totalBenefit, programCost);
+  const band = getROIBand(roiMultiple);
   const bandColor = getBandColor(band);
 
   const targetROIMultiple = 3;
   const requiredBenefitForValueCreating = programCost * targetROIMultiple;
-  const requiredAttritionReduction = (requiredBenefitForValueCreating / baselineAttritionCost) * 100;
+  const requiredAttritionReduction =
+    (requiredBenefitForValueCreating / baselineAttritionCost) * 100;
 
   /* ---- Button Style Helper ---- */
   const scenarioButtonStyle = (active: boolean): React.CSSProperties => ({
@@ -98,25 +101,19 @@ export default function Simulate() {
     color: "#0f172a",
     fontWeight: active ? 700 : 600,
     cursor: "pointer",
-    outline: "none",
-    appearance: "none",
   });
 
   return (
     <div style={{ padding: 24, maxWidth: 1100 }}>
+      <h1>Simulation</h1>
 
       {/* ===== Scenario Presets ===== */}
       <section style={{ marginBottom: 24 }}>
-        <h3 style={{ marginBottom: 8 }}>Quick Scenarios</h3>
+        <h3>Quick Scenarios</h3>
 
         <div style={{ display: "flex", gap: 12 }}>
           <button
             style={scenarioButtonStyle(activeScenario === "Conservative")}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "#e0e7ff")}
-            onMouseLeave={(e) =>
-            (e.currentTarget.style.background =
-              activeScenario === "Conservative" ? "#dbeafe" : "#eef2ff")
-            }
             onClick={() => {
               setAttritionReduction(5);
               setProgramCost(600000);
@@ -128,11 +125,6 @@ export default function Simulate() {
 
           <button
             style={scenarioButtonStyle(activeScenario === "Expected")}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "#e0e7ff")}
-            onMouseLeave={(e) =>
-            (e.currentTarget.style.background =
-              activeScenario === "Expected" ? "#dbeafe" : "#eef2ff")
-            }
             onClick={() => {
               setAttritionReduction(10);
               setProgramCost(500000);
@@ -144,11 +136,6 @@ export default function Simulate() {
 
           <button
             style={scenarioButtonStyle(activeScenario === "Aggressive")}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "#e0e7ff")}
-            onMouseLeave={(e) =>
-            (e.currentTarget.style.background =
-              activeScenario === "Aggressive" ? "#dbeafe" : "#eef2ff")
-            }
             onClick={() => {
               setAttritionReduction(18);
               setProgramCost(450000);
@@ -158,126 +145,46 @@ export default function Simulate() {
             Aggressive
           </button>
         </div>
-
-        {activeScenario && (
-          <div style={{ marginTop: 8 }}>
-            <button
-              style={{
-                fontSize: 12,
-                background: "transparent",
-                border: "none",
-                color: "#2563eb",
-                cursor: "pointer",
-                padding: 0,
-              }}
-              onClick={() => setActiveScenario(null)}
-            >
-              Customize assumptions
-            </button>
-          </div>
-        )}
       </section>
 
-      {/* ===== Simulation Inputs ===== */}
-      <section style={{ marginBottom: 32 }}>
-        <h2>Simulation Assumptions</h2>
+      {/* ===== Time Horizon ===== */}
+      <section style={{ marginBottom: 24 }}>
+        <h3>Time Horizon</h3>
 
-        <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
-          <label>
-            Attrition Reduction (%)
-            <br />
-            <input
-              type="number"
-              value={attritionReduction}
-              disabled={activeScenario !== null}
-              onChange={(e) =>
-                setAttritionReduction(Number(e.target.value))
-              }
-            />
-          </label>
-
-          <label>
-            Program Cost ($)
-            <br />
-            <input
-              type="number"
-              value={programCost}
-              disabled={activeScenario !== null}
-              onChange={(e) =>
-                setProgramCost(Number(e.target.value))
-              }
-            />
-          </label>
-
-          <div style={{ marginBottom: 16 }}>
-            <label style={{ marginRight: 12, fontWeight: 600 }}>
-              Time Horizon:
-            </label>
-
-            {[1, 3].map((h) => (
-              <button
-                key={h}
-                onClick={() => setHorizon(h as Horizon)}
-                style={{
-                  marginRight: 8,
-                  padding: "6px 12px",
-                  borderRadius: 6,
-                  border: h === horizon ? "2px solid #1e40af" : "1px solid #c7d2fe",
-                  background: h === horizon ? "#dbeafe" : "#eef2ff",
-                  color: "#0f172a",
-                  fontWeight: 600,
-                  cursor: "pointer",
-                }}
-              >
-                {h} Year{h > 1 ? "s" : ""}
-              </button>
-            ))}
-          </div>
-
-        </div>
+        {[1, 3].map((h) => (
+          <button
+            key={h}
+            onClick={() => setHorizon(h as Horizon)}
+            style={{
+              marginRight: 8,
+              padding: "6px 12px",
+              borderRadius: 6,
+              border: h === horizon ? "2px solid #1e40af" : "1px solid #c7d2fe",
+              background: h === horizon ? "#dbeafe" : "#eef2ff",
+              fontWeight: 600,
+              cursor: "pointer",
+            }}
+          >
+            {h} Year{h > 1 ? "s" : ""}
+          </button>
+        ))}
       </section>
 
       {/* ===== Financial Summary ===== */}
       <section>
         <h2>Financial Impact Summary</h2>
-        <p>
-          <strong>Projected Benefit ({horizon}-year cumulative):</strong>{" "}
-          {USD.format(totalBenefit)}
-        </p>
-
-        <p>
-          <strong>Annualized Program Cost:</strong>{" "}
-          {USD.format(annualizedCost)}
-        </p>
-
-        <p style={{ fontSize: 12, color: "#64748b", marginTop: 8 }}>
-          Assumes consistent effectiveness across the selected time horizon.
-        </p>
-
+        <p><strong>Projected Benefit:</strong> {USD.format(totalBenefit)}</p>
+        <p><strong>Annualized Program Cost:</strong> {USD.format(annualizedCost)}</p>
+        <p><strong>ROI Multiple:</strong> {roiMultiple.toFixed(2)}×</p>
       </section>
 
       {/* ===== ROI Bands ===== */}
-      <div style={{ marginTop: 40 }}>
+      <section style={{ marginTop: 32 }}>
         <h2>CFO ROI Threshold Assessment</h2>
 
-        {/* --- ROI Band Scale --- */}
-        <div
-          style={{
-            display: "flex",
-            height: 16,
-            borderRadius: 8,
-            overflow: "hidden",
-            marginBottom: 16,
-          }}
-        >
+        <div style={{ display: "flex", height: 16, borderRadius: 8, overflow: "hidden" }}>
           {(
-            [
-              "Capital Destructive",
-              "Value-Eroding",
-              "Marginal",
-              "Accretive",
-              "Value-Creating",
-            ] as ROIBand[]
+            ["Capital Destructive", "Value-Eroding", "Marginal", "Accretive", "Value-Creating"] as ROIBand[]
           ).map((b) => (
             <div
               key={b}
@@ -290,81 +197,19 @@ export default function Simulate() {
           ))}
         </div>
 
-        {/* --- PRIMARY INTELLIGENCE SUMMARY --- */}
-        <div style={{ fontSize: 20, fontWeight: 700, color: bandColor }}>
+        <div style={{ marginTop: 12, fontSize: 18, fontWeight: 700, color: bandColor }}>
           {band}
         </div>
 
-        <p style={{ marginTop: 8, maxWidth: 720, lineHeight: 1.6 }}>
-          {getCFONarrative(band)}
-        </p>
+        <p style={{ maxWidth: 720 }}>{getCFONarrative(band)}</p>
 
-        {/* --- VALUE-CREATING GUIDANCE (conditional) --- */}
         {band !== "Value-Creating" && (
-          <div
-            style={{
-              marginTop: 16,
-              padding: 14,
-              background: "#f8fafc",
-              borderLeft: "4px solid #1e40af",
-              maxWidth: 720,
-              fontSize: 14,
-              lineHeight: 1.5,
-              color: "#0f172a",
-            }}
-          >
-            <strong>What would it take to reach “Value-Creating”?</strong>
-            <p style={{ marginTop: 6 }}>
-              At the current investment level, this would require approximately{" "}
-              <strong>{requiredAttritionReduction.toFixed(1)}%</strong> reduction
-              in attrition-related cost, assuming all other factors remain unchanged.
-            </p>
-            <p style={{ marginTop: 6 }}>
-              Outcomes at this level typically depend on multi-year impact,
-              targeted critical roles, or structural cost advantages.
-            </p>
-          </div>
+          <p style={{ maxWidth: 720 }}>
+            To reach <strong>Value-Creating</strong>, attrition-related cost would need to fall by approximately{" "}
+            <strong>{requiredAttritionReduction.toFixed(1)}%</strong>.
+          </p>
         )}
-
-        {/* --- SENSITIVITY LADDER (SECONDARY QUALIFIER) --- */}
-        <div style={{ marginTop: 24, maxWidth: 720 }}>
-          <h4 style={{ marginBottom: 8 }}>
-            Sensitivity Check <span style={{ fontWeight: 400 }}>(downside scenarios)</span>
-          </h4>
-
-          {[
-            { label: "Base case", factor: 1 },
-            { label: "–10% benefit", factor: 0.9 },
-            { label: "–20% benefit", factor: 0.8 },
-          ].map((s) => {
-            const adjustedBenefit = totalBenefit * s.factor;
-            const adjustedROI = getROIMultiple(adjustedBenefit, programCost);
-            const adjustedBand = getROIBand(adjustedROI);
-
-            return (
-              <div
-                key={s.label}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "8px 12px",
-                  marginBottom: 6,
-                  background: "#f8fafc",
-                  borderLeft: `4px solid ${getBandColor(adjustedBand)}`,
-                  color: "#0f172a",
-                  fontSize: 13,
-                }}
-              >
-                <span>{s.label}</span>
-                <span style={{ fontWeight: 600 }}>
-                  {adjustedROI.toFixed(2)}× — {adjustedBand}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      </section>
     </div>
   );
 }
