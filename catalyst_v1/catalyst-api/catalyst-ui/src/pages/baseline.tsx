@@ -95,7 +95,7 @@ export default function BaselinePage() {
         </p>
 
         <button
-          onClick={() => navigate("/simulate")}
+          onClick={() => navigate("/simulation")}
           style={{
             padding: "10px 18px",
             borderRadius: 6,
