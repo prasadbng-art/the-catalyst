@@ -149,7 +149,7 @@ export default function Simulate() {
 
       {/* ===== Simulation Controls ===== */}
       <section style={{ marginBottom: 24 }}>
-        <h3>Simulation Controls</h3>
+        <h3>Alternative Scenarios</h3>
 
         <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
           <label>
@@ -185,7 +185,7 @@ export default function Simulate() {
 
         {activeScenario && (
           <p style={{ marginTop: 8, fontSize: 12, color: "#64748b" }}>
-            Manual changes will override the selected scenario.
+            Adjust these to explore alternative outcomes.
           </p>
         )}
       </section>
