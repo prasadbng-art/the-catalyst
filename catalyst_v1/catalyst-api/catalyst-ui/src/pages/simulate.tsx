@@ -147,6 +147,49 @@ export default function Simulate() {
         </div>
       </section>
 
+      {/* ===== Simulation Controls ===== */}
+      <section style={{ marginBottom: 24 }}>
+        <h3>Simulation Controls</h3>
+
+        <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
+          <label>
+            Attrition Reduction (%)
+            <br />
+            <input
+              type="number"
+              value={attritionReduction}
+              disabled={activeScenario !== null}
+              onChange={(e) => {
+                setAttritionReduction(Number(e.target.value));
+                setActiveScenario(null);
+              }}
+              style={{ width: 160 }}
+            />
+          </label>
+
+          <label>
+            Program Cost ($)
+            <br />
+            <input
+              type="number"
+              value={programCost}
+              disabled={activeScenario !== null}
+              onChange={(e) => {
+                setProgramCost(Number(e.target.value));
+                setActiveScenario(null);
+              }}
+              style={{ width: 160 }}
+            />
+          </label>
+        </div>
+
+        {activeScenario && (
+          <p style={{ marginTop: 8, fontSize: 12, color: "#64748b" }}>
+            Manual changes will override the selected scenario.
+          </p>
+        )}
+      </section>
+
       {/* ===== Time Horizon ===== */}
       <section style={{ marginBottom: 24 }}>
         <h3>Time Horizon</h3>
@@ -203,6 +246,48 @@ export default function Simulate() {
         </div>
 
         <p style={{ maxWidth: 720 }}>{getCFONarrative(band)}</p>
+
+        {/* ===== Sensitivity Ladder ===== */}
+        <div style={{ marginTop: 24, maxWidth: 720 }}>
+          <h4 style={{ marginBottom: 8 }}>
+            Sensitivity Check{" "}
+            <span style={{ fontWeight: 400, color: "#64748b" }}>
+              (downside scenarios)
+            </span>
+          </h4>
+
+          {[
+            { label: "Base case", factor: 1 },
+            { label: "–10% benefit", factor: 0.9 },
+            { label: "–20% benefit", factor: 0.8 },
+          ].map((s) => {
+            const adjustedBenefit = totalBenefit * s.factor;
+            const adjustedROI = getROIMultiple(adjustedBenefit, programCost);
+            const adjustedBand = getROIBand(adjustedROI);
+
+            return (
+              <div
+                key={s.label}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  padding: "8px 12px",
+                  marginBottom: 6,
+                  background: "#f8fafc",
+                  borderLeft: `4px solid ${getBandColor(adjustedBand)}`,
+                  color: "#0f172a",
+                  fontSize: 13,
+                }}
+              >
+                <span>{s.label}</span>
+                <span style={{ fontWeight: 600 }}>
+                  {adjustedROI.toFixed(2)}× — {adjustedBand}
+                </span>
+              </div>
+            );
+          })}
+        </div>
 
         {band !== "Value-Creating" && (
           <p style={{ maxWidth: 720 }}>
