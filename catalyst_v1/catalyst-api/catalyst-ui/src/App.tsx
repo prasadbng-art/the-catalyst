@@ -1,21 +1,12 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import AppShell from "./components/layout/AppShell";
-import BaselinePage from "./pages/baseline";
-import Simulate from "./pages/simulate";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 export default function App() {
   return (
     <BrowserRouter>
-      <AppShell>
-        <Routes>
-          {/* Default route */}
-          <Route path="/" element={<Navigate to="/baseline" replace />} />
-
-          {/* Main pages */}
-          <Route path="/baseline" element={<BaselinePage />} />
-          <Route path="/simulation" element={<Simulate />} />
-        </Routes>
-      </AppShell>
+      <Routes>
+        <Route path="/" element={<div>Baseline works</div>} />
+        <Route path="/simulation" element={<div>Simulation works</div>} />
+      </Routes>
     </BrowserRouter>
   );
 }
