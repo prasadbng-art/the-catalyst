@@ -11,8 +11,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/baseline" replace />} />
           <Route path="/baseline" element={<BaselinePage />} />
-          <Route path="/simulate" element={<Simulate />} /> 
-            
+          {/* Route path="/simulate" element={<Simulate />} /> */}
+
         </Routes>
       </AppShell>
     </BrowserRouter>
