@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 const linkStyle = {
   display: "block",
@@ -33,7 +33,7 @@ export default function Sidebar() {
           ANALYSIS
         </div>
 
-        <Link
+        <NavLink
           to="/baseline"
           style={{
             ...linkStyle,
@@ -42,10 +42,10 @@ export default function Sidebar() {
           }}
         >
           Baseline
-        </Link>
+        </NavLink>
 
-        <Link
-          to="/simulate"
+        <NavLink
+          to="/simulation"
           style={{
             ...linkStyle,
             background: isActive("/simulate") ? "#1e293b" : "transparent",
@@ -53,7 +53,7 @@ export default function Sidebar() {
           }}
         >
           Simulation
-        </Link>
+        </NavLink>
       </div>
 
       {/* FUTURE MODULES */}
