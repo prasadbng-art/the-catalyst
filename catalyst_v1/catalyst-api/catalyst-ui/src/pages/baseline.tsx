@@ -31,7 +31,7 @@ export default function BaselinePage() {
   const navigate = useNavigate();
 
   return (
-    <div style={{ maxWidth: 1100 }}>
+    <div style={{ maxWidth: 1100, width: "100%" }}>
       <BaselineHeader />
 
       {/* Controls */}
@@ -95,6 +95,7 @@ export default function BaselinePage() {
         </p>
 
         <button
+          type="button"
           onClick={() => navigate("/simulation")}
           style={{
             padding: "10px 18px",
