@@ -11,6 +11,8 @@ type ROIBand =
   | "Capital Destructive";
 
 type Scenario = "Conservative" | "Expected" | "Aggressive" | null;
+type Horizon = 1 | 3
+const [horizon, setHorizon] = useState<Horizon>(1);
 
 /* ================================
    Helpers
@@ -74,11 +76,13 @@ export default function Simulate() {
   const [activeScenario, setActiveScenario] = useState<Scenario>(null);
 
   /* ---- Computation ---- */
-  const projectedBenefit =
+  const annualBenefit =
     baselineAttritionCost * (attritionReduction / 100);
 
-  const roiMultiple = getROIMultiple(projectedBenefit, programCost);
-  const band = getROIBand(roiMultiple);
+  const annualizedCost = programCost / horizon;
+  const totalBenefit = annualBenefit * horizon;
+  const ROIMultiple = getROIMultiple(totalBenefit, programCost);
+  const band = getROIBand(ROIMultiple);
   const bandColor = getBandColor(band);
 
   const targetROIMultiple = 3;
@@ -204,15 +208,51 @@ export default function Simulate() {
               }
             />
           </label>
+
+          <div style={{ marginBottom: 16 }}>
+            <label style={{ marginRight: 12, fontWeight: 600 }}>
+              Time Horizon:
+            </label>
+
+            {[1, 3].map((h) => (
+              <button
+                key={h}
+                onClick={() => setHorizon(h as Horizon)}
+                style={{
+                  marginRight: 8,
+                  padding: "6px 12px",
+                  borderRadius: 6,
+                  border: h === horizon ? "2px solid #1e40af" : "1px solid #c7d2fe",
+                  background: h === horizon ? "#dbeafe" : "#eef2ff",
+                  color: "#0f172a",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                }}
+              >
+                {h} Year{h > 1 ? "s" : ""}
+              </button>
+            ))}
+          </div>
+
         </div>
       </section>
 
       {/* ===== Financial Summary ===== */}
       <section>
         <h2>Financial Impact Summary</h2>
-        <p><strong>Projected Benefit:</strong> {USD.format(projectedBenefit)}</p>
-        <p><strong>Investment Required:</strong> {USD.format(programCost)}</p>
-        <p><strong>ROI Multiple:</strong> {roiMultiple.toFixed(2)}x</p>
+        <p>
+          <strong>Projected Benefit ({horizon}-year cumulative):</strong>{" "}
+          {USD.format(totalBenefit)}
+        </p>
+
+        <p>
+          <strong>Annualized Program Cost:</strong>{" "}
+          {USD.format(annualizedCost)}
+        </p>
+
+        <p style={{ fontSize: 12, color: "#64748b", marginTop: 8 }}>
+          Assumes consistent effectiveness across the selected time horizon.
+        </p>
 
       </section>
 
@@ -297,7 +337,7 @@ export default function Simulate() {
             { label: "–10% benefit", factor: 0.9 },
             { label: "–20% benefit", factor: 0.8 },
           ].map((s) => {
-            const adjustedBenefit = projectedBenefit * s.factor;
+            const adjustedBenefit = totalBenefit * s.factor;
             const adjustedROI = getROIMultiple(adjustedBenefit, programCost);
             const adjustedBand = getROIBand(adjustedROI);
 
