@@ -11,6 +11,20 @@ app = FastAPI(
     title="Catalyst API",
     version="v1",
 )
+# ---- Serve Frontend UI ----
+
+FRONTEND_DIST = os.path.join(
+    os.path.dirname(__file__),
+    "..",
+    "catalyst-ui",
+    "dist"
+)
+
+app.mount(
+    "/",
+    StaticFiles(directory=FRONTEND_DIST, html=True),
+    name="frontend",
+)
 
 # --- CORS (REQUIRED for React) ---
 app.add_middleware(
