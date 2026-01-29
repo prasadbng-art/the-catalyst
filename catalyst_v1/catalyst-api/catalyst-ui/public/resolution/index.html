@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The Catalyst Report - Wayne Enterprises</title>
+    <title>Action Resolution – Catalyst</title>
 
     <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- React -->
+    <!-- React (standalone) -->
     <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -19,56 +19,22 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-    <!-- Base Styles -->
     <style>
         body {
             margin: 0;
-            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-            background: transparent;
+            font-family: 'Inter', sans-serif;
+            background: #f1f5f9;
         }
 
         .money-format::before {
             content: '$';
         }
-
-        /* ===== Catalyst Visual Harmonization ===== */
-
-        #catalyst-resolution-shell {
-            padding: 24px;
-            min-height: 100vh;
-            box-sizing: border-box;
-            background: #f1f5f9;
-            /* matches ResolutionPanel */
-        }
-
-        h1 {
-            font-size: 20px;
-            font-weight: 700;
-            margin-top: 0;
-        }
-
-        h2 {
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        h3 {
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        /* Remove excessive dashboard chrome when embedded */
-        #catalyst-resolution-shell * {
-            box-shadow: none !important;
-        }
     </style>
 </head>
 
 <body>
-    <!-- Catalyst host wrapper -->
-    <div id="catalyst-resolution-shell">
-        <div id="root"></div>
-    </div>
+    <div id="root"></div>
+
 
     <!-- ===========================
        APPLICATION SCRIPT
