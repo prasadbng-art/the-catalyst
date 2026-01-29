@@ -260,8 +260,8 @@ function BaselineCanvas({
           <ul style={{ margin: 0, paddingLeft: 18, lineHeight: 1.6 }}>
             {!detailed ? (
               <>
-                <li><strong>Main pressure:</strong> People risk ({formatPct(stress.people)}%) and cost pressure ({formatPct(stress.cost)}%) are both high.</li>
-                <li><strong>What this means:</strong> External uncertainty ({formatPct(stress.macro)}%) makes employee exits harder to manage.</li>
+                <li><strong>Main pressure:</strong> People risk ({formatPct(stress.people)}) and cost pressure ({formatPct(stress.cost)}) are both high.</li>
+                <li><strong>What this means:</strong> External uncertainty ({formatPct(stress.macro)}) makes employee exits harder to manage.</li>
               </>
             ) : (
               <>
