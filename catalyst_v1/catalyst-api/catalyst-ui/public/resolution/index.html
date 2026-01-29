@@ -21,10 +21,58 @@
             content: '$';
         }
     </style>
+
+    /* ================================
+    Catalyst Visual Harmonization
+    ================================ */
+
+    body {
+    margin: 0;
+    background: transparent;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    /* Host wrapper injected by Catalyst */
+    #catalyst-resolution-shell {
+    padding: 24px;
+    min-height: 100vh;
+    box-sizing: border-box;
+    background: #f1f5f9; /* Matches ResolutionPanel */
+    }
+
+    /* Calm the standalone-app feel */
+    h1 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 0;
+    }
+
+    h2 {
+    font-size: 16px;
+    font-weight: 600;
+    }
+
+    h3 {
+    font-size: 14px;
+    font-weight: 600;
+    }
+
+    /* Remove dashboard heaviness */
+    #catalyst-resolution-shell * {
+    box-shadow: none !important;
+    }
+    </style>
+
 </head>
 
 <body>
-    <div id="root"></div>
+
+    <body>
+        <div id="catalyst-resolution-shell">
+            <div id="root"></div>
+        </div>
+    </body>
+
 
     <script type="text/babel">
         // --- ICONS (Self-contained SVGs) ---
