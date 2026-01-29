@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import KpiCard from "../components/kpi/KpiCard";
 import MagicCube from "../components/visuals/MagicCube";
 import type { StressProfile } from "../components/visuals/motion";
@@ -29,6 +29,65 @@ export default function BaselinePage() {
   const [persona, setPersona] = useState<Persona>("CEO");
   const [detailed, setDetailed] = useState(false);
   const navigate = useNavigate();
+
+  const [simulationOffset, setSimulationOffset] = useState<StressProfile>({
+    people: 0,
+    cost: 0,
+    macro: 0,
+    execution: 0,
+  });
+
+  const clamp = (val: number, min: number, max: number) =>
+    Math.max(min, Math.min(max, val));
+
+  const applySimulationImpact = (impact: any) => {
+    const {
+      risk_delta,
+      high_risk_reduction_count,
+      population_size,
+      cost_avoided,
+      exits_avoided,
+      intervention_precision_score,
+    } = impact;
+
+    const peopleDelta = clamp(
+      risk_delta * 0.6 +
+      (high_risk_reduction_count / population_size) * 40,
+      -15,
+      15
+    );
+
+    const costDelta = clamp(
+      (cost_avoided / (baselineAnnualCost * 1_000_000)) * 80 +
+      (exits_avoided / population_size) * 20,
+      -20,
+      20
+    );
+
+    const executionDelta = clamp(
+      (intervention_precision_score - 0.5) * 40,
+      -10,
+      15
+    );
+
+    setSimulationOffset({
+      people: peopleDelta,
+      cost: costDelta,
+      macro: 0,
+      execution: executionDelta,
+    });
+  };
+
+  useEffect(() => {
+    const handler = (event: MessageEvent) => {
+      if (event.data?.type === "CATALYST_INTERVENTION_IMPACT") {
+        applySimulationImpact(event.data.payload);
+      }
+    };
+
+    window.addEventListener("message", handler);
+    return () => window.removeEventListener("message", handler);
+  }, []);
 
   return (
     <div style={{ maxWidth: 1100, width: "100%" }}>
@@ -65,7 +124,21 @@ export default function BaselinePage() {
           marginBottom: 24,
         }}
       >
-        <BaselineCanvas stress={baselineStress} persona={persona} detailed={detailed} />
+        <BaselineCanvas
+          stress={{
+            people: clamp(baselineStress.people + simulationOffset.people, 0, 100),
+            cost: clamp(baselineStress.cost + simulationOffset.cost, 0, 100),
+            macro: baselineStress.macro,
+            execution: clamp(
+              baselineStress.execution + simulationOffset.execution,
+              0,
+              100
+            ),
+          }}
+          persona={persona}
+          detailed={detailed}
+        />
+
         <PersonaAdvisoryPanel persona={persona} detailed={detailed} />
       </div>
 
