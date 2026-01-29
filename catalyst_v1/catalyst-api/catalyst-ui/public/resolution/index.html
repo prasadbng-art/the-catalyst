@@ -40,26 +40,58 @@
     <!-- Resolution App (Inline React) -->
     <!-- ============================= -->
     <script type="text/babel">
-
         /* -----------------------------
-           Mock Data (Demo)
+           Incoming Signals (from Layer 1)
+           This will later be injected dynamically
         ----------------------------- */
-        const highRiskEmployees = Array.from({ length: 18 }, (_, i) => ({
-            id: `WE${100 + i}`,
-            name: `Employee ${i + 1}`,
-            department: "Warsaw",
-            risk: Math.floor(Math.random() * 20) + 70,
-            drivers: ["Low Engagement", "Poor Manager Score"],
-        }));
 
-        const interventions = {
-            none: { label: "Select intervention", impact: 0 },
-            mentor: { label: "Assign Senior Mentor", impact: 0.45 },
-            raise: { label: "Salary Increase (10%)", impact: 0.5 },
-            project: { label: "Lead Strategic Project", impact: 0.85 },
-            skip: { label: "Skip-Level Meeting", impact: 0.3 },
+        const SIGNALS = {
+            location: "Warsaw",
+
+            organization: {
+                peopleStress: 65,
+                costStress: 70,
+                macroStress: 60,
+                executionStress: 45,
+            },
+
+            workforce: {
+                baselineAttritionRisk: 24.2,
+                highRiskCount: 16,
+                dominantDrivers: [
+                    "Poor Manager Score",
+                    "Low Engagement",
+                    "Stagnant Performance",
+                ],
+            },
+
+            economics: {
+                annualAttritionCost: 1_940_000,
+                perCapitaCost: 124_121,
+            },
         };
 
+        /* -----------------------------
+    High-Risk Employees (Derived)
+ ----------------------------- */
+
+        const highRiskEmployees = Array.from(
+            { length: SIGNALS.workforce.highRiskCount },
+            (_, i) => {
+                const baseRisk = 70 + Math.round(SIGNALS.organization.peopleStress / 3);
+
+                return {
+                    id: `WE${100 + i}`,
+                    name: `Employee ${i + 1}`,
+                    department: SIGNALS.location,
+                    risk: Math.min(baseRisk + Math.floor(Math.random() * 10), 95),
+                    drivers: SIGNALS.workforce.dominantDrivers.slice(
+                        0,
+                        Math.ceil(Math.random() * 2)
+                    ),
+                };
+            }
+        );
 
         /* -----------------------------
            Components
@@ -68,8 +100,37 @@
         const EmployeeCard = ({ employee }) => {
             const [choice, setChoice] = React.useState("none");
 
-            const intervention = interventions[choice];
-            const newRisk = Math.round(employee.risk * (1 - intervention.impact));
+            const interventions = {
+                none: { label: "Select intervention", impact: 0 },
+
+                mentor: {
+                    label: "Assign Senior Mentor",
+                    impact: 0.35,
+                    cost: 5000,
+                    driver: "Low Engagement",
+                },
+
+                raise: {
+                    label: "Salary Increase (10%)",
+                    impact: 0.5,
+                    cost: 12000,
+                    driver: "Low Compa-Ratio",
+                },
+
+                project: {
+                    label: "Lead Strategic Project",
+                    impact: 0.75,
+                    cost: 3000,
+                    driver: "Stagnant Performance",
+                },
+
+                skip: {
+                    label: "Skip-Level Meeting",
+                    impact: 0.3,
+                    cost: 1000,
+                    driver: "Poor Manager Score",
+                },
+            };
 
             return (
                 <div className="bg-white rounded-lg shadow p-4 flex flex-col justify-between">
