@@ -100,6 +100,9 @@
         const EmployeeCard = ({ employee }) => {
             const [choice, setChoice] = React.useState("none");
 
+            const stressMultiplier =
+                SIGNALS.organization.peopleStress / 100;
+
             const interventions = {
                 none: { label: "Select intervention", impact: 0 },
 
@@ -131,6 +134,17 @@
                     driver: "Poor Manager Score",
                 },
             };
+
+            // ✅ Step 4 — derived simulation result (THIS WAS MISPLACED)
+            const intervention = interventions[choice];
+
+            const newRisk =
+                choice === "none"
+                    ? employee.risk
+                    : Math.round(
+                        employee.risk *
+                        (1 - intervention.impact * stressMultiplier)
+                    );
 
             return (
                 <div className="bg-white rounded-lg shadow p-4 flex flex-col justify-between">
@@ -187,6 +201,7 @@
                 </div>
             );
         };
+
 
         /* -----------------------------
            App (DEFINED FIRST)
