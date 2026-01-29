@@ -22,12 +22,8 @@
     <style>
         body {
             margin: 0;
-            font-family: 'Inter', sans-serif;
+            font-family: "Inter", sans-serif;
             background: #f1f5f9;
-        }
-
-        .money-format::before {
-            content: '$';
         }
     </style>
 </head>
@@ -36,14 +32,10 @@
     <!-- React Mount -->
     <div id="root"></div>
 
-    <!-- ============================= -->
-    <!-- Resolution App (Inline React) -->
-    <!-- ============================= -->
     <script type="text/babel">
-        /* -----------------------------
-           Incoming Signals (from Layer 1)
-           This will later be injected dynamically
-        ----------------------------- */
+        /* =====================================================
+           Incoming Signals (Layer 1 → Layer 2 bridge)
+        ===================================================== */
 
         const SIGNALS = {
             location: "Warsaw",
@@ -66,84 +58,116 @@
             },
 
             economics: {
-                annualAttritionCost: 1_940_000,
-                perCapitaCost: 124_121,
+                annualAttritionCost: 1940000,
+                perCapitaCost: 124121,
             },
         };
 
-        /* -----------------------------
-    High-Risk Employees (Derived)
- ----------------------------- */
+        /* =====================================================
+           Driver Pool (Expanded realism)
+        ===================================================== */
+
+        const DRIVER_POOL = [
+            "Poor Manager Score",
+            "Low Engagement",
+            "Low Compa-Ratio",
+            "Stagnant Performance",
+            "Lack of Career Path",
+            "Burnout Risk",
+            "Role Misalignment",
+        ];
+
+        /* =====================================================
+           High-Risk Employees (Derived, non-uniform)
+        ===================================================== */
 
         const highRiskEmployees = Array.from(
             { length: SIGNALS.workforce.highRiskCount },
             (_, i) => {
-                const baseRisk = 70 + Math.round(SIGNALS.organization.peopleStress / 3);
+                const baseRisk = 75 + Math.floor(Math.random() * 21); // 75–95
+                const stressLift = Math.round(SIGNALS.organization.peopleStress / 10);
+
+                const driverCount = 1 + Math.floor(Math.random() * 3);
+                const drivers = [...DRIVER_POOL]
+                    .sort(() => 0.5 - Math.random())
+                    .slice(0, driverCount);
 
                 return {
                     id: `WE${100 + i}`,
                     name: `Employee ${i + 1}`,
                     department: SIGNALS.location,
-                    risk: Math.min(baseRisk + Math.floor(Math.random() * 10), 95),
-                    drivers: SIGNALS.workforce.dominantDrivers.slice(
-                        0,
-                        Math.ceil(Math.random() * 2)
-                    ),
+                    risk: Math.min(baseRisk + stressLift, 95),
+                    drivers,
                 };
             }
         );
 
-        /* -----------------------------
-           Components
-        ----------------------------- */
+        /* =====================================================
+           Employee Card Component
+        ===================================================== */
 
         const EmployeeCard = ({ employee }) => {
             const [choice, setChoice] = React.useState("none");
 
-            const stressMultiplier =
-                SIGNALS.organization.peopleStress / 100;
+            const stressMultiplier = SIGNALS.organization.peopleStress / 100;
 
             const interventions = {
-                none: { label: "Select intervention", impact: 0 },
+                none: {
+                    label: "Select intervention",
+                    impact: 0,
+                    targets: [],
+                },
 
                 mentor: {
                     label: "Assign Senior Mentor",
                     impact: 0.35,
-                    cost: 5000,
-                    driver: "Low Engagement",
+                    targets: ["Low Engagement", "Lack of Career Path", "Stagnant Performance"],
                 },
 
                 raise: {
                     label: "Salary Increase (10%)",
                     impact: 0.5,
-                    cost: 12000,
-                    driver: "Low Compa-Ratio",
+                    targets: ["Low Compa-Ratio"],
                 },
 
                 project: {
                     label: "Lead Strategic Project",
                     impact: 0.75,
-                    cost: 3000,
-                    driver: "Stagnant Performance",
+                    targets: ["Stagnant Performance", "Role Misalignment"],
                 },
 
                 skip: {
                     label: "Skip-Level Meeting",
                     impact: 0.3,
-                    cost: 1000,
-                    driver: "Poor Manager Score",
+                    targets: ["Poor Manager Score"],
                 },
             };
 
-            // ✅ Step 4 — derived simulation result (THIS WAS MISPLACED)
             const intervention = interventions[choice];
+
+            const matchingDrivers = employee.drivers.filter(d =>
+                intervention.targets.includes(d)
+            ).length;
+
+            const alignmentFactor =
+                matchingDrivers === 0 ? 0.2 :
+                    matchingDrivers === 1 ? 0.6 : 1.0;
+
+            const individualResponsiveness = 0.8 + Math.random() * 0.4;
 
             const newRisk =
                 choice === "none"
                     ? employee.risk
-                    : Math.round(
-                        employee.risk *
-                        (1 - intervention.impact * stressMultiplier)
+                    : Math.max(
+                        Math.round(
+                            employee.risk *
+                            (1 -
+                                intervention.impact *
+                                alignmentFactor *
+                                individualResponsiveness *
+                                stressMultiplier)
+                        ),
+                        5
                     );
 
             return (
@@ -202,19 +226,18 @@
             );
         };
 
-
-        /* -----------------------------
-           App (DEFINED FIRST)
-        ----------------------------- */
+        /* =====================================================
+           App
+        ===================================================== */
 
         const App = () => {
             return (
                 <div className="min-h-screen p-6">
-                    <h2 className="text-1g font-semibold text-gray-900">
+                    <h2 className="text-lg font-semibold text-gray-900">
                         Targeted Retention Scenarios
                     </h2>
                     <p className="text-sm text-gray-500 mt-1">
-                        Employee-level interventions and projected risk reduction.
+                        Employee-level interventions aligned to underlying risk drivers.
                     </p>
 
                     <div className="mt-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -226,12 +249,11 @@
             );
         };
 
-        /* -----------------------------
-           Mount (LAST)
-        ----------------------------- */
+        /* =====================================================
+           Mount
+        ===================================================== */
 
         ReactDOM.render(<App />, document.getElementById("root"));
-
     </script>
 </body>
 
