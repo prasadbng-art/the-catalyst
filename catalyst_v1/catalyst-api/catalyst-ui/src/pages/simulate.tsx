@@ -1,4 +1,5 @@
 import { useState } from "react";
+import ResolutionPanel from "../components/ResolutionPanel";
 
 /* ================================
    Types
@@ -38,11 +39,16 @@ function getROIBand(roiMultiple: number): ROIBand {
 
 function getBandColor(band: ROIBand): string {
   switch (band) {
-    case "Value-Creating": return "#1b5e20";
-    case "Accretive": return "#2e7d32";
-    case "Marginal": return "#f9a825";
-    case "Value-Eroding": return "#ef6c00";
-    case "Capital Destructive": return "#b71c1c";
+    case "Value-Creating":
+      return "#1b5e20";
+    case "Accretive":
+      return "#2e7d32";
+    case "Marginal":
+      return "#f9a825";
+    case "Value-Eroding":
+      return "#ef6c00";
+    case "Capital Destructive":
+      return "#b71c1c";
   }
 }
 
@@ -66,6 +72,9 @@ function getCFONarrative(band: ROIBand): string {
 ================================ */
 
 export default function Simulate() {
+  /* ---- Resolution Panel State ---- */
+  const [showResolution, setShowResolution] = useState(false);
+
   /* ---- Simulation Inputs ---- */
   const [attritionReduction, setAttritionReduction] = useState(10);
   const [programCost, setProgramCost] = useState(500000);
@@ -77,9 +86,7 @@ export default function Simulate() {
   const [activeScenario, setActiveScenario] = useState<Scenario>(null);
 
   /* ---- Computation ---- */
-  const annualBenefit =
-    baselineAttritionCost * (attritionReduction / 100);
-
+  const annualBenefit = baselineAttritionCost * (attritionReduction / 100);
   const totalBenefit = annualBenefit * horizon;
   const annualizedCost = programCost / horizon;
 
@@ -200,12 +207,6 @@ export default function Simulate() {
             />
           </label>
         </div>
-
-        {activeScenario && (
-          <p style={{ marginTop: 8, fontSize: 12, color: "#64748b" }}>
-            Adjust these to explore alternative outcomes.
-          </p>
-        )}
       </section>
 
       {/* ===== Time Horizon ===== */}
@@ -222,7 +223,6 @@ export default function Simulate() {
               borderRadius: 6,
               border: h === horizon ? "2px solid #1e40af" : "1px solid #c7d2fe",
               background: h === horizon ? "#dbeafe" : "#eef2ff",
-              color: h === horizon ? "#0f172a" : "#334155",
               fontWeight: 600,
               cursor: "pointer",
             }}
@@ -264,56 +264,35 @@ export default function Simulate() {
         </div>
 
         <p style={{ maxWidth: 720 }}>{getCFONarrative(band)}</p>
-
-        {/* ===== Sensitivity Ladder ===== */}
-        <div style={{ marginTop: 24, maxWidth: 720 }}>
-          <h4 style={{ marginBottom: 8 }}>
-            Sensitivity Check{" "}
-            <span style={{ fontWeight: 400, color: "#64748b" }}>
-              (downside scenarios)
-            </span>
-          </h4>
-
-          {[
-            { label: "Base case", factor: 1 },
-            { label: "–10% benefit", factor: 0.9 },
-            { label: "–20% benefit", factor: 0.8 },
-          ].map((s) => {
-            const adjustedBenefit = totalBenefit * s.factor;
-            const adjustedROI = getROIMultiple(adjustedBenefit, programCost);
-            const adjustedBand = getROIBand(adjustedROI);
-
-            return (
-              <div
-                key={s.label}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "8px 12px",
-                  marginBottom: 6,
-                  background: "#f8fafc",
-                  borderLeft: `4px solid ${getBandColor(adjustedBand)}`,
-                  color: "#0f172a",
-                  fontSize: 13,
-                }}
-              >
-                <span>{s.label}</span>
-                <span style={{ fontWeight: 600 }}>
-                  {adjustedROI.toFixed(2)}× — {adjustedBand}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-
-        {band !== "Value-Creating" && (
-          <p style={{ maxWidth: 720 }}>
-            To reach <strong>Value-Creating</strong>, attrition-related cost would need to fall by approximately{" "}
-            <strong>{requiredAttritionReduction.toFixed(1)}%</strong>.
-          </p>
-        )}
       </section>
+
+      {/* ===== CTA → Layer 2 ===== */}
+      <div style={{ marginTop: 40, textAlign: "right" }}>
+        <button
+          onClick={() => setShowResolution(true)}
+          style={{
+            padding: "8px 14px",
+            borderRadius: 6,
+            border: "1px solid #c7d2fe",
+            background: "#eef2ff",
+            color: "#1e3a8a",
+            fontWeight: 600,
+            cursor: "pointer",
+          }}
+        >
+          Explore targeted intervention leverage
+        </button>
+
+        <p style={{ fontSize: 12, color: "#64748b", marginTop: 6 }}>
+          Illustrative view of how specific actions may reduce attrition risk.
+        </p>
+      </div>
+
+      {/* ===== Embedded Resolution Panel ===== */}
+      <ResolutionPanel
+        open={showResolution}
+        onClose={() => setShowResolution(false)}
+      />
     </div>
   );
 }
