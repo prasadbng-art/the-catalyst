@@ -10,3 +10,5 @@ ReactDOM.createRoot(
     <App />
   </React.StrictMode>
 );
+
+<App />
