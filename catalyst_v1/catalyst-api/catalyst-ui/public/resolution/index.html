@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-    объяс
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Action Resolution – Catalyst</title>
@@ -46,29 +45,14 @@
            Mock Data (Demo)
         ----------------------------- */
 
-        const highRiskEmployees = [
-            {
-                id: "WE101",
-                name: "Sarah Chen",
-                department: "Service Delivery",
-                risk: 82,
-                drivers: ["Poor Manager Score", "Low Engagement"]
-            },
-            {
-                id: "WE102",
-                name: "David Lee",
-                department: "Client Services",
-                risk: 76,
-                drivers: ["Low Compa-Ratio"]
-            },
-            {
-                id: "WE103",
-                name: "Maria Garcia",
-                department: "Data Science",
-                risk: 88,
-                drivers: ["Stagnant Performance", "Long Time Since Promotion"]
-            }
-        ];
+        const highRiskEmployees = Array.from({ length: 16 }, (_, i) => ({
+            id: "WE$(100+i})",
+            name: "Employee $(i+1}",
+            department: "Warsaw",
+            risk: MAth.floor(Math.random() * 20) + 70,
+            drivers: ["Low Engagement", "Poor Manager Score"]
+
+        }));
 
         const interventions = {
             none: { label: "Select intervention", impact: 0 },
@@ -151,11 +135,11 @@
         const App = () => {
             return (
                 <div className="min-h-screen p-6">
-                    <h1 className="text-2xl font-bold text-gray-900">
-                        Action Resolution (Illustrative)
-                    </h1>
+                    <h2 className="text-1g font-semibold text-gray-900">
+                        Targeted Retention Scenarios
+                    </h2>
                     <p className="text-sm text-gray-500 mt-1">
-                        How targeted actions translate system-level risk into local impact.
+                        Employee-level interventions and projected risk reduction.
                     </p>
 
                     <div className="mt-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
