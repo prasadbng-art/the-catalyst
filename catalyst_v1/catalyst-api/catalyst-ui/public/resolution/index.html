@@ -244,7 +244,7 @@
             const [simData, setSimData] = React.useState({});
             const handleSimulationChange = (data) => {
                 setSimData(prev => ({ ...prev, [data.id]: data }));
-            }
+            };
             React.useEffect(() => {
                 const employees = Object.values(simData);
                 if (employees.length === 0) return;
