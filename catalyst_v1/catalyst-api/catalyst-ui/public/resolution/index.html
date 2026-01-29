@@ -2,14 +2,15 @@
 <html lang="en">
 
 <head>
+    объяс
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Action Resolution – Catalyst</title>
 
-    <!-- Tailwind -->
+    <!-- Tailwind (CDN – demo safe) -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- React (standalone) -->
+    <!-- React 17 (standalone) -->
     <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -33,69 +34,142 @@
 </head>
 
 <body>
+    <!-- React Mount -->
     <div id="root"></div>
 
-
-    <!-- ===========================
-       APPLICATION SCRIPT
-       =========================== -->
+    <!-- ============================= -->
+    <!-- Resolution App (Inline React) -->
+    <!-- ============================= -->
     <script type="text/babel">
 
-        /* ===========================
-           ICONS
-           =========================== */
-        const HomeIcon = () => (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3" />
-            </svg>
-        );
+        /* -----------------------------
+           Mock Data (Demo)
+        ----------------------------- */
 
-        const PulseIcon = () => (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682" />
-            </svg>
-        );
+        const highRiskEmployees = [
+            {
+                id: "WE101",
+                name: "Sarah Chen",
+                department: "Service Delivery",
+                risk: 82,
+                drivers: ["Poor Manager Score", "Low Engagement"]
+            },
+            {
+                id: "WE102",
+                name: "David Lee",
+                department: "Client Services",
+                risk: 76,
+                drivers: ["Low Compa-Ratio"]
+            },
+            {
+                id: "WE103",
+                name: "Maria Garcia",
+                department: "Data Science",
+                risk: 88,
+                drivers: ["Stagnant Performance", "Long Time Since Promotion"]
+            }
+        ];
 
-        const BeakerIcon = () => (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477" />
-            </svg>
-        );
+        const interventions = {
+            none: { label: "Select intervention", impact: 0 },
+            mentor: { label: "Assign Senior Mentor", impact: 0.45 },
+            raise: { label: "Salary Increase (10%)", impact: 0.5 },
+            project: { label: "Lead Strategic Project", impact: 0.85 },
+            skip: { label: "Skip-Level Meeting", impact: 0.3 }
+        };
 
-        const LightbulbIcon = () => (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none"
-                viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M12 3v1m6.364 1.636l-.707.707" />
-            </svg>
-        );
+        /* -----------------------------
+           Components
+        ----------------------------- */
 
-        const ArrowRightIcon = () => (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="currentColor"
-                viewBox="0 0 20 20">
-                <path fillRule="evenodd"
-                    d="M10.293 3.293a1 1 0 011.414 0l6 6-6 6" clipRule="evenodd" />
-            </svg>
-        );
+        const EmployeeCard = ({ employee }) => {
+            const [choice, setChoice] = React.useState("none");
 
-        /* ===========================
-           YOUR EXISTING APP LOGIC
-           (UNCHANGED BELOW THIS LINE)
-           =========================== */
+            const intervention = interventions[choice];
+            const newRisk = Math.round(employee.risk * (1 - intervention.impact));
 
-        /* 🔴 IMPORTANT:
-           Everything below here is EXACTLY your logic.
-           I did NOT refactor your app code.
-           Only the HTML shell + styles were fixed.
-        */
+            return (
+                <div className="bg-white rounded-lg shadow p-4 flex flex-col justify-between">
+                    <div>
+                        <div className="flex justify-between">
+                            <div>
+                                <p className="font-semibold text-gray-800">{employee.name}</p>
+                                <p className="text-xs text-gray-500">
+                                    {employee.id} · {employee.department}
+                                </p>
+                            </div>
+                            <div className="text-right">
+                                <p className="text-2xl font-bold text-red-600">
+                                    {employee.risk}%
+                                </p>
+                                <p className="text-xs text-gray-500">Current Risk</p>
+                            </div>
+                        </div>
 
-        /* ... YOUR EXISTING JS / REACT CODE CONTINUES HERE ... */
+                        <div className="flex flex-wrap gap-1 mt-2">
+                            {employee.drivers.map(d => (
+                                <span
+                                    key={d}
+                                    className="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full"
+                                >
+                                    {d}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="mt-4">
+                        <select
+                            className="w-full border rounded-md px-2 py-1 text-sm"
+                            value={choice}
+                            onChange={(e) => setChoice(e.target.value)}
+                        >
+                            {Object.entries(interventions).map(([key, i]) => (
+                                <option key={key} value={key}>
+                                    {i.label}
+                                </option>
+                            ))}
+                        </select>
+
+                        {choice !== "none" && (
+                            <div className="mt-3 text-center bg-green-50 rounded-lg p-2">
+                                <p className="text-xl font-bold text-green-600">
+                                    {newRisk}%
+                                </p>
+                                <p className="text-xs text-gray-500">Simulated Risk</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        /* -----------------------------
+           App (DEFINED FIRST)
+        ----------------------------- */
+
+        const App = () => {
+            return (
+                <div className="min-h-screen p-6">
+                    <h1 className="text-2xl font-bold text-gray-900">
+                        Action Resolution (Illustrative)
+                    </h1>
+                    <p className="text-sm text-gray-500 mt-1">
+                        How targeted actions translate system-level risk into local impact.
+                    </p>
+
+                    <div className="mt-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                        {highRiskEmployees.map(emp => (
+                            <EmployeeCard key={emp.id} employee={emp} />
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        /* -----------------------------
+           Mount (LAST)
+        ----------------------------- */
 
         ReactDOM.render(<App />, document.getElementById("root"));
 
