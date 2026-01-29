@@ -106,7 +106,7 @@
            Employee Card Component
         ===================================================== */
 
-        const EmployeeCard = ({ employee }) => {
+        const EmployeeCard = ({ employee, onSimulationChange }) => {
             const [choice, setChoice] = React.useState("none");
 
             const stressMultiplier = SIGNALS.organization.peopleStress / 100;
@@ -169,6 +169,16 @@
                         ),
                         5
                     );
+            React.useEffect(() => {
+                onSimulationChange({
+                    id: employee.id,
+                    before: employee.risk,
+                    after: newRisk,
+                    intervention: choice,
+                    matchedDrivers: matchingDrivers,
+                    totalDrivers: employee.drivers.length
+                });
+            }, [newRisk, choice]);
 
             return (
                 <div className="bg-white rounded-lg shadow p-4 flex flex-col justify-between">
@@ -231,6 +241,10 @@
         ===================================================== */
 
         const App = () => {
+            const [simData, setSimData] = React.useState({});
+            const handleSimulationChange = (data) => {
+                setSimData(prev => ({ ...prev, [data.id]: data }));
+            }
             return (
                 <div className="min-h-screen p-6">
                     <h2 className="text-lg font-semibold text-gray-900">
@@ -242,7 +256,7 @@
 
                     <div className="mt-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                         {highRiskEmployees.map(emp => (
-                            <EmployeeCard key={emp.id} employee={emp} />
+                            <EmployeeCard key={emp.id} employee={emp} onSimulationChange={handleSimulationChange} />
                         ))}
                     </div>
                 </div>
