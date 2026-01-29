@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import KpiCard from "../components/kpi/KpiCard";
 import MagicCube from "../components/visuals/MagicCube";
 import type { StressProfile } from "../components/visuals/motion";
-import { useNavigate } from "react-router-dom";
 
 /* =========================================================
    Types
@@ -28,8 +27,7 @@ const baselineStress: StressProfile = {
 export default function BaselinePage() {
   const [persona, setPersona] = useState<Persona>("CEO");
   const [detailed, setDetailed] = useState(false);
-  const navigate = useNavigate();
-
+  const [showSimulator, setShowSimulator] = useState(false);
   const [simulationOffset, setSimulationOffset] = useState<StressProfile>({
     people: 0,
     cost: 0,
@@ -169,7 +167,7 @@ export default function BaselinePage() {
 
         <button
           type="button"
-          onClick={() => navigate("/simulation")}
+          onClick={() => setShowSimulator(true)}
           style={{
             padding: "10px 18px",
             borderRadius: 6,
@@ -183,6 +181,31 @@ export default function BaselinePage() {
           Model Financial Impact →
         </button>
       </section>
+      {showSimulator && (
+        <div style={{
+          position: "fixed",
+          top: 0,
+          right: 0,
+          width: "50%",
+          height: "100%",
+          background: "white",
+          borderLeft: "1px solid #e5e7eb",
+          zIndex: 1000,
+          boxShadow: "-4px 0 12px rgba(0,0,0,0.1)"
+        }}>
+          <div style={{ padding: 12, borderBottom: "1px solid #eee", display: "flex", justifyContent: "space-between" }}>
+            <strong>Retention Intervention Simulator</strong>
+            <button onClick={() => setShowSimulator(false)}>Close</button>
+          </div>
+
+          <iframe
+            src="/resolution/index.html"
+            style={{ width: "100%", height: "calc(100% - 48px)", border: "none" }}
+            title="Resolution Simulator"
+          />
+        </div>
+      )}
+
     </div>
   );
 }
