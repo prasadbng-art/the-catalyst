@@ -17,7 +17,12 @@ export default function ResolutionPanel({
                 {/* Header */}
                 <div style={header}>
                     <div>
-                        <h2 style={{ margin: 0 }}>Action Resolution (Illustrative)</h2>
+                        <h2 style={{
+                            margin: 0,
+                            fontSize: 18,
+                            fontWeight: 700,
+                            color: "#0f172a"
+                        }}>Action Resolution (Illustrative)</h2>
                         <p style={subtitle}>
                             How targeted actions translate system-level risk into local impact.
                         </p>
@@ -52,12 +57,13 @@ const panel: React.CSSProperties = {
     position: "absolute",
     right: 0,
     top: 0,
+    borderLeft: "1px solid #e5e7eb",
     height: "100%",
     width: "70%",
-    background: "#f8fafc",
+    background: "#f1f5f9",
     display: "flex",
     flexDirection: "column",
-    boxShadow: "-12px 0 24px rgba(0,0,0,0.3)",
+    boxShadow: "-8px 0 16px rgba(0,0,0,0.25)",
 };
 
 const header: React.CSSProperties = {
@@ -78,6 +84,7 @@ const closeBtn: React.CSSProperties = {
     border: "none",
     background: "transparent",
     color: "#1e40af",
+    fontSize: 13,
     fontWeight: 600,
     cursor: "pointer",
 };
