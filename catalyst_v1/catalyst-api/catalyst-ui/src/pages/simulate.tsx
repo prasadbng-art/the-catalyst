@@ -94,11 +94,6 @@ export default function Simulate() {
   const band = getROIBand(roiMultiple);
   const bandColor = getBandColor(band);
 
-  const targetROIMultiple = 3;
-  const requiredBenefitForValueCreating = programCost * targetROIMultiple;
-  const requiredAttritionReduction =
-    (requiredBenefitForValueCreating / baselineAttritionCost) * 100;
-
   /* ---- Button Style Helper ---- */
   const scenarioButtonStyle = (active: boolean): React.CSSProperties => ({
     padding: "8px 14px",
