@@ -37,7 +37,13 @@ export default function ResolutionPanel({
                 <iframe
                     src="/resolution/index.html"
                     title="Action Resolution"
-                    style={iframe}
+                    style={{
+                        width: "100%",
+                        height: "100%",
+                        minHeight: "100vh",
+                        border: "none",
+                        background: "#f1f5f9",
+                    }}
                 />
             </div>
         </div>
