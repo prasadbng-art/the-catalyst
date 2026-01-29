@@ -245,6 +245,53 @@
             const handleSimulationChange = (data) => {
                 setSimData(prev => ({ ...prev, [data.id]: data }));
             }
+            React.useEffect(() => {
+                const employees = Object.values(simData);
+                if (employees.length === 0) return;
+
+                const populationSize = employees.length;
+
+                const avgRiskBefore =
+                    employees.reduce((s, e) => s + e.before, 0) / populationSize;
+
+                const avgRiskAfter =
+                    employees.reduce((s, e) => s + e.after, 0) / populationSize;
+
+                const riskDelta = avgRiskBefore - avgRiskAfter;
+
+                const highRiskReductionCount = employees.filter(
+                    e => e.before >= 75 && e.after < 75
+                ).length;
+
+                const expectedExitsBefore = avgRiskBefore / 100 * populationSize;
+                const expectedExitsAfter = avgRiskAfter / 100 * populationSize;
+                const exitsAvoided = expectedExitsBefore - expectedExitsAfter;
+
+                const costAvoided = exitsAvoided * SIGNALS.economics.perCapitaCost;
+
+                const aligned = employees.filter(e => e.matchedDrivers > 0).length;
+                const precisionScore = aligned / populationSize;
+
+                const payload = {
+                    population_size: populationSize,
+                    avg_risk_before: avgRiskBefore,
+                    avg_risk_after: avgRiskAfter,
+                    risk_delta: riskDelta,
+                    high_risk_reduction_count: highRiskReductionCount,
+                    expected_exits_before: expectedExitsBefore,
+                    expected_exits_after: expectedExitsAfter,
+                    exits_avoided: exitsAvoided,
+                    cost_avoided: costAvoided,
+                    intervention_precision_score: precisionScore
+                };
+
+                window.parent.postMessage({
+                    type: "CATALYST_INTERVENTION_IMPACT",
+                    payload
+                }, "*");
+
+            }, [simData]);
+
             return (
                 <div className="min-h-screen p-6">
                     <h2 className="text-lg font-semibold text-gray-900">
