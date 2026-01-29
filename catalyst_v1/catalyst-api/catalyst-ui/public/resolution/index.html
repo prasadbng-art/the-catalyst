@@ -44,14 +44,12 @@
         /* -----------------------------
            Mock Data (Demo)
         ----------------------------- */
-
         const highRiskEmployees = Array.from({ length: 16 }, (_, i) => ({
-            id: "WE$(100+i})",
-            name: "Employee $(i+1}",
+            id: `WE${100 + i}`,
+            name: `Employee ${i + 1}`,
             department: "Warsaw",
-            risk: MAth.floor(Math.random() * 20) + 70,
-            drivers: ["Low Engagement", "Poor Manager Score"]
-
+            risk: Math.floor(Math.random() * 20) + 70,
+            drivers: ["Low Engagement", "Poor Manager Score"],
         }));
 
         const interventions = {
@@ -59,8 +57,9 @@
             mentor: { label: "Assign Senior Mentor", impact: 0.45 },
             raise: { label: "Salary Increase (10%)", impact: 0.5 },
             project: { label: "Lead Strategic Project", impact: 0.85 },
-            skip: { label: "Skip-Level Meeting", impact: 0.3 }
+            skip: { label: "Skip-Level Meeting", impact: 0.3 },
         };
+
 
         /* -----------------------------
            Components
