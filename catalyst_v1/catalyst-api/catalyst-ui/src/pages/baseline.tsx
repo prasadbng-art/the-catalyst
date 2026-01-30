@@ -36,6 +36,7 @@ export default function BaselinePage() {
   ===================================================== */
   useEffect(() => {
     const handler = (event: MessageEvent) => {
+      console.log("MESSAGE RECEIVED:", event.data);
       if (event.data?.type !== "CATALYST_INTERVENTION_IMPACT") return;
 
       const impact = event.data.payload;
@@ -82,6 +83,20 @@ export default function BaselinePage() {
           }}
           persona={persona}
         />
+      </div>
+      <div style={{ marginBottom: 24, color: "#0f172a" }}>
+        <p>
+          <strong>People pressure:</strong>{" "}
+          {Math.round(baselineStress.people + simulationOffset.people)}%
+        </p>
+        <p>
+          <strong>Cost pressure:</strong>{" "}
+          {Math.round(baselineStress.cost + simulationOffset.cost)}%
+        </p>
+        <p>
+          <strong>Execution posture:</strong>{" "}
+          {Math.round(baselineStress.execution + simulationOffset.execution)}%
+        </p>
       </div>
 
       {/* CTA */}
