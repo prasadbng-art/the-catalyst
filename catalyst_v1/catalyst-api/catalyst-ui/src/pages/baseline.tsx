@@ -84,12 +84,23 @@ export default function BaselinePage() {
           persona={persona}
         />
       </div>
-      <div style={{ marginBottom: 24, color: "#0f172a" }}>
-        <p>
+      <div
+        style={{
+          marginTop: 16,
+          marginBottom: 24,
+          padding: 16,
+          background: "#020617",
+          border: "1px solid #1e293b",
+          borderRadius: 8,
+          color: "#e5e7eb",
+          maxWidth: 420,
+        }}
+      >
+        <p style={{ marginBottom: 8 }}>
           <strong>People pressure:</strong>{" "}
           {Math.round(baselineStress.people + simulationOffset.people)}%
         </p>
-        <p>
+        <p style={{ marginBottom: 8 }}>
           <strong>Cost pressure:</strong>{" "}
           {Math.round(baselineStress.cost + simulationOffset.cost)}%
         </p>
