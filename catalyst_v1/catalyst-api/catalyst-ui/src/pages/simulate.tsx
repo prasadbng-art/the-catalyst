@@ -13,14 +13,30 @@ type SimulationResponse = {
 };
 
 export default function SimulatePage() {
-  const [persona, setPersona] = useState<Persona>("CFO");
+  const params = new URLSearchParams(window.location.search);
+  const initialPersona = (params.get("persona") as Persona) || "CFO";
 
-  const stress: StressProfile = {
-    people: 0.26,
-    cost: 0.31,
-    macro: 0.18,
-    execution: 0.22,
-  };
+  const [persona, setPersona] = useState<Persona>(initialPersona);
+
+
+  function readStressFromURL(): StressProfile {
+    const params = new URLSearchParams(window.location.search);
+
+    const read = (key: string, fallback: number) => {
+      const v = Number(params.get(key));
+      return Number.isFinite(v) ? v : fallback;
+    };
+
+    return {
+      people: read("people", 0.26),
+      cost: read("cost", 0.31),
+      execution: read("execution", 0.22),
+      macro: read("macro", 0.18),
+    };
+  }
+
+  const stress = readStressFromURL();
+
 
   const [riskReductionPct, setRiskReductionPct] = useState(15);
   const [interventionCost, setInterventionCost] = useState(250000);

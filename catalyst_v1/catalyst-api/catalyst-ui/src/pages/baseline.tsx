@@ -5,6 +5,7 @@ import { PERSONAS, type Persona } from "../types/persona";
 import { personaConfig } from "../persona/personaConfig";
 
 const BASELINE_PERSONA = PERSONAS.CEO;
+
 const BASELINE_STRESS: StressProfile = {
   people: 0.65,
   cost: 0.7,
@@ -23,7 +24,9 @@ export default function BaselinePage() {
       {/* LEFT */}
       <div style={{ flex: 1, padding: 40, color: "#e5e7eb", overflowY: "auto" }}>
         <h1 style={{ fontSize: 42 }}>Baseline</h1>
-        <p style={{ color: "#94a3b8" }}>Current organizational pressure profile</p>
+        <p style={{ color: "#94a3b8" }}>
+          Current organizational pressure profile
+        </p>
 
         <div style={{ marginTop: 12 }}>
           <label>View as: </label>
@@ -41,6 +44,7 @@ export default function BaselinePage() {
           <MagicCube stress={BASELINE_STRESS} persona={BASELINE_PERSONA} />
         </div>
 
+        {/* DETAILED SUMMARY — NOW CONSISTENT */}
         <div
           style={{
             marginTop: 32,
@@ -52,12 +56,24 @@ export default function BaselinePage() {
           }}
         >
           <strong>{narrative.headline}</strong>
-          <p style={{ marginTop: 12, lineHeight: 1.6 }}>{narrative.narrative}</p>
+          <p style={{ marginTop: 12, lineHeight: 1.6 }}>
+            {narrative.narrative}
+          </p>
 
-          <ul style={{ marginTop: 12 }}>
-            <li>People risk: 65%</li>
-            <li>Cost pressure: 70%</li>
-            <li>Execution posture: 45%</li>
+          <ul style={{ marginTop: 12, color: "#cbd5f5" }}>
+            <li>
+              People stress level: {Math.round(BASELINE_STRESS.people * 100)}%
+            </li>
+            <li>
+              Cost pressure index: {Math.round(BASELINE_STRESS.cost * 100)}%
+            </li>
+            <li>
+              Execution constraint:{" "}
+              {Math.round(BASELINE_STRESS.execution * 100)}%
+            </li>
+            <li>
+              Macro exposure: {Math.round(BASELINE_STRESS.macro * 100)}%
+            </li>
           </ul>
         </div>
 
@@ -77,7 +93,7 @@ export default function BaselinePage() {
         </button>
       </div>
 
-      {/* RIGHT PANEL */}
+      {/* RIGHT PANEL — NOW INTENTIONAL */}
       {showPanel && (
         <div
           style={{
@@ -99,30 +115,56 @@ export default function BaselinePage() {
               color: "#e5e7eb",
             }}
           >
-            <strong>Financial Impact Modeling</strong>
+            <strong>Next Step</strong>
             <button onClick={() => setShowPanel(false)}>Close</button>
           </div>
 
-          <iframe
-            src="/Catalyst/simulation"
-            style={{ flex: 1, border: "none" }}
-            title="Financial Model"
-          />
+          <div style={{ padding: 24, color: "#cbd5f5", flex: 1 }}>
+            <p style={{ marginBottom: 16 }}>
+              Move from baseline stress exposure to quantified financial impact
+              using Catalyst’s financial model.
+            </p>
 
-          <div style={{ padding: 16, borderTop: "1px solid #1e293b" }}>
             <button
-              onClick={() =>
-                window.open(
-                  "/Catalyst/resolution/retention_simulator.html",
-                  "_blank"
-                )
-              }
+              onClick={() => {
+                const params = new URLSearchParams({
+                  people: BASELINE_STRESS.people.toString(),
+                  cost: BASELINE_STRESS.cost.toString(),
+                  execution: BASELINE_STRESS.execution.toString(),
+                  macro: BASELINE_STRESS.macro.toString(),
+                  persona,
+                });
+
+                window.location.assign(`/simulate?${params.toString()}`);
+              }}
               style={{
                 padding: "10px 16px",
                 background: "#2563eb",
                 color: "white",
                 borderRadius: 6,
                 border: "none",
+                fontWeight: 600,
+              }}
+            >
+              Open Financial Model →
+            </button>
+
+          </div>
+
+          <div style={{ padding: 16, borderTop: "1px solid #1e293b" }}>
+            <button
+              onClick={() =>
+                window.open(
+                  "/resolution/retention_simulator.html",
+                  "_blank"
+                )
+              }
+              style={{
+                padding: "10px 16px",
+                background: "#0f172a",
+                color: "white",
+                borderRadius: 6,
+                border: "1px solid #2563eb",
                 fontWeight: 600,
               }}
             >
