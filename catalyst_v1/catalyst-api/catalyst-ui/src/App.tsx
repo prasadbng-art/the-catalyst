@@ -1,21 +1,16 @@
-import Sidebar from "./components/layout/Sidebar";
+import { Routes, Route } from "react-router-dom";
+import AppShell from "./components/layout/AppShell";
+import BaselinePage from "./pages/baseline";
+import SimulationPage from "./pages/simulate";
 
 export default function App() {
   return (
-    <div style={{ display: "flex", minHeight: "100vh" }}>
-      <Sidebar />
-
-      <main
-        style={{
-          flex: 1,
-          background: "#1f2937",
-          color: "#e5e7eb",
-          padding: 32,
-        }}
-      >
-        <h1>Baseline</h1>
-        <p>Current organizational pressure profile</p>
-      </main>
-    </div>
+    <AppShell>
+      <Routes>
+        <Route path="/" element={<BaselinePage />} />
+        <Route path="/baseline" element={<BaselinePage />} />
+        <Route path="/simulation" element={<SimulationPage />} />
+      </Routes>
+    </AppShell>
   );
 }
