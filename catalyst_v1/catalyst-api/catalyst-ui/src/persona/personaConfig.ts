@@ -20,8 +20,9 @@ export const personaConfig: Record<
       "headcount",
     ],
     narrative:
-      "Workforce attrition presents a cross-functional risk with implications for cost, delivery, and organizational stability.",
+      "This view shows the level of workforce pressure the organization is currently carrying. If attrition continues at this level, it can affect delivery timelines, leadership continuity, and overall stability. The figures below estimate the financial impact if no corrective action is taken.",
   },
+
 
   CFO: {
     headline: "Financial Risk Exposure",
@@ -31,8 +32,10 @@ export const personaConfig: Record<
       "headcount",
     ],
     narrative:
-      "Current attrition levels translate into material annual cost exposure, with downside risk if no action is taken.",
+      "Based on current workforce conditions, attrition is creating ongoing cost exposure. This model estimates the cost that could be avoided if targeted actions reduce exits. The numbers represent reasonable estimates, not guaranteed outcomes.",
   },
+
+
 
   CHRO: {
     headline: "Workforce Stability Overview",
@@ -42,6 +45,6 @@ export const personaConfig: Record<
       "annual_attrition_cost_exposure",
     ],
     narrative:
-      "Attrition risk highlights potential workforce instability hotspots that require proactive talent interventions.",
+      "Current stress levels indicate higher risk of unwanted employee exits. This view helps identify where intervention can improve retention and workforce stability, while keeping cost impact visible and controlled.",
   },
-};
+}
