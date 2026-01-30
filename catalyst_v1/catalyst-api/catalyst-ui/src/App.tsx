@@ -1,10 +1,21 @@
+import Sidebar from "./components/layout/Sidebar";
+
 export default function App() {
   return (
+    <div style={{ display: "flex", minHeight: "100vh" }}>
+      <Sidebar />
 
-
-    <div style={{ padding: 40, color: "white" }}>
-      <h1>CATALYST BOOT TEST</h1>
-      <p>If you see this, React is alive.</p>
+      <main
+        style={{
+          flex: 1,
+          background: "#1f2937",
+          color: "#e5e7eb",
+          padding: 32,
+        }}
+      >
+        <h1>Baseline</h1>
+        <p>Current organizational pressure profile</p>
+      </main>
     </div>
   );
 }
