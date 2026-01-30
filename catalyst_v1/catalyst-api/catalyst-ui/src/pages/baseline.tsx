@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
+import MagicCube from "../components/visuals/MagicCube";
 import type { StressProfile } from "../components/visuals/motion";
 
-/* ========================================================= */
+/* =========================================================
+   Types & Baseline
+========================================================= */
 type Persona = "CEO" | "CFO" | "CHRO";
-
-const baselineAttritionRisk = 24.2;
-const baselineAnnualCost = 1.94;
 
 const baselineStress: StressProfile = {
   people: 65,
@@ -14,9 +14,11 @@ const baselineStress: StressProfile = {
   execution: 45,
 };
 
+/* =========================================================
+   Page
+========================================================= */
 export default function BaselinePage() {
-  //  const [persona, setPersona] = useState<Persona>("CEO");
-  //  const [detailed, setDetailed] = useState(false);
+  const [persona] = useState<Persona>("CEO");
   const [showSimulator, setShowSimulator] = useState(false);
 
   const [simulationOffset, setSimulationOffset] = useState<StressProfile>({
@@ -29,21 +31,29 @@ export default function BaselinePage() {
   const clamp = (v: number, min: number, max: number) =>
     Math.max(min, Math.min(max, v));
 
+  /* =====================================================
+     Listen to Retention Simulator (iframe)
+  ===================================================== */
   useEffect(() => {
     const handler = (event: MessageEvent) => {
-      if (event.data?.type === "CATALYST_INTERVENTION_IMPACT") {
-        const impact = event.data.payload;
+      if (event.data?.type !== "CATALYST_INTERVENTION_IMPACT") return;
 
-        const people = clamp(impact.risk_delta * 0.6, -15, 15);
-        const cost = clamp((impact.cost_avoided / 1_940_000) * 80, -20, 20);
-        const execution = clamp(
-          (impact.intervention_precision_score - 0.5) * 40,
-          -10,
-          15
-        );
+      const impact = event.data.payload;
 
-        setSimulationOffset({ people, cost, macro: 0, execution });
-      }
+      const people = clamp(impact.risk_delta * 0.6, -15, 15);
+      const cost = clamp((impact.cost_avoided / 1_940_000) * 80, -20, 20);
+      const execution = clamp(
+        (impact.intervention_precision_score - 0.5) * 40,
+        -10,
+        15
+      );
+
+      setSimulationOffset({
+        people,
+        cost,
+        macro: 0,
+        execution,
+      });
     };
 
     window.addEventListener("message", handler);
@@ -51,52 +61,82 @@ export default function BaselinePage() {
   }, []);
 
   return (
-    <div style={{ maxWidth: 1100, width: "100%" }}>
+    <div style={{ maxWidth: 1100, width: "100%", padding: 24 }}>
       <h1>Baseline</h1>
+      <p style={{ color: "#64748b", marginBottom: 16 }}>
+        Current organizational pressure profile
+      </p>
 
-      <BaselineCanvas
-        stress={{
-          people: clamp(baselineStress.people + simulationOffset.people, 0, 100),
-          cost: clamp(baselineStress.cost + simulationOffset.cost, 0, 100),
-          macro: baselineStress.macro,
-          execution: clamp(
-            baselineStress.execution + simulationOffset.execution,
-            0,
-            100
-          ),
+      {/* Cube */}
+      <div style={{ marginBottom: 24 }}>
+        <MagicCube
+          stress={{
+            people: clamp(baselineStress.people + simulationOffset.people, 0, 100),
+            cost: clamp(baselineStress.cost + simulationOffset.cost, 0, 100),
+            macro: baselineStress.macro,
+            execution: clamp(
+              baselineStress.execution + simulationOffset.execution,
+              0,
+              100
+            ),
+          }}
+          persona={persona}
+        />
+      </div>
+
+      {/* CTA */}
+      <button
+        onClick={() => setShowSimulator(true)}
+        style={{
+          padding: "10px 16px",
+          borderRadius: 6,
+          border: "none",
+          background: "#1e40af",
+          color: "white",
+          fontWeight: 600,
+          cursor: "pointer",
         }}
-        persona={persona}
-        detailed={detailed}
-      />
-
-      <button onClick={() => setShowSimulator(true)}>
+      >
         Model Financial Impact
       </button>
 
+      {/* Simulator Panel */}
       {showSimulator && (
-        <iframe
-          src="/resolution/index.html"
-          style={{ width: "100%", height: 600, border: "1px solid #ddd" }}
-        />
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            right: 0,
+            width: "50%",
+            height: "100%",
+            background: "white",
+            borderLeft: "1px solid #e5e7eb",
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              padding: 12,
+              borderBottom: "1px solid #e5e7eb",
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
+            <strong>Targeted Retention Scenarios</strong>
+            <button onClick={() => setShowSimulator(false)}>Close</button>
+          </div>
+
+          <iframe
+            src="/resolution/index.html"
+            style={{
+              width: "100%",
+              height: "calc(100% - 48px)",
+              border: "none",
+            }}
+            title="Retention Simulator"
+          />
+        </div>
       )}
-    </div>
-  );
-}
-
-function BaselineCanvas({
-  stress,
-}: {
-  stress: StressProfile;
-  persona: Persona;
-  detailed: boolean;
-}) {
-  const formatPct = (v: number) => `${v.toFixed(1)}%`;
-
-  return (
-    <div>
-      People: {formatPct(stress.people)} | Cost: {formatPct(stress.cost)} |
-      Macro: {formatPct(stress.macro)} | Execution:{" "}
-      {formatPct(stress.execution)}
     </div>
   );
 }
