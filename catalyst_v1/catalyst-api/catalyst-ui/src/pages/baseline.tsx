@@ -41,12 +41,12 @@ export default function BaselinePage() {
 
       const impact = event.data.payload;
 
-      const people = clamp(impact.risk_delta * 0.6, -15, 15);
-      const cost = clamp((impact.cost_avoided / 1_940_000) * 80, -20, 20);
+      const people = clamp(impact.risk_delta * 1.2, -15, 15);
+      const cost = clamp((impact.cost_avoided / 1_940_000) * 120, -30, 30);
       const execution = clamp(
-        (impact.intervention_precision_score - 0.5) * 40,
-        -10,
-        15
+        (impact.intervention_precision_score - 0.5) * 60,
+        -20,
+        25
       );
 
       setSimulationOffset({
