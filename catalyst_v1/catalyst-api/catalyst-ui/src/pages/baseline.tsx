@@ -181,7 +181,7 @@ export default function BaselinePage() {
           </div>
 
           <iframe
-            src={'${import.meta.env.BASE_URL}resolution/retention_simulator.html'}
+            src="/resolution/retention_simulator.html"
             style={{
               width: "100%",
               height: "calc(100% - 48px)",
