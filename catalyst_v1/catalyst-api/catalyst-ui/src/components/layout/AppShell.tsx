@@ -14,8 +14,6 @@ export default function AppShell({ children }: { children: ReactNode }) {
           color: "#e5e7eb",
         }}
       >
-        <h1>APP SHELL TEST</h1>
-        <p>If you see this, AppShell is rendering children correctly.</p>
         {children}
       </main>
     </div>
