@@ -161,7 +161,7 @@ export default function SimulatePage() {
         {error && <p style={{ color: "red" }}>{error}</p>}
 
         {result && (
-          <div style={{ marginTop: 32 }}>
+          <div style={{ marginTop: 16 }}>
             <h2>Financial Impact</h2>
 
             <div
@@ -175,8 +175,10 @@ export default function SimulatePage() {
               <Metric label="ROI" value={`${Math.round(result.roi)}%`} />
               <Metric label="Confidence" value={`${Math.round(result.confidence * 100)}%`} />
             </div>
-
-            <p style={{ marginTop: 24, opacity: 0.85 }}>{copy.narrative}</p>
+            <p style={{ marginTop: 12, fontSize: 13, opacity: 0.65 }}>
+              These figures are estimates based on current data and assumptions.
+            </p>
+            <p style={{ marginTop: 20, opacity: 0.85 }}>{copy.narrative}</p>
           </div>
         )}
       </div>
