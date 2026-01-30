@@ -1,30 +1,21 @@
-import type { ReactNode } from "react";
 import Sidebar from "./Sidebar";
+import type { ReactNode } from "react";
 
-type Props = {
-  children: ReactNode;
-};
-
-export default function AppShell({ children }: Props) {
+export default function AppShell({ children }: { children: ReactNode }) {
   return (
-    <div
-      style={{
-        display: "flex",
-        minHeight: "100vh",     // ✅ critical
-        alignItems: "stretch", // ✅ critical
-      }}
-    >
+    <div style={{ display: "flex", minHeight: "100vh" }}>
       <Sidebar />
+
       <main
         style={{
           flex: 1,
-          padding: "24px",
-          display: "flex",     // optional, but helps
-          flexDirection: "column",
+          padding: 32,
+          background: "#020617",
+          color: "#e5e7eb",
         }}
       >
         {children}
       </main>
     </div>
-  )
+  );
 }
