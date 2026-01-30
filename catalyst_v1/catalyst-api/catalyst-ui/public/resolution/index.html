@@ -105,6 +105,11 @@
         /* =====================================================
            Employee Card Component
         ===================================================== */
+        const [individualResponsiveness] = React.useState(
+            () => 0.8 + Math.random() * 0.4
+        );
+
+        const baseRisk = React.useMemo(() => employee.risk, []);
 
         const EmployeeCard = ({ employee, onSimulationChange }) => {
             const [choice, setChoice] = React.useState("none");
@@ -155,20 +160,22 @@
 
             const individualResponsiveness = 0.8 + Math.random() * 0.4;
 
-            const newRisk =
-                choice === "none"
-                    ? employee.risk
-                    : Math.max(
-                        Math.round(
-                            employee.risk *
-                            (1 -
-                                intervention.impact *
-                                alignmentFactor *
-                                individualResponsiveness *
-                                stressMultiplier)
-                        ),
-                        5
-                    );
+            const newRisk = React.useMemo(() => {
+                if (choice === "none") return baseRisk;
+
+                return Math.max(
+                    Math.round(
+                        baseRisk *
+                        (1 -
+                            intervention.impact *
+                            alignmentFactor *
+                            individualResponsiveness *
+                            stressMultiplier)
+                    ),
+                    5
+                );
+            }, [choice]);
+
             React.useEffect(() => {
                 onSimulationChange({
                     id: employee.id,

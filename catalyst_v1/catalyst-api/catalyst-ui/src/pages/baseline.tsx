@@ -28,12 +28,19 @@ export default function BaselinePage() {
     execution: 0,
   });
 
+  /* =========================================================
+     Helpers
+  ========================================================= */
   const clamp = (v: number, min: number, max: number) =>
     Math.max(min, Math.min(max, v));
 
-  /* =====================================================
+  // Demo-only visual amplification (presentation layer only)
+  const demoAmplify = (delta: number, baseline: number) =>
+    clamp(baseline + delta * 2.5, 0, 100);
+
+  /* =========================================================
      Listen to Retention Simulator (iframe)
-  ===================================================== */
+  ========================================================= */
   useEffect(() => {
     const handler = (event: MessageEvent) => {
       console.log("MESSAGE RECEIVED:", event.data);
@@ -61,6 +68,9 @@ export default function BaselinePage() {
     return () => window.removeEventListener("message", handler);
   }, []);
 
+  /* =========================================================
+     Render
+  ========================================================= */
   return (
     <div style={{ maxWidth: 1100, width: "100%", padding: 24 }}>
       <h1>Baseline</h1>
@@ -72,18 +82,25 @@ export default function BaselinePage() {
       <div style={{ marginBottom: 24 }}>
         <MagicCube
           stress={{
-            people: clamp(baselineStress.people + simulationOffset.people, 0, 100),
-            cost: clamp(baselineStress.cost + simulationOffset.cost, 0, 100),
+            people: demoAmplify(
+              simulationOffset.people,
+              baselineStress.people
+            ),
+            cost: demoAmplify(
+              simulationOffset.cost,
+              baselineStress.cost
+            ),
             macro: baselineStress.macro,
-            execution: clamp(
-              baselineStress.execution + simulationOffset.execution,
-              0,
-              100
+            execution: demoAmplify(
+              simulationOffset.execution,
+              baselineStress.execution
             ),
           }}
           persona={persona}
         />
       </div>
+
+      {/* Narrative */}
       <div
         style={{
           marginTop: 16,
@@ -98,15 +115,24 @@ export default function BaselinePage() {
       >
         <p style={{ marginBottom: 8 }}>
           <strong>People pressure:</strong>{" "}
-          {Math.round(baselineStress.people + simulationOffset.people)}%
+          {Math.round(
+            baselineStress.people + simulationOffset.people
+          )}
+          %
         </p>
         <p style={{ marginBottom: 8 }}>
           <strong>Cost pressure:</strong>{" "}
-          {Math.round(baselineStress.cost + simulationOffset.cost)}%
+          {Math.round(
+            baselineStress.cost + simulationOffset.cost
+          )}
+          %
         </p>
         <p>
           <strong>Execution posture:</strong>{" "}
-          {Math.round(baselineStress.execution + simulationOffset.execution)}%
+          {Math.round(
+            baselineStress.execution + simulationOffset.execution
+          )}
+          %
         </p>
       </div>
 
@@ -149,7 +175,9 @@ export default function BaselinePage() {
             }}
           >
             <strong>Targeted Retention Scenarios</strong>
-            <button onClick={() => setShowSimulator(false)}>Close</button>
+            <button onClick={() => setShowSimulator(false)}>
+              Close
+            </button>
           </div>
 
           <iframe
