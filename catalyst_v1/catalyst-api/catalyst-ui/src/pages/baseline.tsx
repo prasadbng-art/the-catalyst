@@ -1,13 +1,10 @@
 import { useState } from "react";
 import MagicCube from "../components/visuals/MagicCube";
 import type { StressProfile } from "../components/visuals/motion";
-import type { Persona } from "../types/persona";
+import { PERSONAS, type Persona } from "../types/persona";
 import { personaConfig } from "../persona/personaConfig";
 
-/* =======================
-   STATIC BASELINE DATA
-   ======================= */
-
+const BASELINE_PERSONA = PERSONAS.CEO;
 const BASELINE_STRESS: StressProfile = {
   people: 0.65,
   cost: 0.7,
@@ -15,55 +12,24 @@ const BASELINE_STRESS: StressProfile = {
   macro: 0.6,
 };
 
-const DEFAULT_PERSONA: Persona = "CEO";
-
-/* =======================
-   BASELINE PAGE
-   ======================= */
-
 export default function BaselinePage() {
-  const [activePersona, setActivePersona] =
-    useState<Persona>(DEFAULT_PERSONA);
-
+  const [persona, setPersona] = useState<Persona>("CEO");
   const [showPanel, setShowPanel] = useState(false);
 
-  const personaMeta = personaConfig[activePersona];
+  const narrative = personaConfig[persona];
 
   return (
-    <div
-      style={{
-        display: "flex",
-        width: "100%",
-        height: "100%",
-        background: "#0f172a",
-        color: "#e5e7eb",
-      }}
-    >
-      {/* ================= LEFT ================= */}
-      <div
-        style={{
-          flex: 1,
-          padding: "32px 40px",
-          overflowY: "auto",
-        }}
-      >
-        <h1 style={{ fontSize: 42, fontWeight: 700 }}>Baseline</h1>
+    <div style={{ display: "flex", height: "100vh", background: "#020617" }}>
+      {/* LEFT */}
+      <div style={{ flex: 1, padding: 40, color: "#e5e7eb", overflowY: "auto" }}>
+        <h1 style={{ fontSize: 42 }}>Baseline</h1>
+        <p style={{ color: "#94a3b8" }}>Current organizational pressure profile</p>
 
-        <p style={{ marginTop: 6, color: "#94a3b8" }}>
-          Current organizational pressure profile
-        </p>
-
-        {/* Persona Selector */}
-        <div style={{ marginTop: 16 }}>
-          <label style={{ fontSize: 14, marginRight: 8 }}>
-            View as:
-          </label>
-
+        <div style={{ marginTop: 12 }}>
+          <label>View as: </label>
           <select
-            value={activePersona}
-            onChange={(e) =>
-              setActivePersona(e.target.value as Persona)
-            }
+            value={persona}
+            onChange={(e) => setPersona(e.target.value as Persona)}
           >
             <option value="CEO">CEO</option>
             <option value="CFO">CFO</option>
@@ -71,29 +37,22 @@ export default function BaselinePage() {
           </select>
         </div>
 
-        {/* ===== Magic Cube ===== */}
         <div style={{ marginTop: 32, width: 320 }}>
-          <MagicCube
-            stress={BASELINE_STRESS}
-            persona={activePersona}
-          />
+          <MagicCube stress={BASELINE_STRESS} persona={BASELINE_PERSONA} />
         </div>
 
-        {/* ===== Persona Narrative ===== */}
         <div
           style={{
             marginTop: 32,
             background: "#020617",
-            borderRadius: 10,
+            border: "1px solid #1e293b",
+            borderRadius: 12,
             padding: 20,
             maxWidth: 520,
           }}
         >
-          <strong>{personaMeta.headline}</strong>
-
-          <p style={{ marginTop: 12, lineHeight: 1.5 }}>
-            {personaMeta.narrative}
-          </p>
+          <strong>{narrative.headline}</strong>
+          <p style={{ marginTop: 12, lineHeight: 1.6 }}>{narrative.narrative}</p>
 
           <ul style={{ marginTop: 12 }}>
             <li>People risk: 65%</li>
@@ -106,7 +65,7 @@ export default function BaselinePage() {
           style={{
             marginTop: 28,
             padding: "10px 16px",
-            background: "#1e40af",
+            background: "#2563eb",
             color: "white",
             borderRadius: 6,
             border: "none",
@@ -118,19 +77,17 @@ export default function BaselinePage() {
         </button>
       </div>
 
-      {/* ================= RIGHT PANEL ================= */}
+      {/* RIGHT PANEL */}
       {showPanel && (
         <div
           style={{
-            width: "50%",
-            height: "100%",
+            width: "40%",
             display: "flex",
             flexDirection: "column",
             borderLeft: "1px solid #1e293b",
             background: "#020617",
           }}
         >
-          {/* Header */}
           <div
             style={{
               height: 48,
@@ -139,32 +96,20 @@ export default function BaselinePage() {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
+              color: "#e5e7eb",
             }}
           >
             <strong>Financial Impact Modeling</strong>
-            <button onClick={() => setShowPanel(false)}>
-              Close
-            </button>
+            <button onClick={() => setShowPanel(false)}>Close</button>
           </div>
 
-          {/* Financial Model */}
           <iframe
             src="/Catalyst/simulation"
+            style={{ flex: 1, border: "none" }}
             title="Financial Model"
-            style={{
-              flex: 1,
-              border: "none",
-              width: "100%",
-            }}
           />
 
-          {/* Retention CTA */}
-          <div
-            style={{
-              padding: 16,
-              borderTop: "1px solid #1e293b",
-            }}
-          >
+          <div style={{ padding: 16, borderTop: "1px solid #1e293b" }}>
             <button
               onClick={() =>
                 window.open(
