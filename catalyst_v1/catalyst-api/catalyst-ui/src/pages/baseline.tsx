@@ -181,7 +181,7 @@ export default function BaselinePage() {
           </div>
 
           <iframe
-            src="/resolution/index.html"
+            src={'${import.meta.env.BASE_URL}"/resolution/index.html'}
             style={{
               width: "100%",
               height: "calc(100% - 48px)",
