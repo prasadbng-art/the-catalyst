@@ -23,13 +23,13 @@ export default function BaselinePage() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          alignItems: "center",
-          gap: "clamp(32px, 5vw, 72px)",
+          gridTemplateColumns: "minmax(420px, 1fr) minmax(420px, 1fr)",
+          alignItems: "start",
+          gap: "clamp(40px, 6vw, 80px)",
         }}
       >
-        {/* LEFT — Narrative */}
-        <div style={{ maxWidth: 560 }}>
+        {/* LEFT — Narrative & Snapshot */}
+        <div style={{ maxWidth: 560, paddingTop: 8 }}>
           <h1 style={{ fontSize: "clamp(28px, 4vw, 42px)", marginBottom: 8 }}>
             Baseline
           </h1>
@@ -65,10 +65,22 @@ export default function BaselinePage() {
             </p>
 
             <ul style={{ marginTop: 12, color: "#cbd5f5" }}>
-              <li>People stress level: {Math.round(BASELINE_STRESS.people * 100)}%</li>
-              <li>Cost pressure index: {Math.round(BASELINE_STRESS.cost * 100)}%</li>
-              <li>Execution constraint: {Math.round(BASELINE_STRESS.execution * 100)}%</li>
-              <li>Macro exposure: {Math.round(BASELINE_STRESS.macro * 100)}%</li>
+              <li>
+                People stress level:{" "}
+                {Math.round(BASELINE_STRESS.people * 100)}%
+              </li>
+              <li>
+                Cost pressure index:{" "}
+                {Math.round(BASELINE_STRESS.cost * 100)}%
+              </li>
+              <li>
+                Execution constraint:{" "}
+                {Math.round(BASELINE_STRESS.execution * 100)}%
+              </li>
+              <li>
+                Macro exposure:{" "}
+                {Math.round(BASELINE_STRESS.macro * 100)}%
+              </li>
             </ul>
           </div>
 
@@ -92,7 +104,7 @@ export default function BaselinePage() {
           </button>
         </div>
 
-        {/* RIGHT — Visual Anchor */}
+        {/* RIGHT — Organizational Stress Visualization */}
         <div
           style={{
             display: "flex",
@@ -101,11 +113,32 @@ export default function BaselinePage() {
             gap: 16,
           }}
         >
-          <MagicCube
-            stress={BASELINE_STRESS}
-            persona={BASELINE_PERSONA}
-            size={280}
-          />
+          <div
+            style={{
+              fontSize: 14,
+              fontWeight: 600,
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+              color: "#94a3b8",
+            }}
+          >
+            Organizational Stress
+          </div>
+
+          <div
+            style={{
+              background: "#020617",
+              border: "1px solid #1e293b",
+              borderRadius: 16,
+              padding: 24,
+            }}
+          >
+            <MagicCube
+              stress={BASELINE_STRESS}
+              persona={BASELINE_PERSONA}
+              size={300}
+            />
+          </div>
         </div>
       </div>
     </PageShell>
