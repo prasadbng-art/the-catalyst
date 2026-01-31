@@ -21,6 +21,13 @@ export default function SimulatePage() {
 
   /* ---------------- Time Horizon (FIXED POSITION) ---------------- */
   const [timeHorizon, setTimeHorizon] = useState<1 | 3>(1);
+  // Stress deltas driven by retention actions (0 = no change)
+  const [stressDelta, setStressDelta] = useState<StressProfile>({
+    people: 0,
+    cost: 0,
+    execution: 0,
+    macro: 0,
+  });
 
   /* ---------------- Stress (from URL) ---------------- */
   function readStressFromURL(): StressProfile {
@@ -39,7 +46,15 @@ export default function SimulatePage() {
     };
   }
 
-  const stress = readStressFromURL();
+  const baseStress = readStressFromURL();
+
+  const stress: StressProfile = {
+    people: Math.max(0, baseStress.people + stressDelta.people),
+    cost: Math.max(0, baseStress.cost + stressDelta.cost),
+    execution: Math.max(0, baseStress.execution + stressDelta.execution),
+    macro: Math.max(0, baseStress.macro + stressDelta.macro),
+  };
+
 
   /* ---------------- Inputs ---------------- */
   const [riskReductionPct, setRiskReductionPct] = useState(15);
@@ -294,15 +309,20 @@ export default function SimulatePage() {
           The cube reflects normalized stress across people, cost, macro, and execution.
         </p>
 
-        <a
-          href="/resolution/retention_simulator.html"
-          target="_blank"
-          rel="noreferrer"
+        <button
+          onClick={() =>
+            setStressDelta({
+              people: -0.1,
+              cost: -0.08,
+              execution: -0.05,
+              macro: 0,
+            })
+          }
+          style={{ width: "100%" }}
         >
-          <button style={{ width: "100%" }}>
-            Open Retention Simulator
-          </button>
-        </a>
+          Apply Retention Improvement →
+        </button>
+
       </div>
     </div>
   );
