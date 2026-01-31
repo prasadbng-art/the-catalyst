@@ -66,12 +66,14 @@ export default function SimulatePage() {
   useEffect(() => {
     const intensity = riskReductionPct / 100;
 
-    setStressDelta({
+    const nextDelta = {
       people: -0.4 * intensity,
       cost: -0.3 * intensity,
       execution: -0.25 * intensity,
       macro: 0,
-    });
+    };
+    console.log("STRESS DELTA", nextDelta);
+    setStressDelta(nextDelta);
   }, [riskReductionPct, interventionCost, timeHorizon]);
 
   /* ---------------- Frontend Financial Engine ---------------- */

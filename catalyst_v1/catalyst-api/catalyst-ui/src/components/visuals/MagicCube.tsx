@@ -36,7 +36,7 @@ export default function MagicCube({
   const MAX_DELTA = size * 0.18;       // max deformation
 
   const radius = (value: number) =>
-    BASE_RADIUS + (value / 100) * MAX_DELTA;
+    BASE_RADIUS + value * MAX_DELTA;
 
   /* ---------------------------------------------
      Stress-weighted vertices
@@ -142,8 +142,8 @@ export default function MagicCube({
                   v.key === "people"
                     ? v.y - 10
                     : v.key === "execution"
-                    ? v.y + 18
-                    : v.y + 4
+                      ? v.y + 18
+                      : v.y + 4
                 }
                 textAnchor="middle"
                 fontSize={11}
