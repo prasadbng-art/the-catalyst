@@ -3,6 +3,7 @@ import MagicCube from "../components/visuals/MagicCube";
 import type { StressProfile } from "../components/visuals/motion";
 import { PERSONAS, type Persona } from "../types/persona";
 import { personaConfig } from "../persona/personaConfig";
+import SimulatePage from "./simulate";
 
 const BASELINE_PERSONA = PERSONAS.CEO;
 
@@ -93,17 +94,20 @@ export default function BaselinePage() {
         </button>
       </div>
 
-      {/* RIGHT PANEL — NOW INTENTIONAL */}
+      {/* RIGHT PANEL */}
       {showPanel && (
         <div
           style={{
-            width: "40%",
-            display: "flex",
-            flexDirection: "column",
+            width: "45%",
+            height: "100vh",
             borderLeft: "1px solid #1e293b",
             background: "#020617",
+            overflow: "hidden",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
+          {/* Header */}
           <div
             style={{
               height: 48,
@@ -115,64 +119,17 @@ export default function BaselinePage() {
               color: "#e5e7eb",
             }}
           >
-            <strong>Next Step</strong>
+            <strong>Financial Impact Simulation</strong>
             <button onClick={() => setShowPanel(false)}>Close</button>
           </div>
 
-          <div style={{ padding: 24, color: "#cbd5f5", flex: 1 }}>
-            <p style={{ marginBottom: 16 }}>
-              Move from baseline stress exposure to quantified financial impact
-              using Catalyst’s financial model.
-            </p>
-
-            <button
-              onClick={() => {
-                const params = new URLSearchParams({
-                  people: BASELINE_STRESS.people.toString(),
-                  cost: BASELINE_STRESS.cost.toString(),
-                  execution: BASELINE_STRESS.execution.toString(),
-                  macro: BASELINE_STRESS.macro.toString(),
-                  persona,
-                });
-
-                window.location.assign(`/Catalyst/simulate?${params.toString()}`);
-              }}
-              style={{
-                padding: "10px 16px",
-                background: "#2563eb",
-                color: "white",
-                borderRadius: 6,
-                border: "none",
-                fontWeight: 600,
-              }}
-            >
-              Open Financial Model →
-            </button>
-
-          </div>
-
-          <div style={{ padding: 16, borderTop: "1px solid #1e293b" }}>
-            <button
-              onClick={() =>
-                window.open(
-                  "/resolution/retention_simulator.html",
-                  "_blank"
-                )
-              }
-              style={{
-                padding: "10px 16px",
-                background: "#0f172a",
-                color: "white",
-                borderRadius: 6,
-                border: "1px solid #2563eb",
-                fontWeight: 600,
-              }}
-            >
-              Open Retention Impact Simulator →
-            </button>
+          {/* Embedded Simulation */}
+          <div style={{ flex: 1, overflow: "auto" }}>
+            <SimulatePage />
           </div>
         </div>
       )}
+
     </div>
   );
 }
