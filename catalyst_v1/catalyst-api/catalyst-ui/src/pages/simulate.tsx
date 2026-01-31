@@ -203,10 +203,10 @@ export default function SimulatePage() {
             style={{
               marginTop: 32,
               padding: "12px 20px",
-              background: "#020617",
-              color: "#cbd5f5",
+              background: "#2563eb",
+              color: "#ffffff",
               borderRadius: 8,
-              border: "1px solid #1e293b",
+              border: "none",
               fontWeight: 600,
               cursor: "pointer",
             }}
