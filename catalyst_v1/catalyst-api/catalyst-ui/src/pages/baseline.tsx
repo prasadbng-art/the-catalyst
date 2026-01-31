@@ -99,7 +99,7 @@ export default function BaselinePage() {
               cursor: "pointer",
             }}
             onClick={() => {
-              navigate("/simulate");
+              navigate("/simulation");
             }}
           >
             Model Financial Impact →
