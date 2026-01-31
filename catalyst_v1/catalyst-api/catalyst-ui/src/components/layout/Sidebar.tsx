@@ -48,7 +48,7 @@ export default function Sidebar() {
           to="/simulation"
           style={{
             ...linkStyle,
-            background: isActive("/simulate") ? "#1e293b" : "transparent",
+            background: isActive("/simulation") ? "#1e293b" : "transparent",
             color: "#e5e7eb",
           }}
         >
