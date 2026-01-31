@@ -46,15 +46,15 @@ export default function SimulatePage() {
     };
   }
 
-  const baseStress = readStressFromURL();
-
-  const stress: StressProfile = {
-    people: Math.max(0, baseStress.people + stressDelta.people),
-    cost: Math.max(0, baseStress.cost + stressDelta.cost),
-    execution: Math.max(0, baseStress.execution + stressDelta.execution),
-    macro: Math.max(0, baseStress.macro + stressDelta.macro),
-  };
-
+  const [stress, setStress] = useState<StressProfile>(() => readStressFromURL());
+  useEffect(() => {
+    setStress(prev => ({
+      people: Math.max(0, Math.min(1, prev.people + stressDelta.people)),
+      cost: Math.max(0, Math.min(1, prev.cost + stressDelta.cost)),
+      execution: Math.max(0, Math.min(1, prev.execution + stressDelta.execution)),
+      macro: Math.max(0, Math.min(1, prev.macro + stressDelta.macro)),
+    }));
+  }, [stressDelta]);
 
   /* ---------------- Inputs ---------------- */
   const [riskReductionPct, setRiskReductionPct] = useState(15);
