@@ -4,6 +4,7 @@ import type { StressProfile } from "../components/visuals/motion";
 import { PERSONAS, type Persona } from "../types/persona";
 import { personaConfig } from "../persona/personaConfig";
 import PageShell from "../components/layout/PageShell";
+import { useNavigate } from "react-router-dom";
 
 const BASELINE_PERSONA = PERSONAS.CEO;
 
@@ -17,6 +18,7 @@ const BASELINE_STRESS: StressProfile = {
 export default function BaselinePage() {
   const [persona, setPersona] = useState<Persona>("CEO");
   const narrative = personaConfig[persona];
+  const navigate = useNavigate();
 
   return (
     <PageShell>
@@ -97,7 +99,7 @@ export default function BaselinePage() {
               cursor: "pointer",
             }}
             onClick={() => {
-              window.location.assign("/Catalyst/simulate");
+              navigate("/simulate");
             }}
           >
             Model Financial Impact →
