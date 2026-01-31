@@ -1,10 +1,23 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { Persona } from "../types/persona";
 import { personaConfig } from "../persona/personaConfig";
 import MagicCube from "../components/visuals/MagicCube";
 import type { StressProfile } from "../components/visuals/motion";
 
-const DEFAULT_BASELINE_COST = 1_940_000; // annual attrition cost (demo-safe)
+/* =========================================================
+   Baseline stress (mirrors Baseline page exactly)
+========================================================= */
+const BASELINE_STRESS: StressProfile = {
+  people: 0.65,
+  cost: 0.7,
+  execution: 0.45,
+  macro: 0.6,
+};
+
+/* =========================================================
+   Financial model constants
+========================================================= */
+const DEFAULT_BASELINE_COST = 1_940_000;
 
 const SENSITIVITY = {
   low: 0.7,
@@ -13,117 +26,37 @@ const SENSITIVITY = {
 };
 
 export default function SimulatePage() {
-  /* ---------------- Persona (from URL or default) ---------------- */
-  const params = new URLSearchParams(window.location.search);
-  const initialPersona = (params.get("persona") as Persona) || "CFO";
+  /* ---------------- Persona ---------------- */
+  const [persona, setPersona] = useState<Persona>("CFO");
 
-  const [persona, setPersona] = useState<Persona>(initialPersona);
+  /* ---------------- Scenario inputs ---------------- */
+  const [riskReductionPct, setRiskReductionPct] = useState(10);
+  const [interventionCost, setInterventionCost] = useState(100000);
+  const [timeHorizon, setTimeHorizon] = useState<1 | 3>(3);
 
-  /* ---------------- Time Horizon (FIXED POSITION) ---------------- */
-  const [timeHorizon, setTimeHorizon] = useState<1 | 3>(1);
-  // Stress deltas driven by retention actions (0 = no change)
-  const [stressDelta, setStressDelta] = useState<StressProfile>({
-    people: 0,
-    cost: 0,
-    execution: 0,
-    macro: 0,
-  });
+  /* =========================================================
+     Stress derivation (PURE, DETERMINISTIC)
+     No mutation. No accumulation. No history.
+  ========================================================= */
+  const intensity = riskReductionPct / 100;
 
-  /* ---------------- Stress (from URL) ---------------- */
-  function readStressFromURL(): StressProfile {
-    const params = new URLSearchParams(window.location.search);
+  const stress: StressProfile = {
+    people: Math.max(0, BASELINE_STRESS.people - 0.4 * intensity),
+    cost: Math.max(0, BASELINE_STRESS.cost - 0.3 * intensity),
+    execution: Math.max(0, BASELINE_STRESS.execution - 0.25 * intensity),
+    macro: BASELINE_STRESS.macro, // macro unchanged by retention
+  };
 
-    const read = (key: string, fallback: number) => {
-      const v = Number(params.get(key));
-      return Number.isFinite(v) ? v : fallback;
-    };
+  /* =========================================================
+     Financial model
+  ========================================================= */
+  const annualSavings = DEFAULT_BASELINE_COST * intensity;
 
-    return {
-      people: read("people", 0.26),
-      cost: read("cost", 0.31),
-      execution: read("execution", 0.22),
-      macro: read("macro", 0.18),
-    };
-  }
-
-  const [stress, setStress] = useState<StressProfile>(() => readStressFromURL());
-  useEffect(() => {
-    setStress(prev => ({
-      people: Math.max(0, Math.min(1, prev.people + stressDelta.people)),
-      cost: Math.max(0, Math.min(1, prev.cost + stressDelta.cost)),
-      execution: Math.max(0, Math.min(1, prev.execution + stressDelta.execution)),
-      macro: Math.max(0, Math.min(1, prev.macro + stressDelta.macro)),
-    }));
-  }, [stressDelta]);
-
-  /* ---------------- Inputs ---------------- */
-  const [riskReductionPct, setRiskReductionPct] = useState(15);
-  const [interventionCost, setInterventionCost] = useState(250000);
-
-  /* ---------------- Async state (kept, but secondary) ---------------- */
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const intensity = riskReductionPct / 100;
-
-    const nextDelta = {
-      people: -0.4 * intensity,
-      cost: -0.3 * intensity,
-      execution: -0.25 * intensity,
-      macro: 0,
-    };
-    console.log("STRESS DELTA", nextDelta);
-    setStressDelta(nextDelta);
-  }, [riskReductionPct, interventionCost, timeHorizon]);
-
-  /* ---------------- Frontend Financial Engine ---------------- */
-  function computeFinancials() {
-    const annualSavings =
-      DEFAULT_BASELINE_COST * (riskReductionPct / 100);
-
-    const horizonMultiplier = timeHorizon;
-
-    const ladder = {
-      low: annualSavings * SENSITIVITY.low * horizonMultiplier,
-      base: annualSavings * SENSITIVITY.base * horizonMultiplier,
-      high: annualSavings * SENSITIVITY.high * horizonMultiplier,
-    };
-
-    const roi =
-      ((ladder.base - interventionCost) / interventionCost) * 100;
-
-    return {
-      ladder,
-      roi: Math.round(roi),
-    };
-  }
-
-  const financials = computeFinancials();
-
-  /* ---------------- Backend call (non-authoritative) ---------------- */
-  async function runSimulation() {
-    setLoading(true);
-    try {
-      const res = await fetch("/intelligence/simulate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          persona,
-          stress,
-          risk_reduction_pct: riskReductionPct,
-          intervention_cost: interventionCost,
-        }),
-      });
-
-      if (!res.ok) throw new Error("Simulation failed");
-
-      await res.json(); //backend response ignored - frontend model is authoritative
-
-    } catch {
-    } finally {
-      setLoading(false);
-    }
-  }
+  const ladder = {
+    low: annualSavings * SENSITIVITY.low * timeHorizon,
+    base: annualSavings * SENSITIVITY.base * timeHorizon,
+    high: annualSavings * SENSITIVITY.high * timeHorizon,
+  };
 
   const copy = personaConfig[persona];
 
@@ -136,23 +69,21 @@ export default function SimulatePage() {
         overflow: "hidden",
       }}
     >
-      {/* ---------------- MAIN ---------------- */}
+      {/* ================= MAIN ================= */}
       <div style={{ padding: "32px 40px", overflowY: "auto" }}>
         <h1>{copy.headline}</h1>
         <p style={{ opacity: 0.75 }}>
           Model the financial impact of reducing organizational stress and attrition risk.
         </p>
-
         <p style={{ marginTop: 8, fontSize: 14, opacity: 0.65 }}>
-          You can adjust the inputs below to test different scenarios.
-          The impact ranges and cube update based on your selections.
+          You can adjust the inputs below to test different scenarios. The cube and
+          impact ranges update based on your selections.
         </p>
 
         {/* Persona selector */}
         <div style={{ margin: "24px 0" }}>
-          {(["CEO", "CFO", "CHRO"] as Persona[]).map((p) => {
+          {(["CEO", "CFO", "CHRO"] as Persona[]).map(p => {
             const active = persona === p;
-
             return (
               <button
                 key={p}
@@ -190,9 +121,7 @@ export default function SimulatePage() {
             <input
               type="number"
               value={riskReductionPct}
-              onChange={(e) =>
-                setRiskReductionPct(Number(e.target.value))
-              }
+              onChange={e => setRiskReductionPct(Number(e.target.value))}
               style={{ width: "100%", marginTop: 6 }}
             />
           </div>
@@ -202,21 +131,15 @@ export default function SimulatePage() {
             <input
               type="number"
               value={interventionCost}
-              onChange={(e) =>
-                setInterventionCost(Number(e.target.value))
-              }
+              onChange={e => setInterventionCost(Number(e.target.value))}
               style={{ width: "100%", marginTop: 6 }}
             />
           </div>
         </div>
 
-        {/* Time Horizon */}
-        <div style={{ marginBottom: 20 }}>
-          <label style={{ fontSize: 13, display: "block", marginBottom: 6 }}>
-            Time Horizon
-          </label>
-
-          {[1, 3].map((y) => (
+        {/* Time horizon */}
+        <div style={{ marginBottom: 24 }}>
+          {[1, 3].map(y => (
             <button
               key={y}
               onClick={() => setTimeHorizon(y as 1 | 3)}
@@ -242,25 +165,9 @@ export default function SimulatePage() {
           ))}
         </div>
 
-        <button
-          onClick={runSimulation}
-          disabled={loading}
-          style={{
-            padding: "10px 18px",
-            borderRadius: 8,
-            background: "#4f46e5",
-            color: "#ffffff",
-            border: "none",
-            cursor: "pointer",
-            marginBottom: 16,
-          }}
-        >
-          {loading ? "Running Model…" : "Update Scenario"}
-        </button>
-
+        {/* Enterprise Risk Snapshot */}
         <div
           style={{
-            marginTop: 32,
             background: "#020617",
             border: "1px solid #1e293b",
             borderRadius: 12,
@@ -269,12 +176,6 @@ export default function SimulatePage() {
           }}
         >
           <strong>Enterprise Risk Snapshot</strong>
-
-          <p style={{ marginTop: 12, lineHeight: 1.6, opacity: 0.85 }}>
-            This snapshot reflects the current organizational stress posture based on
-            the scenario inputs selected above.
-          </p>
-
           <ul style={{ marginTop: 12, color: "#cbd5f5" }}>
             <li>People stress level: {Math.round(stress.people * 100)}%</li>
             <li>Cost pressure index: {Math.round(stress.cost * 100)}%</li>
@@ -284,8 +185,8 @@ export default function SimulatePage() {
         </div>
 
         {/* Financial Impact */}
-        <div style={{ marginTop: 24 }}>
-          <h2 style={{ marginBottom: 16 }}>Financial Impact</h2>
+        <div style={{ marginTop: 32 }}>
+          <h2>Financial Impact</h2>
 
           <div
             style={{
@@ -296,27 +197,21 @@ export default function SimulatePage() {
           >
             <Metric
               label="Low Impact"
-              value={`$${Math.round(
-                financials.ladder.low
-              ).toLocaleString()}`}
+              value={`$${Math.round(ladder.low).toLocaleString()}`}
             />
             <Metric
               label="Expected Impact"
-              value={`$${Math.round(
-                financials.ladder.base
-              ).toLocaleString()}`}
+              value={`$${Math.round(ladder.base).toLocaleString()}`}
             />
             <Metric
               label="High Impact"
-              value={`$${Math.round(
-                financials.ladder.high
-              ).toLocaleString()}`}
+              value={`$${Math.round(ladder.high).toLocaleString()}`}
             />
           </div>
 
           <p style={{ marginTop: 12, fontSize: 13, opacity: 0.65 }}>
             Values show estimated cost avoided over {timeHorizon} year
-            {timeHorizon === 3 ? "s" : ""}, under different execution conditions.
+            {timeHorizon === 3 ? "s" : ""}.
           </p>
 
           <p style={{ marginTop: 20, opacity: 0.85 }}>
@@ -325,7 +220,7 @@ export default function SimulatePage() {
         </div>
       </div>
 
-      {/* ---------------- RIGHT RAIL ---------------- */}
+      {/* ================= RIGHT RAIL ================= */}
       <div
         style={{
           borderLeft: "1px solid #e5e7eb",
@@ -340,26 +235,14 @@ export default function SimulatePage() {
         <p style={{ fontSize: 13, opacity: 0.7 }}>
           The cube reflects normalized stress across people, cost, macro, and execution.
         </p>
-
-        <button
-          onClick={() =>
-            setStressDelta({
-              people: -0.1,
-              cost: -0.08,
-              execution: -0.05,
-              macro: 0,
-            })
-          }
-          style={{ width: "100%" }}
-        >
-          Apply Retention Improvement →
-        </button>
-
       </div>
     </div>
   );
 }
 
+/* =========================================================
+   Metric
+========================================================= */
 function Metric({ label, value }: { label: string; value: string }) {
   return (
     <div style={{ padding: 16, borderRadius: 8, border: "1px solid #e5e7eb" }}>
