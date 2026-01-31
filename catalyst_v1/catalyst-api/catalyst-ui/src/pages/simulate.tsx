@@ -141,6 +141,11 @@ export default function SimulatePage() {
           Model the financial impact of reducing organizational stress and attrition risk.
         </p>
 
+        <p style={{ marginTop: 8, fontSize: 14, opacity: 0.65 }}>
+          You can adjust the inputs below to test different scenarios.
+          The impact ranges and cube update based on your selections.
+        </p>
+
         {/* Persona selector */}
         <div style={{ margin: "24px 0" }}>
           {(["CEO", "CFO", "CHRO"] as Persona[]).map((p) => {
