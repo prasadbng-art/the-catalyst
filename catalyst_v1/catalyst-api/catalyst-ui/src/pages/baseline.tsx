@@ -135,7 +135,7 @@ export default function BaselinePage() {
                   persona,
                 });
 
-                window.location.assign(`/simulate?${params.toString()}`);
+                window.location.assign(`/Catalyst/simulate?${params.toString()}`);
               }}
               style={{
                 padding: "10px 16px",

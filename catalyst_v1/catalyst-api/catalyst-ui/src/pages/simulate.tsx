@@ -62,11 +62,9 @@ export default function SimulatePage() {
 
   /* ---------------- Async state (kept, but secondary) ---------------- */
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    runSimulation();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, []);
 
   /* ---------------- Frontend Financial Engine ---------------- */
@@ -96,8 +94,6 @@ export default function SimulatePage() {
   /* ---------------- Backend call (non-authoritative) ---------------- */
   async function runSimulation() {
     setLoading(true);
-    setError(null);
-
     try {
       const res = await fetch("/intelligence/simulate", {
         method: "POST",
@@ -115,7 +111,6 @@ export default function SimulatePage() {
       await res.json(); //backend response ignored - frontend model is authoritative
 
     } catch {
-      setError("Unable to run financial simulation.");
     } finally {
       setLoading(false);
     }
@@ -246,10 +241,8 @@ export default function SimulatePage() {
             marginBottom: 16,
           }}
         >
-          {loading ? "Running Model…" : "Recalculate Impact"}
+          {loading ? "Running Model…" : "Update Scenario"}
         </button>
-
-        {error && <p style={{ color: "red" }}>{error}</p>}
 
         {/* Financial Impact */}
         <div style={{ marginTop: 24 }}>
