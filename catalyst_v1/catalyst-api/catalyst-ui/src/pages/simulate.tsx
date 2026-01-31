@@ -4,6 +4,14 @@ import { personaConfig } from "../persona/personaConfig";
 import MagicCube from "../components/visuals/MagicCube";
 import type { StressProfile } from "../components/visuals/motion";
 
+const DEFAULT_BASELINE_COST = 1_940_000; // annual attrition cost (demo-safe)
+
+const SENSITIVITY = {
+  low: 0.7,
+  base: 1.0,
+  high: 1.3,
+};
+
 type SimulationResponse = {
   baseline_cost: number;
   simulated_cost: number;
@@ -13,12 +21,16 @@ type SimulationResponse = {
 };
 
 export default function SimulatePage() {
+  /* ---------------- Persona (from URL or default) ---------------- */
   const params = new URLSearchParams(window.location.search);
   const initialPersona = (params.get("persona") as Persona) || "CFO";
 
   const [persona, setPersona] = useState<Persona>(initialPersona);
 
+  /* ---------------- Time Horizon (FIXED POSITION) ---------------- */
+  const [timeHorizon, setTimeHorizon] = useState<1 | 3>(1);
 
+  /* ---------------- Stress (from URL) ---------------- */
   function readStressFromURL(): StressProfile {
     const params = new URLSearchParams(window.location.search);
 
@@ -37,12 +49,12 @@ export default function SimulatePage() {
 
   const stress = readStressFromURL();
 
-
+  /* ---------------- Inputs ---------------- */
   const [riskReductionPct, setRiskReductionPct] = useState(15);
   const [interventionCost, setInterventionCost] = useState(250000);
 
+  /* ---------------- Async state (kept, but secondary) ---------------- */
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<SimulationResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -50,6 +62,31 @@ export default function SimulatePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  /* ---------------- Frontend Financial Engine ---------------- */
+  function computeFinancials() {
+    const annualSavings =
+      DEFAULT_BASELINE_COST * (riskReductionPct / 100);
+
+    const horizonMultiplier = timeHorizon;
+
+    const ladder = {
+      low: annualSavings * SENSITIVITY.low * horizonMultiplier,
+      base: annualSavings * SENSITIVITY.base * horizonMultiplier,
+      high: annualSavings * SENSITIVITY.high * horizonMultiplier,
+    };
+
+    const roi =
+      ((ladder.base - interventionCost) / interventionCost) * 100;
+
+    return {
+      ladder,
+      roi: Math.round(roi),
+    };
+  }
+
+  const financials = computeFinancials();
+
+  /* ---------------- Backend call (non-authoritative) ---------------- */
   async function runSimulation() {
     setLoading(true);
     setError(null);
@@ -66,12 +103,10 @@ export default function SimulatePage() {
         }),
       });
 
-      if (!res.ok) {
-        throw new Error("Simulation failed");
-      }
+      if (!res.ok) throw new Error("Simulation failed");
 
-      const data = await res.json();
-      setResult(data);
+      await res.json(); //backend response ignored - frontend model is authoritative
+
     } catch {
       setError("Unable to run financial simulation.");
     } finally {
@@ -90,36 +125,48 @@ export default function SimulatePage() {
         overflow: "hidden",
       }}
     >
+      {/* ---------------- MAIN ---------------- */}
       <div style={{ padding: "32px 40px", overflowY: "auto" }}>
         <h1>{copy.headline}</h1>
         <p style={{ opacity: 0.75 }}>
           Model the financial impact of reducing organizational stress and attrition risk.
         </p>
 
+        {/* Persona selector */}
         <div style={{ margin: "24px 0" }}>
-          {(["CEO", "CFO", "CHRO"] as Persona[]).map((p) => (
-            <button
-              key={p}
-              onClick={() => setPersona(p)}
-              style={{
-                marginRight: 8,
-                padding: "6px 12px",
-                borderRadius: 6,
-                border: persona === p ? "2px solid #4f46e5" : "1px solid #d1d5db",
-                background: persona === p ? "#eef2ff" : "#ffffff",
-              }}
-            >
-              {p}
-            </button>
-          ))}
+          {(["CEO", "CFO", "CHRO"] as Persona[]).map((p) => {
+            const active = persona === p;
+
+            return (
+              <button
+                key={p}
+                onClick={() => setPersona(p)}
+                style={{
+                  marginRight: 8,
+                  padding: "8px 14px",
+                  borderRadius: 6,
+                  border: active
+                    ? "2px solid #2563eb"
+                    : "1px solid #cbd5e1",
+                  background: active ? "#2563eb" : "#f8fafc",
+                  color: active ? "#ffffff" : "#0f172a",
+                  fontWeight: active ? 600 : 500,
+                  cursor: "pointer",
+                }}
+              >
+                {p}
+              </button>
+            );
+          })}
         </div>
 
+        {/* Inputs */}
         <div
           style={{
             display: "grid",
             gridTemplateColumns: "1fr 1fr",
             gap: 24,
-            marginBottom: 32,
+            marginBottom: 24,
           }}
         >
           <div>
@@ -127,7 +174,9 @@ export default function SimulatePage() {
             <input
               type="number"
               value={riskReductionPct}
-              onChange={(e) => setRiskReductionPct(Number(e.target.value))}
+              onChange={(e) =>
+                setRiskReductionPct(Number(e.target.value))
+              }
               style={{ width: "100%", marginTop: 6 }}
             />
           </div>
@@ -137,10 +186,44 @@ export default function SimulatePage() {
             <input
               type="number"
               value={interventionCost}
-              onChange={(e) => setInterventionCost(Number(e.target.value))}
+              onChange={(e) =>
+                setInterventionCost(Number(e.target.value))
+              }
               style={{ width: "100%", marginTop: 6 }}
             />
           </div>
+        </div>
+
+        {/* Time Horizon */}
+        <div style={{ marginBottom: 20 }}>
+          <label style={{ fontSize: 13, display: "block", marginBottom: 6 }}>
+            Time Horizon
+          </label>
+
+          {[1, 3].map((y) => (
+            <button
+              key={y}
+              onClick={() => setTimeHorizon(y as 1 | 3)}
+              style={{
+                marginRight: 8,
+                padding: "6px 12px",
+                borderRadius: 6,
+                border:
+                  timeHorizon === y
+                    ? "2px solid #2563eb"
+                    : "1px solid #cbd5e1",
+                background:
+                  timeHorizon === y ? "#2563eb" : "#f8fafc",
+                color:
+                  timeHorizon === y ? "#ffffff" : "#0f172a",
+                fontWeight:
+                  timeHorizon === y ? 600 : 500,
+                cursor: "pointer",
+              }}
+            >
+              {y} Year{y === 3 ? "s" : ""}
+            </button>
+          ))}
         </div>
 
         <button
@@ -153,6 +236,7 @@ export default function SimulatePage() {
             color: "#ffffff",
             border: "none",
             cursor: "pointer",
+            marginBottom: 16,
           }}
         >
           {loading ? "Running Model…" : "Recalculate Impact"}
@@ -160,29 +244,49 @@ export default function SimulatePage() {
 
         {error && <p style={{ color: "red" }}>{error}</p>}
 
-        {result && (
-          <div style={{ marginTop: 16 }}>
-            <h2>Financial Impact</h2>
+        {/* Financial Impact */}
+        <div style={{ marginTop: 24 }}>
+          <h2 style={{ marginBottom: 16 }}>Financial Impact</h2>
 
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gap: 16,
-              }}
-            >
-              <Metric label="Cost Avoided" value={`$${result.cost_avoided.toLocaleString()}`} />
-              <Metric label="ROI" value={`${Math.round(result.roi)}%`} />
-              <Metric label="Confidence" value={`${Math.round(result.confidence * 100)}%`} />
-            </div>
-            <p style={{ marginTop: 12, fontSize: 13, opacity: 0.65 }}>
-              These figures are estimates based on current data and assumptions.
-            </p>
-            <p style={{ marginTop: 20, opacity: 0.85 }}>{copy.narrative}</p>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 16,
+            }}
+          >
+            <Metric
+              label="Low Impact"
+              value={`$${Math.round(
+                financials.ladder.low
+              ).toLocaleString()}`}
+            />
+            <Metric
+              label="Expected Impact"
+              value={`$${Math.round(
+                financials.ladder.base
+              ).toLocaleString()}`}
+            />
+            <Metric
+              label="High Impact"
+              value={`$${Math.round(
+                financials.ladder.high
+              ).toLocaleString()}`}
+            />
           </div>
-        )}
+
+          <p style={{ marginTop: 12, fontSize: 13, opacity: 0.65 }}>
+            Values show estimated cost avoided over {timeHorizon} year
+            {timeHorizon === 3 ? "s" : ""}, under different execution conditions.
+          </p>
+
+          <p style={{ marginTop: 20, opacity: 0.85 }}>
+            {copy.narrative}
+          </p>
+        </div>
       </div>
 
+      {/* ---------------- RIGHT RAIL ---------------- */}
       <div
         style={{
           borderLeft: "1px solid #e5e7eb",
@@ -198,7 +302,11 @@ export default function SimulatePage() {
           The cube reflects normalized stress across people, cost, macro, and execution.
         </p>
 
-        <a href="/resolution/retention_simulator.html" target="_blank" rel="noreferrer">
+        <a
+          href="/resolution/retention_simulator.html"
+          target="_blank"
+          rel="noreferrer"
+        >
           <button style={{ width: "100%" }}>
             Open Retention Simulator
           </button>
