@@ -19,8 +19,8 @@ export default function Sidebar() {
       style={{
         width: 220,
         padding: 20,
-        borderRight: "1px solid #1f2937",
-        background: "#0f172a",
+        borderRight: "1px solid #1e293b",
+        background: "#020617",
         color: "#e5e7eb",
         minHeight: "100vh",
       }}

@@ -19,7 +19,8 @@ export default function PageShell({ children }: PageShellProps) {
                     maxWidth: 1200,
                     padding: "clamp(24px, 4vw, 48px)",
                     boxSizing: "border-box",
-                    margin: "0 auto",   // critical
+                    marginLeft: "0",   // critical
+                    marginRight: "auto"
                 }}
             >
                 {children}
