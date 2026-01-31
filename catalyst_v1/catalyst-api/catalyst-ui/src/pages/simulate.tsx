@@ -258,6 +258,31 @@ export default function SimulatePage() {
           {loading ? "Running Model…" : "Update Scenario"}
         </button>
 
+        <div
+          style={{
+            marginTop: 32,
+            background: "#020617",
+            border: "1px solid #1e293b",
+            borderRadius: 12,
+            padding: 20,
+            maxWidth: 520,
+          }}
+        >
+          <strong>Enterprise Risk Snapshot</strong>
+
+          <p style={{ marginTop: 12, lineHeight: 1.6, opacity: 0.85 }}>
+            This snapshot reflects the current organizational stress posture based on
+            the scenario inputs selected above.
+          </p>
+
+          <ul style={{ marginTop: 12, color: "#cbd5f5" }}>
+            <li>People stress level: {Math.round(stress.people * 100)}%</li>
+            <li>Cost pressure index: {Math.round(stress.cost * 100)}%</li>
+            <li>Execution constraint: {Math.round(stress.execution * 100)}%</li>
+            <li>Macro exposure: {Math.round(stress.macro * 100)}%</li>
+          </ul>
+        </div>
+
         {/* Financial Impact */}
         <div style={{ marginTop: 24 }}>
           <h2 style={{ marginBottom: 16 }}>Financial Impact</h2>
