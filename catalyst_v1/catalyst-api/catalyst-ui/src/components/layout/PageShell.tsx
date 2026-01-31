@@ -16,14 +16,15 @@ export default function PageShell({ children }: PageShellProps) {
             <div
                 style={{
                     width: "100%",
-                    maxWidth: 1280,
-                    marginLeft: "clamp(16px, 3vw, 48px)",
+                    maxWidth: 1200,
                     padding: "clamp(24px, 4vw, 48px)",
                     boxSizing: "border-box",
+                    margin: "0 auto",   // critical
                 }}
             >
                 {children}
             </div>
+
         </div>
     );
 }
