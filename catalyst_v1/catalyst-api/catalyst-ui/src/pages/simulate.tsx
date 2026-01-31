@@ -12,14 +12,6 @@ const SENSITIVITY = {
   high: 1.3,
 };
 
-type SimulationResponse = {
-  baseline_cost: number;
-  simulated_cost: number;
-  cost_avoided: number;
-  roi: number;
-  confidence: number;
-};
-
 export default function SimulatePage() {
   /* ---------------- Persona (from URL or default) ---------------- */
   const params = new URLSearchParams(window.location.search);
