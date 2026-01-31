@@ -31,10 +31,13 @@ export default function BaselinePage() {
     >
       {/* LEFT */}
       <div>
-        <h1 style={{ margin: 0 }}>Baseline</h1>
-        <p style={{ color: "#94a3b8" }}>
-          Current organizational pressure profile
-        </p>
+        <div style={{ maxWidth: 640, marginBottom: 24 }}>
+
+          <h1 style={{ margin: 0 }}>Executive Baseline</h1>
+          <p style={{ color: "#94a3b8", marginTop: 4 }}>
+            Current organizational pressure profile
+          </p>
+        </div>
 
         <div style={{ marginBottom: 24 }}>
           <label style={{ marginRight: 8 }}>View as:</label>
@@ -47,6 +50,7 @@ export default function BaselinePage() {
             <option value="CHRO">CHRO</option>
           </select>
         </div>
+
 
         <div
           style={{
@@ -98,6 +102,6 @@ export default function BaselinePage() {
           size={280}
         />
       </div>
-    </div>
+    </div >
   );
 }
