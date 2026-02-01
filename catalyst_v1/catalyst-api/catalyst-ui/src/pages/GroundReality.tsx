@@ -3,6 +3,7 @@ import { getGroundRealitySignal } from "../state/groundRealitysignal";
 import ReferenceDump from "./ground-reality/ReferenceDump";
 import TopKpis from "./ground-reality/TopKpis";
 import SentimentBars from "./ground-reality/SentimentBars";
+import LocationTable from "./ground-reality/LocationTable";
 
 export default function GroundRealityPage() {
     const signal = getGroundRealitySignal();
@@ -25,6 +26,22 @@ export default function GroundRealityPage() {
         { label: "Poland", value: -55 },
         { label: "India", value: 12 },
         { label: "Japan", value: 4 },
+    ];
+
+    const costByLocation = [
+        { location: "Warsaw", value: 12345678 },
+        { location: "Bangalore", value: 9876543 },
+        { location: "New York", value: 8436574 },
+        { location: "Shanghai", value: 6543210 },
+        { location: "Dubai", value: 5678901 },
+    ];
+
+    const attritsByLocation = [
+        { location: "Warsaw", value: 120 },
+        { location: "Bangalore", value: 85 },
+        { location: "New York", value: 75 },
+        { location: "Shanghai", value: 60 },
+        { location: "Dubai", value: 35 },
     ];
 
     return (
@@ -50,6 +67,25 @@ export default function GroundRealityPage() {
                     <SentimentBars
                         title="Sentiment by Country"
                         data={sentimentByCountry}
+                    />
+                </div>
+
+                <div
+                    style={{
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr",
+                        gap: 24,
+                        marginTop: 32,
+                    }}
+                >
+                    <LocationTable
+                        title="Total Cost of Attrition by Location"
+                        rows={costByLocation}
+                        isMoney
+                    />
+                    <LocationTable
+                        title="Attrits by Location (YTD)"
+                        rows={attritsByLocation}
                     />
                 </div>
 
