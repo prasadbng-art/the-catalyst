@@ -5,6 +5,7 @@ import type { StressProfile } from "../components/visuals/motion";
 import type { Persona } from "../types/persona";
 import { personaConfig } from "../persona/personaConfig";
 import { setGroundRealitySignal } from "../state/groundRealitysignal"
+import { useNavigate } from "react-router-dom";
 
 /* =========================================================
    Baseline stress (mirrors Baseline page)
@@ -30,7 +31,7 @@ const SENSITIVITY = {
 export default function SimulatePage() {
   /* ---------------- Persona ---------------- */
   const [persona, setPersona] = useState<Persona>("CFO");
-
+  const navigate = useNavigate();
   /* ---------------- Scenario inputs ---------------- */
   const [riskReductionPct, setRiskReductionPct] = useState(10);
   const [interventionCost, setInterventionCost] = useState(100000);
@@ -213,15 +214,14 @@ export default function SimulatePage() {
             }}
             onClick={() => {
               setGroundRealitySignal({
-                horizonMonths: 12,
+                horizonMonths: timeHorizon * 12,
                 attritionDeltaPct: -12,
                 costDeltaPct: -8,
                 dominantDriver: "COST",
                 interventionConfidence: 0.72,
-              })
-              window.open(
-                "/resolution/layer2_reference.html",
-              );
+              });
+              navigate("/ground-reality");
+
             }}
           >
             Explore Ground Reality →
