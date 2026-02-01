@@ -1,7 +1,11 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Sidebar from "./Sidebar";
+import ActionPlans from "../../pages/ground-reality/ActionPlans";
 
 export default function AppShell() {
+  const location = useLocation();
+  const isGroundReality = location.pathname.includes("ground-reality");
+
   return (
     <div
       style={{
@@ -13,9 +17,30 @@ export default function AppShell() {
       }}
     >
       <Sidebar />
-      <main style={{ flex: 1 }}>
+
+      {/* MAIN CONTENT */}
+      <main
+        style={{
+          flex: 1,
+          overflowY: "auto",
+        }}
+      >
         <Outlet />
       </main>
+
+      {/* RIGHT PANEL — ACTION PLANS */}
+      <aside
+        style={{
+          width: 360,
+          borderLeft: "1px solid #1e293b",
+          background: "#020617",
+          padding: 16,
+          overflowY: "auto",
+          display: isGroundReality ? "block" : "none",
+        }}
+      >
+        <ActionPlans />
+      </aside>
     </div>
   );
 }
