@@ -2,6 +2,7 @@ import PageShell from "../components/layout/PageShell";
 import { getGroundRealitySignal } from "../state/groundRealitysignal";
 import ReferenceDump from "./ground-reality/ReferenceDump";
 import TopKpis from "./ground-reality/TopKpis";
+import SentimentBars from "./ground-reality/SentimentBars";
 
 export default function GroundRealityPage() {
     const signal = getGroundRealitySignal();
@@ -11,13 +12,47 @@ export default function GroundRealityPage() {
         { label: "eNPS", value: "-11", accent: "#f59e0b" },
         { label: "Global Headcount", value: "1,888" },
     ];
+    const sentimentByRegion = [
+        { label: "Americas", value: 5 },
+        { label: "EMEA", value: -10 },
+        { label: "APAC", value: 8 },
+    ];
+
+    const sentimentByCountry = [
+        { label: "USA", value: 5 },
+        { label: "UK", value: 10 },
+        { label: "Germany", value: 15 },
+        { label: "Poland", value: -55 },
+        { label: "India", value: 12 },
+        { label: "Japan", value: 4 },
+    ];
 
     return (
 
         <PageShell>
             <ReferenceDump>
                 <h1>Ground Reality — Retention Simulator</h1>
+
                 <TopKpis items={kpis} />
+
+                <div
+                    style={{
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr",
+                        gap: 24,
+                        marginTop: 32,
+                    }}
+                >
+                    <SentimentBars
+                        title="Sentiment by Region"
+                        data={sentimentByRegion}
+                    />
+                    <SentimentBars
+                        title="Sentiment by Country"
+                        data={sentimentByCountry}
+                    />
+                </div>
+
                 {signal && (
                     <div style={{ marginTop: 24 }}>
                         <p>Horizon: {signal.horizonMonths} months</p>
@@ -28,5 +63,5 @@ export default function GroundRealityPage() {
                 )}
             </ReferenceDump>
         </PageShell>
-    );
+    )
 }
