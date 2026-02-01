@@ -4,6 +4,7 @@ import MagicCube from "../components/visuals/MagicCube";
 import type { StressProfile } from "../components/visuals/motion";
 import { PERSONAS, type Persona } from "../types/persona";
 import { personaConfig } from "../persona/personaConfig";
+import { getGroundRealitySignal } from "../state/groundRealitysignal"
 
 const BASELINE_PERSONA = PERSONAS.CEO;
 
@@ -18,6 +19,7 @@ export default function BaselinePage() {
   const [persona, setPersona] = useState<Persona>("CEO");
   const navigate = useNavigate();
   const narrative = personaConfig[persona];
+  const groundSignal = getGroundRealitySignal()
 
   return (
     <div
@@ -85,6 +87,12 @@ export default function BaselinePage() {
         >
           Model Financial Impact →
         </button>
+        {groundSignal && (
+          <div style={{ marginTop: 16, color: "#38bdf8" }}>
+            Signal received for {groundSignal.horizonMonths} months
+          </div>
+        )}
+
       </div>
 
       {/* RIGHT */}
@@ -103,5 +111,6 @@ export default function BaselinePage() {
         />
       </div>
     </div >
+
   );
 }

@@ -4,6 +4,7 @@ import MagicCube from "../components/visuals/MagicCube";
 import type { StressProfile } from "../components/visuals/motion";
 import type { Persona } from "../types/persona";
 import { personaConfig } from "../persona/personaConfig";
+import { setGroundRealitySignal } from "../state/groundRealitysignal"
 
 /* =========================================================
    Baseline stress (mirrors Baseline page)
@@ -211,9 +212,15 @@ export default function SimulatePage() {
               cursor: "pointer",
             }}
             onClick={() => {
+              setGroundRealitySignal({
+                horizonMonths: 12,
+                attritionDeltaPct: -12,
+                costDeltaPct: -8,
+                dominantDriver: "COST",
+                interventionConfidence: 0.72,
+              })
               window.open(
                 "/Catalyst/resolution/retention_simulator.html",
-                "_blank"
               );
             }}
           >
