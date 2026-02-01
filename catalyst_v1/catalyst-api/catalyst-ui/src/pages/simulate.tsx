@@ -220,7 +220,7 @@ export default function SimulatePage() {
                 interventionConfidence: 0.72,
               })
               window.open(
-                "/Catalyst/resolution/retention_simulator.html",
+                "/resolution/layer2_reference.html",
               );
             }}
           >
