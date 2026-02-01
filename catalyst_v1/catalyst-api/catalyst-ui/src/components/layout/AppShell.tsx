@@ -23,8 +23,19 @@ export default function AppShell() {
         style={{
           flex: 1,
           overflowY: "auto",
+          display: "felx",
+          justifyContent: "center",
         }}
       >
+        <div
+          style={{
+            width: "100%",
+            maxWidth: isGroundReality ? 1200 : "none",
+            paddingRight: isGroundReality ? 24 : 0,
+          }}
+        >
+
+        </div>
         <Outlet />
       </main>
 
