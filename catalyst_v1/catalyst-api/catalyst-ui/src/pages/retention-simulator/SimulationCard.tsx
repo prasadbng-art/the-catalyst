@@ -1,11 +1,9 @@
 import { useState } from "react";
 
-type RiskDriver =
-    | "Long Time Since Promotion"
-    | "Low Compensation Ratio"
-    | "Stagnant Performance"
-    | "Poor Manager Score"
-    | "Low Engagement";
+type Intervention = {
+    key: string;
+    label: string;
+};
 
 type SimulationEntity = {
     id: string;
@@ -13,26 +11,13 @@ type SimulationEntity = {
     role: string;
     function: string;
     currentRiskPct: number;
-    riskDrivers: readonly RiskDriver[];
-};
-
-type InterventionOption = {
-    key: string;
-    label: string;
+    riskDrivers: readonly string[];
 };
 
 type Props = {
     entity: SimulationEntity;
-    interventions: InterventionOption[];
-    onSimulate: (id: string, simulatedRiskPct: number | null) => void;
-};
-
-const INTERVENTION_DELTAS: Record<string, number> = {
-    none: 0,
-    leadership: 8,
-    compensation: 12,
-    mobility: 6,
-    role_redesign: 5,
+    interventions: Intervention[];
+    onSimulate: (id: string, simulatedRisk: number | null) => void;
 };
 
 export default function SimulationCard({
@@ -43,56 +28,56 @@ export default function SimulationCard({
     const [selectedIntervention, setSelectedIntervention] =
         useState<string>("none");
 
-    const delta = INTERVENTION_DELTAS[selectedIntervention] ?? 0;
+    const simulateRisk = (): number | null => {
+        if (selectedIntervention === "none") return null;
 
-    const simulatedRiskPct =
-        selectedIntervention === "none"
-            ? null
-            : Math.max(0, entity.currentRiskPct - delta);
+        switch (selectedIntervention) {
+            case "leadership":
+                return Math.max(entity.currentRiskPct - 12, 0);
+            case "compensation":
+                return Math.max(entity.currentRiskPct - 15, 0);
+            case "mobility":
+                return Math.max(entity.currentRiskPct - 10, 0);
+            case "role_redesign":
+                return Math.max(entity.currentRiskPct - 8, 0);
+            default:
+                return null;
+        }
+    };
 
     return (
         <div
             style={{
                 background: "#ffffff",
-                borderRadius: 10,
+                borderRadius: 12,
                 padding: 16,
-                boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-                display: "flex",
-                flexDirection: "column",
-                gap: 12,
-                color: "#020617",
+                border: "1px solid #e5e7eb",
             }}
         >
-            {/* ================= IDENTITY ================= */}
-            <div>
-                <div style={{ fontWeight: 600 }}>{entity.name}</div>
-                <div style={{ fontSize: 12, opacity: 0.7 }}>
-                    {entity.role} | {entity.function}
+            {/* Header */}
+            <div style={{ marginBottom: 8 }}>
+                <div style={{ fontWeight: 600, color: "#020617" }}>
+                    {entity.name}
+                </div>
+                <div style={{ fontSize: 12, color: "#475569" }}>
+                    {entity.role} · {entity.function}
                 </div>
             </div>
 
-            {/* ================= CURRENT RISK ================= */}
+            {/* Risk */}
             <div
                 style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
+                    fontSize: 20,
+                    fontWeight: 700,
+                    color: "#dc2626",
+                    marginBottom: 8,
                 }}
             >
-                <div style={{ fontSize: 12, opacity: 0.7 }}>Current Risk</div>
-                <div
-                    style={{
-                        fontSize: 20,
-                        fontWeight: 700,
-                        color: "#dc2626",
-                    }}
-                >
-                    {entity.currentRiskPct}%
-                </div>
+                {entity.currentRiskPct}%
             </div>
 
-            {/* ================= RISK DRIVERS ================= */}
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+            {/* Drivers */}
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 12 }}>
                 {entity.riskDrivers.map((driver) => (
                     <span
                         key={driver}
@@ -101,8 +86,7 @@ export default function SimulationCard({
                             padding: "4px 8px",
                             borderRadius: 999,
                             background: "#fee2e2",
-                            color: "#991b1b",
-                            whiteSpace: "nowrap",
+                            color: "#7f1d1d",
                         }}
                     >
                         {driver}
@@ -110,73 +94,28 @@ export default function SimulationCard({
                 ))}
             </div>
 
-            {/* ================= INTERVENTION SELECTOR ================= */}
-            <div>
-                <label
-                    style={{
-                        fontSize: 12,
-                        fontWeight: 600,
-                        marginBottom: 4,
-                        display: "block",
-                    }}
-                >
-                    Select a Personalized Intervention
-                </label>
-
-                <select
-                    value={selectedIntervention}
-                    onChange={(e) => {
-                        const value = e.target.value;
-                        setSelectedIntervention(value);
-
-                        const delta = INTERVENTION_DELTAS[value] ?? 0;
-                        const simulated =
-                            value === "none"
-                                ? null
-                                : Math.max(0, entity.currentRiskPct - delta);
-
-                        onSimulate(entity.id, simulated);
-                    }}
-                    style={{
-                        width: "100%",
-                        padding: "8px 10px",
-                        borderRadius: 6,
-                        border: "1px solid #e5e7eb",
-                        background: "#ffffff",
-                        color: "#020617",
-                    }}
-                >
-                    {interventions.map((option) => (
-                        <option key={option.key} value={option.key}>
-                            {option.label}
-                        </option>
-                    ))}
-                </select>
-            </div>
-
-            {/* ================= SIMULATED OUTCOME ================= */}
-            {simulatedRiskPct !== null && (
-                <div
-                    style={{
-                        marginTop: 8,
-                        paddingTop: 8,
-                        borderTop: "1px solid #e5e7eb",
-                    }}
-                >
-                    <div style={{ fontSize: 12, opacity: 0.7 }}>
-                        Simulated Risk
-                    </div>
-                    <div
-                        style={{
-                            fontSize: 18,
-                            fontWeight: 700,
-                            color: "#16a34a",
-                        }}
-                    >
-                        {simulatedRiskPct}%
-                    </div>
-                </div>
-            )}
+            {/* Intervention selector */}
+            <select
+                value={selectedIntervention}
+                onChange={(e) => {
+                    const value = e.target.value;
+                    setSelectedIntervention(value);
+                    onSimulate(entity.id, simulateRisk());
+                }}
+                style={{
+                    width: "100%",
+                    padding: 8,
+                    borderRadius: 6,
+                    border: "1px solid #cbd5f5",
+                    background: "#ffffff",
+                }}
+            >
+                {interventions.map((i) => (
+                    <option key={i.key} value={i.key}>
+                        {i.label}
+                    </option>
+                ))}
+            </select>
         </div>
     );
 }

@@ -112,12 +112,17 @@ export default function RetentionSimulatorPage() {
                             <SimulationCard
                                 key={entity.id}
                                 entity={{
-                                    ...entity,
+                                    id: entity.id,
+                                    name: entity.name,
+                                    role: entity.role,
+                                    function: entity.function,
                                     currentRiskPct: entity.baselineRiskPct,
+                                    riskDrivers: entity.riskDrivers, // ← EXPLICITLY PASS
                                 }}
                                 interventions={INTERVENTIONS}
                                 onSimulate={handleSimulate}
                             />
+
                         ))}
                     </div>
                 </section>
