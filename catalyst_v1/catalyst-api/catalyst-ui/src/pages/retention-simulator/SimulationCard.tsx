@@ -1,3 +1,11 @@
+const INTERVENTION_DELTAS: Record<string, number> = {
+    none: 0,
+    leadership: 8,
+    compensation: 12,
+    mobility: 6,
+    role_redeign: 5,
+};
+
 type RiskDriver =
     | "Long Time Since Promotion"
     | "Low Compensation Ratio"
@@ -23,8 +31,20 @@ type Props = {
     entity: SimulationEntity;
     interventions: InterventionOption[];
 };
+import { useState } from "react";
 
 export default function SimulationCard({ entity, interventions }: Props) {
+    const [selectedIntervention, setSelectedIntervention] =
+        useState<string>("none");
+
+    const delta =
+        INTERVENTION_DELTAS[selectedIntervention] ?? 0;
+
+    const simulatedRiskPct =
+        selectedIntervention === "none"
+            ? null
+            : Math.max(0, entity.currentRiskPct - delta);
+
     return (
         <div
             style={{
@@ -98,6 +118,8 @@ export default function SimulationCard({ entity, interventions }: Props) {
                 </label>
 
                 <select
+                    value={selectedIntervention}
+                    onChange={(e) => setSelectedIntervention(e.target.value)}
                     style={{
                         width: "100%",
                         padding: "8px 10px",
@@ -105,11 +127,9 @@ export default function SimulationCard({ entity, interventions }: Props) {
                         border: "1px solid #e5e7eb",
                         background: "#ffffff",
                     }}
-                    defaultValue=""
                 >
-                    <option value="" disabled>
-                        Choose an intervention…
-                    </option>
+
+                    <option value="none">No Action</option>
 
                     {interventions.map((option) => (
                         <option key={option.key} value={option.key}>
@@ -120,15 +140,29 @@ export default function SimulationCard({ entity, interventions }: Props) {
             </div>
 
             {/* ================= SIMULATED OUTCOME (PLACEHOLDER) ================= */}
-            <div
-                style={{
-                    fontSize: 12,
-                    opacity: 0.5,
-                    fontStyle: "italic",
-                }}
-            >
-                Simulated outcome will appear here after selection
-            </div>
+            {simulatedRiskPct !== null && (
+                <div
+                    style={{
+                        marginTop: 8,
+                        paddingTop: 8,
+                        borderTop: "1px solid #e5e7eb",
+                    }}
+                >
+                    <div style={{ fontSize: 12, opacity: 0.7 }}>
+                        Simulated Risk
+                    </div>
+                    <div
+                        style={{
+                            fontSize: 18,
+                            fontWeight: 700,
+                            color: "#16a34a",
+                        }}
+                    >
+                        {simulatedRiskPct}%
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }
