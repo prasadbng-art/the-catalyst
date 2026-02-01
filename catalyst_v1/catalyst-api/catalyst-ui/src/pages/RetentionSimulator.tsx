@@ -70,7 +70,7 @@ export default function RetentionSimulatorPage() {
                             color: "#e5e7eb",
                         }}
                     >
-                        <div style={{ fontSize: 12, opacity: 0.6, marginTop: 4 }}>
+                        <div style={{ fontSize: 12, opacity: 0.75, }}>
                             Simulated Organization-Level Impact
                         </div>
 
@@ -85,7 +85,7 @@ export default function RetentionSimulatorPage() {
                             {deltaPct}% attrition risk change
                         </div>
 
-                        <div style={{ fontSize: 12, opacity: 0.6, marginTop: 4 }}>
+                        <div style={{ fontSize: 12, opacity: 0.75, marginTop: 4 }}>
                             Based on simulated outcomes for selected individuals only.
                         </div>
                     </div>
