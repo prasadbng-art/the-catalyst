@@ -5,5 +5,5 @@ export default function ReferenceDump({
 }: {
     children?: ReactNode;
 }) {
-    return <div style={{ padding: 24 }}>{children}</div>;
+    return <div>{children}</div>;
 }

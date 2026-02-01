@@ -11,47 +11,56 @@ export default function AppShell() {
       style={{
         display: "flex",
         height: "100vh",
-        border: "1px solid #0f172a", // visual reference frame
+        border: "1px solid #0f172a",
         boxSizing: "border-box",
         overflow: "hidden",
       }}
     >
       <Sidebar />
 
-      {/* MAIN CONTENT */}
-      <main
+      {/* MAIN + RIGHT CLUSTER (LEFT-ANCHORED) */}
+      <div
         style={{
           flex: 1,
           overflowY: "auto",
-          display: "felx",
-          justifyContent: "center",
         }}
       >
         <div
           style={{
+            display: "flex",
+            alignItems: "flex-start",
             width: "100%",
-            maxWidth: isGroundReality ? 1200 : "none",
-            paddingRight: isGroundReality ? 24 : 0,
+            maxWidth: isGroundReality ? 1400 : "none",
+            gap: isGroundReality ? 24 : 0,
+            paddingLeft: 16,
+            paddingRight: 16,
+            boxSizing: "border-box",
           }}
         >
+          {/* MAIN CONTENT */}
+          <main style={{ flex: 1 }}>
+            <Outlet />
+          </main>
 
+          {/* RIGHT PANEL — ACTION PLANS */}
+          {isGroundReality && (
+            <aside
+              style={{
+                width: 360,
+                background: "#020617",
+                border: "1px solid #1e293b",
+                borderRadius: 16,
+                padding: 16,
+                paddingTop: 16,
+                height: "fit-content",
+                marginTop: 195,
+              }}
+            >
+              <ActionPlans />
+            </aside>
+          )}
         </div>
-        <Outlet />
-      </main>
-
-      {/* RIGHT PANEL — ACTION PLANS */}
-      <aside
-        style={{
-          width: 360,
-          borderLeft: "1px solid #1e293b",
-          background: "#020617",
-          padding: 16,
-          overflowY: "auto",
-          display: isGroundReality ? "block" : "none",
-        }}
-      >
-        <ActionPlans />
-      </aside>
+      </div>
     </div>
   );
 }

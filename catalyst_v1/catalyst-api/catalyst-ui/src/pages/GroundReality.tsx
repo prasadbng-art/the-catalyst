@@ -48,7 +48,10 @@ export default function GroundRealityPage() {
 
         <PageShell>
             <ReferenceDump>
-                <h1>Ground Reality — Retention Simulator</h1>
+                <h1 style={{ marginTop: 0 }}>
+                    Ground Reality — Retention Simulator
+                </h1>
+
 
                 <TopKpis items={kpis} />
 
