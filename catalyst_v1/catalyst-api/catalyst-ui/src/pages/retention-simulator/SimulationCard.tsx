@@ -11,7 +11,7 @@ type SimulationEntity = {
     role: string;
     function: string;
     currentRiskPct: number;
-    riskDrivers: RiskDriver[];
+    riskDrivers: readonly RiskDriver[];
 };
 
 type InterventionOption = {
