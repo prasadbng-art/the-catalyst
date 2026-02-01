@@ -48,58 +48,59 @@ export default function GroundRealityPage() {
 
         <PageShell>
             <ReferenceDump>
-                <h1 style={{ marginTop: 0 }}>
-                    Ground Reality — Retention Simulator
-                </h1>
+                <div id="kpi-anchor">
+                    <h1 style={{ marginTop: 0 }}>
+                        Ground Reality — Retention Simulator
+                    </h1>
 
+                    <TopKpis items={kpis} />
 
-                <TopKpis items={kpis} />
-
-                <div
-                    style={{
-                        display: "grid",
-                        gridTemplateColumns: "1fr 1fr",
-                        gap: 24,
-                        marginTop: 32,
-                    }}
-                >
-                    <SentimentBars
-                        title="Sentiment by Region"
-                        data={sentimentByRegion}
-                    />
-                    <SentimentBars
-                        title="Sentiment by Country"
-                        data={sentimentByCountry}
-                    />
-                </div>
-
-                <div
-                    style={{
-                        display: "grid",
-                        gridTemplateColumns: "1fr 1fr",
-                        gap: 24,
-                        marginTop: 32,
-                    }}
-                >
-                    <LocationTable
-                        title="Total Cost of Attrition by Location"
-                        rows={costByLocation}
-                        isMoney
-                    />
-                    <LocationTable
-                        title="Attrits by Location (YTD)"
-                        rows={attritsByLocation}
-                    />
-                </div>
-
-                {signal && (
-                    <div style={{ marginTop: 24 }}>
-                        <p>Horizon: {signal.horizonMonths} months</p>
-                        <p>Cost delta: {signal.costDeltaPct}%</p>
-                        <p>Dominant driver: {signal.dominantDriver}</p>
-                        <p>Confidence: {signal.interventionConfidence}</p>
+                    <div
+                        style={{
+                            display: "grid",
+                            gridTemplateColumns: "1fr 1fr",
+                            gap: 24,
+                            marginTop: 32,
+                        }}
+                    >
+                        <SentimentBars
+                            title="Sentiment by Region"
+                            data={sentimentByRegion}
+                        />
+                        <SentimentBars
+                            title="Sentiment by Country"
+                            data={sentimentByCountry}
+                        />
                     </div>
-                )}
+
+                    <div
+                        style={{
+                            display: "grid",
+                            gridTemplateColumns: "1fr 1fr",
+                            gap: 24,
+                            marginTop: 32,
+                        }}
+                    >
+                        <LocationTable
+                            title="Total Cost of Attrition by Location"
+                            rows={costByLocation}
+                            isMoney
+                        />
+                        <LocationTable
+                            title="Attrits by Location (YTD)"
+                            rows={attritsByLocation}
+                        />
+                    </div>
+
+                    {signal && (
+                        <div style={{ marginTop: 24 }}>
+                            <p>Horizon: {signal.horizonMonths} months</p>
+                            <p>Cost delta: {signal.costDeltaPct}%</p>
+                            <p>Dominant driver: {signal.dominantDriver}</p>
+                            <p>Confidence: {signal.interventionConfidence}</p>
+                        </div>
+                    )}
+                </div>
             </ReferenceDump>
         </PageShell>
     )
