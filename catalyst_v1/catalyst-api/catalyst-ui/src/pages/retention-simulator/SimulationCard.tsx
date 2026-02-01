@@ -1,10 +1,4 @@
-const INTERVENTION_DELTAS: Record<string, number> = {
-    none: 0,
-    leadership: 8,
-    compensation: 12,
-    mobility: 6,
-    role_redeign: 5,
-};
+import { useState } from "react";
 
 type RiskDriver =
     | "Long Time Since Promotion"
@@ -30,15 +24,26 @@ type InterventionOption = {
 type Props = {
     entity: SimulationEntity;
     interventions: InterventionOption[];
+    onSimulate: (id: string, simulatedRiskPct: number | null) => void;
 };
-import { useState } from "react";
 
-export default function SimulationCard({ entity, interventions }: Props) {
+const INTERVENTION_DELTAS: Record<string, number> = {
+    none: 0,
+    leadership: 8,
+    compensation: 12,
+    mobility: 6,
+    role_redesign: 5,
+};
+
+export default function SimulationCard({
+    entity,
+    interventions,
+    onSimulate,
+}: Props) {
     const [selectedIntervention, setSelectedIntervention] =
         useState<string>("none");
 
-    const delta =
-        INTERVENTION_DELTAS[selectedIntervention] ?? 0;
+    const delta = INTERVENTION_DELTAS[selectedIntervention] ?? 0;
 
     const simulatedRiskPct =
         selectedIntervention === "none"
@@ -119,7 +124,18 @@ export default function SimulationCard({ entity, interventions }: Props) {
 
                 <select
                     value={selectedIntervention}
-                    onChange={(e) => setSelectedIntervention(e.target.value)}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        setSelectedIntervention(value);
+
+                        const delta = INTERVENTION_DELTAS[value] ?? 0;
+                        const simulated =
+                            value === "none"
+                                ? null
+                                : Math.max(0, entity.currentRiskPct - delta);
+
+                        onSimulate(entity.id, simulated);
+                    }}
                     style={{
                         width: "100%",
                         padding: "8px 10px",
@@ -128,9 +144,6 @@ export default function SimulationCard({ entity, interventions }: Props) {
                         background: "#ffffff",
                     }}
                 >
-
-                    <option value="none">No Action</option>
-
                     {interventions.map((option) => (
                         <option key={option.key} value={option.key}>
                             {option.label}
@@ -139,7 +152,7 @@ export default function SimulationCard({ entity, interventions }: Props) {
                 </select>
             </div>
 
-            {/* ================= SIMULATED OUTCOME (PLACEHOLDER) ================= */}
+            {/* ================= SIMULATED OUTCOME ================= */}
             {simulatedRiskPct !== null && (
                 <div
                     style={{
@@ -162,7 +175,6 @@ export default function SimulationCard({ entity, interventions }: Props) {
                     </div>
                 </div>
             )}
-
         </div>
     );
 }

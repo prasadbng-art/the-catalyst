@@ -1,6 +1,7 @@
 import PageShell from "../components/layout/PageShell";
 import { demoOrganizationState } from "../demo/demoOrganizationState";
 import SimulationCard from "./retention-simulator/SimulationCard";
+import { useState } from "react";
 
 const INTERVENTIONS = [
     { key: "none", label: "No Action" },
@@ -11,9 +12,44 @@ const INTERVENTIONS = [
 ];
 
 export default function RetentionSimulatorPage() {
+    const [simulatedRisks, setSimulatedRisks] = useState<
+        Record<string, number | null>
+    >({});
+    // ================= Aggregation =================
+
+    const baselineAvgRisk =
+        demoOrganizationState.people.entities.reduce(
+            (sum, e) => sum + e.baselineRiskPct,
+            0
+        ) / demoOrganizationState.people.entities.length;
+
+    const simulatedValues = Object.values(simulatedRisks).filter(
+        (v): v is number => v !== null
+    );
+
+    const simulatedAvgRisk =
+        simulatedValues.length > 0
+            ? simulatedValues.reduce((sum, v) => sum + v, 0) /
+            simulatedValues.length
+            : null;
+
+    const deltaPct =
+        simulatedAvgRisk !== null
+            ? Math.round((simulatedAvgRisk - baselineAvgRisk) * 10) / 10
+            : null;
+
+
+    const handleSimulate = (id: string, simulatedRisk: number | null) => {
+        setSimulatedRisks((prev) => ({
+            ...prev,
+            [id]: simulatedRisk,
+        }));
+    };
+
     return (
         <PageShell>
             <div style={{ maxWidth: 1200, padding: 24 }}>
+
                 {/* ================= PAGE HEADER ================= */}
                 <div style={{ marginBottom: 24 }}>
                     <h1>Retention Intervention Simulator</h1>
@@ -22,6 +58,39 @@ export default function RetentionSimulatorPage() {
                         All outcomes shown are simulated.
                     </p>
                 </div>
+                {deltaPct !== null && (
+                    <div
+                        style={{
+                            marginBottom: 24,
+                            padding: 16,
+                            borderRadius: 8,
+                            background: "#020617",
+                            border: "1px solid #1e293b",
+                            maxWidth: 720,
+                            color: "#e5e7eb",
+                        }}
+                    >
+                        <div style={{ fontSize: 12, opacity: 0.6, marginTop: 4 }}>
+                            Simulated Organization-Level Impact
+                        </div>
+
+                        <div
+                            style={{
+                                fontSize: 22,
+                                fontWeight: 700,
+                                color: deltaPct < 0 ? "#16a34a" : "#dc2626",
+                            }}
+                        >
+                            {deltaPct < 0 ? "" : "+"}
+                            {deltaPct}% attrition risk change
+                        </div>
+
+                        <div style={{ fontSize: 12, opacity: 0.6, marginTop: 4 }}>
+                            Based on simulated outcomes for selected individuals only.
+                        </div>
+                    </div>
+                )}
+
 
                 {/* ================= SIMULATION CARDS ================= */}
                 <section>
@@ -47,6 +116,7 @@ export default function RetentionSimulatorPage() {
                                     currentRiskPct: entity.baselineRiskPct,
                                 }}
                                 interventions={INTERVENTIONS}
+                                onSimulate={handleSimulate}
                             />
                         ))}
                     </div>
