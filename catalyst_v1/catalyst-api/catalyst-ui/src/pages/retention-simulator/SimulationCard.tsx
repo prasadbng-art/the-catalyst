@@ -60,6 +60,7 @@ export default function SimulationCard({
                 display: "flex",
                 flexDirection: "column",
                 gap: 12,
+                color: "#020617",
             }}
         >
             {/* ================= IDENTITY ================= */}
@@ -142,6 +143,7 @@ export default function SimulationCard({
                         borderRadius: 6,
                         border: "1px solid #e5e7eb",
                         background: "#ffffff",
+                        color: "#020617",
                     }}
                 >
                     {interventions.map((option) => (
