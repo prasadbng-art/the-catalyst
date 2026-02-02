@@ -32,9 +32,9 @@ export default function BaselinePage() {
           paddingLeft: 90,
           margin: 0,
           display: "grid",
-          gridTemplateColumns: "520px 720px 420px",
           gap: 120,
           alignItems: "start",
+          gridTemplateColumns: "520px 720px 420px",
         }}
       >
         {/* ================= LEFT PANEL ================= */}
