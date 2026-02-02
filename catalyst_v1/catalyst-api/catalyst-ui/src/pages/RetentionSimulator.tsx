@@ -2,6 +2,7 @@ import PageShell from "../components/layout/PageShell";
 import { demoOrganizationState } from "../demo/demoOrganizationState";
 import SimulationCard from "./retention-simulator/SimulationCard";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const INTERVENTIONS = [
     { key: "none", label: "No Action" },
@@ -15,8 +16,10 @@ export default function RetentionSimulatorPage() {
     const [simulatedRisks, setSimulatedRisks] = useState<
         Record<string, number | null>
     >({});
-    // ================= Aggregation =================
 
+    const navigate = useNavigate();
+
+    // ================= Aggregation =================
     const baselineAvgRisk =
         demoOrganizationState.people.entities.reduce(
             (sum, e) => sum + e.baselineRiskPct,
@@ -38,6 +41,10 @@ export default function RetentionSimulatorPage() {
             ? Math.round((simulatedAvgRisk - baselineAvgRisk) * 10) / 10
             : null;
 
+    const handleSendToFinancials = () => {
+        if (deltaPct === null) return;
+        navigate(`/financial-simulation?attritionDelta=${deltaPct}`);
+    };
 
     const handleSimulate = (id: string, simulatedRisk: number | null) => {
         setSimulatedRisks((prev) => ({
@@ -58,6 +65,7 @@ export default function RetentionSimulatorPage() {
                         All outcomes shown are simulated.
                     </p>
                 </div>
+
                 {deltaPct !== null && (
                     <div
                         style={{
@@ -70,7 +78,7 @@ export default function RetentionSimulatorPage() {
                             color: "#e5e7eb",
                         }}
                     >
-                        <div style={{ fontSize: 12, opacity: 0.75, }}>
+                        <div style={{ fontSize: 12, opacity: 0.75 }}>
                             Simulated Organization-Level Impact
                         </div>
 
@@ -88,9 +96,25 @@ export default function RetentionSimulatorPage() {
                         <div style={{ fontSize: 12, opacity: 0.75, marginTop: 4 }}>
                             Based on simulated outcomes for selected individuals only.
                         </div>
+
+                        {/* ✅ NEW: Send to Financial Simulation */}
+                        <button
+                            onClick={handleSendToFinancials}
+                            style={{
+                                marginTop: "16px",
+                                padding: "10px 14px",
+                                background: "#1d4ed8",
+                                color: "white",
+                                border: "none",
+                                borderRadius: "6px",
+                                cursor: "pointer",
+                                fontWeight: 600,
+                            }}
+                        >
+                            Use This Scenario in Financial Simulation →
+                        </button>
                     </div>
                 )}
-
 
                 {/* ================= SIMULATION CARDS ================= */}
                 <section>
@@ -117,12 +141,11 @@ export default function RetentionSimulatorPage() {
                                     role: entity.role,
                                     function: entity.function,
                                     currentRiskPct: entity.baselineRiskPct,
-                                    riskDrivers: entity.riskDrivers, // ← EXPLICITLY PASS
+                                    riskDrivers: entity.riskDrivers,
                                 }}
                                 interventions={INTERVENTIONS}
                                 onSimulate={handleSimulate}
                             />
-
                         ))}
                     </div>
                 </section>
