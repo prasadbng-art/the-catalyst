@@ -212,7 +212,7 @@ export default function SimulatePage() {
             style={{
               display: "grid",
               gridTemplateColumns: "repeat(3, 1fr)",
-              gap: 16,
+              gap: 24,
             }}
           >
             <Metric label="Low Impact" value={`$${Math.round(ladder.low).toLocaleString()}`} />

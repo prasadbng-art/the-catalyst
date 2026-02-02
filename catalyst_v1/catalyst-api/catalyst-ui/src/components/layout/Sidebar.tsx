@@ -25,7 +25,7 @@ export default function Sidebar() {
         minHeight: "100vh",
       }}
     >
-      <h2 style={{ marginBottom: 24 }}>Catalyst</h2>
+      <h1 style={{ fontSize: 36, fontWeight: 900, letterSpacing: "0.5px", }}>Catalyst</h1>
 
       {/* ACTIVE MODULES */}
       <div style={{ marginBottom: 24 }}>
