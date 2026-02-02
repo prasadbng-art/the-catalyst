@@ -108,6 +108,7 @@ export default function SimulationCard({
                     borderRadius: 6,
                     border: "1px solid #cbd5f5",
                     background: "#ffffff",
+                    color: "#020617"
                 }}
             >
                 {interventions.map((i) => (
