@@ -50,7 +50,7 @@ export default function GroundRealityPage() {
             <ReferenceDump>
                 <div id="kpi-anchor">
                     <h1 style={{ marginTop: 0 }}>
-                        Ground Reality — Retention Simulator
+                        Metrics
                     </h1>
 
                     <TopKpis items={kpis} />

@@ -4,7 +4,7 @@ import MagicCube from "../components/visuals/MagicCube";
 import type { StressProfile } from "../components/visuals/motion";
 import { PERSONAS, type Persona } from "../types/persona";
 import { personaConfig } from "../persona/personaConfig";
-import { getGroundRealitySignal } from "../state/groundRealitysignal"
+import { getGroundRealitySignal } from "../state/groundRealitysignal";
 
 const BASELINE_PERSONA = PERSONAS.CEO;
 
@@ -19,7 +19,7 @@ export default function BaselinePage() {
   const [persona, setPersona] = useState<Persona>("CEO");
   const navigate = useNavigate();
   const narrative = personaConfig[persona];
-  const groundSignal = getGroundRealitySignal()
+  const groundSignal = getGroundRealitySignal();
 
   return (
     <div
@@ -28,14 +28,13 @@ export default function BaselinePage() {
         gridTemplateColumns: "minmax(520px, 1fr) 420px",
         gap: 48,
         alignItems: "start",
-        height: "100%",
+        marginTop: 90,
       }}
     >
       {/* LEFT */}
       <div>
         <div style={{ maxWidth: 640, marginBottom: 24 }}>
-
-          <h1 style={{ margin: 0 }}>Executive Baseline</h1>
+          <h2 style={{ margin: 0 }}>Organizational Stress Profile</h2>
           <p style={{ color: "#94a3b8", marginTop: 4 }}>
             Current organizational pressure profile
           </p>
@@ -52,7 +51,6 @@ export default function BaselinePage() {
             <option value="CHRO">CHRO</option>
           </select>
         </div>
-
 
         <div
           style={{
@@ -87,11 +85,6 @@ export default function BaselinePage() {
         >
           Model Financial Impact →
         </button>
-        {groundSignal && (
-          <div style={{ marginTop: 16, color: "#38bdf8" }}>
-            Signal received for {groundSignal.horizonMonths} months
-          </div>
-        )}
 
         <button
           onClick={() => navigate("/retention-simulator")}
@@ -106,9 +99,8 @@ export default function BaselinePage() {
             fontWeight: 600,
           }}
         >
-          Open Retention Intervention Simulator →
+          Retention Intervention Simulator →
         </button>
-
       </div>
 
       {/* RIGHT */}
@@ -118,6 +110,11 @@ export default function BaselinePage() {
           border: "1px solid #1e293b",
           borderRadius: 12,
           padding: 24,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+          gap: 16,
         }}
       >
         <MagicCube
@@ -125,8 +122,13 @@ export default function BaselinePage() {
           persona={BASELINE_PERSONA}
           size={280}
         />
-      </div>
-    </div >
 
+        {groundSignal && (
+          <div style={{ marginTop: 16, color: "#38bdf8", fontSize: 14 }}>
+            Signal received for {groundSignal.horizonMonths} months
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
