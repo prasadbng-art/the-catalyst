@@ -5,11 +5,13 @@ import TopKpis from "./ground-reality/TopKpis";
 import SentimentBars from "./ground-reality/SentimentBars";
 import LocationTable from "./ground-reality/LocationTable";
 import { baseOrgState } from "../state/orgState";
+import { useNavigate } from "react-router-dom";
 
 export default function GroundRealityPage() {
+    const navigate = useNavigate();
     const signal = getGroundRealitySignal();
     const kpis = [
-        { label: "Attrition Cost (Annual)", value: `$$(baseOrgState.kpis.attritionCost.toLocaleString()}` },
+        { label: "Attrition Cost (Annual)", value: `$${baseOrgState.kpis.attritionCost.toLocaleString()}` },
         { label: "Attrition Rate", value: `${baseOrgState.kpis.attritionRate}%` },
         { label: "Engagement (eNPS", value: baseOrgState.kpis.engagement.toString() },
         { label: "Global Headcount", value: baseOrgState.kpis.headcount.toLocaleString() },
@@ -51,7 +53,7 @@ export default function GroundRealityPage() {
             <ReferenceDump>
                 <div id="kpi-anchor">
                     <h1 style={{ marginTop: 0 }}>
-                        Metrics
+                        Mapped Metrics
                     </h1>
 
                     <TopKpis items={kpis} />
@@ -101,6 +103,38 @@ export default function GroundRealityPage() {
                             <p>Confidence: {signal.interventionConfidence}</p>
                         </div>
                     )}
+                    <div style={{ marginTop: 40, display: "flex", gap: 16 }}>
+                        <button
+                            onClick={() => navigate("/simulation")}
+                            style={{
+                                padding: "12px 18px",
+                                background: "#1d4ed8",
+                                color: "white",
+                                border: "none",
+                                borderRadius: 8,
+                                cursor: "pointer",
+                                fontWeight: 600,
+                            }}
+                        >
+                            Financial Simulation →
+                        </button>
+
+                        <button
+                            onClick={() => navigate("/retention-simulator")}
+                            style={{
+                                padding: "12px 18px",
+                                background: "#1d4ed8",
+                                color: "white",
+                                border: "none",
+                                borderRadius: 8,
+                                cursor: "pointer",
+                                fontWeight: 600,
+                            }}
+                        >
+                            Retention Intervention Simulation →
+                        </button>
+                    </div>
+
                 </div>
             </ReferenceDump>
         </PageShell>
