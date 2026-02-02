@@ -42,8 +42,8 @@ export default function SimulatePage() {
   const attritionDeltaParam = params.get("attritionDelta");
   const attritionDelta = attritionDeltaParam ? parseFloat(attritionDeltaParam) : null;
 
-  // Convert attrition change into risk reduction %
-  const scenarioRiskReduction = attritionDelta !== null ? Math.abs(attritionDelta) : null;
+  const scenarioRiskReduction =
+    attritionDelta !== null ? Math.abs(attritionDelta) : null;
 
   /* ---------------- Scenario inputs ---------------- */
   const [riskReductionPct, setRiskReductionPct] = useState(
@@ -54,11 +54,11 @@ export default function SimulatePage() {
   const [timeHorizon, setTimeHorizon] = useState<1 | 3>(3);
 
   /* =========================================================
-     Stress derivation
+     Stress derivation (for cube preview)
   ========================================================= */
   const intensity = riskReductionPct / 100;
 
-  const stress: StressProfile = {
+  const simulatedStress: StressProfile = {
     people: Math.max(0, BASELINE_STRESS.people - 0.4 * intensity),
     cost: Math.max(0, BASELINE_STRESS.cost - 0.3 * intensity),
     execution: Math.max(0, BASELINE_STRESS.execution - 0.25 * intensity),
@@ -98,7 +98,6 @@ export default function SimulatePage() {
             Test how changes in retention risk translate into financial impact.
           </p>
 
-          {/* ✅ Scenario Banner */}
           {attritionDelta !== null && (
             <div
               style={{
@@ -111,7 +110,7 @@ export default function SimulatePage() {
                 fontSize: 14,
               }}
             >
-              Using simulated attrition change from Retention Simulator (
+              Using simulated attrition change (
               <strong>
                 {attritionDelta > 0 ? "+" : ""}
                 {attritionDelta.toFixed(1)}%
@@ -132,9 +131,7 @@ export default function SimulatePage() {
                     marginRight: 8,
                     padding: "8px 14px",
                     borderRadius: 6,
-                    border: active
-                      ? "2px solid #2563eb"
-                      : "1px solid #1e293b",
+                    border: active ? "2px solid #2563eb" : "1px solid #1e293b",
                     background: active ? "#2563eb" : "#020617",
                     color: active ? "#ffffff" : "#cbd5f5",
                     fontWeight: active ? 600 : 500,
@@ -187,16 +184,10 @@ export default function SimulatePage() {
                   marginRight: 8,
                   padding: "6px 12px",
                   borderRadius: 6,
-                  border:
-                    timeHorizon === y
-                      ? "2px solid #2563eb"
-                      : "1px solid #1e293b",
-                  background:
-                    timeHorizon === y ? "#2563eb" : "#020617",
-                  color:
-                    timeHorizon === y ? "#ffffff" : "#cbd5f5",
-                  fontWeight:
-                    timeHorizon === y ? 600 : 500,
+                  border: timeHorizon === y ? "2px solid #2563eb" : "1px solid #1e293b",
+                  background: timeHorizon === y ? "#2563eb" : "#020617",
+                  color: timeHorizon === y ? "#ffffff" : "#cbd5f5",
+                  fontWeight: timeHorizon === y ? 600 : 500,
                   cursor: "pointer",
                 }}
               >
@@ -208,13 +199,7 @@ export default function SimulatePage() {
           {/* Financial impact */}
           <h2 style={{ marginBottom: 16 }}>Financial Impact</h2>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: 24,
-            }}
-          >
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
             <Metric label="Low Impact" value={`$${Math.round(ladder.low).toLocaleString()}`} />
             <Metric label="Expected Impact" value={`$${Math.round(ladder.base).toLocaleString()}`} />
             <Metric label="High Impact" value={`$${Math.round(ladder.high).toLocaleString()}`} />
@@ -224,9 +209,7 @@ export default function SimulatePage() {
             Estimated cost avoided over {timeHorizon} year{timeHorizon === 3 ? "s" : ""}.
           </p>
 
-          <p style={{ marginTop: 20, opacity: 0.85 }}>
-            {copy.narrative}
-          </p>
+          <p style={{ marginTop: 20, opacity: 0.85 }}>{copy.narrative}</p>
 
           {/* Deep dive CTA */}
           <button
@@ -255,14 +238,14 @@ export default function SimulatePage() {
           </button>
         </div>
 
-        {/* ================= RIGHT — Organizational Stress ================= */}
+        {/* ================= RIGHT — Stress Preview ================= */}
         <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
           <div style={{ fontSize: 14, fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase", color: "#94a3b8" }}>
-            Organizational Stress
+            Organizational Stress (Simulated)
           </div>
 
           <div style={{ background: "#020617", border: "1px solid #1e293b", borderRadius: 16, padding: 24 }}>
-            <MagicCube stress={stress} persona={persona} size={300} />
+            <MagicCube stress={simulatedStress} persona={persona} size={300} />
           </div>
         </div>
       </div>

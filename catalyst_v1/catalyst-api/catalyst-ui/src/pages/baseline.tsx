@@ -1,17 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MagicCube from "../components/visuals/MagicCube";
-import type { StressProfile } from "../components/visuals/motion";
 import { PERSONAS, type Persona } from "../types/persona";
+import { baseOrgState } from "../state/orgState";
 
 const BASELINE_PERSONA = PERSONAS.CEO;
-
-const BASELINE_STRESS: StressProfile = {
-  people: 0.65,
-  cost: 0.7,
-  execution: 0.45,
-  macro: 0.6,
-};
+const BASELINE_STRESS = baseOrgState.stress;
 
 export default function BaselinePage() {
   const [persona, setPersona] = useState<Persona>("CEO");
