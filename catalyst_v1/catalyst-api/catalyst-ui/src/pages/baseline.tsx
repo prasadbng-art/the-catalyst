@@ -113,14 +113,18 @@ export default function BaselinePage() {
         <div style={{ display: "flex", justifyContent: "center" }}>
           <div
             style={{
-              background: "#020617",
-              border: "1px solid #1e293b",
+              background: "radial-gradient(circle at 50% 40%, #0b1220 0%, #020617 70%)",
+              border: "1px solid rgba(56,189,248,0.15)",
               borderRadius: 20,
-              padding: 24,
-              boxShadow: "0 0 60px rgba(0,0,0,0.6)",
+              padding: 28,
+              boxShadow: `
+                0 0 80px rgba(0,0,0,0.65)
+                0 0 25px rgba(56,189,248,0.08)
+              `,
+
             }}
           >
-            <MagicCube stress={BASELINE_STRESS} persona={BASELINE_PERSONA} size={500} />
+            <MagicCube stress={BASELINE_STRESS} persona={BASELINE_PERSONA} size={540} />
           </div>
         </div>
 
@@ -130,7 +134,7 @@ export default function BaselinePage() {
             DOMINANT STRESS DRIVER
           </div>
 
-          <div style={{ color: "#f97316", fontWeight: 700, marginBottom: 16 }}>
+          <div style={{ color: "#fb923c", letterSpacing: "0.05em", fontWeight: 700, marginBottom: 14 }}>
             Cost Pressure
           </div>
 
