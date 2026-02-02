@@ -93,6 +93,22 @@ export default function BaselinePage() {
           </div>
         )}
 
+        <button
+          onClick={() => navigate("/retention-simulator")}
+          style={{
+            marginTop: 16,
+            padding: "10px 14px",
+            background: "#1d4ed8",
+            color: "white",
+            border: "none",
+            borderRadius: 6,
+            cursor: "pointer",
+            fontWeight: 600,
+          }}
+        >
+          Open Retention Intervention Simulator →
+        </button>
+
       </div>
 
       {/* RIGHT */}
