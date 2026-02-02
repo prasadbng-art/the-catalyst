@@ -11,8 +11,8 @@ export default function GroundRealityPage() {
     const navigate = useNavigate();
     const signal = getGroundRealitySignal();
     const kpis = [
-        { label: "Attrition Cost (Annual)", value: `$${baseOrgState.kpis.attritionCost.toLocaleString()}` },
-        { label: "Attrition Rate", value: `${baseOrgState.kpis.attritionRate}%` },
+        { label: "Attrition Cost (Annual)", value: "$15,300,000", accent: "#ef4444", },
+        { label: "Attrition Rate", value: "18%", accent: "#ef4444" },
         { label: "Engagement (eNPS", value: baseOrgState.kpis.engagement.toString() },
         { label: "Global Headcount", value: baseOrgState.kpis.headcount.toLocaleString() },
     ];
@@ -32,19 +32,19 @@ export default function GroundRealityPage() {
     ];
 
     const costByLocation = [
-        { location: "Warsaw", value: 12345678 },
-        { location: "Bangalore", value: 9876543 },
-        { location: "New York", value: 8436574 },
-        { location: "Shanghai", value: 6543210 },
-        { location: "Dubai", value: 5678901 },
+        { location: "Warsaw", value: 3_375_000 },
+        { location: "Bangalore", value: 3_060_000 },
+        { location: "New York", value: 3_690_000 },
+        { location: "Shanghai", value: 2_835_000 },
+        { location: "Dubai", value: 2_340_000 },
     ];
 
     const attritsByLocation = [
-        { location: "Warsaw", value: 120 },
-        { location: "Bangalore", value: 85 },
-        { location: "New York", value: 75 },
-        { location: "Shanghai", value: 60 },
-        { location: "Dubai", value: 35 },
+        { location: "Warsaw", value: 75 },
+        { location: "Bangalore", value: 68 },
+        { location: "New York", value: 82 },
+        { location: "Shanghai", value: 63 },
+        { location: "Dubai", value: 52 },
     ];
 
     return (
