@@ -20,7 +20,7 @@ const BASELINE_STRESS: StressProfile = {
 /* =========================================================
    Financial model constants
 ========================================================= */
-const DEFAULT_BASELINE_COST = 1_940_000;
+const DEFAULT_BASELINE_COST = 15_300_000;
 
 const SENSITIVITY = {
   low: 0.7,
