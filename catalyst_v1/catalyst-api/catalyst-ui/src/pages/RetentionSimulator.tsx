@@ -41,6 +41,20 @@ export default function RetentionSimulatorPage() {
             ? Math.round((simulatedAvgRisk - baselineAvgRisk) * 10) / 10
             : null;
 
+    let narrative: string | null = null;
+
+    if (deltaPct !== null) {
+        if (deltaPct <= -2) {
+            narrative = "Meaningful reduction in flight risk across targeted talent.";
+        } else if (deltaPct < 0) {
+            narrative = "Moderate localized retention improvement.";
+        } else if (deltaPct === 0) {
+            narrative = "No modeled change in retention risk.";
+        } else {
+            narrative = "Modeled interventions may be insufficient or misaligned.";
+        }
+    }
+
     const handleSendToFinancials = () => {
         if (deltaPct === null) return;
         navigate(`/financial-simulation?attritionDelta=${deltaPct}`);
@@ -80,8 +94,22 @@ export default function RetentionSimulatorPage() {
                     >
                         <div style={{ fontSize: 12, opacity: 0.75 }}>
                             Simulated Organization-Level Impact
+                            {narrative && (
+                                <div
+                                    style={{
+                                        marginTop: 10,
+                                        padding: 10,
+                                        borderRadius: 6,
+                                        background: "#0f172a",
+                                        border: "1px solid #1e293b",
+                                        fontSize: 13,
+                                        color: "#cbd5f5",
+                                    }}
+                                >
+                                    {narrative}
+                                </div>
+                            )}
                         </div>
-
                         <div
                             style={{
                                 fontSize: 22,
