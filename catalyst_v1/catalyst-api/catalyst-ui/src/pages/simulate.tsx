@@ -6,6 +6,7 @@ import type { Persona } from "../types/persona";
 import { personaConfig } from "../persona/personaConfig";
 import { setGroundRealitySignal } from "../state/groundRealitysignal";
 import { useNavigate, useLocation } from "react-router-dom";
+import { setSimulatedStress } from "../state/simulatedStressState";
 
 /* =========================================================
    Baseline stress (mirrors Baseline page)
@@ -224,6 +225,7 @@ export default function SimulatePage() {
               cursor: "pointer",
             }}
             onClick={() => {
+              setSimulatedStress(simulatedStress);
               setGroundRealitySignal({
                 horizonMonths: timeHorizon * 12,
                 attritionDeltaPct: -riskReductionPct,

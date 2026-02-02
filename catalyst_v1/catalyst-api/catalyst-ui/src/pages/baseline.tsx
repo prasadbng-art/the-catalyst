@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import MagicCube from "../components/visuals/MagicCube";
 import { PERSONAS, type Persona } from "../types/persona";
 import { baseOrgState } from "../state/orgState";
+import { getSimulatedStress } from "../state/simulatedStressState";
 
 const BASELINE_PERSONA = PERSONAS.CEO;
-const BASELINE_STRESS = baseOrgState.stress;
+const simulated = getSimulatedStress();
+const BASELINE_STRESS = simulated ?? baseOrgState.stress;
 
 export default function BaselinePage() {
   const [persona, setPersona] = useState<Persona>("CEO");
@@ -16,6 +18,25 @@ export default function BaselinePage() {
       {/* ===== HEADER ===== */}
       <div style={{ textAlign: "center", marginBottom: 120 }}>
         <h2 style={{ fontSize: 28, letterSpacing: "0.08em" }}>ENTERPRISE EQUILIBRIUM SCORE</h2>
+        {simulated && (
+          <div
+            style={{
+              marginTop: 12,
+              display: "inline-block",
+              padding: "6px 12px",
+              background: "#1e293b",
+              border: "1px solid #334155",
+              borderRadius: 999,
+              fontSize: 12,
+              color: "#38bdf8",
+              letterSpacing: "0.05em",
+              textTransform: "uppercase",
+            }}
+          >
+            Simulated Scenario Active
+          </div>
+        )}
+
       </div>
 
       {/* ===== MAIN 3-COLUMN LAYOUT ===== */}
