@@ -28,10 +28,10 @@ export default function SimulationCard({
     const [selectedIntervention, setSelectedIntervention] =
         useState<string>("none");
 
-    const simulateRisk = (): number | null => {
-        if (selectedIntervention === "none") return null;
+    const [simulatedRisk, setSimulatedRisk] = useState<number | null>(null);
 
-        switch (selectedIntervention) {
+    const calculateRisk = (intervention: string): number | null => {
+        switch (intervention) {
             case "leadership":
                 return Math.max(entity.currentRiskPct - 12, 0);
             case "compensation":
@@ -44,6 +44,9 @@ export default function SimulationCard({
                 return null;
         }
     };
+
+    const displayedRisk = simulatedRisk ?? entity.currentRiskPct;
+    const isImproved = simulatedRisk !== null && simulatedRisk < entity.currentRiskPct;
 
     return (
         <div
@@ -64,17 +67,23 @@ export default function SimulationCard({
                 </div>
             </div>
 
-            {/* Risk */}
+            {/* Risk Display */}
             <div
                 style={{
                     fontSize: 20,
                     fontWeight: 700,
-                    color: "#dc2626",
-                    marginBottom: 8,
+                    color: isImproved ? "#16a34a" : "#dc2626",
+                    marginBottom: 4,
                 }}
             >
-                {entity.currentRiskPct}%
+                {displayedRisk}%
             </div>
+
+            {simulatedRisk !== null && (
+                <div style={{ fontSize: 11, color: "#64748b", marginBottom: 8 }}>
+                    Baseline: {entity.currentRiskPct}%
+                </div>
+            )}
 
             {/* Drivers */}
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 12 }}>
@@ -100,7 +109,10 @@ export default function SimulationCard({
                 onChange={(e) => {
                     const value = e.target.value;
                     setSelectedIntervention(value);
-                    onSimulate(entity.id, simulateRisk());
+
+                    const newRisk = calculateRisk(value);
+                    setSimulatedRisk(newRisk);
+                    onSimulate(entity.id, newRisk);
                 }}
                 style={{
                     width: "100%",
@@ -108,7 +120,7 @@ export default function SimulationCard({
                     borderRadius: 6,
                     border: "1px solid #cbd5f5",
                     background: "#ffffff",
-                    color: "#020617"
+                    color: "#020617",
                 }}
             >
                 {interventions.map((i) => (

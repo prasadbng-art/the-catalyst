@@ -4,8 +4,8 @@ import MagicCube from "../components/visuals/MagicCube";
 import type { StressProfile } from "../components/visuals/motion";
 import type { Persona } from "../types/persona";
 import { personaConfig } from "../persona/personaConfig";
-import { setGroundRealitySignal } from "../state/groundRealitysignal"
-import { useNavigate } from "react-router-dom";
+import { setGroundRealitySignal } from "../state/groundRealitysignal";
+import { useNavigate, useLocation } from "react-router-dom";
 
 /* =========================================================
    Baseline stress (mirrors Baseline page)
@@ -29,16 +29,32 @@ const SENSITIVITY = {
 };
 
 export default function SimulatePage() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   /* ---------------- Persona ---------------- */
   const [persona, setPersona] = useState<Persona>("CFO");
-  const navigate = useNavigate();
+
+  /* =========================================================
+     Read attrition delta from Retention Simulator (if present)
+  ========================================================= */
+  const params = new URLSearchParams(location.search);
+  const attritionDeltaParam = params.get("attritionDelta");
+  const attritionDelta = attritionDeltaParam ? parseFloat(attritionDeltaParam) : null;
+
+  // Convert attrition change into risk reduction %
+  const scenarioRiskReduction = attritionDelta !== null ? Math.abs(attritionDelta) : null;
+
   /* ---------------- Scenario inputs ---------------- */
-  const [riskReductionPct, setRiskReductionPct] = useState(10);
+  const [riskReductionPct, setRiskReductionPct] = useState(
+    scenarioRiskReduction ?? 10
+  );
+
   const [interventionCost, setInterventionCost] = useState(100000);
   const [timeHorizon, setTimeHorizon] = useState<1 | 3>(3);
 
   /* =========================================================
-     Stress derivation (pure, deterministic)
+     Stress derivation
   ========================================================= */
   const intensity = riskReductionPct / 100;
 
@@ -81,6 +97,28 @@ export default function SimulatePage() {
           <p style={{ color: "#94a3b8", marginBottom: 24 }}>
             Test how changes in retention risk translate into financial impact.
           </p>
+
+          {/* ✅ Scenario Banner */}
+          {attritionDelta !== null && (
+            <div
+              style={{
+                marginBottom: 20,
+                padding: 12,
+                borderRadius: 8,
+                background: "#0f172a",
+                border: "1px solid #1e293b",
+                color: "#cbd5f5",
+                fontSize: 14,
+              }}
+            >
+              Using simulated attrition change from Retention Simulator (
+              <strong>
+                {attritionDelta > 0 ? "+" : ""}
+                {attritionDelta.toFixed(1)}%
+              </strong>
+              )
+            </div>
+          )}
 
           {/* Persona selector */}
           <div style={{ marginBottom: 24 }}>
@@ -177,23 +215,13 @@ export default function SimulatePage() {
               gap: 16,
             }}
           >
-            <Metric
-              label="Low Impact"
-              value={`$${Math.round(ladder.low).toLocaleString()}`}
-            />
-            <Metric
-              label="Expected Impact"
-              value={`$${Math.round(ladder.base).toLocaleString()}`}
-            />
-            <Metric
-              label="High Impact"
-              value={`$${Math.round(ladder.high).toLocaleString()}`}
-            />
+            <Metric label="Low Impact" value={`$${Math.round(ladder.low).toLocaleString()}`} />
+            <Metric label="Expected Impact" value={`$${Math.round(ladder.base).toLocaleString()}`} />
+            <Metric label="High Impact" value={`$${Math.round(ladder.high).toLocaleString()}`} />
           </div>
 
           <p style={{ marginTop: 12, fontSize: 13, opacity: 0.65 }}>
-            Estimated cost avoided over {timeHorizon} year
-            {timeHorizon === 3 ? "s" : ""}.
+            Estimated cost avoided over {timeHorizon} year{timeHorizon === 3 ? "s" : ""}.
           </p>
 
           <p style={{ marginTop: 20, opacity: 0.85 }}>
@@ -215,13 +243,12 @@ export default function SimulatePage() {
             onClick={() => {
               setGroundRealitySignal({
                 horizonMonths: timeHorizon * 12,
-                attritionDeltaPct: -12,
+                attritionDeltaPct: -riskReductionPct,
                 costDeltaPct: -8,
                 dominantDriver: "COST",
                 interventionConfidence: 0.72,
               });
               navigate("/ground-reality");
-
             }}
           >
             Explore Ground Reality →
@@ -229,34 +256,12 @@ export default function SimulatePage() {
         </div>
 
         {/* ================= RIGHT — Organizational Stress ================= */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 16,
-          }}
-        >
-          <div
-            style={{
-              fontSize: 14,
-              fontWeight: 600,
-              letterSpacing: "0.04em",
-              textTransform: "uppercase",
-              color: "#94a3b8",
-            }}
-          >
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
+          <div style={{ fontSize: 14, fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase", color: "#94a3b8" }}>
             Organizational Stress
           </div>
 
-          <div
-            style={{
-              background: "#020617",
-              border: "1px solid #1e293b",
-              borderRadius: 16,
-              padding: 24,
-            }}
-          >
+          <div style={{ background: "#020617", border: "1px solid #1e293b", borderRadius: 16, padding: 24 }}>
             <MagicCube stress={stress} persona={persona} size={300} />
           </div>
         </div>
@@ -265,9 +270,6 @@ export default function SimulatePage() {
   );
 }
 
-/* =========================================================
-   Metric
-========================================================= */
 function Metric({ label, value }: { label: string; value: string }) {
   return (
     <div style={{ padding: 16, borderRadius: 8, border: "1px solid #1e293b" }}>
