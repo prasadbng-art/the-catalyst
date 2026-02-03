@@ -8,6 +8,7 @@ import { setSimulatedStress } from "../state/simulatedStressState";
 
 const BASELINE_PERSONA = PERSONAS.CEO;
 const simulated = getSimulatedStress();
+console.log("READING SIMULATEDS STRESS:", simulated);
 const BASELINE_STRESS = simulated ?? baseOrgState.stress;
 
 export default function BaselinePage() {

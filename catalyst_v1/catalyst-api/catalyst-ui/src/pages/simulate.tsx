@@ -225,6 +225,7 @@ export default function SimulatePage() {
               cursor: "pointer",
             }}
             onClick={() => {
+              console.log("SETTING SIMULATED STRESS:", simulatedStress);
               setSimulatedStress(simulatedStress);
               setGroundRealitySignal({
                 horizonMonths: timeHorizon * 12,
