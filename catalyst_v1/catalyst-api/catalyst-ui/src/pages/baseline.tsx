@@ -4,6 +4,7 @@ import MagicCube from "../components/visuals/MagicCube";
 import { PERSONAS, type Persona } from "../types/persona";
 import { baseOrgState } from "../state/orgState";
 import { getSimulatedStress } from "../state/simulatedStressState";
+import { setSimulatedStress } from "../state/simulatedStressState";
 
 const BASELINE_PERSONA = PERSONAS.CEO;
 const simulated = getSimulatedStress();
@@ -19,26 +20,40 @@ export default function BaselinePage() {
       <div style={{ textAlign: "center", marginBottom: 120 }}>
         <h2 style={{ fontSize: 28, letterSpacing: "0.08em" }}>ENTERPRISE EQUILIBRIUM SCORE</h2>
         {simulated && (
-          <div
-            style={{
-              marginTop: 12,
-              display: "inline-block",
-              padding: "6px 12px",
-              background: "#1e293b",
-              border: "1px solid #334155",
-              borderRadius: 999,
-              fontSize: 12,
-              color: "#38bdf8",
-              letterSpacing: "0.05em",
-              textTransform: "uppercase",
-            }}
-          >
-            Simulated Scenario Active
+          <div style={{ marginTop: 12, display: "flex", gap: 12, alignItems: "center" }}>
+            <div
+              style={{
+                padding: "6px 12px",
+                background: "#1e293b",
+                border: "1px solid #334155",
+                borderRadius: 999,
+                fontSize: 12,
+                color: "#38bdf8",
+                letterSpacing: "0.05em",
+                textTransform: "uppercase",
+              }}
+            >
+              Simulated Scenario Active
+            </div>
+
+            <button
+              onClick={() => setSimulatedStress(null)}
+              style={{
+                padding: "6px 12px",
+                background: "#334155",
+                color: "#e2e8f0",
+                border: "1px solid #475569",
+                borderRadius: 999,
+                fontSize: 12,
+                cursor: "pointer",
+                fontWeight: 500,
+              }}
+            >
+              Return to Baseline
+            </button>
           </div>
         )}
-
       </div>
-
       {/* ===== MAIN 3-COLUMN LAYOUT ===== */}
       <div
         style={{
