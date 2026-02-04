@@ -11,7 +11,6 @@ const linkStyle = {
 
 export default function Sidebar() {
   const location = useLocation();
-
   const isActive = (path: string) => location.pathname === path;
 
   return (
@@ -25,10 +24,19 @@ export default function Sidebar() {
         minHeight: "100vh",
       }}
     >
-      <h1 style={{ fontSize: 36, fontWeight: 900, letterSpacing: "0.5px", }}>Catalyst</h1>
+      <h1
+        style={{
+          fontSize: 36,
+          fontWeight: 900,
+          letterSpacing: "0.5px",
+          marginBottom: 24,
+        }}
+      >
+        Catalyst
+      </h1>
 
-      {/* ACTIVE MODULES */}
-      <div style={{ marginBottom: 24 }}>
+      {/* ANALYSIS */}
+      <div style={{ marginBottom: 28 }}>
         <div style={{ fontSize: 12, opacity: 0.6, marginBottom: 8 }}>
           ANALYSIS
         </div>
@@ -41,22 +49,55 @@ export default function Sidebar() {
             color: "#e5e7eb",
           }}
         >
-          Baseline
+          Equilibrium Score
         </NavLink>
+
+        <NavLink
+          to="/ground-reality"
+          style={{
+            ...linkStyle,
+            background: isActive("/ground-reality") ? "#1e293b" : "transparent",
+            color: "#e5e7eb",
+          }}
+        >
+          Mapped Metrics
+        </NavLink>
+      </div>
+
+      {/* SIMULATIONS */}
+      <div style={{ marginBottom: 28 }}>
+        <div style={{ fontSize: 12, opacity: 0.6, marginBottom: 8 }}>
+          SIMULATIONS
+        </div>
 
         <NavLink
           to="/simulation"
           style={{
             ...linkStyle,
+            paddingLeft: 20,
             background: isActive("/simulation") ? "#1e293b" : "transparent",
             color: "#e5e7eb",
           }}
         >
-          Simulation
+          Financial Impact
+        </NavLink>
+
+        <NavLink
+          to="/retention-simulator"
+          style={{
+            ...linkStyle,
+            paddingLeft: 20,
+            background: isActive("/retention-simulator")
+              ? "#1e293b"
+              : "transparent",
+            color: "#e5e7eb",
+          }}
+        >
+          Retention Simulation
         </NavLink>
       </div>
 
-      {/* FUTURE MODULES */}
+      {/* PRODUCTION MODULES */}
       <div>
         <div style={{ fontSize: 12, opacity: 0.6, marginBottom: 8 }}>
           PRODUCTION MODULES
