@@ -7,9 +7,6 @@ import {
 } from "../state/simulatedStressState";
 import { PERSONAS } from "../types/persona";
 
-/* =========================================================
-   Helpers
-========================================================= */
 function getDominantStress(stress: typeof baseOrgState.stress) {
   return (Object.entries(stress) as [keyof typeof stress, number][])
     .sort((a, b) => b[1] - a[1])[0][0];
@@ -20,60 +17,85 @@ export default function BaselinePage() {
   const stress = simulated ?? baseOrgState.stress;
   const navigate = useNavigate();
   const BASELINE_PERSONA = PERSONAS.CEO;
-
   const dominantStress = getDominantStress(stress);
 
+  const CONTENT_OFFSET = 200;
+
+  const ctaStyle: React.CSSProperties = {
+    padding: "12px 22px",
+    background: "#2563eb",
+    border: "none",
+    borderRadius: 10,
+    color: "#ffffff",
+    cursor: "pointer",
+    fontWeight: 600,
+    minWidth: 240,
+    textAlign: "center",
+  };
+
   return (
-    <div style={{ padding: "40px 60px" }}>
+    <div style={{ paddingTop: 40, paddingBottom: 40 }}>
       {/* ===== HEADER ===== */}
-      <div style={{ textAlign: "center", marginBottom: 80 }}>
-        <h2 style={{ fontSize: 28, letterSpacing: "0.08em" }}>
-          ENTERPRISE EQUILIBRIUM SCORE
-        </h2>
-
-        {simulated && (
-          <div
-            style={{
-              margin: "20px auto 0",
-              padding: "10px 14px",
-              borderRadius: 8,
-              background: "#1e293b",
-              border: "1px solid #334155",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              gap: 12,
-              maxWidth: 560,
-            }}
-          >
-            <span style={{ fontSize: 14, color: "#cbd5f5" }}>
-              Simulation Active — Viewing adjusted organizational state
-            </span>
-
-            <button
-              type="button"
-              onClick={() => setSimulatedStress(null)}
-              style={{
-                padding: "6px 12px",
-                borderRadius: 6,
-                border: "1px solid #475569",
-                background: "#0f172a",
-                color: "#ffffff",
-                cursor: "pointer",
-                fontSize: 13,
-              }}
-            >
-              Return to Baseline
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* ===== MAIN 3-COLUMN LAYOUT ===== */}
       <div
         style={{
           maxWidth: 1400,
-          paddingLeft: 90,
+          textAlign: "center",
+          paddingLeft: CONTENT_OFFSET,
+          marginRight: "auto",
+          display: "grid",
+          gridTemplateColumns: "520px 720px 420px",
+          marginBottom: 80,
+        }}
+      >
+        <div style={{ gridColumn: 2, display: "flex", justifyContent: "center" }}>
+          <div style={{ width: 600, textAlign: "center", margin: "0 auto", gap: 20, flexWrap: "wrap" }}></div>
+          <h2 style={{ fontSize: 28, letterSpacing: "0.08em" }}>
+            ENTERPRISE EQUILIBRIUM SCORE
+          </h2>
+
+          {simulated && (
+            <div
+              style={{
+                marginTop: 12,
+                padding: "10px 14px",
+                borderRadius: 8,
+                background: "#1e293b",
+                border: "1px solid #334155",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                gap: 12,
+              }}
+            >
+              <span style={{ fontSize: 14, color: "#cbd5f5" }}>
+                Simulation Active — Viewing adjusted organizational state
+              </span>
+
+              <button
+                type="button"
+                onClick={() => setSimulatedStress(null)}
+                style={{
+                  padding: "6px 12px",
+                  borderRadius: 6,
+                  border: "1px solid #475569",
+                  background: "#0f172a",
+                  color: "#ffffff",
+                  cursor: "pointer",
+                  fontSize: 13,
+                }}
+              >
+                Return to Baseline
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ===== MAIN GRID ===== */}
+      <div
+        style={{
+          maxWidth: 1400,
+          paddingLeft: CONTENT_OFFSET,
           marginRight: "auto",
           display: "grid",
           gap: 120,
@@ -81,7 +103,7 @@ export default function BaselinePage() {
           gridTemplateColumns: "520px 720px 420px",
         }}
       >
-        {/* ================= LEFT PANEL ================= */}
+        {/* LEFT */}
         <div>
           <div
             style={{
@@ -107,10 +129,9 @@ export default function BaselinePage() {
               <li>Macro exposure: {Math.round(stress.macro * 100)}%</li>
             </ul>
           </div>
-
         </div>
 
-        {/* ================= CENTER PANEL ================= */}
+        {/* CENTER */}
         <div style={{ display: "flex", justifyContent: "center" }}>
           <div
             style={{
@@ -129,7 +150,7 @@ export default function BaselinePage() {
           </div>
         </div>
 
-        {/* ================= RIGHT PANEL ================= */}
+        {/* RIGHT */}
         <div>
           <div style={{ marginBottom: 8, fontSize: 12, opacity: 0.6 }}>
             DOMINANT STRESS DRIVER
@@ -156,59 +177,38 @@ export default function BaselinePage() {
               lineHeight: 1.6,
             }}
           >
-            System absorbing pressure. Organizational stress remains elevated
-            but contained. No structural instability detected under current
-            operating conditions.
+            System absorbing pressure. Organizational stress remains elevated but
+            contained. No structural instability detected under current operating
+            conditions.
           </div>
         </div>
       </div>
-      {/* ===== NEXT STEPS ===== */}
+
+      {/* ===== CTA BAR ===== */}
       <div
         style={{
-          marginTop: 100,
-          paddingTop: 32,
-          borderTop: "1px solid #1e293b",
+          gridColumn: 2,
           display: "flex",
           justifyContent: "center",
-          gap: 20,
-          flexWrap: "wrap",
         }}
       >
-        {[
-          {
-            label: "Explore Operational Drivers →",
-            path: "/ground-reality",
-          },
-          {
-            label: "Model Financial Impact →",
-            path: "/simulation",
-          },
-          {
-            label: "Run Retention Scenario →",
-            path: "/retention-simulator",
-          },
-        ].map((cta) => (
-          <button
-            key={cta.path}
-            type="button"
-            onClick={() => navigate(cta.path)}
-            style={{
-              padding: "12px 20px",
-              background: "#2563eb",
-              border: "none",
-              borderRadius: 8,
-              color: "#ffffff",
-              cursor: "pointer",
-              fontWeight: 600,
-              minWidth: 220,
-              textAlign: "center",
-            }}
-          >
-            {cta.label}
-          </button>
-        ))}
+        <div style={{ width: 720, display: "flex", justifyContent: "center", gap: 20, flexWrap: "wrap" }}>
+          {[
+            { label: "Explore Operational Drivers →", path: "/ground-reality" },
+            { label: "Model Financial Impact →", path: "/simulation" },
+            { label: "Run Retention Scenario →", path: "/retention-simulator" },
+          ].map((cta) => (
+            <button
+              key={cta.path}
+              type="button"
+              onClick={() => navigate(cta.path)}
+              style={ctaStyle}
+            >
+              {cta.label}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
 }
-
