@@ -9,7 +9,3 @@ export function setSimulatedStress(stress: StressProfile | null) {
 export function getSimulatedStress(): StressProfile | null {
     return simulatedStress;
 }
-
-export function hasSimulatedStress(): boolean {
-    return simulatedStress !== null;
-}

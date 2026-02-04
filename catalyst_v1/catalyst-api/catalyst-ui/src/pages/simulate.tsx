@@ -55,7 +55,6 @@ export default function SimulatePage() {
     execution: Math.max(0, baseOrgState.stress.execution - 0.25 * intensity),
     macro: baseOrgState.stress.macro,
   };
-  setSimulatedStress(simulatedStress);
 
   /* =========================================================
      Financial impact
