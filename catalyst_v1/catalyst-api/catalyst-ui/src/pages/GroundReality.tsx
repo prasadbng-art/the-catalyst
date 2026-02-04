@@ -1,21 +1,66 @@
 import PageShell from "../components/layout/PageShell";
-import { getGroundRealitySignal } from "../state/groundRealitysignal";
 import ReferenceDump from "./ground-reality/ReferenceDump";
 import TopKpis from "./ground-reality/TopKpis";
 import SentimentBars from "./ground-reality/SentimentBars";
 import LocationTable from "./ground-reality/LocationTable";
+
 import { baseOrgState } from "../state/orgState";
-import { useNavigate } from "react-router-dom";
+import { getSimulatedStress } from "../state/simulatedStressState";
+
+/* =========================================================
+   Helpers
+========================================================= */
+function getDominantStress(stress: typeof baseOrgState.stress) {
+    return (Object.entries(stress) as [keyof typeof stress, number][])
+        .sort((a, b) => b[1] - a[1])[0][0];
+}
 
 export default function GroundRealityPage() {
-    const navigate = useNavigate();
-    const signal = getGroundRealitySignal();
+    /* =========================================================
+       Stress source (single truth)
+    ========================================================= */
+    const simulation = getSimulatedStress();
+    const stress = simulation ? simulation.stress : baseOrgState.stress;
+
+    console.log("GROUND REALITY — STRESS SOURCE:", stress);
+
+    const dominantStress = getDominantStress(stress);
+
+    /* =========================================================
+       KPI derivation (aligned, non-nonsensical)
+    ========================================================= */
+    const TOTAL_HEADCOUNT = 1888;
+    const ATTRITION_RATE = Math.round(stress.people * 100); // proxy
+    const ATTRITS_YTD = Math.round((ATTRITION_RATE / 100) * TOTAL_HEADCOUNT);
+    const COST_PER_ATTRIT = 124_121;
+
+    const TOTAL_ATTRITION_COST = ATTRITS_YTD * COST_PER_ATTRIT;
+
     const kpis = [
-        { label: "Attrition Cost (Annual)", value: "$15,300,000", accent: "#ef4444", },
-        { label: "Attrition Rate", value: "18%", accent: "#ef4444" },
-        { label: "Engagement (eNPS", value: baseOrgState.kpis.engagement.toString() },
-        { label: "Global Headcount", value: baseOrgState.kpis.headcount.toLocaleString() },
+        {
+            label: "Per-Capita Attrition Cost",
+            value: `$${COST_PER_ATTRIT.toLocaleString()}`,
+            accent: "#ef4444",
+        },
+        {
+            label: "Total Attrits (YTD)",
+            value: ATTRITS_YTD.toLocaleString(),
+            accent: "#ef4444",
+        },
+        {
+            label: "eNPS",
+            value: "-11",
+            accent: "#f59e0b",
+        },
+        {
+            label: "Global Headcount",
+            value: TOTAL_HEADCOUNT.toLocaleString(),
+        },
     ];
+
+    /* =========================================================
+       Regional sentiment (static for now)
+    ========================================================= */
     const sentimentByRegion = [
         { label: "Americas", value: 5 },
         { label: "EMEA", value: -10 },
@@ -31,30 +76,51 @@ export default function GroundRealityPage() {
         { label: "Japan", value: 4 },
     ];
 
-    const costByLocation = [
-        { location: "Warsaw", value: 3_375_000 },
-        { location: "Bangalore", value: 3_060_000 },
-        { location: "New York", value: 3_690_000 },
-        { location: "Shanghai", value: 2_835_000 },
-        { location: "Dubai", value: 2_340_000 },
-    ];
-
+    /* =========================================================
+       Location-level costs (aligned with totals)
+    ========================================================= */
     const attritsByLocation = [
-        { location: "Warsaw", value: 75 },
-        { location: "Bangalore", value: 68 },
-        { location: "New York", value: 82 },
-        { location: "Shanghai", value: 63 },
-        { location: "Dubai", value: 52 },
+        { location: "Warsaw", value: 120 },
+        { location: "Bangalore", value: 85 },
+        { location: "New York", value: 75 },
+        { location: "Shanghai", value: 60 },
+        { location: "Dubai", value: 35 },
     ];
 
-    return (
+    const totalAttrits = attritsByLocation.reduce(
+        (sum, l) => sum + l.value,
+        0
+    );
 
+    const costByLocation = attritsByLocation.map((l) => ({
+        location: l.location,
+        value: Math.round(
+            (l.value / totalAttrits) * TOTAL_ATTRITION_COST
+        ),
+    }));
+
+    /* =========================================================
+       Render
+    ========================================================= */
+    return (
         <PageShell>
             <ReferenceDump>
                 <div id="kpi-anchor">
-                    <h1 style={{ marginTop: 0 }}>
-                        Mapped Metrics
-                    </h1>
+                    <h1 style={{ marginTop: 0 }}>Mapped Metrics</h1>
+
+                    {simulation && (
+                        <div
+                            style={{
+                                marginBottom: 16,
+                                fontSize: 12,
+                                color: "#38bdf8",
+                                letterSpacing: "0.04em",
+                                textTransform: "uppercase",
+                            }}
+                        >
+                            Simulated scenario reflected
+                        </div>
+                    )}
 
                     <TopKpis items={kpis} />
 
@@ -95,48 +161,38 @@ export default function GroundRealityPage() {
                         />
                     </div>
 
-                    {signal && (
-                        <div style={{ marginTop: 24 }}>
-                            <p>Horizon: {signal.horizonMonths} months</p>
-                            <p>Cost delta: {signal.costDeltaPct}%</p>
-                            <p>Dominant driver: {signal.dominantDriver}</p>
-                            <p>Confidence: {signal.interventionConfidence}</p>
+                    <div style={{ marginTop: 32 }}>
+                        <div
+                            style={{
+                                fontSize: 12,
+                                opacity: 0.6,
+                                marginBottom: 6,
+                            }}
+                        >
+                            DOMINANT STRESS DRIVER
                         </div>
-                    )}
-                    <div style={{ marginTop: 40, display: "flex", gap: 16 }}>
-                        <button
-                            onClick={() => navigate("/simulation")}
-                            style={{
-                                padding: "12px 18px",
-                                background: "#1d4ed8",
-                                color: "white",
-                                border: "none",
-                                borderRadius: 8,
-                                cursor: "pointer",
-                                fontWeight: 600,
-                            }}
-                        >
-                            Financial Simulation →
-                        </button>
 
-                        <button
-                            onClick={() => navigate("/retention-simulator")}
+                        <div
                             style={{
-                                padding: "12px 18px",
-                                background: "#1d4ed8",
-                                color: "white",
-                                border: "none",
-                                borderRadius: 8,
-                                cursor: "pointer",
-                                fontWeight: 600,
+                                fontWeight: 700,
+                                letterSpacing: "0.05em",
+                                color: "#fb923c",
+                                marginBottom: 8,
+                                textTransform: "uppercase",
                             }}
                         >
-                            Retention Intervention Simulation →
-                        </button>
+                            {dominantStress}
+                        </div>
+
+                        <div style={{ maxWidth: 520, lineHeight: 1.6 }}>
+                            Workforce pressure is currently concentrated in the{" "}
+                            <strong>{dominantStress.toLowerCase()}</strong> dimension.
+                            This is reflected consistently across enterprise-level KPIs
+                            and regional metrics.
+                        </div>
                     </div>
-
                 </div>
             </ReferenceDump>
         </PageShell>
-    )
+    );
 }

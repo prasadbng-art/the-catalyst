@@ -1,27 +1,55 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MagicCube from "../components/visuals/MagicCube";
-import { PERSONAS, type Persona } from "../types/persona";
 import { baseOrgState } from "../state/orgState";
-import { getSimulatedStress } from "../state/simulatedStressState";
-import { setSimulatedStress } from "../state/simulatedStressState";
-
-const BASELINE_PERSONA = PERSONAS.CEO;
-const simulated = getSimulatedStress();
-console.log("READING SIMULATEDS STRESS:", simulated);
-const BASELINE_STRESS = simulated ?? baseOrgState.stress;
+import {
+  getSimulatedStress,
+  clearSimulatedStress,
+} from "../state/simulatedStressState";
+import type { Persona } from "../types/persona";
+/* =========================================================
+   Helpers
+========================================================= */
+function getDominantStress(stress: typeof baseOrgState.stress) {
+  return (Object.entries(stress) as [keyof typeof stress, number][])
+    .sort((a, b) => b[1] - a[1])[0][0];
+}
 
 export default function BaselinePage() {
   const [persona, setPersona] = useState<Persona>("CEO");
   const navigate = useNavigate();
 
+  /* =========================================================
+     Stress source (single truth)
+  ========================================================= */
+  const simulation = getSimulatedStress();
+
+  const stress = simulation
+    ? simulation.stress
+    : baseOrgState.stress;
+
+  console.log("READING SIMULATED STRESS:", simulation);
+
+  const dominantStress = getDominantStress(stress);
+
   return (
     <div style={{ padding: "40px 60px" }}>
       {/* ===== HEADER ===== */}
       <div style={{ textAlign: "center", marginBottom: 120 }}>
-        <h2 style={{ fontSize: 28, letterSpacing: "0.08em" }}>ENTERPRISE EQUILIBRIUM SCORE</h2>
-        {simulated && (
-          <div style={{ marginTop: 12, display: "flex", gap: 12, alignItems: "center" }}>
+        <h2 style={{ fontSize: 28, letterSpacing: "0.08em" }}>
+          ENTERPRISE EQUILIBRIUM SCORE
+        </h2>
+
+        {simulation && (
+          <div
+            style={{
+              marginTop: 12,
+              display: "flex",
+              gap: 12,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <div
               style={{
                 padding: "6px 12px",
@@ -38,7 +66,10 @@ export default function BaselinePage() {
             </div>
 
             <button
-              onClick={() => setSimulatedStress(null)}
+              onClick={() => {
+                clearSimulatedStress();
+                window.location.reload();
+              }}
               style={{
                 padding: "6px 12px",
                 background: "#334155",
@@ -55,13 +86,12 @@ export default function BaselinePage() {
           </div>
         )}
       </div>
+
       {/* ===== MAIN 3-COLUMN LAYOUT ===== */}
       <div
         style={{
           maxWidth: 1400,
-          marginLeft: 0,
           paddingLeft: 90,
-          margin: 0,
           display: "grid",
           gap: 120,
           alignItems: "start",
@@ -100,10 +130,12 @@ export default function BaselinePage() {
             </p>
 
             <ul style={{ marginTop: 12 }}>
-              <li>People stress level: {Math.round(BASELINE_STRESS.people * 100)}%</li>
-              <li>Cost pressure index: {Math.round(BASELINE_STRESS.cost * 100)}%</li>
-              <li>Execution constraint: {Math.round(BASELINE_STRESS.execution * 100)}%</li>
-              <li>Macro exposure: {Math.round(BASELINE_STRESS.macro * 100)}%</li>
+              <li>People stress level: {Math.round(stress.people * 100)}%</li>
+              <li>Cost pressure index: {Math.round(stress.cost * 100)}%</li>
+              <li>
+                Execution constraint: {Math.round(stress.execution * 100)}%
+              </li>
+              <li>Macro exposure: {Math.round(stress.macro * 100)}%</li>
             </ul>
           </div>
 
@@ -144,18 +176,18 @@ export default function BaselinePage() {
         <div style={{ display: "flex", justifyContent: "center" }}>
           <div
             style={{
-              background: "radial-gradient(circle at 50% 40%, #0b1220 0%, #020617 70%)",
+              background:
+                "radial-gradient(circle at 50% 40%, #0b1220 0%, #020617 70%)",
               border: "1px solid rgba(56,189,248,0.15)",
               borderRadius: 20,
               padding: 28,
               boxShadow: `
-                0 0 80px rgba(0,0,0,0.65)
+                0 0 80px rgba(0,0,0,0.65),
                 0 0 25px rgba(56,189,248,0.08)
               `,
-
             }}
           >
-            <MagicCube stress={BASELINE_STRESS} persona={BASELINE_PERSONA} size={540} />
+            <MagicCube stress={stress} persona={persona} size={540} />
           </div>
         </div>
 
@@ -165,8 +197,16 @@ export default function BaselinePage() {
             DOMINANT STRESS DRIVER
           </div>
 
-          <div style={{ color: "#fb923c", letterSpacing: "0.05em", fontWeight: 700, marginBottom: 14 }}>
-            Cost Pressure
+          <div
+            style={{
+              color: "#fb923c",
+              letterSpacing: "0.05em",
+              fontWeight: 700,
+              marginBottom: 14,
+              textTransform: "uppercase",
+            }}
+          >
+            {dominantStress}
           </div>
 
           <div

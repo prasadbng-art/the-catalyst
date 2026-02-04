@@ -1,16 +1,34 @@
 import type { StressProfile } from "../components/visuals/motion";
 
-const KEY = "catalyst_simulated_stress";
+type SimulationState = {
+    stress: StressProfile;
+    riskReductionPct: number;
+    horizonYears: 1 | 3;
+};
 
-export function setSimulatedStress(stress: StressProfile | null) {
-    if (stress) {
-        sessionStorage.setItem(KEY, JSON.stringify(stress));
-    } else {
-        sessionStorage.removeItem(KEY);
-    }
+let simulatedState: SimulationState | null = null;
+
+/* ================= SET ================= */
+export function setSimulatedStress(
+    stress: StressProfile,
+    riskReductionPct: number,
+    horizonYears: 1 | 3
+) {
+    simulatedState = {
+        stress,
+        riskReductionPct,
+        horizonYears,
+    };
+
+    console.log("SETTING SIMULATION STATE:", simulatedState);
 }
 
-export function getSimulatedStress(): StressProfile | null {
-    const raw = sessionStorage.getItem(KEY);
-    return raw ? (JSON.parse(raw) as StressProfile) : null;
+/* ================= GET ================= */
+export function getSimulatedStress() {
+    return simulatedState;
+}
+
+/* ================= RESET ================= */
+export function clearSimulatedStress() {
+    simulatedState = null;
 }
