@@ -65,7 +65,7 @@ export default function SimulatePage() {
     execution: Math.max(0, BASELINE_STRESS.execution - 0.25 * intensity),
     macro: BASELINE_STRESS.macro,
   };
-  setSimulatedStress(simulatedStress, riskReductionPct, timeHorizon);
+  setSimulatedStress(simulatedStress);
 
   /* =========================================================
      Financial impact
@@ -227,7 +227,7 @@ export default function SimulatePage() {
             }}
             onClick={() => {
               console.log("SETTING SIMULATED STRESS:", simulatedStress);
-              setSimulatedStress(simulatedStress, riskReductionPct, timeHorizon);
+              setSimulatedStress(simulatedStress);
               setGroundRealitySignal({
                 horizonMonths: timeHorizon * 12,
                 attritionDeltaPct: -riskReductionPct,

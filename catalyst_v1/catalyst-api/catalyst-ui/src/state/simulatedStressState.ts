@@ -1,34 +1,15 @@
 import type { StressProfile } from "../components/visuals/motion";
 
-type SimulationState = {
-    stress: StressProfile;
-    riskReductionPct: number;
-    horizonYears: 1 | 3;
-};
+let simulatedStress: StressProfile | null = null;
 
-let simulatedState: SimulationState | null = null;
-
-/* ================= SET ================= */
-export function setSimulatedStress(
-    stress: StressProfile,
-    riskReductionPct: number,
-    horizonYears: 1 | 3
-) {
-    simulatedState = {
-        stress,
-        riskReductionPct,
-        horizonYears,
-    };
-
-    console.log("SETTING SIMULATION STATE:", simulatedState);
+export function setSimulatedStress(stress: StressProfile | null) {
+    simulatedStress = stress;
 }
 
-/* ================= GET ================= */
-export function getSimulatedStress() {
-    return simulatedState;
+export function getSimulatedStress(): StressProfile | null {
+    return simulatedStress;
 }
 
-/* ================= RESET ================= */
-export function clearSimulatedStress() {
-    simulatedState = null;
+export function hasSimulatedStress(): boolean {
+    return simulatedStress !== null;
 }

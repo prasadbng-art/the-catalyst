@@ -4,7 +4,7 @@ import MagicCube from "../components/visuals/MagicCube";
 import { baseOrgState } from "../state/orgState";
 import {
   getSimulatedStress,
-  clearSimulatedStress,
+  setSimulatedStress,
 } from "../state/simulatedStressState";
 import type { Persona } from "../types/persona";
 /* =========================================================
@@ -16,20 +16,14 @@ function getDominantStress(stress: typeof baseOrgState.stress) {
 }
 
 export default function BaselinePage() {
+  const simulated = getSimulatedStress();
+  const stress = simulated ?? baseOrgState.stress;
   const [persona, setPersona] = useState<Persona>("CEO");
   const navigate = useNavigate();
 
   /* =========================================================
      Stress source (single truth)
   ========================================================= */
-  const simulation = getSimulatedStress();
-
-  const stress = simulation
-    ? simulation.stress
-    : baseOrgState.stress;
-
-  console.log("READING SIMULATED STRESS:", simulation);
-
   const dominantStress = getDominantStress(stress);
 
   return (
@@ -40,7 +34,7 @@ export default function BaselinePage() {
           ENTERPRISE EQUILIBRIUM SCORE
         </h2>
 
-        {simulation && (
+        {simulated && (
           <div
             style={{
               marginTop: 12,
@@ -67,7 +61,7 @@ export default function BaselinePage() {
 
             <button
               onClick={() => {
-                clearSimulatedStress();
+                setSimulatedStress(null);
                 window.location.reload();
               }}
               style={{

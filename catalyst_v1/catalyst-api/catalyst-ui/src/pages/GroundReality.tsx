@@ -19,8 +19,8 @@ export default function GroundRealityPage() {
     /* =========================================================
        Stress source (single truth)
     ========================================================= */
-    const simulation = getSimulatedStress();
-    const stress = simulation ? simulation.stress : baseOrgState.stress;
+    const simulated = getSimulatedStress();
+    const stress = simulated ?? baseOrgState.stress;
 
     console.log("GROUND REALITY — STRESS SOURCE:", stress);
 
@@ -108,7 +108,7 @@ export default function GroundRealityPage() {
                 <div id="kpi-anchor">
                     <h1 style={{ marginTop: 0 }}>Mapped Metrics</h1>
 
-                    {simulation && (
+                    {simulated && (
                         <div
                             style={{
                                 marginBottom: 16,
