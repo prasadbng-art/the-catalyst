@@ -3,9 +3,7 @@ import ReferenceDump from "./ground-reality/ReferenceDump";
 import TopKpis from "./ground-reality/TopKpis";
 import SentimentBars from "./ground-reality/SentimentBars";
 import LocationTable from "./ground-reality/LocationTable";
-
 import { baseOrgState } from "../state/orgState";
-import { getSimulatedStress } from "../state/simulatedStressState";
 
 /* =========================================================
    Helpers
@@ -17,20 +15,10 @@ function getDominantStress(stress: typeof baseOrgState.stress) {
 
 export default function GroundRealityPage() {
     /* =========================================================
-       Stress source (single truth)
-    ========================================================= */
-    const simulated = getSimulatedStress();
-    const stress = simulated ?? baseOrgState.stress;
-
-    console.log("GROUND REALITY — STRESS SOURCE:", stress);
-
-    const dominantStress = getDominantStress(stress);
-
-    /* =========================================================
        KPI derivation (aligned, non-nonsensical)
     ========================================================= */
     const TOTAL_HEADCOUNT = 1888;
-    const ATTRITION_RATE = Math.round(stress.people * 100); // proxy
+    const ATTRITION_RATE = Math.round(baseOrgState.stress.people * 100); // proxy
     const ATTRITS_YTD = Math.round((ATTRITION_RATE / 100) * TOTAL_HEADCOUNT);
     const COST_PER_ATTRIT = 124_121;
 
@@ -99,28 +87,17 @@ export default function GroundRealityPage() {
         ),
     }));
 
+    const dominantStress = getDominantStress(baseOrgState.stress);
+
     /* =========================================================
        Render
     ========================================================= */
+
     return (
         <PageShell>
             <ReferenceDump>
                 <div id="kpi-anchor">
                     <h1 style={{ marginTop: 0 }}>Mapped Metrics</h1>
-
-                    {simulated && (
-                        <div
-                            style={{
-                                marginBottom: 16,
-                                fontSize: 12,
-                                color: "#38bdf8",
-                                letterSpacing: "0.04em",
-                                textTransform: "uppercase",
-                            }}
-                        >
-                            Simulated scenario reflected
-                        </div>
-                    )}
 
                     <TopKpis items={kpis} />
 

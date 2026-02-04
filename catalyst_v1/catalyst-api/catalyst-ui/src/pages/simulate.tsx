@@ -1,22 +1,12 @@
 import { useState } from "react";
 import PageShell from "../components/layout/PageShell";
 import MagicCube from "../components/visuals/MagicCube";
-import type { StressProfile } from "../components/visuals/motion";
 import type { Persona } from "../types/persona";
 import { personaConfig } from "../persona/personaConfig";
 import { setGroundRealitySignal } from "../state/groundRealitysignal";
 import { useNavigate, useLocation } from "react-router-dom";
 import { setSimulatedStress } from "../state/simulatedStressState";
-
-/* =========================================================
-   Baseline stress (mirrors Baseline page)
-========================================================= */
-const BASELINE_STRESS: StressProfile = {
-  people: 0.65,
-  cost: 0.7,
-  execution: 0.45,
-  macro: 0.6,
-};
+import { baseOrgState } from "../state/orgState";
 
 /* =========================================================
    Financial model constants
@@ -59,13 +49,14 @@ export default function SimulatePage() {
   ========================================================= */
   const intensity = riskReductionPct / 100;
 
-  const simulatedStress: StressProfile = {
-    people: Math.max(0, BASELINE_STRESS.people - 0.4 * intensity),
-    cost: Math.max(0, BASELINE_STRESS.cost - 0.3 * intensity),
-    execution: Math.max(0, BASELINE_STRESS.execution - 0.25 * intensity),
-    macro: BASELINE_STRESS.macro,
+  const simulatedStress = {
+    people: Math.max(0, baseOrgState.stress.people - 0.4 * intensity),
+    cost: Math.max(0, baseOrgState.stress.cost - 0.3 * intensity),
+    execution: Math.max(0, baseOrgState.stress.execution - 0.25 * intensity),
+    macro: baseOrgState.stress.macro,
   };
   setSimulatedStress(simulatedStress);
+  navigate("/ground-reality");
 
   /* =========================================================
      Financial impact

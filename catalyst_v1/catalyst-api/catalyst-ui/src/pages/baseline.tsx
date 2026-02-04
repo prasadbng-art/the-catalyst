@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MagicCube from "../components/visuals/MagicCube";
 import { baseOrgState } from "../state/orgState";
@@ -6,7 +5,8 @@ import {
   getSimulatedStress,
   setSimulatedStress,
 } from "../state/simulatedStressState";
-import type { Persona } from "../types/persona";
+import { PERSONAS } from "../types/persona";
+
 /* =========================================================
    Helpers
 ========================================================= */
@@ -18,8 +18,8 @@ function getDominantStress(stress: typeof baseOrgState.stress) {
 export default function BaselinePage() {
   const simulated = getSimulatedStress();
   const stress = simulated ?? baseOrgState.stress;
-  const [persona, setPersona] = useState<Persona>("CEO");
   const navigate = useNavigate();
+  const BASELINE_PERSONA = PERSONAS.CEO
 
   /* =========================================================
      Stress source (single truth)
@@ -93,19 +93,9 @@ export default function BaselinePage() {
         }}
       >
         {/* ================= LEFT PANEL ================= */}
-        <div>
-          <div style={{ marginBottom: 20 }}>
-            <label style={{ marginRight: 8 }}>View as:</label>
-            <select
-              value={persona}
-              onChange={(e) => setPersona(e.target.value as Persona)}
-            >
-              <option value="CEO">CEO</option>
-              <option value="CFO">CFO</option>
-              <option value="CHRO">CHRO</option>
-            </select>
-          </div>
 
+        {/* ================= LEFT PANEL ================= */}
+        <div>
           <div
             style={{
               background: "#020617",
@@ -115,6 +105,7 @@ export default function BaselinePage() {
               marginBottom: 24,
             }}
           >
+
             <strong>Enterprise Risk Snapshot</strong>
             <p style={{ marginTop: 12 }}>
               This view shows the level of workforce pressure the organization is
@@ -181,7 +172,7 @@ export default function BaselinePage() {
               `,
             }}
           >
-            <MagicCube stress={stress} persona={persona} size={540} />
+            <MagicCube stress={stress} persona={BASELINE_PERSONA} size={540} />
           </div>
         </div>
 
