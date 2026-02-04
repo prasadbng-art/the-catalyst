@@ -6,6 +6,7 @@ import type { Persona } from "../types/persona";
 import { personaConfig } from "../persona/personaConfig";
 import { setSimulatedStress } from "../state/simulatedStressState";
 import { baseOrgState } from "../state/orgState";
+import { useLocation } from "react-router-dom";
 
 /* =========================================================
    Financial model constants
@@ -27,7 +28,8 @@ export default function Simulation() {
   /* =========================================================
      Read attrition delta from Retention Simulator (optional)
   ========================================================= */
-  const params = new URLSearchParams(window.location.search);
+  const { search } = useLocation();
+  const params = new URLSearchParams(search);
   const attritionDeltaParam = params.get("attritionDelta");
   const attritionDelta = attritionDeltaParam
     ? parseFloat(attritionDeltaParam)
