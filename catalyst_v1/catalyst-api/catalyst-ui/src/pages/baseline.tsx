@@ -108,39 +108,6 @@ export default function BaselinePage() {
             </ul>
           </div>
 
-          <div>
-            <button
-              type="button"
-              onClick={() => navigate("/simulation")}
-              style={{
-                padding: "10px 16px",
-                background: "#2563eb",
-                color: "#fff",
-                borderRadius: 6,
-                border: "none",
-                cursor: "pointer",
-                marginRight: 16,
-              }}
-            >
-              Model Financial Impact →
-            </button>
-
-            <button
-              type="button"
-              onClick={() => navigate("/retention-simulator")}
-              style={{
-                padding: "10px 14px",
-                background: "#1d4ed8",
-                color: "white",
-                border: "none",
-                borderRadius: 6,
-                cursor: "pointer",
-                fontWeight: 600,
-              }}
-            >
-              Retention Intervention Simulator →
-            </button>
-          </div>
         </div>
 
         {/* ================= CENTER PANEL ================= */}
@@ -195,6 +162,53 @@ export default function BaselinePage() {
           </div>
         </div>
       </div>
+      {/* ===== NEXT STEPS ===== */}
+      <div
+        style={{
+          marginTop: 100,
+          paddingTop: 32,
+          borderTop: "1px solid #1e293b",
+          display: "flex",
+          justifyContent: "center",
+          gap: 20,
+          flexWrap: "wrap",
+        }}
+      >
+        {[
+          {
+            label: "Explore Operational Drivers →",
+            path: "/ground-reality",
+          },
+          {
+            label: "Model Financial Impact →",
+            path: "/simulation",
+          },
+          {
+            label: "Run Retention Scenario →",
+            path: "/retention-simulator",
+          },
+        ].map((cta) => (
+          <button
+            key={cta.path}
+            type="button"
+            onClick={() => navigate(cta.path)}
+            style={{
+              padding: "12px 20px",
+              background: "#2563eb",
+              border: "none",
+              borderRadius: 8,
+              color: "#ffffff",
+              cursor: "pointer",
+              fontWeight: 600,
+              minWidth: 220,
+              textAlign: "center",
+            }}
+          >
+            {cta.label}
+          </button>
+        ))}
+      </div>
     </div>
   );
 }
+
