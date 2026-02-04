@@ -56,13 +56,12 @@ export default function BaselinePage() {
                 textTransform: "uppercase",
               }}
             >
-              Simulated Scenario Active
+              Simulation Active
             </div>
 
             <button
               onClick={() => {
                 setSimulatedStress(null);
-                window.location.reload();
               }}
               style={{
                 padding: "6px 12px",
@@ -92,8 +91,6 @@ export default function BaselinePage() {
           gridTemplateColumns: "520px 720px 420px",
         }}
       >
-        {/* ================= LEFT PANEL ================= */}
-
         {/* ================= LEFT PANEL ================= */}
         <div>
           <div
