@@ -3,7 +3,6 @@ import PageShell from "../components/layout/PageShell";
 import MagicCube from "../components/visuals/MagicCube";
 import type { Persona } from "../types/persona";
 import { personaConfig } from "../persona/personaConfig";
-import { setGroundRealitySignal } from "../state/groundRealitysignal";
 import { useNavigate, useLocation } from "react-router-dom";
 import { setSimulatedStress } from "../state/simulatedStressState";
 import { baseOrgState } from "../state/orgState";
@@ -27,11 +26,13 @@ export default function SimulatePage() {
   const [persona, setPersona] = useState<Persona>("CFO");
 
   /* =========================================================
-     Read attrition delta from Retention Simulator (if present)
+     Read attrition delta from Retention Simulator (optional)
   ========================================================= */
   const params = new URLSearchParams(location.search);
   const attritionDeltaParam = params.get("attritionDelta");
-  const attritionDelta = attritionDeltaParam ? parseFloat(attritionDeltaParam) : null;
+  const attritionDelta = attritionDeltaParam
+    ? parseFloat(attritionDeltaParam)
+    : null;
 
   const scenarioRiskReduction =
     attritionDelta !== null ? Math.abs(attritionDelta) : null;
@@ -40,16 +41,16 @@ export default function SimulatePage() {
   const [riskReductionPct, setRiskReductionPct] = useState(
     scenarioRiskReduction ?? 10
   );
-
   const [interventionCost, setInterventionCost] = useState(100000);
   const [timeHorizon, setTimeHorizon] = useState<1 | 3>(3);
 
   /* =========================================================
-     Stress derivation (for cube preview)
+     Stress derivation (PREVIEW ONLY)
+     — no persistence here
   ========================================================= */
   const intensity = riskReductionPct / 100;
 
-  const simulatedStress = {
+  const simulatedStressPreview = {
     people: Math.max(0, baseOrgState.stress.people - 0.4 * intensity),
     cost: Math.max(0, baseOrgState.stress.cost - 0.3 * intensity),
     execution: Math.max(0, baseOrgState.stress.execution - 0.25 * intensity),
@@ -122,7 +123,9 @@ export default function SimulatePage() {
                     marginRight: 8,
                     padding: "8px 14px",
                     borderRadius: 6,
-                    border: active ? "2px solid #2563eb" : "1px solid #1e293b",
+                    border: active
+                      ? "2px solid #2563eb"
+                      : "1px solid #1e293b",
                     background: active ? "#2563eb" : "#020617",
                     color: active ? "#ffffff" : "#cbd5f5",
                     fontWeight: active ? 600 : 500,
@@ -175,10 +178,16 @@ export default function SimulatePage() {
                   marginRight: 8,
                   padding: "6px 12px",
                   borderRadius: 6,
-                  border: timeHorizon === y ? "2px solid #2563eb" : "1px solid #1e293b",
-                  background: timeHorizon === y ? "#2563eb" : "#020617",
-                  color: timeHorizon === y ? "#ffffff" : "#cbd5f5",
-                  fontWeight: timeHorizon === y ? 600 : 500,
+                  border:
+                    timeHorizon === y
+                      ? "2px solid #2563eb"
+                      : "1px solid #1e293b",
+                  background:
+                    timeHorizon === y ? "#2563eb" : "#020617",
+                  color:
+                    timeHorizon === y ? "#ffffff" : "#cbd5f5",
+                  fontWeight:
+                    timeHorizon === y ? 600 : 500,
                   cursor: "pointer",
                 }}
               >
@@ -190,19 +199,37 @@ export default function SimulatePage() {
           {/* Financial impact */}
           <h2 style={{ marginBottom: 16 }}>Financial Impact</h2>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
-            <Metric label="Low Impact" value={`$${Math.round(ladder.low).toLocaleString()}`} />
-            <Metric label="Expected Impact" value={`$${Math.round(ladder.base).toLocaleString()}`} />
-            <Metric label="High Impact" value={`$${Math.round(ladder.high).toLocaleString()}`} />
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, 1fr)",
+              gap: 24,
+            }}
+          >
+            <Metric
+              label="Low Impact"
+              value={`$${Math.round(ladder.low).toLocaleString()}`}
+            />
+            <Metric
+              label="Expected Impact"
+              value={`$${Math.round(ladder.base).toLocaleString()}`}
+            />
+            <Metric
+              label="High Impact"
+              value={`$${Math.round(ladder.high).toLocaleString()}`}
+            />
           </div>
 
           <p style={{ marginTop: 12, fontSize: 13, opacity: 0.65 }}>
-            Estimated cost avoided over {timeHorizon} year{timeHorizon === 3 ? "s" : ""}.
+            Estimated cost avoided over {timeHorizon} year
+            {timeHorizon === 3 ? "s" : ""}.
           </p>
 
-          <p style={{ marginTop: 20, opacity: 0.85 }}>{copy.narrative}</p>
+          <p style={{ marginTop: 20, opacity: 0.85 }}>
+            {copy.narrative}
+          </p>
 
-          {/* Deep dive CTA */}
+          {/* Persist + navigate */}
           <button
             style={{
               marginTop: 32,
@@ -215,15 +242,7 @@ export default function SimulatePage() {
               cursor: "pointer",
             }}
             onClick={() => {
-              console.log("SETTING SIMULATED STRESS:", simulatedStress);
-              setSimulatedStress(simulatedStress);
-              setGroundRealitySignal({
-                horizonMonths: timeHorizon * 12,
-                attritionDeltaPct: -riskReductionPct,
-                costDeltaPct: -8,
-                dominantDriver: "COST",
-                interventionConfidence: 0.72,
-              });
+              setSimulatedStress(simulatedStressPreview);
               navigate("/ground-reality");
             }}
           >
@@ -232,13 +251,39 @@ export default function SimulatePage() {
         </div>
 
         {/* ================= RIGHT — Stress Preview ================= */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
-          <div style={{ fontSize: 14, fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase", color: "#94a3b8" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 16,
+          }}
+        >
+          <div
+            style={{
+              fontSize: 14,
+              fontWeight: 600,
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+              color: "#94a3b8",
+            }}
+          >
             Organizational Stress (Simulated)
           </div>
 
-          <div style={{ background: "#020617", border: "1px solid #1e293b", borderRadius: 16, padding: 24 }}>
-            <MagicCube stress={simulatedStress} persona={persona} size={300} />
+          <div
+            style={{
+              background: "#020617",
+              border: "1px solid #1e293b",
+              borderRadius: 16,
+              padding: 24,
+            }}
+          >
+            <MagicCube
+              stress={simulatedStressPreview}
+              persona={persona}
+              size={300}
+            />
           </div>
         </div>
       </div>
