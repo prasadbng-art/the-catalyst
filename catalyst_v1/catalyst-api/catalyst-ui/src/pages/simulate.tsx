@@ -1,9 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import PageShell from "../components/layout/PageShell";
 import MagicCube from "../components/visuals/MagicCube";
 import type { Persona } from "../types/persona";
 import { personaConfig } from "../persona/personaConfig";
-import { useNavigate, useLocation } from "react-router-dom";
 import { setSimulatedStress } from "../state/simulatedStressState";
 import { baseOrgState } from "../state/orgState";
 
@@ -18,9 +18,8 @@ const SENSITIVITY = {
   high: 1.3,
 };
 
-export default function SimulatePage() {
+export default function Simulation() {
   const navigate = useNavigate();
-  const location = useLocation();
 
   /* ---------------- Persona ---------------- */
   const [persona, setPersona] = useState<Persona>("CFO");
@@ -28,7 +27,7 @@ export default function SimulatePage() {
   /* =========================================================
      Read attrition delta from Retention Simulator (optional)
   ========================================================= */
-  const params = new URLSearchParams(location.search);
+  const params = new URLSearchParams(window.location.search);
   const attritionDeltaParam = params.get("attritionDelta");
   const attritionDelta = attritionDeltaParam
     ? parseFloat(attritionDeltaParam)
@@ -46,7 +45,6 @@ export default function SimulatePage() {
 
   /* =========================================================
      Stress derivation (PREVIEW ONLY)
-     — no persistence here
   ========================================================= */
   const intensity = riskReductionPct / 100;
 
@@ -70,6 +68,7 @@ export default function SimulatePage() {
 
   const copy = personaConfig[persona];
 
+  /* ---------------- Reset (STAYS ON PAGE) ---------------- */
   return (
     <PageShell>
       <div
@@ -182,12 +181,9 @@ export default function SimulatePage() {
                     timeHorizon === y
                       ? "2px solid #2563eb"
                       : "1px solid #1e293b",
-                  background:
-                    timeHorizon === y ? "#2563eb" : "#020617",
-                  color:
-                    timeHorizon === y ? "#ffffff" : "#cbd5f5",
-                  fontWeight:
-                    timeHorizon === y ? 600 : 500,
+                  background: timeHorizon === y ? "#2563eb" : "#020617",
+                  color: timeHorizon === y ? "#ffffff" : "#cbd5f5",
+                  fontWeight: timeHorizon === y ? 600 : 500,
                   cursor: "pointer",
                 }}
               >
@@ -206,31 +202,20 @@ export default function SimulatePage() {
               gap: 24,
             }}
           >
-            <Metric
-              label="Low Impact"
-              value={`$${Math.round(ladder.low).toLocaleString()}`}
-            />
-            <Metric
-              label="Expected Impact"
-              value={`$${Math.round(ladder.base).toLocaleString()}`}
-            />
-            <Metric
-              label="High Impact"
-              value={`$${Math.round(ladder.high).toLocaleString()}`}
-            />
+            <Metric label="Low Impact" value={`$${Math.round(ladder.low).toLocaleString()}`} />
+            <Metric label="Expected Impact" value={`$${Math.round(ladder.base).toLocaleString()}`} />
+            <Metric label="High Impact" value={`$${Math.round(ladder.high).toLocaleString()}`} />
           </div>
 
           <p style={{ marginTop: 12, fontSize: 13, opacity: 0.65 }}>
-            Estimated cost avoided over {timeHorizon} year
-            {timeHorizon === 3 ? "s" : ""}.
+            Estimated cost avoided over {timeHorizon} year{timeHorizon === 3 ? "s" : ""}.
           </p>
 
-          <p style={{ marginTop: 20, opacity: 0.85 }}>
-            {copy.narrative}
-          </p>
+          <p style={{ marginTop: 20, opacity: 0.85 }}>{copy.narrative}</p>
 
           {/* Persist + navigate */}
           <button
+            type="button"
             style={{
               marginTop: 32,
               padding: "12px 20px",
@@ -243,22 +228,34 @@ export default function SimulatePage() {
             }}
             onClick={() => {
               setSimulatedStress(simulatedStressPreview);
-              navigate("../ground-reality");
+              navigate("/ground-reality");
             }}
           >
             Explore Ground Reality →
           </button>
+
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setSimulatedStress(null);
+            }}
+            style={{
+              marginTop: "12px",
+              padding: "10px 16px",
+              background: "#e5e7eb",
+              border: "1px solid #d1d5db",
+              borderRadius: "6px",
+              cursor: "pointer",
+            }}
+          >
+            Reset Simulation
+          </button>
         </div>
 
         {/* ================= RIGHT — Stress Preview ================= */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 16,
-          }}
-        >
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
           <div
             style={{
               fontSize: 14,
@@ -279,11 +276,7 @@ export default function SimulatePage() {
               padding: 24,
             }}
           >
-            <MagicCube
-              stress={simulatedStressPreview}
-              persona={persona}
-              size={300}
-            />
+            <MagicCube stress={simulatedStressPreview} persona={persona} size={300} />
           </div>
         </div>
       </div>
