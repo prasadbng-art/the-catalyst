@@ -11,7 +11,7 @@ export default function App() {
       <Route element={<AppShell />}>
         <Route index element={<Navigate to="baseline" replace />} />
         <Route path="baseline" element={<BaselinePage />} />
-        <Route path="/simulation" element={<SimulatePage />} />
+        <Route path="simulation" element={<SimulatePage />} />
         <Route path="retention-simulator" element={<RetentionSimulatorPage />} />
         <Route path="ground-reality" element={<GroundRealityPage />} />
       </Route>

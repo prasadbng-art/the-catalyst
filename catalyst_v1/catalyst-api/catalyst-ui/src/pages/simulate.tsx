@@ -241,7 +241,7 @@ export default function Simulation() {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              setSimulatedStress(null);
+              console.log("RESET CLICKED - no state change");
             }}
             style={{
               marginTop: "12px",
