@@ -243,7 +243,7 @@ export default function SimulatePage() {
             }}
             onClick={() => {
               setSimulatedStress(simulatedStressPreview);
-              navigate("/ground-reality");
+              navigate("../ground-reality");
             }}
           >
             Explore Ground Reality →

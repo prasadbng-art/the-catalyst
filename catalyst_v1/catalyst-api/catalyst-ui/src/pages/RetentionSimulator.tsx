@@ -57,7 +57,7 @@ export default function RetentionSimulatorPage() {
 
     const handleSendToFinancials = () => {
         if (deltaPct === null) return;
-        navigate(`/financial-simulation?attritionDelta=${deltaPct}`);
+        navigate(`/simulation?attritionDelta=${deltaPct}`);
     };
 
     const handleSimulate = (id: string, simulatedRisk: number | null) => {
