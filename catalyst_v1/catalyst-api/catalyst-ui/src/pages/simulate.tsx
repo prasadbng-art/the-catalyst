@@ -56,7 +56,6 @@ export default function SimulatePage() {
     macro: baseOrgState.stress.macro,
   };
   setSimulatedStress(simulatedStress);
-  navigate("/ground-reality");
 
   /* =========================================================
      Financial impact
