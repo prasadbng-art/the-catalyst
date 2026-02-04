@@ -19,17 +19,14 @@ export default function BaselinePage() {
   const simulated = getSimulatedStress();
   const stress = simulated ?? baseOrgState.stress;
   const navigate = useNavigate();
-  const BASELINE_PERSONA = PERSONAS.CEO
+  const BASELINE_PERSONA = PERSONAS.CEO;
 
-  /* =========================================================
-     Stress source (single truth)
-  ========================================================= */
   const dominantStress = getDominantStress(stress);
 
   return (
     <div style={{ padding: "40px 60px" }}>
       {/* ===== HEADER ===== */}
-      <div style={{ textAlign: "center", marginBottom: 120 }}>
+      <div style={{ textAlign: "center", marginBottom: 80 }}>
         <h2 style={{ fontSize: 28, letterSpacing: "0.08em" }}>
           ENTERPRISE EQUILIBRIUM SCORE
         </h2>
@@ -37,41 +34,33 @@ export default function BaselinePage() {
         {simulated && (
           <div
             style={{
-              marginTop: 12,
+              margin: "20px auto 0",
+              padding: "10px 14px",
+              borderRadius: 8,
+              background: "#1e293b",
+              border: "1px solid #334155",
               display: "flex",
-              gap: 12,
               alignItems: "center",
-              justifyContent: "center",
+              justifyContent: "space-between",
+              gap: 12,
+              maxWidth: 560,
             }}
           >
-            <div
-              style={{
-                padding: "6px 12px",
-                background: "#1e293b",
-                border: "1px solid #334155",
-                borderRadius: 999,
-                fontSize: 12,
-                color: "#38bdf8",
-                letterSpacing: "0.05em",
-                textTransform: "uppercase",
-              }}
-            >
-              Simulation Active
-            </div>
+            <span style={{ fontSize: 14, color: "#cbd5f5" }}>
+              Simulation Active — Viewing adjusted organizational state
+            </span>
 
             <button
-              onClick={() => {
-                setSimulatedStress(null);
-              }}
+              type="button"
+              onClick={() => setSimulatedStress(null)}
               style={{
                 padding: "6px 12px",
-                background: "#334155",
-                color: "#e2e8f0",
+                borderRadius: 6,
                 border: "1px solid #475569",
-                borderRadius: 999,
-                fontSize: 12,
+                background: "#0f172a",
+                color: "#ffffff",
                 cursor: "pointer",
-                fontWeight: 500,
+                fontSize: 13,
               }}
             >
               Return to Baseline
@@ -85,6 +74,7 @@ export default function BaselinePage() {
         style={{
           maxWidth: 1400,
           paddingLeft: 90,
+          marginRight: "auto",
           display: "grid",
           gap: 120,
           alignItems: "start",
@@ -102,7 +92,6 @@ export default function BaselinePage() {
               marginBottom: 24,
             }}
           >
-
             <strong>Enterprise Risk Snapshot</strong>
             <p style={{ marginTop: 12 }}>
               This view shows the level of workforce pressure the organization is
@@ -114,15 +103,14 @@ export default function BaselinePage() {
             <ul style={{ marginTop: 12 }}>
               <li>People stress level: {Math.round(stress.people * 100)}%</li>
               <li>Cost pressure index: {Math.round(stress.cost * 100)}%</li>
-              <li>
-                Execution constraint: {Math.round(stress.execution * 100)}%
-              </li>
+              <li>Execution constraint: {Math.round(stress.execution * 100)}%</li>
               <li>Macro exposure: {Math.round(stress.macro * 100)}%</li>
             </ul>
           </div>
 
           <div>
             <button
+              type="button"
               onClick={() => navigate("/simulation")}
               style={{
                 padding: "10px 16px",
@@ -138,6 +126,7 @@ export default function BaselinePage() {
             </button>
 
             <button
+              type="button"
               onClick={() => navigate("/retention-simulator")}
               style={{
                 padding: "10px 14px",
