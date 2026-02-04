@@ -241,12 +241,15 @@ export default function Simulation() {
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              console.log("RESET CLICKED - no state change");
+              setSimulatedStress(null);
+              setRiskReductionPct(scenarioRiskReduction ?? 10);
+              setInterventionCost(100000);
+              setTimeHorizon(3);
             }}
             style={{
               marginTop: "12px",
               padding: "10px 16px",
-              background: "#e5e7eb",
+              background: "#2563eb",
               border: "1px solid #d1d5db",
               borderRadius: "6px",
               cursor: "pointer",
