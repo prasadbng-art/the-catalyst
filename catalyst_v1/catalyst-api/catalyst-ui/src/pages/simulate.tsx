@@ -6,7 +6,6 @@ import type { Persona } from "../types/persona";
 import { personaConfig } from "../persona/personaConfig";
 import { setSimulatedStress } from "../state/simulatedStressState";
 import { baseOrgState } from "../state/orgState";
-import { useLocation } from "react-router-dom";
 
 /* =========================================================
    Financial model constants
@@ -19,29 +18,14 @@ const SENSITIVITY = {
   high: 1.3,
 };
 
-export default function Simulation() {
+export default function SimulatePage() {
   const navigate = useNavigate();
 
   /* ---------------- Persona ---------------- */
   const [persona, setPersona] = useState<Persona>("CFO");
 
-  /* =========================================================
-     Read attrition delta from Retention Simulator (optional)
-  ========================================================= */
-  const { search } = useLocation();
-  const params = new URLSearchParams(search);
-  const attritionDeltaParam = params.get("attritionDelta");
-  const attritionDelta = attritionDeltaParam
-    ? parseFloat(attritionDeltaParam)
-    : null;
-
-  const scenarioRiskReduction =
-    attritionDelta !== null ? Math.abs(attritionDelta) : null;
-
   /* ---------------- Scenario inputs ---------------- */
-  const [riskReductionPct, setRiskReductionPct] = useState(
-    scenarioRiskReduction ?? 10
-  );
+  const [riskReductionPct, setRiskReductionPct] = useState(10);
   const [interventionCost, setInterventionCost] = useState(100000);
   const [timeHorizon, setTimeHorizon] = useState<1 | 3>(3);
 
@@ -70,47 +54,32 @@ export default function Simulation() {
 
   const copy = personaConfig[persona];
 
-  /* ---------------- Reset (STAYS ON PAGE) ---------------- */
+  /* =========================================================
+     Render
+  ========================================================= */
   return (
     <PageShell>
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "420px minmax(720px,1fr) 280px",
-          gap: 48,
+          gridTemplateColumns: "minmax(520px, 1.2fr) minmax(420px, 0.8fr)",
+          gridTemplateRows: "auto 1fr",
+          columnGap: "clamp(40px, 6vw, 80px)",
+          rowGap: 32,
           alignItems: "start",
         }}
       >
-        {/* ================= LEFT — Simulation Controls ================= */}
-        <div style={{ maxWidth: 640 }}>
-          <h1 style={{ fontSize: "clamp(28px, 4vw, 42px)", marginBottom: 8 }}>
+        {/* =====================================================
+            LEFT — TOP (Controls)
+        ====================================================== */}
+        <div style={{ gridColumn: 1, gridRow: 1 }}>
+          <h1 style={{ fontSize: 36, marginBottom: 8 }}>
             Financial Simulation
           </h1>
 
           <p style={{ color: "#94a3b8", marginBottom: 24 }}>
             Test how changes in retention risk translate into financial impact.
           </p>
-
-          {attritionDelta !== null && (
-            <div
-              style={{
-                marginBottom: 20,
-                padding: 12,
-                borderRadius: 8,
-                background: "#0f172a",
-                border: "1px solid #1e293b",
-                color: "#cbd5f5",
-                fontSize: 14,
-              }}
-            >
-              Using simulated attrition change (
-              <strong>
-                {attritionDelta > 0 ? "+" : ""}
-                {attritionDelta.toFixed(1)}%
-              </strong>
-              )
-            </div>
-          )}
 
           {/* Persona selector */}
           <div style={{ marginBottom: 24 }}>
@@ -153,7 +122,9 @@ export default function Simulation() {
               <input
                 type="number"
                 value={riskReductionPct}
-                onChange={(e) => setRiskReductionPct(Number(e.target.value))}
+                onChange={(e) =>
+                  setRiskReductionPct(Number(e.target.value))
+                }
                 style={{ width: "100%", marginTop: 6 }}
               />
             </div>
@@ -163,7 +134,9 @@ export default function Simulation() {
               <input
                 type="number"
                 value={interventionCost}
-                onChange={(e) => setInterventionCost(Number(e.target.value))}
+                onChange={(e) =>
+                  setInterventionCost(Number(e.target.value))
+                }
                 style={{ width: "100%", marginTop: 6 }}
               />
             </div>
@@ -183,9 +156,12 @@ export default function Simulation() {
                     timeHorizon === y
                       ? "2px solid #2563eb"
                       : "1px solid #1e293b",
-                  background: timeHorizon === y ? "#2563eb" : "#020617",
-                  color: timeHorizon === y ? "#ffffff" : "#cbd5f5",
-                  fontWeight: timeHorizon === y ? 600 : 500,
+                  background:
+                    timeHorizon === y ? "#2563eb" : "#020617",
+                  color:
+                    timeHorizon === y ? "#ffffff" : "#cbd5f5",
+                  fontWeight:
+                    timeHorizon === y ? 600 : 500,
                   cursor: "pointer",
                 }}
               >
@@ -193,8 +169,54 @@ export default function Simulation() {
               </button>
             ))}
           </div>
+        </div>
 
-          {/* Financial impact */}
+        {/* =====================================================
+            RIGHT — TOP (Cube, anchored)
+        ====================================================== */}
+        <div
+          style={{
+            gridColumn: 2,
+            gridRow: 1,
+            alignSelf: "start",
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <div
+            style={{
+              background: "#020617",
+              border: "1px solid #1e293b",
+              borderRadius: 16,
+              padding: 24,
+            }}
+          >
+            <div
+              style={{
+                fontSize: 13,
+                fontWeight: 600,
+                letterSpacing: "0.04em",
+                textTransform: "uppercase",
+                color: "#94a3b8",
+                textAlign: "center",
+                marginBottom: 12,
+              }}
+            >
+              Organizational Stress (Simulated)
+            </div>
+
+            <MagicCube
+              stress={simulatedStressPreview}
+              persona={persona}
+              size={300}
+            />
+          </div>
+        </div>
+
+        {/* =====================================================
+            LEFT — BOTTOM (Impact + CTAs)
+        ====================================================== */}
+        <div style={{ gridColumn: 1, gridRow: 2 }}>
           <h2 style={{ marginBottom: 16 }}>Financial Impact</h2>
 
           <div
@@ -202,89 +224,88 @@ export default function Simulation() {
               display: "grid",
               gridTemplateColumns: "repeat(3, 1fr)",
               gap: 24,
+              marginBottom: 16,
             }}
           >
-            <Metric label="Low Impact" value={`$${Math.round(ladder.low).toLocaleString()}`} />
-            <Metric label="Expected Impact" value={`$${Math.round(ladder.base).toLocaleString()}`} />
-            <Metric label="High Impact" value={`$${Math.round(ladder.high).toLocaleString()}`} />
+            <Metric
+              label="Low Impact"
+              value={`$${Math.round(ladder.low).toLocaleString()}`}
+            />
+            <Metric
+              label="Expected Impact"
+              value={`$${Math.round(ladder.base).toLocaleString()}`}
+            />
+            <Metric
+              label="High Impact"
+              value={`$${Math.round(ladder.high).toLocaleString()}`}
+            />
           </div>
 
-          <p style={{ marginTop: 12, fontSize: 13, opacity: 0.65 }}>
-            Estimated cost avoided over {timeHorizon} year{timeHorizon === 3 ? "s" : ""}.
+          <p style={{ fontSize: 13, opacity: 0.65 }}>
+            Estimated cost avoided over {timeHorizon} year
+            {timeHorizon === 3 ? "s" : ""}.
           </p>
 
-          <p style={{ marginTop: 20, opacity: 0.85 }}>{copy.narrative}</p>
+          <p style={{ marginTop: 20, opacity: 0.85 }}>
+            {copy.narrative}
+          </p>
 
-          {/* Persist + navigate */}
-          <button
-            type="button"
-            style={{
-              marginTop: 32,
-              padding: "12px 20px",
-              background: "#2563eb",
-              color: "#ffffff",
-              borderRadius: 8,
-              border: "none",
-              fontWeight: 600,
-              cursor: "pointer",
-            }}
-            onClick={() => {
-              setSimulatedStress(simulatedStressPreview);
-              navigate("/ground-reality");
-            }}
-          >
-            Explore Ground Reality →
-          </button>
+          {/* CTAs */}
+          <div style={{ marginTop: 32, display: "flex", gap: 16 }}>
+            <button
+              onClick={() => navigate("/ground-reality")}
+              style={{
+                padding: "12px 20px",
+                background: "#2563eb",
+                border: "none",
+                borderRadius: 8,
+                color: "#ffffff",
+                fontWeight: 600,
+                cursor: "pointer",
+              }}
+            >
+              Explore Ground Reality →
+            </button>
 
-          <button
-            type="button"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setSimulatedStress(null);
-              setRiskReductionPct(scenarioRiskReduction ?? 10);
-              setInterventionCost(100000);
-              setTimeHorizon(3);
-            }}
-            style={{
-              marginTop: "12px",
-              padding: "10px 16px",
-              background: "#2563eb",
-              border: "1px solid #d1d5db",
-              borderRadius: "6px",
-              cursor: "pointer",
-            }}
-          >
-            Reset Simulation
-          </button>
-        </div>
+            <button
+              onClick={() => navigate("/retention-simulator")}
+              style={{
+                padding: "12px 20px",
+                background: "#1e293b",
+                border: "1px solid #334155",
+                borderRadius: 8,
+                color: "#e5e7eb",
+                fontWeight: 600,
+                cursor: "pointer",
+              }}
+            >
+              Run Retention Simulation →
+            </button>
+          </div>
 
-        {/* ================= RIGHT — Stress Preview ================= */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
-          <div
+          {/* Reset */}
+          <label
             style={{
-              fontSize: 14,
-              fontWeight: 600,
-              letterSpacing: "0.04em",
-              textTransform: "uppercase",
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              marginTop: 16,
+              fontSize: 13,
               color: "#94a3b8",
-              marginTop: 156,
+              cursor: "pointer",
             }}
           >
-            Organizational Stress (Simulated)
-          </div>
-
-          <div
-            style={{
-              background: "#020617",
-              border: "1px solid #1e293b",
-              borderRadius: 16,
-              padding: 24,
-
-            }}
-          >
-            <MagicCube stress={simulatedStressPreview} persona={persona} size={300} />
-          </div>
+            <input
+              type="checkbox"
+              onChange={() => {
+                setSimulatedStress(null);
+                setRiskReductionPct(10);
+                setInterventionCost(100000);
+                setTimeHorizon(3);
+              }}
+            />
+            Reset simulation inputs
+          </label>
         </div>
       </div>
     </PageShell>
@@ -293,7 +314,14 @@ export default function Simulation() {
 
 function Metric({ label, value }: { label: string; value: string }) {
   return (
-    <div style={{ padding: 16, borderRadius: 8, border: "1px solid #1e293b" }}>
+    <div
+      style={{
+        padding: 16,
+        borderRadius: 8,
+        border: "1px solid #1e293b",
+        background: "#020617",
+      }}
+    >
       <div style={{ fontSize: 12, opacity: 0.7 }}>{label}</div>
       <div style={{ fontSize: 22, fontWeight: 600 }}>{value}</div>
     </div>
