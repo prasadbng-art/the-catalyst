@@ -131,7 +131,7 @@ export default function GroundRealityPage() {
                     <div
                         style={{
                             display: "grid",
-                            gridTemplateColumns: "3fr 6fr 3fr",
+                            gridTemplateColumns: "320px minmax(1,2fr) 360px",
                             gap: 48,
                             alignItems: "start",
                             marginBottom: 64,
@@ -151,6 +151,7 @@ export default function GroundRealityPage() {
                                     display: "grid",
                                     gridTemplateColumns: "1fr 1fr",
                                     gap: 24,
+                                    rowGap: 32,
                                 }}
                             >
                                 <SentimentBars
