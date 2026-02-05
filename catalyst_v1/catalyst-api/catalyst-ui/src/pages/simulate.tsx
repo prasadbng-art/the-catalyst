@@ -76,8 +76,8 @@ export default function Simulation() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "minmax(520px, 1.2fr) minmax(420px, 0.8fr)",
-          gap: "clamp(40px, 6vw, 80px)",
+          gridTemplateColumns: "420px minmax(720px,1fr) 280px",
+          gap: 48,
           alignItems: "start",
         }}
       >
@@ -268,6 +268,7 @@ export default function Simulation() {
               letterSpacing: "0.04em",
               textTransform: "uppercase",
               color: "#94a3b8",
+              marginTop: 156,
             }}
           >
             Organizational Stress (Simulated)
@@ -279,6 +280,7 @@ export default function Simulation() {
               border: "1px solid #1e293b",
               borderRadius: 16,
               padding: 24,
+
             }}
           >
             <MagicCube stress={simulatedStressPreview} persona={persona} size={300} />
