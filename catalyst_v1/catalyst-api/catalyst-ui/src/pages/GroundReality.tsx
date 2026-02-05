@@ -80,45 +80,77 @@ export default function GroundRealityPage() {
 
     const dominantStress = getDominantStress(baseOrgState.stress);
 
-    /* =========================================================
-       CTA styles (uniform across app)
-    ========================================================= */
-    const primaryCTA = {
-        padding: "12px 20px",
+    const ctaStyle: React.CSSProperties = {
+        padding: "12px 22px",
         background: "#2563eb",
         border: "none",
-        borderRadius: 8,
+        borderRadius: 10,
         color: "#ffffff",
         cursor: "pointer",
         fontWeight: 600,
-        minWidth: 220,
-        textAlign: "center" as const,
+        minWidth: 240,
+        textAlign: "center",
     };
 
     return (
         <PageShell>
             <div
                 style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    height: "100%",
-                    minHeight: 0,
+                    minHeight: "100vh",
+                    background: "#020617",
+                    color: "#e5e7eb",
                 }}
             >
-                {/* MAIN CONTENT */}
-                <div style={{ flex: 1, minHeight: 0, overflowY: "auto", paddingRight: 4, }}>
-                    <ReferenceDump>
-                        <div id="kpi-anchor">
-                            <h1 style={{ marginTop: 0 }}>Mapped Metrics</h1>
+                {/* ===== SINGLE LAYOUT CONTAINER (SAME AS BASELINE) ===== */}
+                <div
+                    style={{
+                        maxWidth: 1400,
+                        margin: "0 auto",
+                        padding: "32px",
+                    }}
+                >
+                    {/* ===== HEADER ===== */}
+                    <header
+                        style={{
+                            textAlign: "center",
+                            marginBottom: 48,
+                        }}
+                    >
+                        <h1
+                            style={{
+                                fontSize: 36,
+                                fontWeight: 400,
+                                letterSpacing: "0.04em",
+                            }}
+                        >
+                            Mapped Metrics
+                        </h1>
+                    </header>
 
-                            <TopKpis items={kpis} />
+                    {/* ===== MAIN GRID (3 / 6 / 3) ===== */}
+                    <div
+                        style={{
+                            display: "grid",
+                            gridTemplateColumns: "3fr 6fr 3fr",
+                            gap: 48,
+                            alignItems: "start",
+                            marginBottom: 64,
+                        }}
+                    >
+                        {/* LEFT PANEL */}
+                        <aside>
+                            <ReferenceDump>
+                                <TopKpis items={kpis} />
+                            </ReferenceDump>
+                        </aside>
 
+                        {/* CENTER PANEL */}
+                        <main>
                             <div
                                 style={{
                                     display: "grid",
                                     gridTemplateColumns: "1fr 1fr",
                                     gap: 24,
-                                    marginTop: 32,
                                 }}
                             >
                                 <SentimentBars
@@ -149,70 +181,77 @@ export default function GroundRealityPage() {
                                     rows={attritsByLocation}
                                 />
                             </div>
+                        </main>
 
-                            <div style={{ marginTop: 32 }}>
-                                <div style={{ fontSize: 12, opacity: 0.6, marginBottom: 6 }}>
+                        {/* RIGHT PANEL */}
+                        <aside>
+                            <div
+                                style={{
+                                    background: "#0f172a",
+                                    border: "1px solid #1e293b",
+                                    borderRadius: 12,
+                                    padding: 16,
+                                    lineHeight: 1.6,
+                                }}
+                            >
+                                <div
+                                    style={{
+                                        fontSize: 12,
+                                        opacity: 0.6,
+                                        marginBottom: 8,
+                                    }}
+                                >
                                     DOMINANT STRESS DRIVER
                                 </div>
 
                                 <div
                                     style={{
                                         fontWeight: 700,
-                                        letterSpacing: "0.05em",
                                         color: "#fb923c",
-                                        marginBottom: 8,
                                         textTransform: "uppercase",
+                                        marginBottom: 12,
                                     }}
                                 >
                                     {dominantStress}
                                 </div>
 
-                                <div style={{ maxWidth: 520, lineHeight: 1.6 }}>
-                                    Workforce pressure is currently concentrated in the{" "}
-                                    <strong>{dominantStress.toLowerCase()}</strong> dimension.
-                                    This is reflected consistently across enterprise-level KPIs
-                                    and regional metrics.
-                                </div>
+                                Workforce pressure is currently concentrated in this dimension,
+                                reflected consistently across enterprise KPIs and regions.
                             </div>
+                        </aside>
+                    </div>
+
+                    {/* ===== CTA ROW ===== */}
+                    <footer style={{ textAlign: "center" }}>
+                        <div
+                            style={{
+                                display: "inline-flex",
+                                gap: 20,
+                                flexWrap: "wrap",
+                            }}
+                        >
+                            <button
+                                style={ctaStyle}
+                                onClick={() => navigate("/simulation")}
+                            >
+                                Model Financial Impact →
+                            </button>
+
+                            <button
+                                style={ctaStyle}
+                                onClick={() => navigate("/retention-simulator")}
+                            >
+                                Run Retention Scenario →
+                            </button>
+
+                            <button
+                                style={ctaStyle}
+                                onClick={() => navigate("/baseline")}
+                            >
+                                ← Back to Equilibrium Score
+                            </button>
                         </div>
-                    </ReferenceDump>
-                </div>
-
-                {/* NEXT STEPS */}
-                <div
-                    style={{
-                        marginTop: 80,
-                        paddingTop: 32,
-                        borderTop: "1px solid #1e293b",
-                        display: "flex",
-                        justifyContent: "center",
-                        gap: 20,
-                        flexWrap: "wrap",
-                    }}
-                >
-                    <button
-                        type="button"
-                        onClick={() => navigate("/simulation")}
-                        style={primaryCTA}
-                    >
-                        Model Financial Impact →
-                    </button>
-
-                    <button
-                        type="button"
-                        onClick={() => navigate("/retention-simulator")}
-                        style={primaryCTA}
-                    >
-                        Run Retention Scenario →
-                    </button>
-
-                    <button
-                        type="button"
-                        onClick={() => navigate("/baseline")}
-                        style={primaryCTA}
-                    >
-                        ← Back to Equilibrium Score
-                    </button>
+                    </footer>
                 </div>
             </div>
         </PageShell>
