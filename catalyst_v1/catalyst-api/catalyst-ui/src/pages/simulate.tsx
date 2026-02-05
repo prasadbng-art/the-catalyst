@@ -30,7 +30,7 @@ export default function SimulatePage() {
   const [timeHorizon, setTimeHorizon] = useState<1 | 3>(3);
 
   /* =========================================================
-     Stress derivation (PREVIEW ONLY)
+     Stress derivation (PREVIEW ONLY — no persistence)
   ========================================================= */
   const intensity = riskReductionPct / 100;
 
@@ -62,27 +62,33 @@ export default function SimulatePage() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "minmax(520px, 1.2fr) minmax(420px, 0.8fr)",
-          gridTemplateRows: "auto 1fr",
-          columnGap: "clamp(40px, 6vw, 80px)",
-          rowGap: 32,
+          gridTemplateColumns: "640px 1fr 400px",
+          gap: 48,
           alignItems: "start",
         }}
       >
         {/* =====================================================
-            LEFT — TOP (Controls)
+            LEFT COLUMN — Controls + Financial Impact (STACKED)
         ====================================================== */}
-        <div style={{ gridColumn: 1, gridRow: 1 }}>
-          <h1 style={{ fontSize: 36, marginBottom: 8 }}>
-            Financial Simulation
-          </h1>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 24,
+          }}
+        >
+          {/* ---------- Header ---------- */}
+          <div>
+            <h1 style={{ fontSize: 36, marginBottom: 8 }}>
+              Financial Simulation
+            </h1>
+            <p style={{ color: "#94a3b8" }}>
+              Test how changes in retention risk translate into financial impact.
+            </p>
+          </div>
 
-          <p style={{ color: "#94a3b8", marginBottom: 24 }}>
-            Test how changes in retention risk translate into financial impact.
-          </p>
-
-          {/* Persona selector */}
-          <div style={{ marginBottom: 24 }}>
+          {/* ---------- Persona ---------- */}
+          <div>
             {(["CEO", "CFO", "CHRO"] as Persona[]).map((p) => {
               const active = persona === p;
               return (
@@ -108,13 +114,12 @@ export default function SimulatePage() {
             })}
           </div>
 
-          {/* Inputs */}
+          {/* ---------- Inputs ---------- */}
           <div
             style={{
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
               gap: 24,
-              marginBottom: 24,
             }}
           >
             <div>
@@ -142,8 +147,8 @@ export default function SimulatePage() {
             </div>
           </div>
 
-          {/* Time horizon */}
-          <div style={{ marginBottom: 32 }}>
+          {/* ---------- Time Horizon ---------- */}
+          <div>
             {[1, 3].map((y) => (
               <button
                 key={y}
@@ -169,91 +174,50 @@ export default function SimulatePage() {
               </button>
             ))}
           </div>
-        </div>
 
-        {/* =====================================================
-            RIGHT — TOP (Cube, anchored)
-        ====================================================== */}
-        <div
-          style={{
-            gridColumn: 2,
-            gridRow: 1,
-            alignSelf: "start",
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <div
-            style={{
-              background: "#020617",
-              border: "1px solid #1e293b",
-              borderRadius: 16,
-              padding: 24,
-            }}
-          >
+          {/* ---------- Financial Impact ---------- */}
+          <div>
+            <h2 style={{ marginBottom: 16 }}>Financial Impact</h2>
+
             <div
               style={{
-                fontSize: 13,
-                fontWeight: 600,
-                letterSpacing: "0.04em",
-                textTransform: "uppercase",
-                color: "#94a3b8",
-                textAlign: "center",
-                marginBottom: 12,
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gap: 24,
+                marginBottom: 16,
               }}
             >
-              Organizational Stress (Simulated)
+              <Metric
+                label="Low Impact"
+                value={`$${Math.round(ladder.low).toLocaleString()}`}
+              />
+              <Metric
+                label="Expected Impact"
+                value={`$${Math.round(ladder.base).toLocaleString()}`}
+              />
+              <Metric
+                label="High Impact"
+                value={`$${Math.round(ladder.high).toLocaleString()}`}
+              />
             </div>
 
-            <MagicCube
-              stress={simulatedStressPreview}
-              persona={persona}
-              size={300}
-            />
-          </div>
-        </div>
+            <p style={{ fontSize: 13, opacity: 0.65 }}>
+              Estimated cost avoided over {timeHorizon} year
+              {timeHorizon === 3 ? "s" : ""}.
+            </p>
 
-        {/* =====================================================
-            LEFT — BOTTOM (Impact + CTAs)
-        ====================================================== */}
-        <div style={{ gridColumn: 1, gridRow: 2 }}>
-          <h2 style={{ marginBottom: 16 }}>Financial Impact</h2>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
-              gap: 24,
-              marginBottom: 16,
-            }}
-          >
-            <Metric
-              label="Low Impact"
-              value={`$${Math.round(ladder.low).toLocaleString()}`}
-            />
-            <Metric
-              label="Expected Impact"
-              value={`$${Math.round(ladder.base).toLocaleString()}`}
-            />
-            <Metric
-              label="High Impact"
-              value={`$${Math.round(ladder.high).toLocaleString()}`}
-            />
+            <p style={{ marginTop: 20, opacity: 0.85 }}>
+              {copy.narrative}
+            </p>
           </div>
 
-          <p style={{ fontSize: 13, opacity: 0.65 }}>
-            Estimated cost avoided over {timeHorizon} year
-            {timeHorizon === 3 ? "s" : ""}.
-          </p>
-
-          <p style={{ marginTop: 20, opacity: 0.85 }}>
-            {copy.narrative}
-          </p>
-
-          {/* CTAs */}
-          <div style={{ marginTop: 32, display: "flex", gap: 16 }}>
+          {/* ---------- CTAs ---------- */}
+          <div style={{ display: "flex", gap: 16 }}>
             <button
-              onClick={() => navigate("/ground-reality")}
+              onClick={() => {
+                setSimulatedStress(simulatedStressPreview);
+                navigate("/ground-reality");
+              }}
               style={{
                 padding: "12px 20px",
                 background: "#2563eb",
@@ -283,13 +247,12 @@ export default function SimulatePage() {
             </button>
           </div>
 
-          {/* Reset */}
+          {/* ---------- Reset ---------- */}
           <label
             style={{
               display: "flex",
               alignItems: "center",
               gap: 8,
-              marginTop: 16,
               fontSize: 13,
               color: "#94a3b8",
               cursor: "pointer",
@@ -306,6 +269,45 @@ export default function SimulatePage() {
             />
             Reset simulation inputs
           </label>
+        </div>
+
+        {/* =====================================================
+            MIDDLE COLUMN — Fluid Spacer
+        ====================================================== */}
+        <div />
+
+        {/* =====================================================
+            RIGHT COLUMN — MagicCube (anchored)
+        ====================================================== */}
+        <div style={{ alignSelf: "start" }}>
+          <div
+            style={{
+              background: "#020617",
+              border: "1px solid #1e293b",
+              borderRadius: 16,
+              padding: 24,
+            }}
+          >
+            <div
+              style={{
+                fontSize: 13,
+                fontWeight: 600,
+                letterSpacing: "0.04em",
+                textTransform: "uppercase",
+                color: "#94a3b8",
+                textAlign: "center",
+                marginBottom: 12,
+              }}
+            >
+              Organizational Stress (Simulated)
+            </div>
+
+            <MagicCube
+              stress={simulatedStressPreview}
+              persona={persona}
+              size={300}
+            />
+          </div>
         </div>
       </div>
     </PageShell>
