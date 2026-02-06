@@ -2,7 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import AppShell from "./components/layout/AppShell";
 import BaselinePage from "./pages/baseline";
 import SimulatePage from "./pages/simulate";
-import GroundRealityPage from "./pages/GroundReality";
+import GroundRealityPage from "./pages/ground-reality";
 import RetentionSimulatorPage from "./pages/RetentionSimulator";
 
 export default function App() {
@@ -18,4 +18,3 @@ export default function App() {
     </Routes>
   );
 }
-

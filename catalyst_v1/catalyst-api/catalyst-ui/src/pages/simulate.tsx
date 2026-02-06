@@ -235,10 +235,10 @@ export default function SimulatePage() {
               onClick={() => navigate("/retention-simulator")}
               style={{
                 padding: "12px 20px",
-                background: "#1e293b",
+                background: "#2563eb",
                 border: "1px solid #334155",
                 borderRadius: 8,
-                color: "#e5e7eb",
+                color: "#ffffff",
                 fontWeight: 600,
                 cursor: "pointer",
               }}

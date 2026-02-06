@@ -9,26 +9,12 @@ export default function PageShell({ children }: PageShellProps) {
         <div
             style={{
                 width: "100%",
-                height: "100%",
-                overflow: "hidden", // system boundary
+                maxWidth: 1600,
+                margin: "0 auto",
+                padding: "32px 40px",
             }}
         >
-            <div
-                style={{
-                    width: "100%",
-                    maxWidth: 1280,
-                    height: "100%",
-                    paddingLeft: "clamp(24px, 4vw, 48px)",
-                    paddingRight: "clamp(24px, 4vw, 48px)",
-                    paddingBottom: "clamp(24px, 4vw, 48px)",
-                    paddingTop: "clamp(32px, 5vh, 48px)",
-                    boxSizing: "border-box",
-                    marginRight: "auto",
-                    overflowY: "auto", // page-level vertical scroll
-                }}
-            >
-                {children}
-            </div>
+            {children}
         </div>
     );
 }
