@@ -91,7 +91,7 @@ export default function RetentionSimulatorPage() {
 
         setScenarioAttritionDelta(deltaPct);
         navigate("/simulation");
-        console.log("Retention delta sent to financials:", deltaPct);
+
     };
 
     /* =========================================================
