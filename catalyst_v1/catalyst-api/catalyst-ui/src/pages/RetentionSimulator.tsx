@@ -3,6 +3,7 @@ import { demoOrganizationState } from "../demo/demoOrganizationState";
 import SimulationCard from "./retention-simulator/SimulationCard";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import type { PersonEntity } from "../types/persona";
 
 const INTERVENTIONS = [
     { key: "none", label: "No Action" },
@@ -11,7 +12,7 @@ const INTERVENTIONS = [
     { key: "mobility", label: "Internal Mobility Opportunity" },
     { key: "role_redesign", label: "Role Redesign" },
 ];
-
+const people: PersonEntity[] = demoOrganizationState.people.entities;
 export default function RetentionSimulatorPage() {
     const [simulatedRisks, setSimulatedRisks] = useState<
         Record<string, number | null>
@@ -178,24 +179,32 @@ export default function RetentionSimulatorPage() {
                     </div>
                 </section>
 
+
                 {/* ================= CTA ZONE ================= */}
-                <div style={{ marginTop: 32 }}>
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        marginTop: 32,
+                    }}
+                >
                     <button
-                        onClick={() => {
-                            window.location.href = "/baseline";
-                        }}
+                        onClick={() => navigate("/baseline")}
                         style={{
-                            padding: "10px 16px",
-                            borderRadius: 6,
-                            border: "1px solid #1e293b",
-                            background: "#020617",
-                            color: "#e5e7eb",
+                            background: "#2563eb",
+                            color: "#ffffff",
+                            border: "1px solid #1d4ed8",
+                            borderRadius: 12,
+                            padding: "12px 20px",
+                            fontSize: 14,
+                            fontWeight: 500,
                             cursor: "pointer",
                         }}
                     >
-                        Home
+                        ← Home
                     </button>
                 </div>
+
             </div>
         </PageShell>
     );

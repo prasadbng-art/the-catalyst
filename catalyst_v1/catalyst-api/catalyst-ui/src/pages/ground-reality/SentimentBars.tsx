@@ -9,6 +9,16 @@ interface SentimentBarsProps {
     data: SentimentDatum[];
 }
 
+const SENTIMENT_DOMAIN = 50; // +/- 50% fixed scale
+
+function clamp(value: number, min: number, max: number) {
+    return Math.max(min, Math.min(max, value));
+}
+
+function normalize(value: number) {
+    return clamp(value, -SENTIMENT_DOMAIN, SENTIMENT_DOMAIN) / SENTIMENT_DOMAIN;
+}
+
 export default function SentimentBars({ title, data }: SentimentBarsProps) {
     return (
         <div
@@ -16,19 +26,21 @@ export default function SentimentBars({ title, data }: SentimentBarsProps) {
                 background: "#020617",
                 border: "1px solid #1e293b",
                 borderRadius: 16,
-                padding: 20,
+                padding: 10,
+                marginTop: 10,
+                marginBottom: 0
             }}
         >
             <div style={{ fontWeight: 600, marginBottom: 12 }}>{title}</div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                 {data.map((item) => {
-                    const total = item.positive + item.negative || 1;
-                    const posPct = (item.positive / total) * 100;
-                    const negPct = (item.negative / total) * 100;
+                    const net = item.positive - item.negative;
+                    const normalized = normalize(net);
 
                     return (
                         <div key={item.label}>
+                            {/* label row */}
                             <div
                                 style={{
                                     display: "flex",
@@ -39,30 +51,47 @@ export default function SentimentBars({ title, data }: SentimentBarsProps) {
                                 }}
                             >
                                 <span>{item.label}</span>
-                                <span>
-                                    +{item.positive}% / -{item.negative}%
-                                </span>
+                                <span>{net > 0 ? `+${net}%` : `${net}%`}</span>
                             </div>
 
+                            {/* bar */}
                             <div
                                 style={{
-                                    display: "flex",
+                                    position: "relative",
                                     height: 8,
                                     borderRadius: 6,
-                                    overflow: "hidden",
                                     background: "#020617",
+                                    overflow: "hidden",
                                 }}
                             >
+                                {/* zero baseline */}
                                 <div
                                     style={{
-                                        width: `${posPct}%`,
-                                        background: "linear-gradient(90deg,#10b981,#34d399)",
+                                        position: "absolute",
+                                        left: "50%",
+                                        top: 0,
+                                        bottom: 0,
+                                        width: 1,
+                                        background: "rgba(148,163,184,0.4)",
                                     }}
                                 />
+
+                                {/* sentiment bar */}
                                 <div
                                     style={{
-                                        width: `${negPct}%`,
-                                        background: "linear-gradient(90deg,#ef4444,#fb7185)",
+                                        position: "absolute",
+                                        top: 0,
+                                        bottom: 0,
+                                        left:
+                                            normalized >= 0
+                                                ? "50%"
+                                                : `${50 + normalized * 50}%`,
+                                        width: `${Math.abs(normalized) * 50}%`,
+                                        background:
+                                            normalized >= 0
+                                                ? "linear-gradient(90deg,#10b981,#34d399)"
+                                                : "linear-gradient(90deg,#ef4444,#fb7185)",
+                                        borderRadius: 6,
                                     }}
                                 />
                             </div>

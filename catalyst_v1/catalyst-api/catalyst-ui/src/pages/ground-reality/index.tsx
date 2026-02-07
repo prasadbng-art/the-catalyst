@@ -11,11 +11,17 @@ import DetailsByLocationTable from "./DetailsByLocationTable";
 
 export default function GroundRealityPage() {
     const navigate = useNavigate();
-
+    /* ================= Locations ================= */
+    const attritsByLocation = [
+        { location: "Warsaw", value: 120 },
+        { location: "Bangalore", value: 85 },
+        { location: "New York", value: 75 },
+        { location: "Shanghai", value: 60 },
+        { location: "Dubai", value: 35 },
+    ];
     /* ================= KPIs ================= */
     const TOTAL_HEADCOUNT = 1888;
-    const ATTRITION_RATE = Math.round(baseOrgState.stress.people * 100);
-    const ATTRITS_YTD = Math.round((ATTRITION_RATE / 100) * TOTAL_HEADCOUNT);
+    const ATTRITS_YTD = attritsByLocation.reduce((sum, row) => sum + row.value, 0);
     const COST_PER_ATTRIT = 124_121;
     const TOTAL_ATTRITION_COST = ATTRITS_YTD * COST_PER_ATTRIT;
 
@@ -54,14 +60,7 @@ export default function GroundRealityPage() {
         { label: "Japan", positive: 4, negative: 0 },
     ];
 
-    /* ================= Locations ================= */
-    const attritsByLocation = [
-        { location: "Warsaw", value: 120 },
-        { location: "Bangalore", value: 85 },
-        { location: "New York", value: 75 },
-        { location: "Shanghai", value: 60 },
-        { location: "Dubai", value: 35 },
-    ];
+
 
     const totalAttrits = attritsByLocation.reduce((s, r) => s + r.value, 0);
     const detailsByLocation = attritsByLocation.map((r) => ({
@@ -72,9 +71,17 @@ export default function GroundRealityPage() {
 
     /* ================= Cube ================= */
     const stress = getSimulatedStress() ?? baseOrgState.stress;
-
-
-
+    const primaryctaStyle: React.CSSProperties = {
+        background: "#2563eb",
+        border: "1px solid #1e293b",
+        borderRadius: 18,
+        padding: "12px 18px",
+        fontSize: 13,
+        fontWeight: 500,
+        color: "#ffffff",
+        cursor: "pointer",
+        transition: "background 0.2s ease",
+    };
     return (
         <PageShell>
             <div
@@ -82,15 +89,18 @@ export default function GroundRealityPage() {
                     maxWidth: "100%",
                     marginLeft: 0,
                     marginRight: "auto",
-                    paddingLeft: 16, paddingRight: 16
+                    paddingLeft: 16, paddingRight: 16, paddingTop: 0, paddingBottom: 0,
+                    marginBottom: 0,
+                    marginTop: 10,
                 }}
             >
                 <div
                     style={{
                         display: "grid",
-                        gridTemplateColumns: "repeat(5,minmax(0,1fr))",
+                        gridTemplateColumns: "repeat(4,minmax(0,1fr))",
                         gridAutoRows: "min-content",
-                        gap: 24,
+                        rowGap: 16,
+                        columnGap: 24,
                         alignItems: "start",
                     }}
                 >
@@ -103,7 +113,7 @@ export default function GroundRealityPage() {
                     {/* ================= Row 2: Sentiment ================= */}
                     <div
                         style={{
-                            gridColumn: "1 / 3",
+                            gridColumn: "1 / 5",
                             gridRow: "2",
                             display: "grid",
                             gridTemplateColumns: "1fr 1fr",
@@ -115,13 +125,13 @@ export default function GroundRealityPage() {
                     </div>
 
 
-                    <div style={{ gridColumn: "1 / 3", gridRow: "3" }}>
+                    <div style={{ gridColumn: "3 / 5", gridRow: "3" }}>
                         <ActionPlans />
                     </div>
 
 
                     {/* ================= Row 3: Tables (MOVED UP) ================= */}
-                    <div style={{ gridColumn: "3 / 6", gridRow: "2" }}>
+                    <div style={{ gridColumn: "1 / 3", gridRow: "3", }}>
                         <DetailsByLocationTable rows={detailsByLocation} />
                     </div>
 
@@ -129,75 +139,61 @@ export default function GroundRealityPage() {
                     {/* ================= Row 4: Cube ================= */}
                     <div
                         style={{
-                            gridColumn: "3 / 4",
-                            gridRow: "3",
-
+                            gridColumn: "5 / 6",
+                            gridRow: "2 / span 2",
+                            background: "#020617",
+                            border: "1px solid #1e293b",
+                            borderRadius: 20,
+                            padding: 24,
+                            display: "flex",
+                            flexDirection: "column",
                             justifyContent: "center",
-
+                            gap: 16,
+                            marginTop: 10,
                         }}
                     >
-                        <MagicCube
-                            stress={stress}
-                            persona={PERSONAS.CEO}
-                            size={420}
-                        />
-                    </div>
+                        {/*Header */}
+                        <div style={{ fontWeight: 600, fontSize: 16, }}>
+                            System Stress Profile
+                        </div>
 
-                    {/* ================= Row 5: Dominant Stress ================= */}
-                    <div style={{ gridColumn: "1 / 3" }}>
-                        <div
-                            style={{
-                                gridColumn: "3 / 4",
-                                gridRow: "4",
-                                background: "#020617",
-                                border: "1px solid #1e293b",
-                                borderRadius: 16,
-                                padding: 20,
-                            }}
-                        >
-                            <div style={{ fontSize: 12, opacity: 0.7, marginBottom: 6 }}>
-                                Dominant Stress Driver
-                            </div>
+                        <div style={{ display: "flex", justifyContent: "center" }}>
 
-                            <div style={{ fontWeight: 600, marginBottom: 6 }}>
-                                System Absorbing Pressure
-                            </div>
-
-                            <p style={{ fontSize: 13, opacity: 0.85, marginBottom: 16 }}>
-                                Workforce pressure is currently concentrated in this dimension,
-                                reflected consistently across enterprise KPIs and regions.
-                            </p>
-
-
+                            <MagicCube
+                                stress={stress}
+                                persona={PERSONAS.CEO}
+                                size={420}
+                            />
                         </div>
                     </div>
 
                     {/* ================= Row 6: CTAs ================= */}
+
                     <div
                         style={{
-                            gridColumn: "1 / 4",
-                            gridRow: "5",
+                            gridColumn: "2 / -1",
+                            gridRow: "6",
                             display: "flex",
                             gap: 12,
 
                         }}
                     >
                         <button
-                            className="px-6 py-3 bg-blue-600 hover:bg-blue-500 rounded-xl text-sm font-medium"
+                            style={primaryctaStyle}
                             onClick={() => navigate("/simulation")}
                         >
                             Model Financial Impact →
                         </button>
 
                         <button
-                            className="px-6 py-3 bg-slate-800 hover:bg-slate-700 rounded-xl text-sm font-medium"
+                            style={primaryctaStyle}
                             onClick={() => navigate("/retention-simulator")}
                         >
                             Run Retention Scenario →
                         </button>
 
                         <button
-                            className="px-6 py-3 bg-slate-900 hover:bg-slate-800 rounded-xl text-sm font-medium"
+                            style={primaryctaStyle}
                             onClick={() => navigate("/baseline")}
                         >
                             ← Back to Equilibrium Score

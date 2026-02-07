@@ -5,7 +5,7 @@ export default function ActionPlans() {
                 background: "#020617",
                 border: "1px solid #1e293b",
                 borderRadius: 16,
-                padding: 20,
+                padding: 12,
                 height: "fit-content",
             }}
         >

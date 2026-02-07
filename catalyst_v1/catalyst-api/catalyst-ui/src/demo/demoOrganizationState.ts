@@ -1,13 +1,19 @@
-export const demoOrganizationState = {
+
+import type { PersonEntity } from "../types/persona"
+export const demoOrganizationState: {
+    people: {
+        entities: PersonEntity[];
+    };
+} = {
     people: {
         entities: [
             {
                 id: "p1",
-                name: "A. Kowalski",
+                name: "Sarah Chen",
                 role: "Senior Engineer",
                 function: "Engineering",
                 locationId: "warsaw",
-                baselineRiskPct: 78,
+                baselineRiskPct: 87,
                 riskDrivers: [
                     "Long Time Since Promotion",
                     "Poor Manager Score",
@@ -16,11 +22,11 @@ export const demoOrganizationState = {
             },
             {
                 id: "p2",
-                name: "D. Lee",
+                name: "Przemeslaw Sabojtnik",
                 role: "Client Services Lead",
                 function: "Client Services",
                 locationId: "warsaw",
-                baselineRiskPct: 71,
+                baselineRiskPct: 81,
                 riskDrivers: [
                     "Low Compensation Ratio",
                     "Stagnant Performance",
@@ -28,11 +34,11 @@ export const demoOrganizationState = {
             },
             {
                 id: "p3",
-                name: "M. Garcia",
+                name: "Miroslav Dzebek",
                 role: "Data Scientist",
                 function: "Data Science",
                 locationId: "warsaw",
-                baselineRiskPct: 64,
+                baselineRiskPct: 84,
                 riskDrivers: [
                     "Tooling Fragmentation",
                     "Low Engagement",
@@ -40,26 +46,36 @@ export const demoOrganizationState = {
             },
             {
                 id: "p4",
-                name: "S. Tanaka",
+                name: "Dominic Radek",
                 role: "Operations Lead",
                 function: "Operations",
                 locationId: "warsaw",
-                baselineRiskPct: 52,
+                baselineRiskPct: 77,
                 riskDrivers: [
                     "Role Ambiguity",
                 ],
             },
             {
                 id: "p5",
-                name: "L. Brown",
+                name: "Lucas Piczcek",
                 role: "HR Partner",
                 function: "HR",
                 locationId: "warsaw",
-                baselineRiskPct: 46,
+                baselineRiskPct: 76,
                 riskDrivers: [
                     "Low Compensation Ratio",
                 ],
             },
+            {
+                id: "p6",
+                name: "Baseline Control",
+                role: "Reference",
+                function: "-",
+                locationId: "warsaw",
+                baselineRiskPct: 0,
+                riskDrivers: [],
+                interventionLocked: true,
+            }
         ],
     },
-} as const;
+}
