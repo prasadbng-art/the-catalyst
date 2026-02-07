@@ -7,7 +7,7 @@ export const demoOrganizationState = {
                 role: "Senior Engineer",
                 function: "Engineering",
                 locationId: "warsaw",
-                baselineRiskPct: 78,
+                baselineRiskPct: 88,
                 riskDrivers: [
                     "Long Time Since Promotion",
                     "Poor Manager Score",
@@ -20,7 +20,7 @@ export const demoOrganizationState = {
                 role: "Client Services Lead",
                 function: "Client Services",
                 locationId: "warsaw",
-                baselineRiskPct: 71,
+                baselineRiskPct: 91,
                 riskDrivers: [
                     "Low Compensation Ratio",
                     "Stagnant Performance",
@@ -32,7 +32,7 @@ export const demoOrganizationState = {
                 role: "Data Scientist",
                 function: "Data Science",
                 locationId: "warsaw",
-                baselineRiskPct: 64,
+                baselineRiskPct: 84,
                 riskDrivers: [
                     "Tooling Fragmentation",
                     "Low Engagement",
@@ -44,7 +44,7 @@ export const demoOrganizationState = {
                 role: "Operations Lead",
                 function: "Operations",
                 locationId: "warsaw",
-                baselineRiskPct: 52,
+                baselineRiskPct: 82,
                 riskDrivers: ["Role Ambiguity"],
             },
             {
@@ -53,7 +53,7 @@ export const demoOrganizationState = {
                 role: "HR Partner",
                 function: "HR",
                 locationId: "warsaw",
-                baselineRiskPct: 46,
+                baselineRiskPct: 74,
                 riskDrivers: ["Low Compensation Ratio"],
             },
 
@@ -64,7 +64,7 @@ export const demoOrganizationState = {
                 role: "Product Manager",
                 function: "Product",
                 locationId: "warsaw",
-                baselineRiskPct: 58,
+                baselineRiskPct: 85,
                 riskDrivers: [
                     "Role Ambiguity",
                     "Stakeholder Overload",

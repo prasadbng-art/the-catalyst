@@ -6,6 +6,7 @@ import type { Persona } from "../types/persona";
 import { personaConfig } from "../persona/personaConfig";
 import { setSimulatedStress } from "../state/simulatedStressState";
 import { baseOrgState } from "../state/orgState";
+import { setScenarioAttritionDelta } from "../state/scenarioState";
 
 /* =========================================================
    Financial model constants
@@ -26,20 +27,32 @@ export default function SimulatePage() {
 
   /* ---------------- Scenario inputs ---------------- */
   const [riskReductionPct, setRiskReductionPct] = useState(10);
-  const [interventionCost, setInterventionCost] = useState(100000);
+  const [interventionCost, setInterventionCost] = useState(100_000);
   const [timeHorizon, setTimeHorizon] = useState<1 | 3>(3);
 
   /* =========================================================
-     Stress derivation (PREVIEW ONLY — no persistence)
+     Derived intensity (THIS WAS MISSING)
   ========================================================= */
   const intensity = riskReductionPct / 100;
 
+  /* =========================================================
+     Stress derivation (PREVIEW ONLY)
+  ========================================================= */
   const simulatedStressPreview = {
     people: Math.max(0, baseOrgState.stress.people - 0.4 * intensity),
     cost: Math.max(0, baseOrgState.stress.cost - 0.3 * intensity),
     execution: Math.max(0, baseOrgState.stress.execution - 0.25 * intensity),
     macro: baseOrgState.stress.macro,
   };
+
+  /* =========================================================
+     Persisted scenario delta (FOR FINANCIAL MODEL)
+     We only persist PEOPLE delta — not full stress
+  ========================================================= */
+  const peopleDeltaPct =
+    ((simulatedStressPreview.people - baseOrgState.stress.people) /
+      baseOrgState.stress.people) *
+    100;
 
   /* =========================================================
      Financial impact
@@ -68,15 +81,9 @@ export default function SimulatePage() {
         }}
       >
         {/* =====================================================
-            LEFT COLUMN — Controls + Financial Impact (STACKED)
+            LEFT COLUMN — Controls + Financial Impact
         ====================================================== */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 24,
-          }}
-        >
+        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
           {/* ---------- Header ---------- */}
           <div>
             <h1 style={{ fontSize: 36, marginBottom: 8 }}>
@@ -127,9 +134,7 @@ export default function SimulatePage() {
               <input
                 type="number"
                 value={riskReductionPct}
-                onChange={(e) =>
-                  setRiskReductionPct(Number(e.target.value))
-                }
+                onChange={(e) => setRiskReductionPct(Number(e.target.value))}
                 style={{ width: "100%", marginTop: 6 }}
               />
             </div>
@@ -139,9 +144,7 @@ export default function SimulatePage() {
               <input
                 type="number"
                 value={interventionCost}
-                onChange={(e) =>
-                  setInterventionCost(Number(e.target.value))
-                }
+                onChange={(e) => setInterventionCost(Number(e.target.value))}
                 style={{ width: "100%", marginTop: 6 }}
               />
             </div>
@@ -165,8 +168,7 @@ export default function SimulatePage() {
                     timeHorizon === y ? "#2563eb" : "#020617",
                   color:
                     timeHorizon === y ? "#ffffff" : "#cbd5f5",
-                  fontWeight:
-                    timeHorizon === y ? 600 : 500,
+                  fontWeight: timeHorizon === y ? 600 : 500,
                   cursor: "pointer",
                 }}
               >
@@ -216,6 +218,7 @@ export default function SimulatePage() {
             <button
               onClick={() => {
                 setSimulatedStress(simulatedStressPreview);
+                setScenarioAttritionDelta(peopleDeltaPct);
                 navigate("/ground-reality");
               }}
               style={{
@@ -246,38 +249,13 @@ export default function SimulatePage() {
               Run Retention Simulation →
             </button>
           </div>
-
-          {/* ---------- Reset ---------- */}
-          <label
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              fontSize: 13,
-              color: "#94a3b8",
-              cursor: "pointer",
-            }}
-          >
-            <input
-              type="checkbox"
-              onChange={() => {
-                setSimulatedStress(null);
-                setRiskReductionPct(10);
-                setInterventionCost(100000);
-                setTimeHorizon(3);
-              }}
-            />
-            Reset simulation inputs
-          </label>
         </div>
 
-        {/* =====================================================
-            MIDDLE COLUMN — Fluid Spacer
-        ====================================================== */}
+        {/* Spacer */}
         <div />
 
         {/* =====================================================
-            RIGHT COLUMN — MagicCube (anchored)
+            RIGHT COLUMN — MagicCube
         ====================================================== */}
         <div style={{ alignSelf: "start" }}>
           <div
@@ -314,6 +292,9 @@ export default function SimulatePage() {
   );
 }
 
+/* =========================================================
+   Metric Card
+========================================================= */
 function Metric({ label, value }: { label: string; value: string }) {
   return (
     <div
