@@ -1,10 +1,4 @@
-
-import type { PersonEntity } from "../types/persona"
-export const demoOrganizationState: {
-    people: {
-        entities: PersonEntity[];
-    };
-} = {
+export const demoOrganizationState = {
     people: {
         entities: [
             {
@@ -13,7 +7,7 @@ export const demoOrganizationState: {
                 role: "Senior Engineer",
                 function: "Engineering",
                 locationId: "warsaw",
-                baselineRiskPct: 87,
+                baselineRiskPct: 78,
                 riskDrivers: [
                     "Long Time Since Promotion",
                     "Poor Manager Score",
@@ -26,7 +20,7 @@ export const demoOrganizationState: {
                 role: "Client Services Lead",
                 function: "Client Services",
                 locationId: "warsaw",
-                baselineRiskPct: 81,
+                baselineRiskPct: 71,
                 riskDrivers: [
                     "Low Compensation Ratio",
                     "Stagnant Performance",
@@ -38,7 +32,7 @@ export const demoOrganizationState: {
                 role: "Data Scientist",
                 function: "Data Science",
                 locationId: "warsaw",
-                baselineRiskPct: 84,
+                baselineRiskPct: 64,
                 riskDrivers: [
                     "Tooling Fragmentation",
                     "Low Engagement",
@@ -50,10 +44,8 @@ export const demoOrganizationState: {
                 role: "Operations Lead",
                 function: "Operations",
                 locationId: "warsaw",
-                baselineRiskPct: 77,
-                riskDrivers: [
-                    "Role Ambiguity",
-                ],
+                baselineRiskPct: 52,
+                riskDrivers: ["Role Ambiguity"],
             },
             {
                 id: "p5",
@@ -61,21 +53,23 @@ export const demoOrganizationState: {
                 role: "HR Partner",
                 function: "HR",
                 locationId: "warsaw",
-                baselineRiskPct: 76,
-                riskDrivers: [
-                    "Low Compensation Ratio",
-                ],
+                baselineRiskPct: 46,
+                riskDrivers: ["Low Compensation Ratio"],
             },
+
+            // ✅ NEW DEMO CARD (IDENTICAL SHAPE)
             {
                 id: "p6",
-                name: "Baseline Control",
-                role: "Reference",
-                function: "-",
+                name: "Elena Novak",
+                role: "Product Manager",
+                function: "Product",
                 locationId: "warsaw",
-                baselineRiskPct: 0,
-                riskDrivers: [],
-                interventionLocked: true,
-            }
+                baselineRiskPct: 58,
+                riskDrivers: [
+                    "Role Ambiguity",
+                    "Stakeholder Overload",
+                ],
+            },
         ],
     },
-}
+} as const;

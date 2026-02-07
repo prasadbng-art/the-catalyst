@@ -12,7 +12,8 @@ const INTERVENTIONS = [
     { key: "mobility", label: "Internal Mobility Opportunity" },
     { key: "role_redesign", label: "Role Redesign" },
 ];
-const people: PersonEntity[] = demoOrganizationState.people.entities;
+const people = demoOrganizationState.people.entities;
+const activePeople = people;
 export default function RetentionSimulatorPage() {
     const [simulatedRisks, setSimulatedRisks] = useState<
         Record<string, number | null>

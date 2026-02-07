@@ -16,3 +16,12 @@ export interface PersonEntity {
     riskDrivers: string[];
     interventionLocked?: boolean;
 }
+
+export interface ReferenceEntity {
+    id: string;
+    name: string;
+    role: "Reference";
+    isReference: true;
+}
+
+export type OrgnizationPerson = PersonEntity | ReferenceEntity;
