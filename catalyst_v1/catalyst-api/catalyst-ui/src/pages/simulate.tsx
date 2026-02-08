@@ -6,7 +6,7 @@ import type { Persona } from "../types/persona";
 import { personaConfig } from "../persona/personaConfig";
 import { setSimulatedStress } from "../state/simulatedStressState";
 import { baseOrgState } from "../state/orgState";
-import { setScenarioAttritionDelta } from "../state/scenarioState";
+import { setScenarioAttritionDelta, getScenarioAttritionDelta } from "../state/scenarioState";
 
 /* =========================================================
    Financial model constants
@@ -21,7 +21,8 @@ const SENSITIVITY = {
 
 export default function SimulatePage() {
   const navigate = useNavigate();
-
+  const scenarioDeltaPct = getScenarioAttritionDelta();
+  console.log("SIM -> received delta:", scenarioDeltaPct);
   /* ---------------- Persona ---------------- */
   const [persona, setPersona] = useState<Persona>("CFO");
 
@@ -33,7 +34,9 @@ export default function SimulatePage() {
   /* =========================================================
      Derived intensity (THIS WAS MISSING)
   ========================================================= */
-  const intensity = riskReductionPct / 100;
+  const intensity =
+    scenarioDeltaPct !== null
+      ? Math.abs(scenarioDeltaPct) / 100 : riskReductionPct / 100;
 
   /* =========================================================
      Stress derivation (PREVIEW ONLY)
