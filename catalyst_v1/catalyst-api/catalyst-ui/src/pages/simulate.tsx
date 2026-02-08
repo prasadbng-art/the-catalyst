@@ -36,14 +36,6 @@ export default function SimulatePage() {
   const scenarioDeltaPct = getScenarioAttritionDelta();
   const isScenarioActive = scenarioDeltaPct !== null;
 
-  /* =========================================================
-     Translate retention outcome → financial lever
-  ========================================================= */
-  const scenarioRiskReductionPct =
-    scenarioDeltaPct !== null
-      ? Math.min(Math.abs(scenarioDeltaPct) * 2, 30)
-      : null;
-
   /* ---------------- Persona ---------------- */
   const [persona, setPersona] = useState<Persona>("CFO");
 
@@ -59,8 +51,8 @@ export default function SimulatePage() {
   useEffect(() => {
     if (scenarioDeltaPct !== null && appliedInputs === null) {
       setAppliedInputs({
-        riskReductionPct: Math.abs(scenarioDeltaPct),
-        interventionCost: interventionCost,
+        riskReductionPct: Math.min(Math.abs(scenarioDeltaPct) * 2, 30),
+        interventionCost,
         timeHorizon,
       });
     }
@@ -70,10 +62,9 @@ export default function SimulatePage() {
      Effective inputs (ONLY after Apply Simulation)
   ========================================================= */
   const effectiveRiskReductionPct =
-    scenarioRiskReductionPct ??
     appliedInputs?.riskReductionPct ??
     0;
-  const effectivetimeHorizon =
+  const effectiveTimeHorizon =
     appliedInputs?.timeHorizon ?? timeHorizon;
 
   const intensity = effectiveRiskReductionPct / 100;
@@ -94,9 +85,9 @@ export default function SimulatePage() {
   const annualSavings = DEFAULT_BASELINE_COST * intensity;
 
   const ladder = {
-    low: annualSavings * SENSITIVITY.low * effectivetimeHorizon,
-    base: annualSavings * SENSITIVITY.base * effectivetimeHorizon,
-    high: annualSavings * SENSITIVITY.high * effectivetimeHorizon,
+    low: annualSavings * SENSITIVITY.low * effectiveTimeHorizon,
+    base: annualSavings * SENSITIVITY.base * effectiveTimeHorizon,
+    high: annualSavings * SENSITIVITY.high * effectiveTimeHorizon,
   };
 
   const copy = personaConfig[persona];
