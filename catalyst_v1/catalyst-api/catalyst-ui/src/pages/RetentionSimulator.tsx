@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import PageShell from "../components/layout/PageShell";
 import { demoOrganizationState } from "../demo/demoOrganizationState";
 import SimulationCard from "./retention-simulator/SimulationCard";
-import { getScenarioAttritionDelta, setScenarioAttritionDelta } from "../state/scenarioState";
 
 /* =========================================================
    Intervention catalog
@@ -88,8 +87,6 @@ export default function RetentionSimulatorPage() {
 
     const handleSendToFinancials = () => {
         if (deltaPct === null) return;
-        console.log("RS -> sending delta:", deltaPct);
-        setScenarioAttritionDelta(deltaPct);
         navigate("/simulation");
 
     };
