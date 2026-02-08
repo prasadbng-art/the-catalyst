@@ -50,10 +50,13 @@ export default function SimulatePage() {
 
   useEffect(() => {
     if (scenarioDeltaPct !== null && appliedInputs === null) {
+      const inferredRiskReductionPct = Math.min(Math.abs(scenarioDeltaPct) * 2,
+        30
+      );
       setAppliedInputs({
-        riskReductionPct: Math.min(Math.abs(scenarioDeltaPct) * 2, 30),
-        interventionCost,
-        timeHorizon,
+        riskReductionPct: inferredRiskReductionPct,
+        interventionCost: interventionCost,
+        timeHorizon: timeHorizon,
       });
     }
   }, [scenarioDeltaPct]);
