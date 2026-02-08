@@ -1,22 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PageShell from "../components/layout/PageShell";
 import MagicCube from "../components/visuals/MagicCube";
 import type { Persona } from "../types/persona";
 import { personaConfig } from "../persona/personaConfig";
-import { setSimulatedStress } from "../state/simulatedStressState";
 import { baseOrgState } from "../state/orgState";
 import {
   getScenarioAttritionDelta,
   setScenarioAttritionDelta,
   clearScenarioAttritionDelta,
 } from "../state/scenarioState";
-
-type AppliedSimulationInputs = {
-  riskReductionPct: number;
-  interventionCost: number;
-  timeHorizon: 1 | 3;
-};
+import { setSimulatedStress } from "../state/simulatedStressState";
 
 /* =========================================================
    Financial model constants
@@ -32,48 +26,31 @@ const SENSITIVITY = {
 export default function SimulatePage() {
   const navigate = useNavigate();
 
-  /* ---------------- External Scenario ---------------- */
+  /* =========================================================
+     GLOBAL SCENARIO STATE (single source of truth)
+  ========================================================= */
   const scenarioDeltaPct = getScenarioAttritionDelta();
-  const isScenarioActive = scenarioDeltaPct !== null;
 
-  /* ---------------- Persona ---------------- */
+  /* =========================================================
+     Local UI state (safe to reset on navigation)
+  ========================================================= */
   const [persona, setPersona] = useState<Persona>("CFO");
-
-  /* ---------------- Input Controls ---------------- */
   const [riskReductionPct, setRiskReductionPct] = useState(10);
   const [interventionCost, setInterventionCost] = useState(100_000);
   const [timeHorizon, setTimeHorizon] = useState<1 | 3>(3);
 
-  /* ---------------- Applied Simulation ---------------- */
-  const [appliedInputs, setAppliedInputs] =
-    useState<AppliedSimulationInputs | null>(null);
-
-  useEffect(() => {
-    if (scenarioDeltaPct !== null && appliedInputs === null) {
-      const inferredRiskReductionPct = Math.min(Math.abs(scenarioDeltaPct) * 2,
-        30
-      );
-      setAppliedInputs({
-        riskReductionPct: inferredRiskReductionPct,
-        interventionCost: interventionCost,
-        timeHorizon: timeHorizon,
-      });
-    }
-  }, [scenarioDeltaPct]);
-
   /* =========================================================
-     Effective inputs (ONLY after Apply Simulation)
+     Effective inputs (scenario ALWAYS wins)
   ========================================================= */
   const effectiveRiskReductionPct =
-    appliedInputs?.riskReductionPct ??
-    0;
-  const effectiveTimeHorizon =
-    appliedInputs?.timeHorizon ?? timeHorizon;
+    scenarioDeltaPct !== null
+      ? Math.min(Math.abs(scenarioDeltaPct) * 2, 30) // capped, demo-safe
+      : riskReductionPct;
 
   const intensity = effectiveRiskReductionPct / 100;
 
   /* =========================================================
-     Simulated Stress (Preview + Applied)
+     Simulated organizational stress (preview + persistable)
   ========================================================= */
   const simulatedStress = {
     people: Math.max(0, baseOrgState.stress.people - 0.4 * intensity),
@@ -83,14 +60,14 @@ export default function SimulatePage() {
   };
 
   /* =========================================================
-     Financial Impact
+     Financial impact model
   ========================================================= */
   const annualSavings = DEFAULT_BASELINE_COST * intensity;
 
   const ladder = {
-    low: annualSavings * SENSITIVITY.low * effectiveTimeHorizon,
-    base: annualSavings * SENSITIVITY.base * effectiveTimeHorizon,
-    high: annualSavings * SENSITIVITY.high * effectiveTimeHorizon,
+    low: annualSavings * SENSITIVITY.low * timeHorizon,
+    base: annualSavings * SENSITIVITY.base * timeHorizon,
+    high: annualSavings * SENSITIVITY.high * timeHorizon,
   };
 
   const copy = personaConfig[persona];
@@ -103,18 +80,18 @@ export default function SimulatePage() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "630px 1fr 360px",
-          gap: 48,
+          gridTemplateColumns: "640px 360px",
+          gap: 56,
           alignItems: "start",
         }}
       >
         {/* =====================================================
-            LEFT COLUMN — Controls + Financial Impact
+            LEFT — CONTROLS + FINANCIALS
         ====================================================== */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
           {/* Header */}
           <div>
-            <h1 style={{ fontSize: 36, marginBottom: 8 }}>
+            <h1 style={{ fontSize: 36, marginBottom: 6 }}>
               Financial Simulation
             </h1>
             <p style={{ color: "#94a3b8" }}>
@@ -150,14 +127,22 @@ export default function SimulatePage() {
           </div>
 
           {/* Inputs */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24 }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 24,
+            }}
+          >
             <div>
               <label>Risk Reduction (%)</label>
               <input
                 type="number"
-                value={riskReductionPct}
-                disabled={isScenarioActive}
-                onChange={(e) => setRiskReductionPct(Number(e.target.value))}
+                value={effectiveRiskReductionPct}
+                disabled={scenarioDeltaPct !== null}
+                onChange={(e) =>
+                  setRiskReductionPct(Number(e.target.value))
+                }
                 style={{ width: "100%", marginTop: 6 }}
               />
             </div>
@@ -167,8 +152,10 @@ export default function SimulatePage() {
               <input
                 type="number"
                 value={interventionCost}
-                disabled={isScenarioActive}
-                onChange={(e) => setInterventionCost(Number(e.target.value))}
+                disabled={scenarioDeltaPct !== null}
+                onChange={(e) =>
+                  setInterventionCost(Number(e.target.value))
+                }
                 style={{ width: "100%", marginTop: 6 }}
               />
             </div>
@@ -205,17 +192,13 @@ export default function SimulatePage() {
           <div style={{ display: "flex", gap: 12 }}>
             <button
               onClick={() =>
-                setAppliedInputs({
-                  riskReductionPct,
-                  interventionCost,
-                  timeHorizon,
-                })
+                setScenarioAttritionDelta(-riskReductionPct)
               }
               style={{
                 padding: "8px 14px",
                 background: "#2563eb",
-                borderRadius: 8,
                 border: "none",
+                borderRadius: 8,
                 color: "#ffffff",
                 fontWeight: 500,
                 cursor: "pointer",
@@ -227,8 +210,6 @@ export default function SimulatePage() {
             <button
               onClick={() => {
                 clearScenarioAttritionDelta();
-                setSimulatedStress(null);
-                setAppliedInputs(null);
                 setRiskReductionPct(10);
                 setInterventionCost(100_000);
                 setTimeHorizon(3);
@@ -236,8 +217,8 @@ export default function SimulatePage() {
               style={{
                 padding: "8px 14px",
                 background: "#020617",
-                borderRadius: 8,
                 border: "1px solid #1e293b",
+                borderRadius: 8,
                 color: "#ffffff",
                 fontWeight: 500,
                 cursor: "pointer",
@@ -251,28 +232,50 @@ export default function SimulatePage() {
           <div>
             <h2 style={{ marginBottom: 16 }}>Financial Impact</h2>
 
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24 }}>
-              <Metric label="Low Impact" value={`$${Math.round(ladder.low).toLocaleString()}`} />
-              <Metric label="Expected Impact" value={`$${Math.round(ladder.base).toLocaleString()}`} />
-              <Metric label="High Impact" value={`$${Math.round(ladder.high).toLocaleString()}`} />
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(3, 1fr)",
+                gap: 24,
+                marginBottom: 16,
+              }}
+            >
+              <Metric
+                label="Low Impact"
+                value={`$${Math.round(ladder.low).toLocaleString()}`}
+              />
+              <Metric
+                label="Expected Impact"
+                value={`$${Math.round(ladder.base).toLocaleString()}`}
+              />
+              <Metric
+                label="High Impact"
+                value={`$${Math.round(ladder.high).toLocaleString()}`}
+              />
             </div>
 
-            <p style={{ marginTop: 16, opacity: 0.85 }}>{copy.narrative}</p>
+            <p style={{ fontSize: 13, opacity: 0.65 }}>
+              Estimated cost avoided over {timeHorizon} year
+              {timeHorizon === 3 ? "s" : ""}.
+            </p>
+
+            <p style={{ marginTop: 20, opacity: 0.85 }}>
+              {copy.narrative}
+            </p>
           </div>
 
-          {/* CTAs */}
+          {/* Navigation CTAs */}
           <div style={{ display: "flex", gap: 16 }}>
             <button
               onClick={() => {
                 setSimulatedStress(simulatedStress);
-                setScenarioAttritionDelta(-effectiveRiskReductionPct);
                 navigate("/ground-reality");
               }}
               style={{
                 padding: "12px 20px",
                 background: "#2563eb",
-                borderRadius: 8,
                 border: "none",
+                borderRadius: 8,
                 color: "#ffffff",
                 fontWeight: 600,
                 cursor: "pointer",
@@ -285,9 +288,9 @@ export default function SimulatePage() {
               onClick={() => navigate("/retention-simulator")}
               style={{
                 padding: "12px 20px",
-                background: "#020617",
+                background: "#2563eb",
+                border: "1px solid #334155",
                 borderRadius: 8,
-                border: "1px solid #1e293b",
                 color: "#ffffff",
                 fontWeight: 600,
                 cursor: "pointer",
@@ -298,21 +301,23 @@ export default function SimulatePage() {
           </div>
         </div>
 
-        {/* Spacer */}
-        <div />
-
         {/* =====================================================
-            RIGHT COLUMN — Cube
+            RIGHT — STRESS CUBE
         ====================================================== */}
-        <div style={{ alignSelf: "center" }}>
+        <div
+          style={{
+            width: 360,
+            display: "flex",
+            flexDirection: "column",
+            gap: 16,
+          }}
+        >
           <div
             style={{
               background: "#020617",
               border: "1px solid #1e293b",
               borderRadius: 16,
               padding: 24,
-              width: 360,
-              marginLeft: -190,
             }}
           >
             <div
@@ -334,6 +339,20 @@ export default function SimulatePage() {
               persona={persona}
               size={300}
             />
+          </div>
+
+          <div
+            style={{
+              background: "#020617",
+              border: "1px solid #1e293b",
+              borderRadius: 14,
+              padding: 14,
+              fontSize: 13,
+              color: "#cbd5f5",
+              textAlign: "center",
+            }}
+          >
+            {copy.narrative}
           </div>
         </div>
       </div>
