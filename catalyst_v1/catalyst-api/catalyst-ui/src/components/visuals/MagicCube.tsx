@@ -10,12 +10,14 @@ type MagicCubeProps = {
   stress: StressProfile;
   persona: Persona;
   size?: number;
+  showAnnotation?: boolean;
 };
 
 export default function MagicCube({
   stress,
   persona,
   size = 220,
+  showAnnotation = true,
 }: MagicCubeProps) {
   /* ---------------------------------------------
      Inject pulse animation once
@@ -161,25 +163,27 @@ export default function MagicCube({
       </svg>
 
       {/* ================= Annotation ================= */}
-      <div
-        style={{
-          marginTop: 12,
-          background: "#020617",
-          border: "1px solid #1e293b",
-          padding: 12,
-          borderRadius: 6,
-          color: "#e5e7eb",
-          fontSize: 13,
-          lineHeight: 1.5,
-        }}
-      >
-        <div style={{ fontSize: 12, color: "#94a3b8", marginBottom: 6 }}>
-          Dominant stress driver: <strong>{dominantKey.toUpperCase()}</strong>
-        </div>
+      {showAnnotation && (
+        <div
+          style={{
+            marginTop: 12,
+            background: "#020617",
+            border: "1px solid #1e293b",
+            padding: 12,
+            borderRadius: 6,
+            color: "#e5e7eb",
+            fontSize: 13,
+            lineHeight: 1.5,
+          }}
+        >
+          <div style={{ fontSize: 12, color: "#94a3b8", marginBottom: 6 }}>
+            Dominant stress driver: <strong>{dominantKey.toUpperCase()}</strong>
+          </div>
 
-        <strong>{annotation.title}</strong>
-        <div>{annotation.message}</div>
-      </div>
+          <strong>{annotation.title}</strong>
+          <div>{annotation.message}</div>
+        </div>
+      )}
     </div>
   );
 }
