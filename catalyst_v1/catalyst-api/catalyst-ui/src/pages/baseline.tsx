@@ -4,8 +4,10 @@ import { baseOrgState } from "../state/orgState";
 import {
   getSimulatedStress,
   setSimulatedStress,
+  subscribeSimulatedStress,
 } from "../state/simulatedStressState";
 import { PERSONAS } from "../types/persona";
+import { useEffect, useState } from "react";
 
 /* =========================================================
    Helpers
@@ -16,7 +18,7 @@ function getDominantStress(stress: typeof baseOrgState.stress) {
 }
 
 export default function BaselinePage() {
-  const simulated = getSimulatedStress();
+  const [simulated, setSimulated] = useState(getSimulatedStress());
   const stress = simulated ?? baseOrgState.stress;
   const dominantStress = getDominantStress(stress);
   const navigate = useNavigate();
@@ -34,6 +36,16 @@ export default function BaselinePage() {
     minWidth: 240,
     textAlign: "center",
   };
+
+  useEffect(() => {
+    const unsubscribe = subscribeSimulatedStress(() => {
+      setSimulated(getSimulatedStress());
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   return (
     <div
@@ -235,3 +247,4 @@ export default function BaselinePage() {
     </div>
   );
 }
+
