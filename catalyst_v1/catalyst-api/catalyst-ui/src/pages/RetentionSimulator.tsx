@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import PageShell from "../components/layout/PageShell";
 import { demoOrganizationState } from "../demo/demoOrganizationState";
 import SimulationCard from "./retention-simulator/SimulationCard";
+import { setSimulatedStress } from "../state/simulatedStressState";
+import { baseOrgState } from "../state/orgState";
 
 /* =========================================================
    Intervention catalog
@@ -87,6 +89,7 @@ export default function RetentionSimulatorPage() {
 
     const handleSendToFinancials = () => {
         if (deltaPct === null) return;
+        setSimulatedStress(baseOrgState.stress);
         navigate("/simulation");
 
     };
