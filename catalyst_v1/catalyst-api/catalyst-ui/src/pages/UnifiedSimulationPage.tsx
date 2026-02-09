@@ -3,7 +3,7 @@ import SimulationControlsPanel from "../components/SimulationControlsPanel";
 import { useState } from "react";
 import MagicCube from "../components/visuals/MagicCube";
 import { baseOrgState } from "../state/orgState";
-import { clearScenarioAttritionDelta, getScenarioAttritionDelta } from "../state/scenarioState";
+import { clearScenarioAttritionDelta, getScenarioAttritionDelta, setScenarioAttritionDelta } from "../state/scenarioState";
 import { getSimulatedStress, setSimulatedStress } from "../state/simulatedStressState";
 import type { Persona } from "../types/persona";
 
@@ -51,17 +51,34 @@ export default function UnifiedSimulationPage() {
         },
     };
 
-    const handleApply = () => {
-        console.log("apply clicked (demo mode)");
-    };
-    const handleReset = () => {
-        clearScenarioAttritionDelta();
-        setSimulatedStress(null);
-    };
     function getDominantStress(stress: typeof baseOrgState.stress) {
         return (Object.entries(stress) as [keyof typeof stress, number][])
             .sort((a, b) => b[1] - a[1])[0][0];
     }
+    const computeDemoDeltaFromStress = () => {
+        if (!simulatedStress) return null;
+        const baseline =
+            (baseOrgState.stress.people +
+                baseOrgState.stress.cost +
+                baseOrgState.stress.execution +
+                baseOrgState.stress.macro) / 4;
+        const simulated =
+            (simulatedStress.people +
+                simulatedStress.cost +
+                simulatedStress.execution +
+                simulatedStress.macro) / 4;
+        return Math.round((simulated - baseline) * 100);
+    };
+    const handleApplySimulation = () => {
+        const delta = computeDemoDeltaFromStress();
+        if (delta === null) return;
+        console.log("APPLY SIMULATION -> scenarion committed", delta);
+        setScenarioAttritionDelta(delta);
+    };
+    const handleResetSimulation = () => {
+        clearScenarioAttritionDelta();
+        setSimulatedStress(null);
+    };
 
     return (
         <div
@@ -102,8 +119,8 @@ export default function UnifiedSimulationPage() {
                             onPersonaChange={setPersona}
                             timeHorizon={3}
                             onTimeHorizonChange={() => { }}
-                            onApply={handleApply}
-                            onReset={handleReset}
+                            onApply={handleApplySimulation}
+                            onReset={handleResetSimulation}
                         />
                     </div>
                 </div>
