@@ -8,8 +8,12 @@ import { getSimulatedStress, setSimulatedStress } from "../state/simulatedStress
 import type { Persona } from "../types/persona";
 
 export default function UnifiedSimulationPage() {
+    const BASELINE_ATTRITION_UNITS = 124_121;
+    const COST_PER_UNIT = 375;
+    const BASELINE_COST =
+        BASELINE_ATTRITION_UNITS * COST_PER_UNIT;
     const [persona, setPersona] = useState<Persona>("CEO");
-    const scenarioDeltaPct = getScenarioAttritionDelta();
+    const [scenarioDeltaPct, setLocalScenarioDeltaPct] = useState<number | null>(null);
     const simulatedStress = getSimulatedStress();
     const effectiveStress = simulatedStress ?? baseOrgState.stress;
     const dominantStress = getDominantStress(effectiveStress);
@@ -64,6 +68,7 @@ export default function UnifiedSimulationPage() {
         }
 
         console.log("APPLY SIMULATION → committed delta", delta);
+        setLocalScenarioDeltaPct(delta);
 
         // Demo bridge: derive visible stress change from delta
         const intensity = Math.abs(delta) / 100;
@@ -79,6 +84,7 @@ export default function UnifiedSimulationPage() {
     const handleResetSimulation = () => {
         clearScenarioAttritionDelta();
         setSimulatedStress(null);
+        setLocalScenarioDeltaPct(null);
     };
 
     return (
