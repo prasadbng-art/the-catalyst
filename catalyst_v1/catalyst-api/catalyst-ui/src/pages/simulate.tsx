@@ -229,29 +229,71 @@ export default function SimulatePage() {
           </div>
 
           {/* Financial Impact */}
+          {/* Financial Impact */}
           <div>
-            <h2 style={{ marginBottom: 16 }}>Financial Impact</h2>
+            <h2 style={{ marginBottom: 8 }}>Financial Impact</h2>
+
+            {/* Causality Line */}
+            {scenarioDeltaPct !== null && (
+              <div style={{ fontSize: 13, opacity: 0.75, marginBottom: 16 }}>
+                Driven by applied retention scenario (attrition change: {scenarioDeltaPct}%)
+              </div>
+            )}
 
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
-                gap: 24,
+                gridTemplateColumns: "1fr 1fr",
+                gap: 32,
                 marginBottom: 16,
               }}
             >
-              <Metric
-                label="Low Impact"
-                value={`$${Math.round(ladder.low).toLocaleString()}`}
-              />
-              <Metric
-                label="Expected Impact"
-                value={`$${Math.round(ladder.base).toLocaleString()}`}
-              />
-              <Metric
-                label="High Impact"
-                value={`$${Math.round(ladder.high).toLocaleString()}`}
-              />
+              {/* BASELINE */}
+              <div>
+                <div style={{ fontSize: 13, opacity: 0.6, marginBottom: 12 }}>
+                  Baseline (No Intervention)
+                </div>
+
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(3, 1fr)",
+                    gap: 16,
+                  }}
+                >
+                  <Metric label="Low Impact" value="$0" />
+                  <Metric label="Expected Impact" value="$0" />
+                  <Metric label="High Impact" value="$0" />
+                </div>
+              </div>
+
+              {/* SIMULATED */}
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 600, marginBottom: 12 }}>
+                  After Retention Scenario
+                </div>
+
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(3, 1fr)",
+                    gap: 16,
+                  }}
+                >
+                  <Metric
+                    label="Low Impact"
+                    value={`$${Math.round(ladder.low).toLocaleString()}`}
+                  />
+                  <Metric
+                    label="Expected Impact"
+                    value={`$${Math.round(ladder.base).toLocaleString()}`}
+                  />
+                  <Metric
+                    label="High Impact"
+                    value={`$${Math.round(ladder.high).toLocaleString()}`}
+                  />
+                </div>
+              </div>
             </div>
 
             <p style={{ fontSize: 13, opacity: 0.65 }}>
