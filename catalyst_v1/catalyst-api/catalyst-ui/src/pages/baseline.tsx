@@ -69,7 +69,7 @@ export default function BaselinePage() {
             Enterprise Equilibrium Score
           </h1>
 
-          {simulated && (
+          {simulated !== null && (
             <div
               style={{
                 marginTop: 16,

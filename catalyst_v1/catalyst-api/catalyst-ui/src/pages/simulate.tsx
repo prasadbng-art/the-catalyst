@@ -310,6 +310,8 @@ export default function SimulatePage() {
             display: "flex",
             flexDirection: "column",
             gap: 16,
+            marginLeft: 70,
+            marginTop: 90,
           }}
         >
           <div
@@ -349,7 +351,7 @@ export default function SimulatePage() {
               padding: 14,
               fontSize: 13,
               color: "#cbd5f5",
-              textAlign: "center",
+              textAlign: "left",
             }}
           >
             {copy.narrative}
