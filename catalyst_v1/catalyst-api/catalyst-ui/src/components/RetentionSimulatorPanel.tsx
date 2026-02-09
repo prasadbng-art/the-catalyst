@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { demoOrganizationState } from "../demo/demoOrganizationState";
 import SimulationCard from "../pages/retention-simulator/SimulationCard";
-//import { baseOrgState } from "../state/orgState";
-//import { setSimulatedStress } from "../state/simulatedStressState";
+import { setScenarioAttritionDelta } from "../state/scenarioState";
 
 /* =========================================================
    Intervention catalog
@@ -41,10 +40,16 @@ export default function RetentionSimulatorPanel() {
             : null;
 
     const handleSimulate = (id: string, simulatedRisk: number | null) => {
-        setSimulatedRisks((prev) => ({
-            ...prev,
-            [id]: simulatedRisk,
-        }));
+        setSimulatedRisks((prev) => {
+            const next = { ...prev, [id]: simulatedRisk };
+
+            // 🔑 PUBLISH SCENARIO DELTA HERE
+            if (deltaPct !== null) {
+                setScenarioAttritionDelta(Math.round(deltaPct));
+            }
+
+            return next;
+        });
     };
 
     return (
