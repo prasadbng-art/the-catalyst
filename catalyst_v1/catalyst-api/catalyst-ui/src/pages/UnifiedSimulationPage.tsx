@@ -3,7 +3,7 @@ import SimulationControlsPanel from "../components/SimulationControlsPanel";
 import { useState } from "react";
 import MagicCube from "../components/visuals/MagicCube";
 import { baseOrgState } from "../state/orgState";
-import { clearScenarioAttritionDelta, getScenarioAttritionDelta, setScenarioAttritionDelta } from "../state/scenarioState";
+import { clearScenarioAttritionDelta, getScenarioAttritionDelta, } from "../state/scenarioState";
 import { getSimulatedStress, setSimulatedStress } from "../state/simulatedStressState";
 import type { Persona } from "../types/persona";
 
@@ -55,26 +55,27 @@ export default function UnifiedSimulationPage() {
         return (Object.entries(stress) as [keyof typeof stress, number][])
             .sort((a, b) => b[1] - a[1])[0][0];
     }
-    const computeDemoDeltaFromStress = () => {
-        if (!simulatedStress) return null;
-        const baseline =
-            (baseOrgState.stress.people +
-                baseOrgState.stress.cost +
-                baseOrgState.stress.execution +
-                baseOrgState.stress.macro) / 4;
-        const simulated =
-            (simulatedStress.people +
-                simulatedStress.cost +
-                simulatedStress.execution +
-                simulatedStress.macro) / 4;
-        return Math.round((simulated - baseline) * 100);
-    };
     const handleApplySimulation = () => {
-        const delta = computeDemoDeltaFromStress();
-        if (delta === null) return;
-        console.log("APPLY SIMULATION -> scenarion committed", delta);
-        setScenarioAttritionDelta(delta);
+        const delta = getScenarioAttritionDelta();
+
+        if (delta === null) {
+            console.warn("No retention scenario to apply");
+            return;
+        }
+
+        console.log("APPLY SIMULATION → committed delta", delta);
+
+        // Demo bridge: derive visible stress change from delta
+        const intensity = Math.abs(delta) / 100;
+
+        setSimulatedStress({
+            people: Math.max(0, baseOrgState.stress.people - intensity * 0.4),
+            cost: Math.max(0, baseOrgState.stress.cost - intensity * 0.3),
+            execution: Math.max(0, baseOrgState.stress.execution - intensity * 0.25),
+            macro: baseOrgState.stress.macro,
+        })
     };
+
     const handleResetSimulation = () => {
         clearScenarioAttritionDelta();
         setSimulatedStress(null);
