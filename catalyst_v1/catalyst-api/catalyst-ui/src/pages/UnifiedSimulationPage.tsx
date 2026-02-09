@@ -3,8 +3,8 @@ import SimulationControlsPanel from "../components/SimulationControlsPanel";
 import { useState } from "react";
 import MagicCube from "../components/visuals/MagicCube";
 import { baseOrgState } from "../state/orgState";
-import { getScenarioAttritionDelta } from "../state/scenarioState";
-import { getSimulatedStress } from "../state/simulatedStressState";
+import { clearScenarioAttritionDelta, getScenarioAttritionDelta } from "../state/scenarioState";
+import { getSimulatedStress, setSimulatedStress } from "../state/simulatedStressState";
 import type { Persona } from "../types/persona";
 
 export default function UnifiedSimulationPage() {
@@ -51,7 +51,13 @@ export default function UnifiedSimulationPage() {
         },
     };
 
-
+    const handleApply = () => {
+        console.log("apply clicked (demo mode)");
+    };
+    const handleReset = () => {
+        clearScenarioAttritionDelta();
+        setSimulatedStress(null);
+    };
     function getDominantStress(stress: typeof baseOrgState.stress) {
         return (Object.entries(stress) as [keyof typeof stress, number][])
             .sort((a, b) => b[1] - a[1])[0][0];
@@ -96,11 +102,10 @@ export default function UnifiedSimulationPage() {
                             onPersonaChange={setPersona}
                             timeHorizon={3}
                             onTimeHorizonChange={() => { }}
-                            onApply={() => { }}
-                            onReset={() => { }}
+                            onApply={handleApply}
+                            onReset={handleReset}
                         />
                     </div>
-
                 </div>
 
                 {/* CENTER PANEL */}
