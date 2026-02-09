@@ -47,8 +47,8 @@ export default function UnifiedSimulationPage() {
 
                     <div style={{ marginTop: 16 }}>
                         <SimulationControlsPanel
-                            persona={"CFO"}
-                            onPersonaChange={() => { }}
+                            persona={persona}
+                            onPersonaChange={setPersona}
                             timeHorizon={3}
                             onTimeHorizonChange={() => { }}
                             onApply={() => { }}
@@ -74,7 +74,7 @@ export default function UnifiedSimulationPage() {
                     <strong>Organizational Response</strong>
 
                     <div style={{ fontSize: 13, color: "#cbd5f5", marginBottom: 12, }}>
-                        Retention interventions adjust workforce risj, which propagates into
+                        Retention interventions adjust workforce risk, which propagates into
                         organizational stress and financial exposure.
                     </div>
 
@@ -187,21 +187,20 @@ export default function UnifiedSimulationPage() {
                                 color: "#22c55e",
                             }}
                         >
-                            <div style={{ fontSize: 22, fontWeight: 600 }}>
-                                {scenarioDeltaPct === null
-                                    ? "$0"
-                                    : `$${Math.round(Math.abs(scenarioDeltaPct) * 460000).toLocaleString()}`}
-                            </div>
-
+                            {scenarioDeltaPct === null
+                                ? "$0"
+                                : `$${Math.round(Math.abs(scenarioDeltaPct) * 460000).toLocaleString()}`}
                         </div>
 
-                        <div style={{ fontSize: 12, opacity: 0.6, marginTop: 4 }}>
-                            Expected cost avoided
-                        </div>
+                    </div>
+
+                    <div style={{ fontSize: 12, opacity: 0.6, marginTop: 4 }}>
+                        Expected cost avoided
                     </div>
                 </div>
-
             </div>
+
         </div>
+
     );
 }

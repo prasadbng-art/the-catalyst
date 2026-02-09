@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { demoOrganizationState } from "../demo/demoOrganizationState";
 import SimulationCard from "../pages/retention-simulator/SimulationCard";
-import { baseOrgState } from "../state/orgState";
-import { setSimulatedStress } from "../state/simulatedStressState";
+//import { baseOrgState } from "../state/orgState";
+//import { setSimulatedStress } from "../state/simulatedStressState";
 
 /* =========================================================
    Intervention catalog
