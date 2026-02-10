@@ -114,7 +114,7 @@ export default function RetentionSimulatorPanel({
             >
                 {people.map((entity) => (
                     <SimulationCard
-                        key={entity.id}
+                        key={`${entity.id}-${resetSignal}`}
                         entity={{
                             id: entity.id,
                             name: entity.name,
@@ -127,6 +127,7 @@ export default function RetentionSimulatorPanel({
                         onSimulate={handleSimulate}
                     />
                 ))}
+
             </div>
         </div>
     );
