@@ -87,22 +87,29 @@ export default function UnifiedSimulationPage() {
         setSimulatedStress(null);
         setLocalScenarioDeltaPct(null);
     };
-    const afterScenarioCost =
-        scenarioDeltaPct === null
-            ? BASELINE_COST
-            : Math.round(
-                BASELINE_COST * (1 - scenarioDeltaPct / 100)
-            );
-    console.log("AFTER SCENARIO COST ->", afterScenarioCost)
+    // ---------------- FINANCIAL LOGIC (LOCKED) ----------------
 
-    const improvementPct =
-        scenarioDeltaPct === null
-            ? 0
-            : Math.abs(scenarioDeltaPct) / 100;
+    // Normalize and clamp scenario delta
+    const rawDelta = scenarioDeltaPct ?? 0;
+
+    // If value looks like 13 or -13 → treat as percent
+    // If value looks like 0.13 → treat as fraction
+    const normalizedImprovement =
+        Math.abs(rawDelta) > 1
+            ? Math.abs(rawDelta) / 100
+            : Math.abs(rawDelta);
+
+    // Clamp to 100% max improvement (cannot save more than baseline)
+    const improvementPct = Math.min(normalizedImprovement, 1);
+
+    // Final avoided cost (THIS is what UI should show)
     const avoidedCost = Math.round(BASELINE_COST * improvementPct);
-    console.log("BASELINE COST ->", BASELINE_COST);
-    console.log("SCENARIO DELTA % ->", scenarioDeltaPct);
-    console.log("AVOIDED COS ->", avoidedCost);
+
+    // ---------------- CONSOLE VERIFICATION ----------------
+    console.log("BASELINE COST →", BASELINE_COST);
+    console.log("RAW SCENARIO DELTA →", rawDelta);
+    console.log("NORMALIZED IMPROVEMENT % →", improvementPct);
+    console.log("AVOIDED COST →", avoidedCost);
 
     return (
         <div
@@ -298,7 +305,7 @@ export default function UnifiedSimulationPage() {
                                 color: "#22c55e",
                             }}
                         >
-                            ${afterScenarioCost.toLocaleString("en-US")}
+                            ${avoidedCost.toLocaleString("en-US")}
                         </div>
 
                         <div style={{ fontSize: 12, opacity: 0.6, marginTop: 4 }}>
