@@ -12,7 +12,7 @@ export default function RetentionSimulatorPage() {
                     simulated.
                 </p>
 
-                <RetentionSimulatorPanel />
+                <RetentionSimulatorPanel resetSignal={0} />
             </div>
         </PageShell>
     );

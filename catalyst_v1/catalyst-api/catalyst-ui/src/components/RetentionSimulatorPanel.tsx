@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { demoOrganizationState } from "../demo/demoOrganizationState";
 import SimulationCard from "../pages/retention-simulator/SimulationCard";
 import { setScenarioAttritionDelta } from "../state/scenarioState";
@@ -14,10 +14,21 @@ const INTERVENTIONS = [
     { key: "role_redesign", label: "Role Redesign" },
 ];
 
-export default function RetentionSimulatorPanel() {
+type RetentionSimulatorPanelProps = {
+    resetSignal: number;
+};
+
+export default function RetentionSimulatorPanel({
+    resetSignal,
+}: RetentionSimulatorPanelProps) {
     const [simulatedRisks, setSimulatedRisks] = useState<
         Record<string, number | null>
     >({});
+
+    // 🔑 HARD RESET when baseline reset is triggered
+    useEffect(() => {
+        setSimulatedRisks({});
+    }, [resetSignal]);
 
     const people = demoOrganizationState.people.entities;
 
@@ -43,7 +54,6 @@ export default function RetentionSimulatorPanel() {
         setSimulatedRisks((prev) => {
             const next = { ...prev, [id]: simulatedRisk };
 
-            // 🔑 PUBLISH SCENARIO DELTA HERE
             if (deltaPct !== null) {
                 setScenarioAttritionDelta(Math.round(deltaPct));
             }

@@ -81,11 +81,12 @@ export default function UnifiedSimulationPage() {
             macro: baseOrgState.stress.macro,
         })
     };
-
+    const [resetCounter, setResetCounter] = useState(0);
     const handleResetSimulation = () => {
         clearScenarioAttritionDelta();
         setSimulatedStress(null);
         setLocalScenarioDeltaPct(null);
+        setResetCounter((c) => c + 1);
     };
     // ---------------- FINANCIAL LOGIC (LOCKED) ----------------
 
@@ -226,7 +227,6 @@ export default function UnifiedSimulationPage() {
                     </div>
                 </div>
 
-
                 {/* RIGHT PANEL */}
                 <div
                     style={{
@@ -242,7 +242,7 @@ export default function UnifiedSimulationPage() {
                     <strong>Retention Levers</strong>
 
                     <div style={{ marginTop: 16 }}>
-                        <RetentionSimulatorPanel />
+                        <RetentionSimulatorPanel resetSignal={resetCounter} />
                     </div>
                 </div>
             </div>
