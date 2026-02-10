@@ -54,27 +54,38 @@ export default function RetentionSimulatorPanel() {
 
     return (
         <div>
+            {/* ================= IMPACT HEADER (PINNED) ================= */}
             {deltaPct !== null && (
                 <div
                     style={{
-                        marginBottom: 24,
-                        padding: 16,
-                        borderRadius: 8,
+                        position: "sticky",
+                        top: 0,
+                        zIndex: 10,
+                        marginBottom: 16,
+                        padding: "10px 12px",
+                        borderRadius: 10,
                         background: "#020617",
                         border: "1px solid #1e293b",
-                        color: "#d2d3d6",
+                        boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
                     }}
                 >
-                    <div style={{ fontSize: 12, opacity: 0.75 }}>
-                        Simulated Organization-Level Impact
+                    <div
+                        style={{
+                            fontSize: 11,
+                            opacity: 0.6,
+                            letterSpacing: "0.04em",
+                            textTransform: "uppercase",
+                        }}
+                    >
+                        Simulated Organization Impact
                     </div>
 
                     <div
                         style={{
-                            fontSize: 22,
+                            fontSize: 20,
                             fontWeight: 700,
                             color: deltaPct < 0 ? "#16a34a" : "#dc2626",
-                            marginTop: 6,
+                            marginTop: 4,
                         }}
                     >
                         {deltaPct < 0 ? "" : "+"}
@@ -83,6 +94,7 @@ export default function RetentionSimulatorPanel() {
                 </div>
             )}
 
+            {/* ================= RETENTION LEVERS ================= */}
             <div
                 style={{
                     display: "grid",
