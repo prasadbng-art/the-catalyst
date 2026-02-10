@@ -51,7 +51,7 @@ export default function SimulationCard({
     return (
         <div
             style={{
-                background: "#ffffff",
+                background: "#fffcfcfb",
                 borderRadius: 12,
                 padding: 16,
                 border: "1px solid #e5e7eb",

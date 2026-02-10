@@ -62,7 +62,7 @@ export default function RetentionSimulatorPanel() {
                         borderRadius: 8,
                         background: "#020617",
                         border: "1px solid #1e293b",
-                        color: "#e5e7eb",
+                        color: "#d2d3d6",
                     }}
                 >
                     <div style={{ fontSize: 12, opacity: 0.75 }}>

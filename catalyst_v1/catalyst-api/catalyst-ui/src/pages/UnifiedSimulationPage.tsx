@@ -114,12 +114,13 @@ export default function UnifiedSimulationPage() {
     return (
         <div
             style={{
-                height: "100vh",
+                minHeight: "100vh",
+                maxHeight: 560,
                 background: "#020617",
-                padding: "32px",
+                padding: "20px",
                 display: "grid",
-                gridTemplateRows: "1fr auto",
-                gap: 32,
+                gridTemplateRows: "auto auto",
+                gap: 20,
             }}
         >
             {/* ================= TOP GRID ================= */}
@@ -127,17 +128,21 @@ export default function UnifiedSimulationPage() {
                 style={{
                     display: "grid",
                     gridTemplateColumns: "360px 1fr 360px",
+                    gridTemplateRows: "minmax(auto,600px)auto",
                     gap: 32,
                     alignItems: "stretch",
                     minHeight: 0,
+                    maxHeight: 560,
                 }}
             >
                 {/* LEFT PANEL */}
                 <div
                     style={{
-                        border: "2px dashed #38bdf8",
-                        borderRadius: 12,
-                        padding: 16,
+                        border: "1px solid #1e293b",
+                        background: "linear-gradient(180deg,#020617 0%, #020617 100%)",
+                        boxShadow: "0, 12px 32px rgba(0,0,0,0.45)",
+                        borderRadius: 14,
+                        padding: 14,
                         overflowY: "auto",
                         minHeight: 0,
                     }}
@@ -159,9 +164,11 @@ export default function UnifiedSimulationPage() {
                 {/* CENTER PANEL */}
                 <div
                     style={{
-                        border: "2px dashed #22c55e",
+                        border: "1px solid #1e293b",
+                        background: "linear-gradient(180deg, #020617 0%, #020617 100%)",
+                        boxShadow: "0, 12px 32px rgba(0,0,0,0.45)",
                         borderRadius: 12,
-                        padding: 24,
+                        padding: 14,
                         display: "grid",
                         gridTemplateColumns: "1fr 260px",
                         gap: 24,
@@ -183,11 +190,13 @@ export default function UnifiedSimulationPage() {
                         style={{
                             border: "1px solid #1e293b",
                             borderRadius: 8,
-                            padding: 12,
+                            padding: 14,
                             background: "#020617",
                             fontSize: 13,
                             color: "#cbd5f5",
                             lineHeight: 1.5,
+                            maxHeight: 160,
+                            overflow: "hidden",
                         }}
                     >
                         <div
@@ -221,9 +230,11 @@ export default function UnifiedSimulationPage() {
                 {/* RIGHT PANEL */}
                 <div
                     style={{
-                        border: "2px dashed #f97316",
+                        border: "1px solid #1e293b",
+                        background: "linear-gradient(180deg, #020617 0%, #020617 100%)",
+                        boxShadow: "0 12px 32px rgba(0,0,0,0.45)",
                         borderRadius: 12,
-                        padding: 16,
+                        padding: 14,
                         minHeight: "520px",
                         overflowY: "auto",
                     }}
@@ -239,9 +250,12 @@ export default function UnifiedSimulationPage() {
             {/* ================= BOTTOM PANEL ================= */}
             <div
                 style={{
-                    border: "2px dashed #eab308",
+                    border: "1px solid #1e293b",
+                    background: "linear-gradient(180deg, #020617 0%, #020617 100%)",
+                    boxShadow: "0 12px 32px rgba(0,0,0,0.45)",
                     borderRadius: 12,
-                    padding: 16,
+                    padding: 14,
+                    marginTop: 0,
                 }}
             >
                 <strong>Financial Outcomes</strong>
@@ -249,38 +263,39 @@ export default function UnifiedSimulationPage() {
                 <div
                     style={{
                         display: "grid",
-                        gridTemplateColumns: "1fr 1fr",
-                        gap: 24,
-                        marginTop: 16,
+                        gridTemplateColumns: "auto auto",
+                        gap: 26,
+                        marginTop: 6,
                     }}
                 >
                     {/* BASELINE */}
                     <div
                         style={{
-                            padding: 16,
-                            borderRadius: 8,
-                            border: "1px solid #1e293b",
+                            padding: 14,
+                            borderRadius: 12,
+                            border: "1px solid #f7060e",
                             background: "#020617",
                         }}
                     >
-                        <div style={{ fontSize: 12, opacity: 0.7 }}>
+                        <div style={{
+                            fontSize: 12, opacity: 0.7,
+                        }}>
                             Baseline (No Retention Action)
                         </div>
 
                         <div style={{ fontSize: 22, fontWeight: 600, marginTop: 6 }}>
                             ${BASELINE_COST.toLocaleString("en-US")}
                         </div>
-
-
                     </div>
 
                     {/* AFTER */}
                     <div
                         style={{
-                            padding: 16,
-                            borderRadius: 8,
-                            border: "1px solid #2563eb",
+                            padding: 14,
+                            borderRadius: 12,
+                            border: "1px solid #2475f7",
                             background: "#020617",
+                            boxShadow: "0 0 0 1px rgba(37,99,235,0.4), 0 8px 24px rgba(0,0,0,0.45)",
                         }}
                     >
                         <div style={{ fontSize: 12, opacity: 0.7 }}>
@@ -295,7 +310,6 @@ export default function UnifiedSimulationPage() {
                         >
                             Driven by applied retention interventions
                         </div>
-
 
                         <div
                             style={{
