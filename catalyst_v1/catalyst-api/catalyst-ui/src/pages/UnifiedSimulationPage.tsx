@@ -12,6 +12,7 @@ export default function UnifiedSimulationPage() {
     const COST_PER_UNIT = 375;
     const BASELINE_COST =
         BASELINE_ATTRITION_UNITS * COST_PER_UNIT;
+    console.log("BASELINE COST VERIFIED->", BASELINE_COST);
     const [persona, setPersona] = useState<Persona>("CEO");
     const [scenarioDeltaPct, setLocalScenarioDeltaPct] = useState<number | null>(null);
     const simulatedStress = getSimulatedStress();
@@ -86,6 +87,22 @@ export default function UnifiedSimulationPage() {
         setSimulatedStress(null);
         setLocalScenarioDeltaPct(null);
     };
+    const afterScenarioCost =
+        scenarioDeltaPct === null
+            ? BASELINE_COST
+            : Math.round(
+                BASELINE_COST * (1 - scenarioDeltaPct / 100)
+            );
+    console.log("AFTER SCENARIO COST ->", afterScenarioCost)
+
+    const improvementPct =
+        scenarioDeltaPct === null
+            ? 0
+            : Math.abs(scenarioDeltaPct) / 100;
+    const avoidedCost = Math.round(BASELINE_COST * improvementPct);
+    console.log("BASELINE COST ->", BASELINE_COST);
+    console.log("SCENARIO DELTA % ->", scenarioDeltaPct);
+    console.log("AVOIDED COS ->", avoidedCost);
 
     return (
         <div
@@ -244,12 +261,10 @@ export default function UnifiedSimulationPage() {
                         </div>
 
                         <div style={{ fontSize: 22, fontWeight: 600, marginTop: 6 }}>
-                            $0
+                            ${BASELINE_COST.toLocaleString("en-US")}
                         </div>
 
-                        <div style={{ fontSize: 12, opacity: 0.6, marginTop: 4 }}>
-                            Expected cost avoided
-                        </div>
+
                     </div>
 
                     {/* AFTER */}
@@ -283,20 +298,15 @@ export default function UnifiedSimulationPage() {
                                 color: "#22c55e",
                             }}
                         >
-                            {scenarioDeltaPct === null
-                                ? "$0"
-                                : `$${Math.round(Math.abs(scenarioDeltaPct) * 460000).toLocaleString()}`}
+                            ${afterScenarioCost.toLocaleString("en-US")}
                         </div>
 
-                    </div>
-
-                    <div style={{ fontSize: 12, opacity: 0.6, marginTop: 4 }}>
-                        Expected cost avoided
+                        <div style={{ fontSize: 12, opacity: 0.6, marginTop: 4 }}>
+                            Expected cost avoided
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
-
-    );
+    )
 }
