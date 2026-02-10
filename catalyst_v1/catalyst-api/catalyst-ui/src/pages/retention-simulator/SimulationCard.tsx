@@ -53,16 +53,17 @@ export default function SimulationCard({
             style={{
                 background: "#fffcfcfb",
                 borderRadius: 12,
-                padding: 16,
+                padding: 12,
                 border: "1px solid #e5e7eb",
+                boxShadow: "0 8px 20px rgba(0,0,0,0.22)",
             }}
         >
             {/* Header */}
-            <div style={{ marginBottom: 8 }}>
-                <div style={{ fontWeight: 600, color: "#020617" }}>
+            <div style={{ marginBottom: 4 }}>
+                <div style={{ fontSize: 12, fontWeight: 600, color: "#020617" }}>
                     {entity.name}
                 </div>
-                <div style={{ fontSize: 12, color: "#475569" }}>
+                <div style={{ fontSize: 10, color: "#475569" }}>
                     {entity.role} · {entity.function}
                 </div>
             </div>
@@ -70,7 +71,7 @@ export default function SimulationCard({
             {/* Risk Display */}
             <div
                 style={{
-                    fontSize: 20,
+                    fontSize: 10,
                     fontWeight: 700,
                     color: isImproved ? "#16a34a" : "#dc2626",
                     marginBottom: 4,
@@ -80,7 +81,7 @@ export default function SimulationCard({
             </div>
 
             {simulatedRisk !== null && (
-                <div style={{ fontSize: 11, color: "#64748b", marginBottom: 8 }}>
+                <div style={{ fontSize: 10, color: "#64748b", marginBottom: 8 }}>
                     Baseline: {entity.currentRiskPct}%
                 </div>
             )}
@@ -91,7 +92,7 @@ export default function SimulationCard({
                     <span
                         key={driver}
                         style={{
-                            fontSize: 11,
+                            fontSize: 10,
                             padding: "4px 8px",
                             borderRadius: 999,
                             background: "#fee2e2",
@@ -116,7 +117,8 @@ export default function SimulationCard({
                 }}
                 style={{
                     width: "100%",
-                    padding: 8,
+                    fontSize: 10,
+                    padding: "6px 8px",
                     borderRadius: 6,
                     border: "1px solid #cbd5f5",
                     background: "#ffffff",
