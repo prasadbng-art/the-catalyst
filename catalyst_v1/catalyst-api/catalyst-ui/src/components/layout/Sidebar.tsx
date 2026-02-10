@@ -82,19 +82,6 @@ export default function Sidebar() {
           Financial Impact
         </NavLink>
 
-        <NavLink
-          to="/retention-simulator"
-          style={{
-            ...linkStyle,
-            paddingLeft: 20,
-            background: isActive("/retention-simulator")
-              ? "#1e293b"
-              : "transparent",
-            color: "#e5e7eb",
-          }}
-        >
-          Retention Simulation
-        </NavLink>
       </div>
 
       {/* PRODUCTION MODULES */}
