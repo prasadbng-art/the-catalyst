@@ -77,90 +77,133 @@ export default function MagicCube({
     number
   ][]).sort((a, b) => b[1] - a[1])[0][0];
 
+  const tiltBias = {
+    people: { x: 8, y: 0 },
+    cost: { x: 0, y: -10 },
+    execution: { x: 0, y: 10 },
+    macro: { x: -6, y: 0 },
+  }[dominantKey];
   /* =========================================================
      Render
   ========================================================= */
   return (
-    <div style={{ width: size }}>
-      <svg width={size} height={size}>
-        {/* ===== DEFINITIONS (Glow + Gradient) ===== */}
-        <defs>
-          <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="3" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
+    <div
+      style={{
+        width: size,
+        perspective: "1200px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <div
+        style={{
+          transform: `
+            rotateX(${28 + tiltBias.x}deg)
+            rotateY(${-36 + tiltBias.y}deg)
+          `,
 
-          <linearGradient id="cubeGlow" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#38bdf8" />
-            <stop offset="100%" stopColor="#22d3ee" />
-          </linearGradient>
-        </defs>
+          transformStyle: "preserve-3d",
+          transition: "transform 0.8s ease-out",
+          boxShadow: "0 50px 90px rgba(0,0,0,0.6)",
+        }}
+      >
+        <svg width={size} height={size}>
 
-        {/* Crosshair */}
-        <line x1={CENTER} y1={0} x2={CENTER} y2={size} stroke="#1e293b" strokeDasharray="4 4" />
-        <line x1={0} y1={CENTER} x2={size} y2={CENTER} stroke="#1e293b" strokeDasharray="4 4" />
+          {/* ===== DEFINITIONS (Glow + Gradient) ===== */}
+          <defs>
+            <filter id="softGlow" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
 
-        {/* Deformed polygon */}
-        <polygon
-          points={vertices.map(v => `${v.x},${v.y}`).join(" ")}
-          fill="none"
-          stroke="url(#cubeGlow)"
-          strokeWidth={2.5}
-          filter="url(#softGlow)"
-          style={{
-            animation: "cubeBreathe 6s ease-in-out infinite",
-            transformOrigin: `$(CENTER)px $(CENTER)px`,
-          }}
-        />
+            <linearGradient id="cubeGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#38bdf8" />
+              <stop offset="100%" stopColor="#22d3ee" />
+            </linearGradient>
+          </defs>
 
-        {/* Vertices */}
-        {vertices.map(v => {
-          const isDominant = v.key === dominantKey;
+          {/* Crosshair */}
+          <line x1={CENTER} y1={0} x2={CENTER} y2={size} stroke="#1e293b" strokeDasharray="4 4" />
+          <line x1={0} y1={CENTER} x2={size} y2={CENTER} stroke="#1e293b" strokeDasharray="4 4" />
 
-          return (
-            <g key={v.key}>
-              {isDominant && (
+          {/* Back face (depth layer) */}
+          <polygon
+            points={vertices.map(v => `${v.x},${v.y}`).join(" ")}
+            fill="none"
+            stroke="#0f172a"
+            strokeWidth={2}
+            opacity={0.55}
+            style={{
+              transform: "translateZ(-18px)",
+              transformOrigin: `${CENTER}px ${CENTER}px`,
+              filter: "brightness(0.75)",
+            }}
+          />
+
+          {/* Deformed polygon */}
+          <polygon
+            points={vertices.map(v => `${v.x},${v.y}`).join(" ")}
+            fill="none"
+            stroke="url(#cubeGlow)"
+            strokeWidth={3}
+            filter="url(#softGlow)"
+            style={{
+              animation: "cubeBreathe 6s ease-in-out infinite",
+              transformOrigin: `${CENTER}px ${CENTER}px`,
+              filter: "brightness(1.1)",
+            }}
+          />
+
+          {/* Vertices */}
+          {vertices.map(v => {
+            const isDominant = v.key === dominantKey;
+
+            return (
+              <g key={v.key}>
+                {isDominant && (
+                  <circle
+                    cx={v.x}
+                    cy={v.y}
+                    r={14}
+                    fill="url(#cubeGlow)"
+                    style={{ animation: "cubePulse 2.8s ease-in-out infinite" }}
+                  />
+                )}
+
                 <circle
                   cx={v.x}
                   cy={v.y}
-                  r={14}
-                  fill="url(#cubeGlow)"
-                  style={{ animation: "cubePulse 2.8s ease-in-out infinite" }}
+                  r={5}
+                  fill={isDominant ? "#38bdf8" : "#94a3b8"}
                 />
-              )}
 
-              <circle
-                cx={v.x}
-                cy={v.y}
-                r={5}
-                fill={isDominant ? "#38bdf8" : "#94a3b8"}
-              />
-
-              <text
-                x={v.x}
-                y={
-                  v.key === "people"
-                    ? v.y - 12
-                    : v.key === "execution"
-                      ? v.y + 20
-                      : v.y + 4
-                }
-                textAnchor="middle"
-                fontSize={13}
-                fontWeight={500}
-                letterSpacing="0.03em"
-                fill={isDominant ? "#e5e7eb" : "#94a3b8"}
-                style={{ textShadow: "0 0 6px rgba(0,0,0,0.8)" }}
-              >
-                {v.label}
-              </text>
-            </g>
-          );
-        })}
-      </svg>
+                <text
+                  x={v.x}
+                  y={
+                    v.key === "people"
+                      ? v.y - 12
+                      : v.key === "execution"
+                        ? v.y + 20
+                        : v.y + 4
+                  }
+                  textAnchor="middle"
+                  fontSize={13}
+                  fontWeight={500}
+                  letterSpacing="0.03em"
+                  fill={isDominant ? "#e5e7eb" : "#94a3b8"}
+                  style={{ textShadow: "0 0 6px rgba(0,0,0,0.8)" }}
+                >
+                  {v.label}
+                </text>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
 
       {/* ================= Annotation ================= */}
       {showAnnotation && (
@@ -185,5 +228,6 @@ export default function MagicCube({
         </div>
       )}
     </div>
+
   );
 }
