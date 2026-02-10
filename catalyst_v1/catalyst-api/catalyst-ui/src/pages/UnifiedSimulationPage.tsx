@@ -119,8 +119,8 @@ export default function UnifiedSimulationPage() {
                 background: "#020617",
                 padding: "20px",
                 display: "grid",
-                gridTemplateRows: "auto auto",
-                gap: 20,
+                gridTemplateRows: "minmax(520px,max-content) auto",
+                gap: 8,
             }}
         >
             {/* ================= TOP GRID ================= */}
