@@ -7,7 +7,40 @@ import { clearScenarioAttritionDelta, getScenarioAttritionDelta, } from "../stat
 import { getSimulatedStress, setSimulatedStress } from "../state/simulatedStressState";
 import type { Persona } from "../types/persona";
 
+type ScenarioLens = "cost" | "people" | "execution" | "macro";
+
+const SCENARIO_LENSES: Record<
+    ScenarioLens,
+    { people: number; cost: number; execution: number; macro: number }
+> = {
+    cost: {
+        people: 0.2,
+        cost: 0.6,
+        execution: 0.15,
+        macro: 0.05,
+    },
+    people: {
+        people: 0.6,
+        cost: 0.2,
+        execution: 0.15,
+        macro: 0.05,
+    },
+    execution: {
+        people: 0.2,
+        cost: 0.2,
+        execution: 0.5,
+        macro: 0.1,
+    },
+    macro: {
+        people: 0.2,
+        cost: 0.2,
+        execution: 0.2,
+        macro: 0.4,
+    },
+};
+
 export default function UnifiedSimulationPage() {
+    const [scenarioLens, setScenarioLens] = useState<ScenarioLens>("cost");
     const BASELINE_ATTRITION_UNITS = 124_121;
     const COST_PER_UNIT = 375;
     const BASELINE_COST =
@@ -73,12 +106,12 @@ export default function UnifiedSimulationPage() {
 
         // Demo bridge: derive visible stress change from delta
         const intensity = Math.abs(delta) / 100;
-
+        const lens = SCENARIO_LENSES[scenarioLens];
         setSimulatedStress({
-            people: Math.max(0, baseOrgState.stress.people - intensity * 0.4),
-            cost: Math.max(0, baseOrgState.stress.cost - intensity * 0.3),
-            execution: Math.max(0, baseOrgState.stress.execution - intensity * 0.25),
-            macro: baseOrgState.stress.macro,
+            people: Math.max(0, baseOrgState.stress.people - intensity * lens.people),
+            cost: Math.max(0, baseOrgState.stress.cost - intensity * lens.cost),
+            execution: Math.max(0, baseOrgState.stress.execution - intensity * lens.execution),
+            macro: baseOrgState.stress.macro - intensity * lens.macro
         })
     };
     const [resetCounter, setResetCounter] = useState(0);
