@@ -49,7 +49,15 @@ export default function UnifiedSimulationPage() {
     console.log("BASELINE COST VERIFIED->", BASELINE_COST);
     const [persona, setPersona] = useState<Persona>("CEO");
     const [scenarioDeltaPct, setLocalScenarioDeltaPct] = useState<number | null>(null);
+    const isSimulationActive = scenarioDeltaPct
     const simulatedStress = getSimulatedStress();
+    console.log("Simulated Stress:", simulatedStress);
+    const cubeStress: StressProfile =
+        isSimulationActive && simulatedStress
+            ? simulatedStress
+            : DEMO_STRESS[demoLens];
+    DEMO_STRESS[demoLens] ??
+        baseOrgState.stress
     const effectiveStress = simulatedStress ?? baseOrgState.stress;
     const dominantStress = getDominantStress(effectiveStress);
     const DOMINANT_STRESS_NARRATIVE: Record<
@@ -103,8 +111,17 @@ export default function UnifiedSimulationPage() {
         }
 
         console.log("APPLY SIMULATION → committed delta", delta);
+
+        // Persist delta
         setLocalScenarioDeltaPct(delta);
+
+        // Exit demo mode
+        setDemoLens("cost");
+
+        // Force stress update
+        setSimulatedStress({ ...baseOrgState.stress });
     };
+
     const [resetCounter, setResetCounter] = useState(0);
     const handleResetSimulation = () => {
         clearScenarioAttritionDelta();
@@ -113,9 +130,11 @@ export default function UnifiedSimulationPage() {
         setResetCounter((c) => c + 1);
     };
     // ---------------- FINANCIAL LOGIC (LOCKED) ----------------
-
+    console.log("LOCAL scenarioDeltaPct ->", scenarioDeltaPct);
     // Normalize and clamp scenario delta
-    const rawDelta = scenarioDeltaPct ?? 0;
+    const rawDelta = scenarioDeltaPct !== null
+        ? scenarioDeltaPct
+        : 0;
 
     // If value looks like 13 or -13 → treat as percent
     // If value looks like 0.13 → treat as fraction
@@ -240,7 +259,7 @@ export default function UnifiedSimulationPage() {
                     {/* LEFT — MAGIC CUBE */}
                     <div style={{ gridColumn: "1/-2", display: "flex", justifyContent: "center", alignItems: "center", }}>
                         <MagicCube
-                            stress={DEMO_STRESS[demoLens]} // 🔒 DEMO-ONLY stress
+                            stress={cubeStress} // 🔒 DEMO-ONLY stress
                             persona={persona}
                             size={400}
                             showAnnotation={false}
