@@ -6,41 +6,44 @@ import { baseOrgState } from "../state/orgState";
 import { clearScenarioAttritionDelta, getScenarioAttritionDelta, } from "../state/scenarioState";
 import { getSimulatedStress, setSimulatedStress } from "../state/simulatedStressState";
 import type { Persona } from "../types/persona";
+import type { StressProfile } from "../components/visuals/motion";
 
 type ScenarioLens = "cost" | "people" | "execution" | "macro";
 
-const SCENARIO_LENSES: Record<
-    ScenarioLens,
-    { people: number; cost: number; execution: number; macro: number }
+const DEMO_STRESS: Record<
+    "cost" | "people" | "execution" | "macro",
+    StressProfile
 > = {
     cost: {
-        people: 0.2,
-        cost: 0.6,
-        execution: 0.15,
-        macro: 0.05,
+        cost: 0.85,
+        people: 0.45,
+        execution: 0.40,
+        macro: 0.30,
     },
     people: {
-        people: 0.6,
-        cost: 0.2,
-        execution: 0.15,
-        macro: 0.05,
+        cost: 0.45,
+        people: 0.85,
+        execution: 0.50,
+        macro: 0.35,
     },
     execution: {
-        people: 0.2,
-        cost: 0.2,
-        execution: 0.5,
-        macro: 0.1,
+        cost: 0.50,
+        people: 0.45,
+        execution: 0.85,
+        macro: 0.35,
     },
     macro: {
-        people: 0.2,
-        cost: 0.2,
-        execution: 0.2,
-        macro: 0.4,
+        cost: 0.55,
+        people: 0.45,
+        execution: 0.50,
+        macro: 0.85,
     },
 };
 
 export default function UnifiedSimulationPage() {
-    const [scenarioLens, setScenarioLens] = useState<ScenarioLens>("cost");
+    const [demoLens, setDemoLens] =
+        useState<"cost" | "people" | "execution" | "macro">("cost");
+
     const BASELINE_ATTRITION_UNITS = 124_121;
     const COST_PER_UNIT = 375;
     const BASELINE_COST =
@@ -103,16 +106,6 @@ export default function UnifiedSimulationPage() {
 
         console.log("APPLY SIMULATION → committed delta", delta);
         setLocalScenarioDeltaPct(delta);
-
-        // Demo bridge: derive visible stress change from delta
-        const intensity = Math.abs(delta) / 100;
-        const lens = SCENARIO_LENSES[scenarioLens];
-        setSimulatedStress({
-            people: Math.max(0, baseOrgState.stress.people - intensity * lens.people),
-            cost: Math.max(0, baseOrgState.stress.cost - intensity * lens.cost),
-            execution: Math.max(0, baseOrgState.stress.execution - intensity * lens.execution),
-            macro: baseOrgState.stress.macro - intensity * lens.macro
-        })
     };
     const [resetCounter, setResetCounter] = useState(0);
     const handleResetSimulation = () => {
@@ -209,10 +202,47 @@ export default function UnifiedSimulationPage() {
                         alignItems: "start",
                     }}
                 >
+                    {/* ================= Demo Stress Lens ================= */}
+                    <div
+                        style={{
+                            display: "flex",
+                            gap: 8,
+                            marginBottom: 12,
+                            justifyContent: "center",
+                        }}
+                    >
+                        {([
+                            { key: "cost", label: "Cost Pressure" },
+                            { key: "people", label: "People Stress" },
+                            { key: "execution", label: "Execution Load" },
+                            { key: "macro", label: "External Conditions" },
+                        ] as const).map(({ key, label }) => (
+                            <button
+                                key={key}
+                                onClick={() => setDemoLens(key)}
+                                style={{
+                                    padding: "6px 10px",
+                                    fontSize: 12,
+                                    borderRadius: 999,
+                                    cursor: "pointer",
+                                    background: demoLens === key ? "#1d4ed8" : "#020617",
+                                    border:
+                                        demoLens === key
+                                            ? "1px solid #3b82f6"
+                                            : "1px solid #1e293b",
+                                    color: demoLens === key ? "#e5e7eb" : "#94a3b8",
+                                    transition: "all 0.15s ease",
+                                }}
+                            >
+                                {label}
+                            </button>
+                        ))}
+                    </div>
+
                     {/* LEFT — MAGIC CUBE */}
-                    <div style={{ display: "flex", justifyContent: "center" }}>
+                    <div style={{ gridColumn: "1/-2", display: "flex", justifyContent: "center", alignItems: "center", }}>
                         <MagicCube
-                            stress={simulatedStress ?? baseOrgState.stress}
+                            stress={DEMO_STRESS[demoLens]} // 🔒 DEMO-ONLY stress
                             persona={persona}
                             size={400}
                             showAnnotation={false}
