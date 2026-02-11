@@ -39,6 +39,7 @@ const DEMO_STRESS: Record<
 };
 
 export default function UnifiedSimulationPage() {
+    const [applyError, setApplyError] = useState<string | null>(null);
     const [demoLens, setDemoLens] =
         useState<"cost" | "people" | "execution" | "macro">("cost");
 
@@ -46,12 +47,10 @@ export default function UnifiedSimulationPage() {
     const COST_PER_UNIT = 375;
     const BASELINE_COST =
         BASELINE_ATTRITION_UNITS * COST_PER_UNIT;
-    console.log("BASELINE COST VERIFIED->", BASELINE_COST);
     const [persona, setPersona] = useState<Persona>("CEO");
     const [scenarioDeltaPct, setLocalScenarioDeltaPct] = useState<number | null>(null);
     const isSimulationActive = scenarioDeltaPct
     const simulatedStress = getSimulatedStress();
-    console.log("Simulated Stress:", simulatedStress);
     const cubeStress: StressProfile =
         isSimulationActive && simulatedStress
             ? simulatedStress
@@ -106,14 +105,19 @@ export default function UnifiedSimulationPage() {
         const delta = getScenarioAttritionDelta();
 
         if (delta === null) {
-            console.warn("No retention scenario to apply");
+            setApplyError("Please select at least one retetion intervention before applying the simulation.");
             return;
         }
-
-        console.log("APPLY SIMULATION → committed delta", delta);
-
+        setApplyError(null);
         // Persist delta
         setLocalScenarioDeltaPct(delta);
+        const intensity = Math.abs(delta) / 100;
+        setSimulatedStress({
+            people: Math.max(0, baseOrgState.stress.people - intensity * 0.7),
+            cost: Math.max(0, baseOrgState.stress.cost - intensity * 0.35),
+            execution: Math.max(0, baseOrgState.stress.execution - intensity * 0.2),
+            macro: baseOrgState.stress.macro,
+        });
 
         // Exit demo mode
         setDemoLens("cost");
@@ -130,7 +134,7 @@ export default function UnifiedSimulationPage() {
         setResetCounter((c) => c + 1);
     };
     // ---------------- FINANCIAL LOGIC (LOCKED) ----------------
-    console.log("LOCAL scenarioDeltaPct ->", scenarioDeltaPct);
+
     // Normalize and clamp scenario delta
     const rawDelta = scenarioDeltaPct !== null
         ? scenarioDeltaPct
@@ -150,11 +154,6 @@ export default function UnifiedSimulationPage() {
     const avoidedCost = Math.round(BASELINE_COST * improvementPct);
 
     // ---------------- CONSOLE VERIFICATION ----------------
-    console.log("BASELINE COST →", BASELINE_COST);
-    console.log("RAW SCENARIO DELTA →", rawDelta);
-    console.log("NORMALIZED IMPROVEMENT % →", improvementPct);
-    console.log("AVOIDED COST →", avoidedCost);
-
     return (
         <div
             style={{
@@ -203,6 +202,22 @@ export default function UnifiedSimulationPage() {
                             onReset={handleResetSimulation}
                         />
                     </div>
+                    {applyError && (
+                        <div
+                            style={{
+                                marginTop: 12,
+                                padding: "10px 12px",
+                                borderRadius: 8,
+                                background: "rgba(220,38,38,0.08)",
+                                border: "1px solid rgba(220,38,38,0.35)",
+                                color: "#f87171",
+                                fontSize: 12,
+                            }}
+                        >
+                            {applyError}
+                        </div>
+                    )}
+
                 </div>
 
                 {/* CENTER PANEL */}
