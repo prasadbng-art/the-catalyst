@@ -180,21 +180,14 @@ export default function GroundRealityPage() {
                     >
                         <button
                             style={primaryctaStyle}
-                            onClick={() => navigate("/simulation")}
+                            onClick={() => navigate("/unified-simulation")}
                         >
                             Model Financial Impact →
                         </button>
 
                         <button
                             style={primaryctaStyle}
-                            onClick={() => navigate("/retention-simulator")}
-                        >
-                            Run Retention Scenario →
-                        </button>
-
-                        <button
-                            style={primaryctaStyle}
-                            onClick={() => navigate("/baseline")}
+                            onClick={() => navigate("/")}
                         >
                             ← Back to Equilibrium Score
                         </button>

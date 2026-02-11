@@ -42,10 +42,10 @@ export default function Sidebar() {
         </div>
 
         <NavLink
-          to="/baseline"
+          to="/"
           style={{
             ...linkStyle,
-            background: isActive("/baseline") ? "#1e293b" : "transparent",
+            background: isActive("/") ? "#1e293b" : "transparent",
             color: "#e5e7eb",
           }}
         >
@@ -53,10 +53,10 @@ export default function Sidebar() {
         </NavLink>
 
         <NavLink
-          to="/ground-reality"
+          to="/mapped-metrics"
           style={{
             ...linkStyle,
-            background: isActive("/ground-reality") ? "#1e293b" : "transparent",
+            background: isActive("/mapped-metrics") ? "#1e293b" : "transparent",
             color: "#e5e7eb",
           }}
         >
