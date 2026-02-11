@@ -8,8 +8,6 @@ import { getSimulatedStress, setSimulatedStress } from "../state/simulatedStress
 import type { Persona } from "../types/persona";
 import type { StressProfile } from "../components/visuals/motion";
 
-type ScenarioLens = "cost" | "people" | "execution" | "macro";
-
 const DEMO_STRESS: Record<
     "cost" | "people" | "execution" | "macro",
     StressProfile
