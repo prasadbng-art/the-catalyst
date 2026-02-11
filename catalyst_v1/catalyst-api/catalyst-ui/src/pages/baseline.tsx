@@ -226,21 +226,15 @@ export default function BaselinePage() {
           >
             <button
               style={ctaStyle}
-              onClick={() => navigate("/ground-reality")}
+              onClick={() => navigate("/mapped-metrics")}
             >
               Explore Operational Drivers →
             </button>
 
-            <button style={ctaStyle} onClick={() => navigate("/simulation")}>
+            <button style={ctaStyle} onClick={() => navigate("/unified-simulation")}>
               Model Financial Impact →
             </button>
 
-            <button
-              style={ctaStyle}
-              onClick={() => navigate("/retention-simulator")}
-            >
-              Run Retention Scenario →
-            </button>
           </div>
         </footer>
       </div>
