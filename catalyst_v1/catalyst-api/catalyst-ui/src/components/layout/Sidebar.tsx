@@ -71,11 +71,11 @@ export default function Sidebar() {
         </div>
 
         <NavLink
-          to="/simulation"
+          to="/unified-simulation"
           style={{
             ...linkStyle,
             paddingLeft: 20,
-            background: isActive("/simulation") ? "#1e293b" : "transparent",
+            background: isActive("/unified-simulation") ? "#1e293b" : "transparent",
             color: "#e5e7eb",
           }}
         >
