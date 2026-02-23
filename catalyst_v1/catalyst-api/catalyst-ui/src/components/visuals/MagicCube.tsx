@@ -18,7 +18,6 @@ type MagicCubeProps = {
 };
 
 function SuspendedOctahedron({
-    stress,
     motionState,
 }: {
     stress: StressProfile;
