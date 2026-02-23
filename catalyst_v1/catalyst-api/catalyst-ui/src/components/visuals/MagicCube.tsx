@@ -1,7 +1,7 @@
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Octahedron, Edges } from "@react-three/drei";
+import { Edges } from "@react-three/drei";
 import * as THREE from "three";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import type { StressProfile, Persona } from "./motion";
 import { getMotionState, getMotionAnnotation } from "./motion";
 
@@ -18,6 +18,7 @@ type MagicCubeProps = {
 };
 
 function SuspendedOctahedron({
+    stress,
     motionState,
 }: {
     stress: StressProfile;
@@ -25,7 +26,59 @@ function SuspendedOctahedron({
 }) {
     const meshRef = useRef<THREE.Mesh>(null);
 
-    // Map motion state to rotation behavior
+    // ----------- Deformation Parameters -----------
+    const MAX_DEFORMATION = 0.08; // 8% cap
+
+    // ----------- Create Geometry Once -----------
+    const geometry = useMemo(() => {
+        const geo = new THREE.OctahedronGeometry(1.4, 0);
+
+        const position = geo.attributes.position;
+        const vertex = new THREE.Vector3();
+
+        const aggregate =
+            (stress.people +
+                stress.cost +
+                stress.execution +
+                stress.macro) /
+            4;
+
+        for (let i = 0; i < position.count; i++) {
+            vertex.fromBufferAttribute(position, i);
+
+            // Normalize direction
+            const direction = vertex.clone().normalize();
+
+            let influence = 0;
+
+            if (direction.x > 0) influence += stress.cost;
+            if (direction.x < 0) influence += stress.macro;
+            if (direction.y > 0) influence += stress.people;
+            if (direction.y < 0) influence += stress.execution;
+
+            // Z axis responds to aggregate
+            if (Math.abs(direction.z) > 0.5) {
+                influence += aggregate * 0.6;
+            }
+
+            // Normalize influence
+            influence = influence / 100;
+
+            const deformation =
+                1 + influence * MAX_DEFORMATION;
+
+            vertex.multiplyScalar(deformation);
+
+            position.setXYZ(i, vertex.x, vertex.y, vertex.z);
+        }
+
+        position.needsUpdate = true;
+        geo.computeVertexNormals();
+
+        return geo;
+    }, [stress]);
+
+    // ----------- Motion Behavior -----------
     useFrame((state, delta) => {
         if (!meshRef.current) return;
 
@@ -35,17 +88,17 @@ function SuspendedOctahedron({
 
         if (motionState === "tension") {
             meshRef.current.rotation.y += delta * 0.15;
-            meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime) * 0.05;
+            meshRef.current.rotation.x =
+                Math.sin(state.clock.elapsedTime) * 0.04;
         }
 
         if (motionState === "overload") {
             meshRef.current.rotation.y += delta * 0.1;
             meshRef.current.rotation.x =
-                Math.sin(state.clock.elapsedTime * 2) * 0.08;
+                Math.sin(state.clock.elapsedTime * 2) * 0.07;
         }
     });
 
-    // Color mapping by motion state
     const emissiveColor =
         motionState === "stable"
             ? "#0891b2"
@@ -54,19 +107,19 @@ function SuspendedOctahedron({
                 : "#dc2626";
 
     return (
-        <Octahedron ref={meshRef} args={[1.4, 0]}>
+        <mesh ref={meshRef} geometry={geometry}>
             <meshPhysicalMaterial
                 color="#0f172a"
                 roughness={0.6}
                 metalness={0.2}
                 emissive={emissiveColor}
-                emissiveIntensity={0.4}
+                emissiveIntensity={0.5}
                 clearcoat={0.3}
             />
-            <Edges scale={1.01} threshold={15}>
+            <Edges scale={1.01}>
                 <lineBasicMaterial color={emissiveColor} />
             </Edges>
-        </Octahedron>
+        </mesh>
     );
 }
 
