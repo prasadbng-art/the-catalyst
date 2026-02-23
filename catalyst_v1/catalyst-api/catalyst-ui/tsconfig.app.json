@@ -11,16 +11,16 @@
     "module": "ESNext",
     "types": [
       "vite/client",
-      "@react-three/fiber"
     ],
     "skipLibCheck": true,
     /* Bundler mode */
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
+    "jsxImportSource": "react",
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
