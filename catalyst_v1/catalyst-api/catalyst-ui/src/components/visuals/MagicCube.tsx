@@ -87,11 +87,12 @@ function SuspendedOctahedron({
         // Smooth stress interpolation
         Object.keys(stress).forEach((key) => {
             const k = key as keyof StressProfile;
-            const weight = 1 + interpolatedStress.current[k] / 100;
+            const currentValue = interpolatedStress.current[k];
+            const weight = 1 + currentValue / 100;
             const speed = BASE_LERP / weight;
 
             interpolatedStress.current[k] +=
-                (stress[k] - interpolatedStress.current[k]) *
+                (stress[k] - currentValue) *
                 Math.min(delta * speed, 1);
         });
 
