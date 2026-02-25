@@ -231,8 +231,9 @@ function SuspendedOctahedron({
                             <div
                                 style={{
                                     color: isDominant ? "#e2e8f0" : "#94a3b8",
-                                    fontSize: "12px",
-                                    fontWeight: 500,
+                                    fontSize: isDominant ? "14px" : "12px",
+                                    fontWeight: isDominant ? 600 : 500,
+                                    letterSpacing: isDominant ? "0.5px" : "0px",
                                     textAlign: "center",
                                 }}
                             >
