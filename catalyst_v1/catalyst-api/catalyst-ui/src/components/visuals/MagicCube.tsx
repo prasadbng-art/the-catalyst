@@ -115,6 +115,11 @@ function SuspendedOctahedron({
             const compression =
                 1 - 0.03 * Math.sin(state.clock.elapsedTime * 2);
             meshRef.current.scale.z = compression;
+
+            meshRef.current.position.x =
+                0.01 * Math.sin(state.clock.elapsedTime * 8);
+            meshRef.current.position.y =
+                0.01 * Math.cos(state.clock.elapsedTime * 6);
         }
     });
 
