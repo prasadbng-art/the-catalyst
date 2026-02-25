@@ -180,7 +180,7 @@ function SuspendedOctahedron({
 
                 return (
                     <group key={axis.key} position={axis.position}>
-                        <mesh>
+                        <mesh scale={isDominant ? 1.4 : 1}>
                             <sphereGeometry args={[0.07, 16, 16]} />
                             <meshStandardMaterial
                                 color={isDominant ? "#38bdf8" : "#64748b"}
