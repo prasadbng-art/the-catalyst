@@ -34,7 +34,7 @@ function SuspendedOctahedron({
         return (Object.entries(stress).sort((a, b) => b[1] - a[1])[0][0] ??
             "people") as keyof StressProfile;
     }, [stress]);
-
+    const interpolatedStress = useRef<StressProfile>({ ...stress });
     /* ---------------------------------------------
        Geometry Deformation
     --------------------------------------------- */
@@ -43,14 +43,11 @@ function SuspendedOctahedron({
         const position = geo.attributes.position;
         const vertex = new THREE.Vector3();
 
-        const aggregate =
-            (stress.people +
-                stress.cost +
-                stress.execution +
-                stress.macro) /
-            4;
+        const s = interpolatedStress.current;
 
-        const MAX_DEFORMATION = 0.08;
+        const aggregate = (s.people + s.cost + s.execution + s.macro) / 4;
+
+        const MAX_DEFORMATION = 0.11;
 
         for (let i = 0; i < position.count; i++) {
             vertex.fromBufferAttribute(position, i);
@@ -85,20 +82,37 @@ function SuspendedOctahedron({
     useFrame((state, delta) => {
         if (!meshRef.current) return;
 
+        const LERP_SPEED = 4; // higher = faster transition
+
+        // Smooth stress interpolation
+        Object.keys(stress).forEach((key) => {
+            const k = key as keyof StressProfile;
+
+            interpolatedStress.current[k] +=
+                (stress[k] - interpolatedStress.current[k]) *
+                Math.min(delta * LERP_SPEED, 1);
+        });
+
+        // Motion behaviour
         if (motionState === "stable") {
             meshRef.current.rotation.y += delta * 0.2;
+            meshRef.current.scale.z = 1;
         }
 
         if (motionState === "tension") {
             meshRef.current.rotation.y += delta * 0.15;
             meshRef.current.rotation.x =
                 Math.sin(state.clock.elapsedTime) * 0.04;
+            meshRef.current.scale.z = 1;
         }
 
         if (motionState === "overload") {
             meshRef.current.rotation.y += delta * 0.1;
             meshRef.current.rotation.x =
-                Math.sin(state.clock.elapsedTime * 2) * 0.07;
+                Math.sin(state.clock.elapsedTime * 3) * 0.09;
+            const compression =
+                1 - 0.03 * Math.sin(state.clock.elapsedTime * 2);
+            meshRef.current.scale.z = compression;
         }
     });
 
@@ -114,7 +128,7 @@ function SuspendedOctahedron({
     --------------------------------------------- */
     const BASE_DISTANCE = 1.6;     // minimum anchor radius
     const SCALE_FACTOR = 0.8;      // how strongly stress affects extension
-
+    const s = interpolatedStress.current;
     const axes: {
         key: keyof StressProfile;
         position: [number, number, number];
@@ -124,7 +138,7 @@ function SuspendedOctahedron({
                 key: "people",
                 position: [
                     0,
-                    BASE_DISTANCE + (stress.people / 100) * SCALE_FACTOR,
+                    BASE_DISTANCE + (s.people / 100) * SCALE_FACTOR,
                     0,
                 ],
                 label: "People",
@@ -132,7 +146,7 @@ function SuspendedOctahedron({
             {
                 key: "cost",
                 position: [
-                    BASE_DISTANCE + (stress.cost / 100) * SCALE_FACTOR,
+                    BASE_DISTANCE + (s.cost / 100) * SCALE_FACTOR,
                     0,
                     0,
                 ],
@@ -142,7 +156,7 @@ function SuspendedOctahedron({
                 key: "execution",
                 position: [
                     0,
-                    -(BASE_DISTANCE + (stress.execution / 100) * SCALE_FACTOR),
+                    -(BASE_DISTANCE + (s.execution / 100) * SCALE_FACTOR),
                     0,
                 ],
                 label: "Execution",
@@ -150,7 +164,7 @@ function SuspendedOctahedron({
             {
                 key: "macro",
                 position: [
-                    -(BASE_DISTANCE + (stress.macro / 100) * SCALE_FACTOR),
+                    -(BASE_DISTANCE + (s.macro / 100) * SCALE_FACTOR),
                     0,
                     0,
                 ],
