@@ -194,6 +194,23 @@ function SuspendedOctahedron({
 
                 return (
                     <group key={axis.key} position={axis.position}>
+                        <line>
+                            <bufferGeometry>
+                                <bufferAttribute
+                                    attach="attributes-position"
+                                    array={new Float32Array([
+                                        0, 0, 0,
+                                        axis.position[0],
+                                        axis.position[1], axis.position[2],
+                                    ])}
+                                    count={2}
+                                    itemSize={3}
+                                />
+                            </bufferGeometry>
+                            <lineBasicMaterial
+                                color={isDominant ? "#38bdf8" : "#334155"}
+                            />
+                        </line>
                         <mesh scale={isDominant ? 1.4 : 1}>
                             <sphereGeometry args={[0.07, 16, 16]} />
                             <meshStandardMaterial
