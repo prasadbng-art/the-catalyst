@@ -82,15 +82,17 @@ function SuspendedOctahedron({
     useFrame((state, delta) => {
         if (!meshRef.current) return;
 
-        const LERP_SPEED = 4; // higher = faster transition
+        const BASE_LERP = 4; // higher = faster transition
 
         // Smooth stress interpolation
         Object.keys(stress).forEach((key) => {
             const k = key as keyof StressProfile;
+            const weight = 1 + interpolatedStress.current[k] / 100;
+            const speed = BASE_LERP / weight;
 
             interpolatedStress.current[k] +=
                 (stress[k] - interpolatedStress.current[k]) *
-                Math.min(delta * LERP_SPEED, 1);
+                Math.min(delta * speed, 1);
         });
 
         // Motion behaviour
