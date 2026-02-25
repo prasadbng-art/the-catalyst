@@ -100,6 +100,7 @@ function SuspendedOctahedron({
         if (motionState === "stable") {
             meshRef.current.rotation.y += delta * 0.2;
             meshRef.current.scale.z = 1;
+            meshRef.current.position.set(0, 0, 0);
         }
 
         if (motionState === "tension") {
@@ -107,6 +108,7 @@ function SuspendedOctahedron({
             meshRef.current.rotation.x =
                 Math.sin(state.clock.elapsedTime) * 0.04;
             meshRef.current.scale.z = 1;
+            meshRef.current.position.set(0, 0, 0);
         }
 
         if (motionState === "overload") {
@@ -116,11 +118,10 @@ function SuspendedOctahedron({
             const compression =
                 1 - 0.03 * Math.sin(state.clock.elapsedTime * 2);
             meshRef.current.scale.z = compression;
-
             meshRef.current.position.x =
-                0.01 * Math.sin(state.clock.elapsedTime * 8);
+                0.08 * Math.sin(state.clock.elapsedTime * 8);
             meshRef.current.position.y =
-                0.01 * Math.cos(state.clock.elapsedTime * 6);
+                0.08 * Math.cos(state.clock.elapsedTime * 6);
         }
     });
 
