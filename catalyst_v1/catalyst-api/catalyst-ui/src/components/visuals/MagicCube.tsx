@@ -268,9 +268,28 @@ export default function MagicCube({
                 <Canvas camera={{ position: [0, 0, 4] }}>
                     <color attach="background" args={["#020617"]} />
 
+                    {/* Lighting */}
                     <ambientLight intensity={0.5} />
                     <directionalLight position={[3, 3, 3]} intensity={1} />
                     <pointLight position={[-3, -3, -3]} intensity={0.6} />
+
+                    {/* Aggregate Stress Halo */}
+                    <mesh rotation={[Math.PI / 2, 0, 0]}>
+                        <ringGeometry args={[2.2, 2.25, 64]} />
+                        <meshBasicMaterial
+                            color="#334155"
+                            transparent
+                            opacity={
+                                0.15 +
+                                (
+                                    (stress.people +
+                                        stress.cost +
+                                        stress.execution +
+                                        stress.macro) / 400
+                                ) * 0.35
+                            }
+                        />
+                    </mesh>
 
                     <SuspendedOctahedron
                         stress={stress}
