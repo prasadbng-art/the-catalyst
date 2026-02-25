@@ -112,17 +112,51 @@ function SuspendedOctahedron({
     /* ---------------------------------------------
        Axis Configuration
     --------------------------------------------- */
+    const BASE_DISTANCE = 1.6;     // minimum anchor radius
+    const SCALE_FACTOR = 0.8;      // how strongly stress affects extension
+
     const axes: {
         key: keyof StressProfile;
         position: [number, number, number];
         label: string;
     }[] = [
-            { key: "people", position: [0, 1.8, 0], label: "People" },
-            { key: "cost", position: [1.8, 0, 0], label: "Cost" },
-            { key: "execution", position: [0, -1.8, 0], label: "Execution" },
-            { key: "macro", position: [-1.8, 0, 0], label: "Macro" },
+            {
+                key: "people",
+                position: [
+                    0,
+                    BASE_DISTANCE + (stress.people / 100) * SCALE_FACTOR,
+                    0,
+                ],
+                label: "People",
+            },
+            {
+                key: "cost",
+                position: [
+                    BASE_DISTANCE + (stress.cost / 100) * SCALE_FACTOR,
+                    0,
+                    0,
+                ],
+                label: "Cost",
+            },
+            {
+                key: "execution",
+                position: [
+                    0,
+                    -(BASE_DISTANCE + (stress.execution / 100) * SCALE_FACTOR),
+                    0,
+                ],
+                label: "Execution",
+            },
+            {
+                key: "macro",
+                position: [
+                    -(BASE_DISTANCE + (stress.macro / 100) * SCALE_FACTOR),
+                    0,
+                    0,
+                ],
+                label: "Macro",
+            },
         ];
-
     return (
         <group>
             {/* Main Octahedron */}
