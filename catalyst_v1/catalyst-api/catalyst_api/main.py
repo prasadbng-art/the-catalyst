@@ -20,11 +20,6 @@ FRONTEND_DIST = os.path.join(
     "dist"
 )
 
-app.mount(
-    "/",
-    StaticFiles(directory=FRONTEND_DIST, html=True),
-    name="frontend",
-)
 
 # --- CORS (REQUIRED for React) ---
 app.add_middleware(
@@ -42,3 +37,9 @@ app.include_router(diagnostics)
 app.include_router(simulation)
 app.include_router(persona)
 app.include_router(catalyst_simulation.router)
+
+app.mount(
+    "/",
+    StaticFiles(directory=FRONTEND_DIST, html=True),
+    name="frontend",
+)
