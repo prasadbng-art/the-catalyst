@@ -36,7 +36,7 @@ app.include_router(baseline)
 app.include_router(diagnostics)
 app.include_router(simulation)
 app.include_router(persona)
-app.include_router(catalyst_simulation.router, tage=["Catalyst"])
+app.include_router(catalyst_simulation.router, tags=["Catalyst"])
 
 app.mount(
     "/",
