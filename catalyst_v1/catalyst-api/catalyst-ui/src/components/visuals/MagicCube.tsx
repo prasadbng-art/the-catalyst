@@ -257,6 +257,19 @@ export default function MagicCube({
 }: MagicCubeProps) {
     const motionState = getMotionState(stress);
     const annotation = getMotionAnnotation(motionState, persona);
+    const stressValues = [
+        stress.people,
+        stress.cost,
+        stress.execution,
+        stress.macro,
+    ];
+    const average =
+        stressValues.reduce((a, b) => a + b, 0) / 4;
+    const variance =
+        stressValues.reduce((sum, value) => {
+            return sum + Math.pow(value - average, 2);
+        }, 0) / 4;
+    const balanceScore = 1 - Math.min(variance / 2000, 1);
 
     return (
         <div
@@ -291,6 +304,16 @@ export default function MagicCube({
                                         stress.macro) / 400
                                 ) * 0.35
                             }
+                        />
+                    </mesh>
+
+                    {/* Structural Balance Ring */}
+                    <mesh rotation={[Math.PI / 2, 0, 0]}>
+                        <ringGeometry args={[2.35, 2.38, 64]} />
+                        <meshBasicMaterial
+                            color={balanceScore > 0.7 ? "#10b981" : "#f59e0b"}
+                            transparent
+                            opacity={0.2 * balanceScore}
                         />
                     </mesh>
 
