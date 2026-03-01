@@ -133,7 +133,7 @@ def run_catalyst_simulation(request: CatalystSimulationRequest, config):
         leadership_variation = np.random.normal(1.0, 0.05)
         capital_variation = np.random.normal(1.0, 0.06)
 
-        varied_request = request.copy()
+        varied_request = request.model_copy()
 
         varied_request.ai_exposure = min(
             max(request.ai_exposure * exposure_variation, 0), 1
@@ -173,11 +173,6 @@ def run_catalyst_simulation(request: CatalystSimulationRequest, config):
         }
 
     anchors = result.anchors  # deterministic anchor logic for now
-
-    from catalyst_api.schemas.catalyst_simulation import (
-        CatalystSimulationResponse,
-        FinancialBand,
-    )
 
     return CatalystSimulationResponse(
         anchors=anchors,
