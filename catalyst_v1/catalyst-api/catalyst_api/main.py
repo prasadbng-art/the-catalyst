@@ -5,7 +5,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from catalyst_api.routers import baseline, health, diagnostics, simulation, persona
+from catalyst_api.routers import baseline, health, diagnostics, simulation, persona, catalyst_simulation
 
 app = FastAPI(
     title="Catalyst API",
@@ -41,3 +41,4 @@ app.include_router(baseline)
 app.include_router(diagnostics)
 app.include_router(simulation)
 app.include_router(persona)
+app.include_router(catalyst_simulation.router)
