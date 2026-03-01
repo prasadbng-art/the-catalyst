@@ -5,7 +5,27 @@ from catalyst_api.schemas.catalyst_simulation import (
     AnchorPoints,
     FinancialBand,
 )
+# ------------------------------------------------------------
+# Governance Mode Multipliers
+# ------------------------------------------------------------
 
+MODE_CONFIG = {
+    "DEFENSIVE": {
+        "displacement": 0.7,
+        "stress": 0.8,
+        "capital": 0.8,
+    },
+    "BALANCED": {
+        "displacement": 1.0,
+        "stress": 1.0,
+        "capital": 1.0,
+    },
+    "AGGRESSIVE": {
+        "displacement": 1.4,
+        "stress": 1.3,
+        "capital": 1.3,
+    },
+}
 
 # ------------------------------------------------------------
 # Utility: Logistic Stress Function
@@ -20,6 +40,7 @@ def logistic(x: float, k: float = 6.0):
 # ------------------------------------------------------------
 
 def run_catalyst_simulation(request: CatalystSimulationRequest, config):
+    mode = MODE_CONFIG[request.governance_mode]
 
     # ----------------------------------------
     # Workforce Glidepath (Deterministic)
@@ -35,22 +56,25 @@ def run_catalyst_simulation(request: CatalystSimulationRequest, config):
 
     load = exposure + (1 - request.leadership_readiness)
     capacity = request.leadership_readiness
-
-    psi_peak = logistic(load / max(capacity, 0.01))
+    base_psi = logistic(load / max(capacity, 0.01))
+    psi_peak = base_psi * mode["stress"]
+    psi_peak = min(psi_peak, 1.0)
 
     # ----------------------------------------
     # Capital Stress (Trough Proxy)
     # ----------------------------------------
 
     capital_ratio = exposure / max(request.capital_buffer, 0.01)
-    capital_trough = 1 - logistic(capital_ratio)
+    base_capital = 1 - logistic(capital_ratio)
+    capital_trough = base_capital * mode["capital"]
+    capital_trough = min(capital_trough, 1.0)
 
     # ----------------------------------------
     # Financial Impact
     # ----------------------------------------
 
     savings = workforce_reduction * request.avg_cost_per_employee
-    productivity_lift = request.revenue_base * (exposure * 0.05)
+    productivity_lift = request.revenue_base * (exposure * 0.05 * mode["displacement"])
 
     net_impact = savings + productivity_lift
     margin_delta = net_impact / request.revenue_base
