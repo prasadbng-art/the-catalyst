@@ -185,24 +185,31 @@ export default function UnifiedSimulationPage() {
     // ================= Catalyst → Stress Mapping =================
 
     const derivedStress: StressProfile | null = catalystData
-        ? {
-            people: catalystData.peak_psi_band.mean * 100,
+        ? (() => {
+            const raw = {
+                people: catalystData.peak_psi_band.mean,
+                cost: Math.abs(catalystData.margin_band.mean),
+                execution: Math.abs(catalystData.ebitda_band.mean),
+                macro: catalystData.capital_trough_band.mean,
+            };
 
-            cost: Math.min(
-                Math.abs(catalystData.margin_band.mean) * 300,
-                100
-            ),
+            const maxVal = Math.max(
+                raw.people,
+                raw.cost,
+                raw.execution,
+                raw.macro
+            );
 
-            execution:
-                Math.min(
-                    Math.log10(
-                        Math.abs(catalystData.ebitda_band.mean) + 1) * 12,
-                    100
-                ),
+            const normalize = (v: number) =>
+                maxVal === 0 ? 0 : (v / maxVal) * 100;
 
-            macro: catalystData.capital_trough_band.mean * 100,
-
-        }
+            return {
+                people: normalize(raw.people),
+                cost: normalize(raw.cost),
+                execution: normalize(raw.execution),
+                macro: normalize(raw.macro),
+            };
+        })()
         : null;
 
     const blendedStress: StressProfile =
