@@ -2,6 +2,7 @@ import RetentionSimulatorPanel from "../components/RetentionSimulatorPanel";
 import SimulationControlsPanel from "../components/SimulationControlsPanel";
 import { useState } from "react";
 import MagicCube from "../components/visuals/MagicCube";
+import { runCatalystSimulation, type CatalystSimulationResponse } from "../api/simulation";
 import { baseOrgState } from "../state/orgState";
 import { clearScenarioAttritionDelta, getScenarioAttritionDelta, } from "../state/scenarioState";
 import { getSimulatedStress, setSimulatedStress } from "../state/simulatedStressState";
@@ -48,6 +49,10 @@ export default function UnifiedSimulationPage() {
     const BASELINE_COST =
         BASELINE_ATTRITION_UNITS * COST_PER_UNIT;
     const [persona, setPersona] = useState<Persona>("CEO");
+    const [catalystData, setCatalystData] = useState<CatalystSimulationResponse | null>(null);
+    const [governanceMode, setGovernanceMode] =
+        useState<"DEFENSIVE" | "BALANCED" | "AGGRESSIVE">("BALANCED");
+    const [catalystLoading, setCatalystLoading] = useState(false);
     const [scenarioDeltaPct, setLocalScenarioDeltaPct] = useState<number | null>(null);
     const isSimulationActive = scenarioDeltaPct
     const simulatedStress = getSimulatedStress();
@@ -133,6 +138,30 @@ export default function UnifiedSimulationPage() {
         setLocalScenarioDeltaPct(null);
         setResetCounter((c) => c + 1);
     };
+
+    async function runCatalyst() {
+        try {
+            setCatalystLoading(true);
+
+            const result = await runCatalystSimulation({
+                workforce_size: 4000,
+                avg_cost_per_employee: 1200000,
+                revenue_base: 5000000000,
+                margin_base: 0.18,
+                ai_exposure: 0.25,
+                leadership_readiness: 0.7,
+                margin_buffer: 0.2,
+                capital_buffer: 0.6,
+                governance_mode: governanceMode,
+            });
+
+            setCatalystData(result);
+        } catch (err) {
+            console.error("Catalyst simulation failed:", err);
+        } finally {
+            setCatalystLoading(false);
+        }
+    }
     // ---------------- FINANCIAL LOGIC (LOCKED) ----------------
 
     // Normalize and clamp scenario delta
@@ -234,6 +263,47 @@ export default function UnifiedSimulationPage() {
                         alignItems: "start",
                     }}
                 >
+                    {/* ================= Catalyst Governance Mode ================= */}
+                    <div
+                        style={{
+                            display: "flex",
+                            gap: 8,
+                            marginBottom: 12,
+                            justifyContent: "center",
+                        }}
+                    >
+                        {(["DEFENSIVE", "BALANCED", "AGGRESSIVE"] as const).map((mode) => (
+                            <button
+                                key={mode}
+                                onClick={() => {
+                                    setGovernanceMode(mode);
+                                    runCatalyst();
+                                }}
+                                style={{
+                                    padding: "6px 10px",
+                                    fontSize: 12,
+                                    borderRadius: 999,
+                                    cursor: "pointer",
+                                    background:
+                                        governanceMode === mode ? "#1d4ed8" : "#020617",
+                                    border:
+                                        governanceMode === mode
+                                            ? "1px solid #3b82f6"
+                                            : "1px solid #1e293b",
+                                    color:
+                                        governanceMode === mode ? "#e5e7eb" : "#94a3b8",
+                                    transition: "all 0.15s ease",
+                                }}
+                            >
+                                {mode}
+                            </button>
+                        ))}
+                    </div>
+                    {catalystLoading && (
+                        <div style={{ textAlign: "center", fontSize: 12, color: "#94a3b8" }}>
+                            Running AI transition simulation...
+                        </div>
+                    )}
                     {/* ================= Demo Stress Lens ================= */}
                     <div
                         style={{
@@ -278,6 +348,7 @@ export default function UnifiedSimulationPage() {
                             persona={persona}
                             size={400}
                             showAnnotation={false}
+                            catalystData={catalystData}
                         />
                     </div>
 
