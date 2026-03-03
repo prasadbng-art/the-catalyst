@@ -182,6 +182,48 @@ export default function UnifiedSimulationPage() {
     // Final avoided cost (THIS is what UI should show)
     const avoidedCost = Math.round(BASELINE_COST * improvementPct);
 
+    // ================= Catalyst → Stress Mapping =================
+
+    const derivedStress: StressProfile | null = catalystData
+        ? {
+            people: Math.min(catalystData.peak_psi_band.mean * 100, 100),
+
+            cost: Math.min(
+                Math.abs(catalystData.margin_band.mean) * 120,
+                100
+            ),
+
+            execution: Math.min(
+                Math.abs(catalystData.ebitda_band.mean) / 1_000_000,
+                100
+            ),
+
+            macro: Math.min(
+                catalystData.capital_trough_band.mean * 100,
+                100
+            ),
+        }
+        : null;
+
+    const blendedStress: StressProfile =
+        derivedStress
+            ? {
+                people:
+                    derivedStress.people *
+                    (1 - improvementPct * 0.7),
+
+                cost:
+                    derivedStress.cost *
+                    (1 - improvementPct * 0.4),
+
+                execution:
+                    derivedStress.execution *
+                    (1 - improvementPct * 0.3),
+
+                macro: derivedStress.macro,
+            }
+            : cubeStress;
+
     // ---------------- CONSOLE VERIFICATION ----------------
     return (
         <div
@@ -344,7 +386,7 @@ export default function UnifiedSimulationPage() {
                     {/* LEFT — MAGIC CUBE */}
                     <div style={{ gridColumn: "1/-2", display: "flex", justifyContent: "center", alignItems: "center", }}>
                         <MagicCube
-                            stress={cubeStress} // 🔒 DEMO-ONLY stress
+                            stress={blendedStress} // 🔒 DEMO-ONLY stress
                             persona={persona}
                             size={400}
                             showAnnotation={false}
