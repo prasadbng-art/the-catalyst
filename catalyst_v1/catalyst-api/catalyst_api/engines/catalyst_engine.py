@@ -15,16 +15,19 @@ MODE_CONFIG = {
         "displacement": 0.7,
         "stress": 0.8,
         "capital": 0.8,
+        "vol-scale": 0.6,
     },
     "BALANCED": {
         "displacement": 1.0,
         "stress": 1.0,
         "capital": 1.0,
+        "vol_scale": 1.0,
     },
     "AGGRESSIVE": {
         "displacement": 1.4,
         "stress": 1.3,
         "capital": 1.3,
+        "vol_scale": 1.6,
     },
 }
 
@@ -34,7 +37,8 @@ MODE_CONFIG = {
 
 def logistic(x: float, k: float = 6.0):
     return 1 / (1 + math.exp(-k * (x - 1)))
-
+def nonlinear_sigma(base_sigma: float, vol_scale: float, alpha: float = 1.2):
+    return base_sigma * math.expl(alpha * (vol_scale - 1))
 
 # ------------------------------------------------------------
 # Deterministic Catalyst Engine (Phase 1)
@@ -117,6 +121,9 @@ def run_catalyst_simulation(request: CatalystSimulationRequest, config):
 
     iterations = config.iterations
 
+    mode = MODE_CONFIG[request.governance_mode]
+    vol_scale = mode["vol_scale"]
+
     margin_results = []
     ebitda_results = []
     psi_results = []
@@ -129,9 +136,13 @@ def run_catalyst_simulation(request: CatalystSimulationRequest, config):
         # Inject Controlled Variance
         # -------------------------------
 
-        exposure_variation = np.random.normal(1.0, 0.08)
-        leadership_variation = np.random.normal(1.0, 0.05)
-        capital_variation = np.random.normal(1.0, 0.06)
+        sigma_exposure = nonlinear_sigma(0.08, vol_scale)
+        sigma_leadership = nonlinear_sigma(0.05, vol_scale)
+        sigma_capital = nonlinear_sigma(0.06, vol_scale)
+
+        exposure_variation = np.random.normal(1.0, sigma_exposure)
+        leadership_variation = np.random.normal(1.0, sigma_leadership)
+        capital_variation = np.random.normal(1.0, sigma_capital)
 
         varied_request = request.model_copy()
 
