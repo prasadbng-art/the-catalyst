@@ -38,7 +38,7 @@ MODE_CONFIG = {
 def logistic(x: float, k: float = 6.0):
     return 1 / (1 + math.exp(-k * (x - 1)))
 def nonlinear_sigma(base_sigma: float, vol_scale: float, alpha: float = 1.2):
-    return base_sigma * math.expl(alpha * (vol_scale - 1))
+    return base_sigma * math.exp(alpha * (vol_scale - 1))
 
 # ------------------------------------------------------------
 # Deterministic Catalyst Engine (Phase 1)
