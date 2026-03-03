@@ -210,15 +210,15 @@ export default function UnifiedSimulationPage() {
             ? {
                 people:
                     derivedStress.people *
-                    (1 - improvementPct * 0.7),
+                    (1 - improvementPct * 1.8),
 
                 cost:
                     derivedStress.cost *
-                    (1 - improvementPct * 0.4),
+                    (1 - improvementPct * 0.8),
 
                 execution:
                     derivedStress.execution *
-                    (1 - improvementPct * 0.3),
+                    (1 - improvementPct * 0.5),
 
                 macro: derivedStress.macro,
             }

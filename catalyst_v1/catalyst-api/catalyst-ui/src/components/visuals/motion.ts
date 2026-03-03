@@ -21,16 +21,16 @@ export type StressProfile = {
 export function getMotionState(
   stress: StressProfile
 ): MotionState {
-  const max  = Math.max(
+  const max = Math.max(
     stress.people,
     stress.cost,
     stress.macro,
     stress.execution
   );
-  
-  if (max<50) return "stable";
-  if (max<70) return "tension";
-  return "overload";
+
+  if (max > 90) return "overload";
+  if (max > 60) return "tension";
+  return "stable";
 }
 // =================================
 // Persona-aware Annotation
