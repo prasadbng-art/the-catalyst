@@ -15,7 +15,7 @@ MODE_CONFIG = {
         "displacement": 0.7,
         "stress": 0.8,
         "capital": 0.8,
-        "vol-scale": 0.6,
+        "vol_scale": 0.6,
     },
     "BALANCED": {
         "displacement": 1.0,
@@ -122,6 +122,8 @@ def run_catalyst_simulation(request: CatalystSimulationRequest, config):
     iterations = config.iterations
 
     mode = MODE_CONFIG[request.governance_mode]
+    print("DEUG MODE CONFIG:", MODE_CONFIG)
+    print("DEBUG MODE:", mode)
     vol_scale = mode["vol_scale"]
 
     margin_results = []
