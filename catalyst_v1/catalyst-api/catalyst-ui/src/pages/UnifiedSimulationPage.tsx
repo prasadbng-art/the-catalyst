@@ -186,22 +186,22 @@ export default function UnifiedSimulationPage() {
 
     const derivedStress: StressProfile | null = catalystData
         ? {
-            people: Math.min(catalystData.peak_psi_band.mean * 100, 100),
+            people: catalystData.peak_psi_band.mean * 100,
 
             cost: Math.min(
-                Math.abs(catalystData.margin_band.mean) * 120,
+                Math.abs(catalystData.margin_band.mean) * 300,
                 100
             ),
 
-            execution: Math.min(
-                Math.abs(catalystData.ebitda_band.mean) / 1_000_000,
-                100
-            ),
+            execution:
+                Math.min(
+                    Math.log10(
+                        Math.abs(catalystData.ebitda_band.mean) + 1) * 12,
+                    100
+                ),
 
-            macro: Math.min(
-                catalystData.capital_trough_band.mean * 100,
-                100
-            ),
+            macro: catalystData.capital_trough_band.mean * 100,
+
         }
         : null;
 

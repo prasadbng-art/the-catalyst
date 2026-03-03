@@ -49,7 +49,7 @@ function SuspendedOctahedron({
 
         const aggregate = (s.people + s.cost + s.execution + s.macro) / 4;
 
-        const MAX_DEFORMATION = 0.11;
+        const MAX_DEFORMATION = 0.35;
 
         for (let i = 0; i < position.count; i++) {
             vertex.fromBufferAttribute(position, i);
