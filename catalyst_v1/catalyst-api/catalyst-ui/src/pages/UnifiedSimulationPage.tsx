@@ -224,6 +224,13 @@ export default function UnifiedSimulationPage() {
             }
             : cubeStress;
 
+    console.log("=== DEBUG STATE ===");
+    console.log("Governance:", governanceMode);
+    console.log("Improvement %:", improvementPct);
+    console.log("Derived:", derivedStress);
+    console.log("Blended:", blendedStress);
+    console.log("Cube Stress:", blendedStress);
+
     // ---------------- CONSOLE VERIFICATION ----------------
     return (
         <div
