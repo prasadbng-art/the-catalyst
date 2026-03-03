@@ -4,6 +4,7 @@ import * as THREE from "three";
 import { useMemo, useRef } from "react";
 import type { StressProfile, Persona } from "./motion";
 import { getMotionState, getMotionAnnotation } from "./motion";
+import type { CatalystSimulationResponse } from "../../api/simulation";
 
 /* =====================================================
    Advanced Suspended Octahedral Stress Field
@@ -14,6 +15,7 @@ type MagicCubeProps = {
     persona: Persona;
     size?: number;
     showAnnotation?: boolean;
+    catalystData?: CatalystSimulationResponse | null;
 };
 
 type MotionState = "stable" | "tension" | "overload";
@@ -254,14 +256,24 @@ export default function MagicCube({
     persona,
     size = 260,
     showAnnotation = true,
+    catalystData = null,
 }: MagicCubeProps) {
-    const motionState = getMotionState(stress);
+    const psiMean = catalystData?.peak_psi_band.mean ?? null;
+    const capitalMean = catalystData?.capital_trough_band.mean ?? null;
+    const effectiveStress: StressProfile = catalystData
+        ? {
+            ...stress,
+            people: Math.min((psiMean ?? 0) * 100, 100),
+            macro: Math.min((capitalMean ?? 0) * 100, 100),
+        }
+        : stress;
+    const motionState = getMotionState(effectiveStress);
     const annotation = getMotionAnnotation(motionState, persona);
     const stressValues = [
-        stress.people,
-        stress.cost,
-        stress.execution,
-        stress.macro,
+        effectiveStress.people,
+        effectiveStress.cost,
+        effectiveStress.execution,
+        effectiveStress.macro,
     ];
     const average =
         stressValues.reduce((a, b) => a + b, 0) / 4;
@@ -318,7 +330,7 @@ export default function MagicCube({
                     </mesh>
 
                     <SuspendedOctahedron
-                        stress={stress}
+                        stress={effectiveStress}
                         motionState={motionState}
                     />
                 </Canvas>
