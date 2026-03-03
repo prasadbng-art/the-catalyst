@@ -12,6 +12,7 @@ import type { CatalystSimulationResponse } from "../../api/simulation";
 
 type MagicCubeProps = {
     stress: StressProfile;
+    rawStress?: StressProfile;
     persona: Persona;
     size?: number;
     showAnnotation?: boolean;
@@ -267,7 +268,7 @@ export default function MagicCube({
             macro: Math.min((capitalMean ?? 0) * 100, 100),
         }
         : stress;
-    const motionState = getMotionState(effectiveStress);
+    const motionState = getMotionState(stress);
     const annotation = getMotionAnnotation(motionState, persona);
     const stressValues = [
         effectiveStress.people,
