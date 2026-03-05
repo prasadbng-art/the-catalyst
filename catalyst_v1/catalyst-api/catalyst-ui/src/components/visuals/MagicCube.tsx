@@ -139,6 +139,35 @@ function SuspendedOctahedron({
             meshRef.current.position.y =
                 0.08 * Math.cos(state.clock.elapsedTime * 6);
         }
+
+        /* ---------------------------------------------
+   Dominant Stress Tilt
+--------------------------------------------- */
+
+        const TILT_STRENGTH = 0.15;
+
+        let targetTiltX = 0;
+        let targetTiltZ = 0;
+
+        if (dominantKey === "people") {
+            targetTiltX = -TILT_STRENGTH;
+        }
+
+        if (dominantKey === "execution") {
+            targetTiltX = TILT_STRENGTH;
+        }
+
+        if (dominantKey === "cost") {
+            targetTiltZ = -TILT_STRENGTH;
+        }
+
+        if (dominantKey === "macro") {
+            targetTiltZ = TILT_STRENGTH;
+        }
+
+        // smooth interpolation
+        meshRef.current.rotation.x += (targetTiltX - meshRef.current.rotation.x) * 0.03;
+        meshRef.current.rotation.z += (targetTiltZ - meshRef.current.rotation.z) * 0.03;
     });
 
     const emissiveColor =
