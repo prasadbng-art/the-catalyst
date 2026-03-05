@@ -1,117 +1,44 @@
-import { NavLink, useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import Sidebar from "./Sidebar";
 
-const linkStyle = {
-  display: "block",
-  padding: "8px 12px",
-  borderRadius: 6,
-  textDecoration: "none",
-  marginBottom: 4,
-  fontSize: 14,
-};
-
-export default function Sidebar() {
-  const location = useLocation();
-  const isActive = (path: string) => location.pathname === path;
-
+export default function AppShell() {
   return (
-    <aside
+    <div
       style={{
-        width: 220,
-        padding: 20,
-        borderRight: "1px solid #1e293b",
-        background: "#020617",
-        color: "#e5e7eb",
-        minHeight: "100vh",
+        display: "flex",
+        height: "100vh",
+        border: "1px solid #0f172a",
+        boxSizing: "border-box",
+        overflow: "hidden",
       }}
     >
-      <h1
+      <Sidebar />
+
+      {/* MAIN CONTENT AREA */}
+      <div
         style={{
-          fontSize: 36,
-          fontWeight: 900,
-          letterSpacing: "0.5px",
-          marginBottom: 24,
+          flex: 1,
+          overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
-        Catalyst
-      </h1>
-
-      {/* ANALYSIS */}
-      <div style={{ marginBottom: 28 }}>
-        <div style={{ fontSize: 12, opacity: 0.6, marginBottom: 8 }}>
-          ANALYSIS
-        </div>
-
-        <NavLink
-          to="/"
+        <main
           style={{
-            ...linkStyle,
-            background: isActive("/") ? "#1e293b" : "transparent",
-            color: "#e5e7eb",
+            flex: 1,
+            width: "100%",
+            maxWidth: 1600,
+            margin: 0,
+            padding: "32px 24px",
+            boxSizing: "border-box",
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
           }}
         >
-          Equilibrium Score
-        </NavLink>
-
-        <NavLink
-          to="/mapped-metrics"
-          style={{
-            ...linkStyle,
-            background: isActive("/mapped-metrics") ? "#1e293b" : "transparent",
-            color: "#e5e7eb",
-          }}
-        >
-          Mapped Metrics
-        </NavLink>
+          <Outlet />
+        </main>
       </div>
-
-      {/* SIMULATIONS */}
-      <div style={{ marginBottom: 28 }}>
-        <div style={{ fontSize: 12, opacity: 0.6, marginBottom: 8 }}>
-          SIMULATIONS
-        </div>
-
-        <NavLink
-          to="/unified-simulation"
-          style={{
-            ...linkStyle,
-            paddingLeft: 20,
-            background: isActive("/unified-simulation") ? "#1e293b" : "transparent",
-            color: "#e5e7eb",
-          }}
-        >
-          Financial Impact
-        </NavLink>
-
-      </div>
-
-      {/* PRODUCTION MODULES */}
-      <div>
-        <div style={{ fontSize: 12, opacity: 0.6, marginBottom: 8 }}>
-          PRODUCTION MODULES
-        </div>
-
-        {[
-          "Data Upload",
-          "Scenario Comparison",
-          "Portfolio View",
-          "Settings",
-        ].map((item) => (
-          <div
-            key={item}
-            style={{
-              ...linkStyle,
-              color: "#64748b",
-              cursor: "not-allowed",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <span>{item}</span>
-            <span style={{ fontSize: 11, opacity: 0.6 }}>Soon</span>
-          </div>
-        ))}
-      </div>
-    </aside>
+    </div>
   );
 }
