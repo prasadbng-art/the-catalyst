@@ -331,7 +331,7 @@ export default function UnifiedSimulationPage() {
             {/* RIGHT PANEL */}
             <div
                 style={{
-                    height: "100%",
+                    height: "calc(100vh - 40px)",
                     overflowY: "auto",
                     paddingRight: 8,
                     borderLeft: "1px solid #1e293b",
