@@ -17,7 +17,7 @@ type SimulationEntity = {
 type Props = {
     entity: SimulationEntity;
     interventions: Intervention[];
-    onSimulate: (id: string, simulatedRisk: number | null) => void;
+    onSimulate: (id: string, simulatedRisk: number | null, intervention: string) => void;
 };
 
 export default function SimulationCard({
@@ -115,7 +115,7 @@ export default function SimulationCard({
 
                     const newRisk = calculateRisk(value);
                     setSimulatedRisk(newRisk);
-                    onSimulate(entity.id, newRisk);
+                    onSimulate(entity.id, newRisk, selectedIntervention);
                 }}
                 style={{
                     width: "100%",
