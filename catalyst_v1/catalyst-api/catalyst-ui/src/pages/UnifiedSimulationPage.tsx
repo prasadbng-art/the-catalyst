@@ -271,7 +271,7 @@ export default function UnifiedSimulationPage() {
                 height: "100%",
                 background: "#020617",
                 display: "grid",
-                gridTemplateColumns: "320px minmax(640px, 1fr) 520px",
+                gridTemplateColumns: "340px minmax(640px, 1fr) 560px",
                 gap: 24,
                 overflow: "hidden",
                 boxSizing: "border-box",
@@ -279,7 +279,13 @@ export default function UnifiedSimulationPage() {
             }}
         >
             {/* LEFT PANEL */}
-            <div>
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 24
+                }}
+            >
                 <SimulationControlsPanel
                     persona={persona}
                     onPersonaChange={setPersona}
@@ -288,6 +294,43 @@ export default function UnifiedSimulationPage() {
                     onApply={handleApplySimulation}
                     onReset={handleResetSimulation}
                 />
+
+                {/* AI DISRUPTION SIMULATION */}
+                <div
+                    style={{
+                        padding: "16px 18px",
+                        border: "1px solid #1e293b",
+                        borderRadius: 10,
+                        background: "#020617"
+                    }}
+                >
+                    <div
+                        style={{
+                            fontSize: 12,
+                            letterSpacing: "0.05em",
+                            color: "#94a3b8",
+                            marginBottom: 10
+                        }}
+                    >
+                        AI DISRUPTION SIMULATION
+                    </div>
+
+                    <div style={{ marginBottom: 6 }}>
+                        Roles Impacted: <strong>{rolesToReduce}</strong>
+                    </div>
+
+                    <div style={{ marginBottom: 6 }}>
+                        Transition Timeline: <strong>{transitionYears} years</strong>
+                    </div>
+
+                    <div style={{ marginBottom: 6 }}>
+                        Monthly Workforce Adjustment: <strong>{monthlyReduction}</strong>
+                    </div>
+
+                    <div style={{ color: "#22c55e", marginTop: 6 }}>
+                        Annual Cost Reduction: <strong>${annualCostReductionFormatted}</strong>
+                    </div>
+                </div>
             </div>
 
             {/* CENTER PANEL */}
@@ -414,25 +457,7 @@ export default function UnifiedSimulationPage() {
                     <div style={{ marginTop: 16, color: "#22c55e" }}>
                         Expected Cost Avoided: ${avoidedCost.toLocaleString()}
                     </div>
-                    <div style={{ marginTop: 20, color: "#94a3b8" }}>
-                        <div style={{ fontSize: 12 }}>AI DISRUPTION SIMULATION</div>
 
-                        <div style={{ marginTop: 8 }}>
-                            Roles Impacted: <strong>{rolesToReduce}</strong>
-                        </div>
-
-                        <div>
-                            Transition Timeline: <strong>{transitionYears} years</strong>
-                        </div>
-
-                        <div>
-                            Monthly Workforce Adjustment: <strong>{monthlyReduction}</strong>
-                        </div>
-
-                        <div style={{ marginTop: 6 }}>
-                            Annual Cost Reduction: <strong>${annualCostReductionFormatted}</strong>
-                        </div>
-                    </div>
                 </div>
             </div>
 

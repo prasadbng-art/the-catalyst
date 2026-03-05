@@ -66,7 +66,7 @@ export default function RetentionSimulatorPanel({
         <div
             style={{
                 height: "100%",
-                fontSize: 15,
+                fontSize: 24,
                 lineHeight: 1.5,
                 display: "flex",
                 flexDirection: "column",
@@ -123,10 +123,11 @@ export default function RetentionSimulatorPanel({
                 style={{
                     display: "flex",
                     flexDirection: "column",
-                    gap: 18,
+                    gap: 20,
                     overflowY: "auto",
-                    maxHeight: "65vh",
-                    paddingRight: 6
+                    maxHeight: "68vh",
+                    paddingRight: 8,
+                    fontSize: 16
 
                 }}
             >
