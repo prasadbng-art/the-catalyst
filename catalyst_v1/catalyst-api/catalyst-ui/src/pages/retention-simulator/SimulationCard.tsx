@@ -25,10 +25,8 @@ export default function SimulationCard({
     interventions,
     onSimulate,
 }: Props) {
-    const [selectedIntervention, setSelectedIntervention] =
-        useState<string>("none");
-
     const [simulatedRisk, setSimulatedRisk] = useState<number | null>(null);
+    const [selectedIntervention, setSelectedIntervention] = useState("none");
 
     const calculateRisk = (intervention: string): number | null => {
         switch (intervention) {
@@ -115,7 +113,7 @@ export default function SimulationCard({
 
                     const newRisk = calculateRisk(value);
                     setSimulatedRisk(newRisk);
-                    onSimulate(entity.id, newRisk, selectedIntervention);
+                    onSimulate(entity.id, newRisk, value);
                 }}
                 style={{
                     width: "100%",
