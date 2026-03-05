@@ -33,9 +33,9 @@ export default function UnifiedSimulationPage() {
     const WORKFORCE_SIZE = 4000;
 
     // AI disruption parameters
-    const [aiExposure, setAiExposure] = useState(0.25);      // % of work exposed to AI
-    const [automationEfficiency, setAutomationEfficiency] = useState(0.6); // % of exposed work automated
-    const [transitionYears, setTransitionYears] = useState(2); // transition timeline    
+    const aiExposure = 0.25;
+    const automationEfficiency = 0.6;
+    const transitionYears = 2;
 
     const rolesImpacted =
         WORKFORCE_SIZE * aiExposure * automationEfficiency;
@@ -173,7 +173,7 @@ export default function UnifiedSimulationPage() {
         };
     }
 
-    const stressValues = Object.values(canonicalStress);
+    const stressValues = Object.values(aiAdjustedStress);
     const maxStress = Math.max(...stressValues);
     const minStress = Math.min(...stressValues);
 
@@ -181,14 +181,14 @@ export default function UnifiedSimulationPage() {
         const avg =
             stressValues.reduce((a, b) => a + b, 0) / 4;
 
-        canonicalStress.people =
-            (canonicalStress.people + avg) / 2;
-        canonicalStress.cost =
-            (canonicalStress.cost + avg) / 2;
-        canonicalStress.execution =
-            (canonicalStress.execution + avg) / 2;
-        canonicalStress.macro =
-            (canonicalStress.macro + avg) / 2;
+        aiAdjustedStress.people =
+            (aiAdjustedStress.people + avg) / 2;
+        aiAdjustedStress.cost =
+            (aiAdjustedStress.cost + avg) / 2;
+        aiAdjustedStress.execution =
+            (aiAdjustedStress.execution + avg) / 2;
+        aiAdjustedStress.macro =
+            (aiAdjustedStress.macro + avg) / 2;
     }
 
     function getDominantStress(stress: StressProfile) {
@@ -200,7 +200,7 @@ export default function UnifiedSimulationPage() {
     }
 
     const dominantStress =
-        getDominantStress(canonicalStress);
+        getDominantStress(aiAdjustedStress);
 
     const avgStress =
         (canonicalStress.people +
