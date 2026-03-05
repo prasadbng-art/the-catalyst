@@ -230,6 +230,7 @@ export default function UnifiedSimulationPage() {
                 display: "grid",
                 gridTemplateColumns: "320px 1fr 380px",
                 gap: 24,
+                overflow: "hidden"
             }}
         >
             {/* LEFT PANEL */}
@@ -328,9 +329,17 @@ export default function UnifiedSimulationPage() {
             </div>
 
             {/* RIGHT PANEL */}
-            <div>
+            <div
+                style={{
+                    height: "100%",
+                    overflowY: "auto",
+                    paddingRight: 8,
+                    borderLeft: "1px solid #1e293b",
+                    maskImage: "linear-gradient(to bottom, transparent, black 20px, black 90%, transparent)"
+                }}
+            >
                 <RetentionSimulatorPanel resetSignal={resetCounter} />
             </div>
         </div>
-    );
+    )
 }
