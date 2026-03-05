@@ -165,10 +165,12 @@ export default function UnifiedSimulationPage() {
     let aiAdjustedStress = { ...canonicalStress };
 
     if (rolesToReduce > 0) {
+        const disruptionFactor = Math.min(rolesToReduce / WORKFORCE_SIZE, 0.25);
+
         aiAdjustedStress = {
-            people: canonicalStress.people + 5,
-            cost: canonicalStress.cost * 0.8,
-            execution: canonicalStress.execution + 15,
+            people: canonicalStress.people + disruptionFactor * 10,
+            cost: canonicalStress.cost * (1 - disruptionFactor * 0.6),
+            execution: canonicalStress.execution + disruptionFactor * 12,
             macro: canonicalStress.macro,
         };
     }
