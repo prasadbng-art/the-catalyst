@@ -65,7 +65,8 @@ export default function RetentionSimulatorPanel({
     return (
         <div
             style={{
-                fontSize: 14,
+                height: "100%",
+                fontSize: 15,
                 lineHeight: 1.5,
                 display: "flex",
                 flexDirection: "column",
@@ -123,8 +124,10 @@ export default function RetentionSimulatorPanel({
                     display: "flex",
                     flexDirection: "column",
                     gap: 18,
-                    width: "100%",
-                    alignItems: "stretch",
+                    overflowY: "auto",
+                    maxHeight: "65vh",
+                    paddingRight: 6
+
                 }}
             >
                 {people.map((entity) => (

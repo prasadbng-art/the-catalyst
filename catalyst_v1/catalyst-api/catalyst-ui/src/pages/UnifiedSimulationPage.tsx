@@ -271,7 +271,7 @@ export default function UnifiedSimulationPage() {
                 height: "100%",
                 background: "#020617",
                 display: "grid",
-                gridTemplateColumns: "320px minmax(640px, 1fr) 460px",
+                gridTemplateColumns: "320px minmax(640px, 1fr) 520px",
                 gap: 24,
                 overflow: "hidden",
                 boxSizing: "border-box",
