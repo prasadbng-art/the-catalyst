@@ -68,6 +68,9 @@ export default function RetentionSimulatorPanel({
             {deltaPct !== null && (
                 <div
                     style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: 16,
                         position: "sticky",
                         top: 0,
                         zIndex: 10,
