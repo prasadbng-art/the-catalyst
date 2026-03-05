@@ -14,6 +14,21 @@ const INTERVENTIONS = [
     { key: "role_redesign", label: "Role Redesign" },
 ];
 
+/* =========================================================
+   Role cost weighting (replacement cost multiplier)
+========================================================= */
+
+const ROLE_COST_WEIGHT: Record<string, number> = {
+    CEO: 4.0,
+    VP: 3.0,
+    Director: 2.2,
+    Manager: 1.6,
+    Lead: 1.3,
+    Senior: 1.2,
+    Analyst: 1.0,
+    Associate: 0.9,
+};
+
 type RetentionSimulatorPanelProps = {
     resetSignal: number;
 };
@@ -35,15 +50,27 @@ export default function RetentionSimulatorPanel({
     const baselineAvgRisk =
         people.reduce((sum, p) => sum + p.baselineRiskPct, 0) / people.length;
 
-    const simulatedValues = Object.values(simulatedRisks).filter(
-        (v): v is number => v !== null
-    );
+    let weightedRiskSum = 0;
+    let weightTotal = 0;
 
-    const simulatedAvgRisk =
-        simulatedValues.length > 0
-            ? simulatedValues.reduce((sum, v) => sum + v, 0) /
-            simulatedValues.length
-            : null;
+    people.forEach((person) => {
+
+        const simulated = simulatedRisks[person.id];
+
+        const risk =
+            simulated !== undefined && simulated !== null
+                ? simulated
+                : person.baselineRiskPct;
+
+        const weight =
+            ROLE_COST_WEIGHT[person.role] ?? 1.0;
+
+        weightedRiskSum += risk * weight;
+        weightTotal += weight;
+
+    });
+
+    const simulatedAvgRisk = weightedRiskSum / weightTotal;
 
     const deltaPct =
         simulatedAvgRisk !== null
@@ -54,8 +81,18 @@ export default function RetentionSimulatorPanel({
         setSimulatedRisks((prev) => {
             const next = { ...prev, [id]: simulatedRisk };
 
-            if (deltaPct !== null) {
-                setScenarioAttritionDelta(Math.round(deltaPct));
+            const values = Object.values(next).filter(
+                (v): v is number => v !== null
+            );
+
+            if (values.length > 0) {
+                const avg =
+                    values.reduce((sum, v) => sum + v, 0) / values.length;
+
+                const delta =
+                    Math.round((avg - baselineAvgRisk) * 10) / 10;
+
+                setScenarioAttritionDelta(Math.round(delta));
             }
 
             return next;

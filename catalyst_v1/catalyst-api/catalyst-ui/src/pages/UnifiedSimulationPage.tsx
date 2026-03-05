@@ -9,6 +9,7 @@ import {
 import type { Persona } from "../types/persona";
 import { getMotionState } from "../components/visuals/motion";
 import type { StressProfile } from "../components/visuals/motion";
+import { getScenarioAttritionDelta } from "../state/scenarioState";
 
 export default function UnifiedSimulationPage() {
     const [persona, setPersona] = useState<Persona>("CEO");
@@ -87,7 +88,8 @@ export default function UnifiedSimulationPage() {
     // ================= RETENTION =================
 
     function handleApplySimulation() {
-        setScenarioDeltaPct(12);
+        const delta = getScenarioAttritionDelta();
+        setScenarioDeltaPct(delta);
     }
 
     function handleResetSimulation() {
