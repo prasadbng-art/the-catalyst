@@ -65,6 +65,7 @@ export default function UnifiedSimulationPage() {
 
     function handleResetSimulation() {
         setScenarioDeltaPct(null);
+        setCatalystData(null);
         setResetCounter((c) => c + 1);
     }
 
@@ -81,15 +82,13 @@ export default function UnifiedSimulationPage() {
 
     const baseStress: StressProfile = catalystData
         ? {
-            people: catalystData.peak_psi_band.mean * 100,
-            cost:
-                Math.abs(catalystData.margin_band.mean) * 100,
-            execution:
-                Math.log10(
-                    Math.abs(catalystData.ebitda_band.mean) + 1
-                ) * 20,
-            macro:
-                catalystData.capital_trough_band.mean * 100,
+            people: Math.min(catalystData.peak_psi_band.mean * 100, 100),
+            cost: Math.min(Math.abs(catalystData.margin_band.mean) * 120, 100),
+            execution: Math.min(
+                Math.log10(Math.abs(catalystData.ebitda_band.mean) + 1) * 10,
+                100
+            ),
+            macro: Math.min(catalystData.capital_trough_band.mean * 100, 100),
         }
         : {
             people: 40,
@@ -98,17 +97,43 @@ export default function UnifiedSimulationPage() {
             macro: 40,
         };
 
+    function applyGovernance(
+        stress: StressProfile
+    ): StressProfile {
+
+        if (governanceMode === "DEFENSIVE") {
+            return {
+                people: stress.people * 0.9,
+                cost: stress.cost * 1.1,
+                execution: stress.execution * 0.7,
+                macro: stress.macro,
+            };
+        }
+
+        if (governanceMode === "AGGRESSIVE") {
+            return {
+                people: stress.people * 1.1,
+                cost: stress.cost * 0.9,
+                execution: stress.execution * 1.2,
+                macro: stress.macro,
+            };
+        }
+
+        return stress;
+    }
+
+    const governedStress = applyGovernance(baseStress);
     const canonicalStress: StressProfile = {
         people:
-            baseStress.people *
+            governedStress.people *
             (1 - improvementPct * 1.8),
         cost:
-            baseStress.cost *
+            governedStress.cost *
             (1 - improvementPct * 0.8),
         execution:
-            baseStress.execution *
+            governedStress.execution *
             (1 - improvementPct * 0.5),
-        macro: baseStress.macro,
+        macro: governedStress.macro,
     };
 
     function getDominantStress(stress: StressProfile) {
