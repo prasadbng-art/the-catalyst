@@ -318,20 +318,26 @@ export default function MagicCube({
                     <directionalLight position={[3, 3, 3]} intensity={1} />
                     <pointLight position={[-3, -3, -3]} intensity={0.6} />
 
-                    {/* Aggregate Stress Halo */}
+                    {/* System Stress Halo */}
                     <mesh rotation={[Math.PI / 2, 0, 0]}>
-                        <ringGeometry args={[2.2, 2.25, 64]} />
+                        <ringGeometry args={[2.25, 2.35, 64]} />
                         <meshBasicMaterial
-                            color="#334155"
+                            color={
+                                (stress.people + stress.cost + stress.execution + stress.macro) / 4 > 60
+                                    ? "#dc2626"
+                                    : (stress.people + stress.cost + stress.execution + stress.macro) / 4 > 40
+                                        ? "#f59e0b"
+                                        : "#22c55e"
+                            }
                             transparent
                             opacity={
-                                0.15 +
+                                0.12 +
                                 (
                                     (stress.people +
                                         stress.cost +
                                         stress.execution +
                                         stress.macro) / 400
-                                ) * 0.35
+                                ) * 0.45
                             }
                         />
                     </mesh>

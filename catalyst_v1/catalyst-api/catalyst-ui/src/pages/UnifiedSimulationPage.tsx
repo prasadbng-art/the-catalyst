@@ -420,6 +420,10 @@ export default function UnifiedSimulationPage() {
                         {systemState}
                     </div>
 
+                    <div style={{ fontSize: 11, opacity: 0.6, letterSpacing: "0.08em" }}>
+                        ORGANIZATIONAL STRESS FIELD
+                    </div>
+
                     <MagicCube
                         stress={aiAdjustedStress}
                         rawStress={baseStress}
