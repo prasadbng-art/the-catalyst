@@ -70,11 +70,11 @@ export default function RetentionSimulatorPanel({
                     style={{
                         display: "flex",
                         flexDirection: "column",
-                        gap: 16,
+                        gap: 24,
                         position: "sticky",
                         top: 0,
                         zIndex: 10,
-                        marginBottom: 16,
+                        marginBottom: 32,
                         padding: "10px 12px",
                         borderRadius: 10,
                         background: "#020617",
