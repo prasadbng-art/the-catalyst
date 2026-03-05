@@ -7,6 +7,7 @@ import {
     type CatalystSimulationResponse,
 } from "../api/simulation";
 import type { Persona } from "../types/persona";
+import { getMotionState } from "../components/visuals/motion";
 import type { StressProfile } from "../components/visuals/motion";
 
 export default function UnifiedSimulationPage() {
@@ -210,18 +211,16 @@ export default function UnifiedSimulationPage() {
     const dominantStress =
         getDominantStress(aiAdjustedStress);
 
-    const avgStress =
-        (aiAdjustedStress.people +
-            aiAdjustedStress.cost +
-            aiAdjustedStress.execution +
-            aiAdjustedStress.macro) / 4;
+    const motionState = getMotionState(aiAdjustedStress);
 
     let systemState = "ORGANIZATIONAL EQUILIBRIUM";
 
-    if (avgStress > 60) {
-        systemState = "SYSTEM OVERLOAD";
-    } else if (avgStress > 40) {
+    if (motionState === "tension") {
         systemState = "STRUCTURAL TENSION";
+    }
+
+    if (motionState === "overload") {
+        systemState = "SYSTEM OVERLOAD";
     }
 
     const avoidedCost = Math.round(
