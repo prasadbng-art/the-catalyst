@@ -84,6 +84,16 @@ function SuspendedOctahedron({
     --------------------------------------------- */
     useFrame((state, delta) => {
         if (!meshRef.current) return;
+        const stressLevel =
+            (stress.people +
+                stress.cost +
+                stress.execution +
+                stress.macro) / 400;
+
+        const pulse =
+            Math.sin(state.clock.elapsedTime * 2) *
+            0.02 *
+            stressLevel;
 
         const BASE_LERP = 4; // higher = faster transition
 
@@ -102,7 +112,7 @@ function SuspendedOctahedron({
         // Motion behaviour
         if (motionState === "stable") {
             meshRef.current.rotation.y += delta * 0.2;
-            meshRef.current.scale.z = 1;
+            meshRef.current.scale.z = 1 + pulse;
             meshRef.current.position.set(0, 0, 0);
         }
 
@@ -110,7 +120,7 @@ function SuspendedOctahedron({
             meshRef.current.rotation.y += delta * 0.15;
             meshRef.current.rotation.x =
                 Math.sin(state.clock.elapsedTime) * 0.04;
-            meshRef.current.scale.z = 1;
+            meshRef.current.scale.z = 1 + pulse * 2
             meshRef.current.position.set(0, 0, 0);
         }
 
@@ -119,7 +129,7 @@ function SuspendedOctahedron({
             meshRef.current.rotation.x =
                 Math.sin(state.clock.elapsedTime * 3) * 0.09;
             const compression =
-                1 - 0.03 * Math.sin(state.clock.elapsedTime * 2);
+                1 - 0.03 * Math.sin(state.clock.elapsedTime * 2) + pulse * 3;
             meshRef.current.scale.z = compression;
             meshRef.current.position.x =
                 0.08 * Math.sin(state.clock.elapsedTime * 8);
