@@ -30,6 +30,32 @@ export default function UnifiedSimulationPage() {
     const BASELINE_COST =
         BASELINE_ATTRITION_UNITS * COST_PER_UNIT;
 
+    const WORKFORCE_SIZE = 4000;
+
+    // AI disruption parameters
+    const [aiExposure, setAiExposure] = useState(0.25);      // % of work exposed to AI
+    const [automationEfficiency, setAutomationEfficiency] = useState(0.6); // % of exposed work automated
+    const [transitionYears, setTransitionYears] = useState(2); // transition timeline    
+
+    const rolesImpacted =
+        WORKFORCE_SIZE * aiExposure * automationEfficiency;
+
+    const rolesToReduce = Math.round(rolesImpacted);
+
+    const transitionMonths = transitionYears * 12;
+
+    const monthlyReduction =
+        Math.round(rolesToReduce / transitionMonths);
+
+    const averageSalary = 1200000;
+
+    const annualCostReduction =
+        rolesToReduce * averageSalary;
+
+    const annualCostReductionFormatted =
+        annualCostReduction.toLocaleString();
+
+
     // ================= CATALYST =================
 
     async function runCatalyst(mode: "DEFENSIVE" | "BALANCED" | "AGGRESSIVE") {
@@ -135,6 +161,17 @@ export default function UnifiedSimulationPage() {
             (1 - improvementPct * 0.9),
         macro: governedStress.macro * (1 - improvementPct * 0.3),
     };
+
+    let aiAdjustedStress = { ...canonicalStress };
+
+    if (rolesToReduce > 0) {
+        aiAdjustedStress = {
+            people: canonicalStress.people + 5,
+            cost: canonicalStress.cost * 0.8,
+            execution: canonicalStress.execution + 15,
+            macro: canonicalStress.macro,
+        };
+    }
 
     const stressValues = Object.values(canonicalStress);
     const maxStress = Math.max(...stressValues);
@@ -300,7 +337,7 @@ export default function UnifiedSimulationPage() {
                     </div>
 
                     <MagicCube
-                        stress={canonicalStress}
+                        stress={aiAdjustedStress}
                         rawStress={baseStress}
                         persona={persona}
                         size={400}
@@ -325,6 +362,25 @@ export default function UnifiedSimulationPage() {
 
                     <div style={{ marginTop: 16, color: "#22c55e" }}>
                         Expected Cost Avoided: ${avoidedCost.toLocaleString()}
+                    </div>
+                    <div style={{ marginTop: 20, color: "#94a3b8" }}>
+                        <div style={{ fontSize: 12 }}>AI DISRUPTION SIMULATION</div>
+
+                        <div style={{ marginTop: 8 }}>
+                            Roles Impacted: <strong>{rolesToReduce}</strong>
+                        </div>
+
+                        <div>
+                            Transition Timeline: <strong>{transitionYears} years</strong>
+                        </div>
+
+                        <div>
+                            Monthly Workforce Adjustment: <strong>{monthlyReduction}</strong>
+                        </div>
+
+                        <div style={{ marginTop: 6 }}>
+                            Annual Cost Reduction: <strong>${annualCostReductionFormatted}</strong>
+                        </div>
                     </div>
                 </div>
             </div>
