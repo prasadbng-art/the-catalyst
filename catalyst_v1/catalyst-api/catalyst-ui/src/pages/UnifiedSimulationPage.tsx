@@ -224,7 +224,7 @@ export default function UnifiedSimulationPage() {
     return (
         <div
             style={{
-                minHeight: "100vh",
+                height: "100vh",
                 background: "#020617",
                 padding: 20,
                 display: "grid",
