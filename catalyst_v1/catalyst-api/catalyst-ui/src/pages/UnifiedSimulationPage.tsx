@@ -268,15 +268,14 @@ export default function UnifiedSimulationPage() {
     return (
         <div
             style={{
-                height: "100vh",
+                height: "100%",
                 background: "#020617",
-                padding: "20px 24px",
                 display: "grid",
                 gridTemplateColumns: "320px minmax(640px, 1fr) 460px",
                 gap: 24,
                 overflow: "hidden",
                 boxSizing: "border-box",
-                alignItems: "stretch"
+
             }}
         >
             {/* LEFT PANEL */}
@@ -343,10 +342,17 @@ export default function UnifiedSimulationPage() {
 
                 <div
                     style={{
+                        padding: "24px 28px",
+                        borderRadius: 12,
+                        border: "1px solid #1e293b",
+                        background: "rgba(2,6,23,0.6)",
+                        backdropFilter: "blur(4px)",
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
-                        gap: 16
+                        gap: 16,
+                        width: "100%",
+                        maxWidth: 520
                     }}
                 >
 
@@ -375,21 +381,21 @@ export default function UnifiedSimulationPage() {
                         stress={aiAdjustedStress}
                         rawStress={baseStress}
                         persona={persona}
-                        size={400}
+                        size={460}
                         showAnnotation={false}
                         baselineStress={baseStress}
-
                     />
+
                 </div>
 
                 <div
                     style={{
-                        marginTop: 12,
+                        marginTop: 20,
                         color: "#cbd5f5",
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
-                        maxWidth: 420,
+                        maxWidth: 520,
                         textAlign: "center"
                     }}
                 >
@@ -438,9 +444,7 @@ export default function UnifiedSimulationPage() {
                     paddingLeft: 18,
                     paddingRight: 12,
                     borderLeft: "1px solid #1e293b",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 16
+
                 }}
             >
                 <RetentionSimulatorPanel resetSignal={resetCounter} />
