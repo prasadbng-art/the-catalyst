@@ -132,9 +132,27 @@ export default function UnifiedSimulationPage() {
             (1 - improvementPct * 0.8),
         execution:
             governedStress.execution *
-            (1 - improvementPct * 0.5),
-        macro: governedStress.macro,
+            (1 - improvementPct * 0.9),
+        macro: governedStress.macro * (1 - improvementPct * 0.3),
     };
+
+    const stressValues = Object.values(canonicalStress);
+    const maxStress = Math.max(...stressValues);
+    const minStress = Math.min(...stressValues);
+
+    if (maxStress - minStress > 45) {
+        const avg =
+            stressValues.reduce((a, b) => a + b, 0) / 4;
+
+        canonicalStress.people =
+            (canonicalStress.people + avg) / 2;
+        canonicalStress.cost =
+            (canonicalStress.cost + avg) / 2;
+        canonicalStress.execution =
+            (canonicalStress.execution + avg) / 2;
+        canonicalStress.macro =
+            (canonicalStress.macro + avg) / 2;
+    }
 
     function getDominantStress(stress: StressProfile) {
         return (

@@ -58,10 +58,10 @@ function SuspendedOctahedron({
             const direction = vertex.clone().normalize();
             let influence = 0;
 
-            if (direction.x > 0) influence += stress.cost;
-            if (direction.x < 0) influence += stress.macro;
-            if (direction.y > 0) influence += stress.people;
-            if (direction.y < 0) influence += stress.execution;
+            if (direction.x > 0) influence += s.cost;
+            if (direction.x < 0) influence += s.macro;
+            if (direction.y > 0) influence += s.people;
+            if (direction.y < 0) influence += s.execution;
 
             if (Math.abs(direction.z) > 0.5) {
                 influence += aggregate * 0.6;
@@ -77,7 +77,7 @@ function SuspendedOctahedron({
         geo.computeVertexNormals();
 
         return geo;
-    }, [stress]);
+    }, []);
 
     /* ---------------------------------------------
        Motion Behaviour
