@@ -25,9 +25,11 @@ type MotionState = "stable" | "tension" | "overload";
 function SuspendedOctahedron({
     stress,
     motionState,
+    ghost = false,
 }: {
     stress: StressProfile;
     motionState: MotionState;
+    ghost?: boolean;
 }) {
     const meshRef = useRef<THREE.Mesh>(null);
 
@@ -202,7 +204,9 @@ function SuspendedOctahedron({
                     color="#0f172a"
                     roughness={0.6}
                     metalness={0.2}
-                    emissive={emissiveColor}
+                    emissive={ghost ? "#334155" : emissiveColor}
+                    transparent={ghost}
+                    opacity={ghost ? 0.18 : 1}
                     emissiveIntensity={0.5}
                     clearcoat={0.3}
                 />
@@ -343,16 +347,12 @@ export default function MagicCube({
                     </mesh>
 
                     {baselineStress && (
-                        <group scale={0.95}>
-                            <mesh>
-                                <octahedronGeometry args={[1.4, 0]} />
-                                <meshBasicMaterial
-                                    color="#334155"
-                                    transparent
-                                    opacity={0.15}
-                                    wireframe
-                                />
-                            </mesh>
+                        <group scale={0.92}>
+                            <SuspendedOctahedron
+                                stress={baselineStress}
+                                motionState={"stable"}
+                                ghost={true}
+                            />
                         </group>
                     )}
 
