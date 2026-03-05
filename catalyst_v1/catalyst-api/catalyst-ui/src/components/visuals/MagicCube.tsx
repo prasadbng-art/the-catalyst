@@ -347,13 +347,15 @@ export default function MagicCube({
                     </mesh>
 
                     {baselineStress && (
-                        <group scale={0.95} position={[0, 0, -0.25]}>
-                            <SuspendedOctahedron
-                                stress={baselineStress}
-                                motionState={"stable"}
-                                ghost={true}
+                        <mesh scale={1.05}>
+                            <octahedronGeometry args={[1.4, 0]} />
+                            <meshBasicMaterial
+                                color="#64748b"
+                                wireframe
+                                transparent
+                                opacity={0.35}
                             />
-                        </group>
+                        </mesh>
                     )}
 
                     <SuspendedOctahedron
