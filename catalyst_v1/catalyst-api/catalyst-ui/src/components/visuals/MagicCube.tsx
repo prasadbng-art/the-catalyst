@@ -206,7 +206,7 @@ function SuspendedOctahedron({
                     metalness={0.2}
                     emissive={ghost ? "#334155" : emissiveColor}
                     transparent={ghost}
-                    opacity={ghost ? 0.18 : 1}
+                    opacity={ghost ? 0.35 : 1}
                     emissiveIntensity={0.5}
                     clearcoat={0.3}
                 />
@@ -347,7 +347,7 @@ export default function MagicCube({
                     </mesh>
 
                     {baselineStress && (
-                        <group scale={0.92}>
+                        <group scale={0.95} position={[0, 0, -0.25]}>
                             <SuspendedOctahedron
                                 stress={baselineStress}
                                 motionState={"stable"}
