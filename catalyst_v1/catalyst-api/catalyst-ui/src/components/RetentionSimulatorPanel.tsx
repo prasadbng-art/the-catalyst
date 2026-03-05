@@ -63,14 +63,24 @@ export default function RetentionSimulatorPanel({
     };
 
     return (
-        <div>
+        <div
+            style={{
+                fontSize: 14,
+                lineHeight: 1.5,
+                display: "flex",
+                flexDirection: "column",
+                gap: 16
+            }}
+        >
             {/* ================= IMPACT HEADER (PINNED) ================= */}
             {deltaPct !== null && (
                 <div
                     style={{
+                        maxHeight: "72vh",
+                        overflowY: "auto",
                         display: "flex",
                         flexDirection: "column",
-                        gap: 24,
+                        gap: 12,
                         position: "sticky",
                         top: 0,
                         zIndex: 10,
@@ -110,9 +120,11 @@ export default function RetentionSimulatorPanel({
             {/* ================= RETENTION LEVERS ================= */}
             <div
                 style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-                    gap: 20,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 18,
+                    width: "100%",
+                    alignItems: "stretch",
                 }}
             >
                 {people.map((entity) => (

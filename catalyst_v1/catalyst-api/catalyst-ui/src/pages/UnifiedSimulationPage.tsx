@@ -272,7 +272,7 @@ export default function UnifiedSimulationPage() {
                 background: "#020617",
                 padding: "20px 24px",
                 display: "grid",
-                gridTemplateColumns: "320px minmax(600px, 1fr) 420px",
+                gridTemplateColumns: "320px minmax(640px, 1fr) 460px",
                 gap: 24,
                 overflow: "hidden",
                 boxSizing: "border-box",
@@ -292,18 +292,48 @@ export default function UnifiedSimulationPage() {
             </div>
 
             {/* CENTER PANEL */}
-            {/* CENTER PANEL */}
             <div
                 style={{
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    justifyContent: "center",
+                    justifyContent: "flex-start",
                     textAlign: "center",
                     gap: 18,
-                    paddingTop: 10
+                    paddingTop: 10,
+                    height: "100%",
+                    overflow: "hidden"
                 }}
             >
+                {/* GOVERNANCE BUTTONS */}
+                <div
+                    style={{
+                        display: "flex",
+                        gap: 18,
+                        justifyContent: "center",
+                        alignItems: "center"
+                    }}
+                >
+                    {(["DEFENSIVE", "BALANCED", "AGGRESSIVE"] as const).map((mode) => (
+                        <button
+                            key={mode}
+                            onClick={() => runCatalyst(mode)}
+                            style={{
+                                padding: "6px 12px",
+                                borderRadius: 999,
+                                background:
+                                    governanceMode === mode
+                                        ? "#1d4ed8"
+                                        : "#111827",
+                                border: "1px solid #334155",
+                                color: "#e5e7eb",
+                                cursor: "pointer",
+                            }}
+                        >
+                            {mode}
+                        </button>
+                    ))}
+                </div>
 
                 {catalystLoading && (
                     <div style={{ marginTop: 10, color: "#94a3b8" }}>
@@ -352,7 +382,17 @@ export default function UnifiedSimulationPage() {
                     />
                 </div>
 
-                <div style={{ marginTop: 20, color: "#cbd5f5" }}>
+                <div
+                    style={{
+                        marginTop: 12,
+                        color: "#cbd5f5",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        maxWidth: 420,
+                        textAlign: "center"
+                    }}
+                >
                     <div style={{ fontSize: 12, opacity: 0.7 }}>
                         Dominant Stress Driver
                     </div>
@@ -393,15 +433,14 @@ export default function UnifiedSimulationPage() {
             {/* RIGHT PANEL */}
             <div
                 style={{
-                    height: "calc(100vh - 60px)",
+                    height: "100%",
                     overflowY: "auto",
-                    paddingLeft: 16,
-                    paddingRight: 10,
+                    paddingLeft: 18,
+                    paddingRight: 12,
                     borderLeft: "1px solid #1e293b",
-                    maskImage: "linear-gradient(to bottom, transparent, black 20px, black 70%, transparent)",
                     display: "flex",
                     flexDirection: "column",
-                    gap: 14
+                    gap: 16
                 }}
             >
                 <RetentionSimulatorPanel resetSignal={resetCounter} />
