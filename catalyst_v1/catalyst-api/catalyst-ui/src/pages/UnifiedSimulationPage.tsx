@@ -24,6 +24,7 @@ export default function UnifiedSimulationPage() {
         useState<number | null>(null);
 
     const [resetCounter, setResetCounter] = useState(0);
+    const [showAiSimulation, setShowAiSimulation] = useState(false);
 
     const BASELINE_ATTRITION_UNITS = 124_121;
     const COST_PER_UNIT = 375;
@@ -279,13 +280,9 @@ export default function UnifiedSimulationPage() {
             }}
         >
             {/* LEFT PANEL */}
-            <div
-                style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 24
-                }}
-            >
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+
                 <SimulationControlsPanel
                     persona={persona}
                     onPersonaChange={setPersona}
@@ -295,42 +292,60 @@ export default function UnifiedSimulationPage() {
                     onReset={handleResetSimulation}
                 />
 
-                {/* AI DISRUPTION SIMULATION */}
+                {/* AI STRATEGIC REVEAL */}
                 <div
                     style={{
-                        padding: "16px 18px",
                         border: "1px solid #1e293b",
-                        borderRadius: 10,
-                        background: "#020617"
+                        borderRadius: 8,
+                        padding: 12,
+                        background: "#020617",
                     }}
                 >
                     <div
+                        onClick={() => setShowAiSimulation(!showAiSimulation)}
                         style={{
-                            fontSize: 12,
-                            letterSpacing: "0.05em",
-                            color: "#94a3b8",
-                            marginBottom: 10
+                            cursor: "pointer",
+                            fontSize: 13,
+                            fontWeight: 600,
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
                         }}
                     >
-                        AI DISRUPTION SIMULATION
+                        Strategic Workforce Transition (AI)
+                        <span style={{ opacity: 0.6 }}>
+                            {showAiSimulation ? "▼" : "▶"}
+                        </span>
                     </div>
 
-                    <div style={{ marginBottom: 6 }}>
-                        Roles Impacted: <strong>{rolesToReduce}</strong>
-                    </div>
+                    {showAiSimulation && (
+                        <div
+                            style={{
+                                marginTop: 12,
+                                fontSize: 14,
+                                color: "#cbd5f5",
+                                lineHeight: 1.6,
+                            }}
+                        >
+                            <div>
+                                Roles Impacted: <strong>{rolesToReduce}</strong>
+                            </div>
 
-                    <div style={{ marginBottom: 6 }}>
-                        Transition Timeline: <strong>{transitionYears} years</strong>
-                    </div>
+                            <div>
+                                Transition Timeline: <strong>{transitionYears} years</strong>
+                            </div>
 
-                    <div style={{ marginBottom: 6 }}>
-                        Monthly Workforce Adjustment: <strong>{monthlyReduction}</strong>
-                    </div>
+                            <div>
+                                Monthly Workforce Adjustment: <strong>{monthlyReduction}</strong>
+                            </div>
 
-                    <div style={{ color: "#22c55e", marginTop: 6 }}>
-                        Annual Cost Reduction: <strong>${annualCostReductionFormatted}</strong>
-                    </div>
+                            <div style={{ marginTop: 6 }}>
+                                Annual Cost Reduction: <strong>${annualCostReductionFormatted}</strong>
+                            </div>
+                        </div>
+                    )}
                 </div>
+
             </div>
 
             {/* CENTER PANEL */}
