@@ -43,7 +43,6 @@ export default function UnifiedSimulationPage() {
     const rolesToReduce = Math.round(rolesImpacted);
 
     const transitionMonths = transitionYears * 12;
-
     const monthlyReduction =
         Math.round(rolesToReduce / transitionMonths);
 
@@ -162,17 +161,23 @@ export default function UnifiedSimulationPage() {
         macro: governedStress.macro * (1 - improvementPct * 0.3),
     };
 
-    let aiAdjustedStress = { ...canonicalStress };
+    let aiAdjustedStress: StressProfile = { ...canonicalStress };
 
     if (rolesToReduce > 0) {
-        const disruptionFactor = Math.min(rolesToReduce / WORKFORCE_SIZE, 0.25);
+        const disruptionFactor =
+            Math.min(rolesToReduce / WORKFORCE_SIZE, 0.25);
 
-        aiAdjustedStress = {
-            people: canonicalStress.people + disruptionFactor * 10,
-            cost: canonicalStress.cost * (1 - disruptionFactor * 0.6),
-            execution: canonicalStress.execution + disruptionFactor * 12,
-            macro: canonicalStress.macro,
-        };
+        const transitionShock =
+            disruptionFactor * 10;
+
+        aiAdjustedStress.people =
+            canonicalStress.people + transitionShock * 0.6;
+
+        aiAdjustedStress.execution =
+            canonicalStress.execution + transitionShock * 0.8;
+
+        aiAdjustedStress.cost =
+            canonicalStress.cost * (1 - disruptionFactor * 0.6);
     }
 
     const stressValues = Object.values(aiAdjustedStress);
