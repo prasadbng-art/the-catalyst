@@ -303,6 +303,12 @@ export default function UnifiedSimulationPage() {
                         persona={persona}
                         size={400}
                         showAnnotation={false}
+                        baselineStress={{
+                            people: 40,
+                            cost: 40,
+                            execution: 40,
+                            macro: 40,
+                        }}
                     />
                 </div>
 

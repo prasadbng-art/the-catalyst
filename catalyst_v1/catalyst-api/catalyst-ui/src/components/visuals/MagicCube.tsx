@@ -17,6 +17,7 @@ type MagicCubeProps = {
     size?: number;
     showAnnotation?: boolean;
     catalystData?: CatalystSimulationResponse | null;
+    baselineStress?: StressProfile;
 };
 
 type MotionState = "stable" | "tension" | "overload";
@@ -268,6 +269,7 @@ export default function MagicCube({
     size = 260,
     showAnnotation = true,
     catalystData = null,
+    baselineStress,
 }: MagicCubeProps) {
     const psiMean = catalystData?.peak_psi_band.mean ?? null;
     const capitalMean = catalystData?.capital_trough_band.mean ?? null;
@@ -339,6 +341,20 @@ export default function MagicCube({
                             opacity={0.2 * balanceScore}
                         />
                     </mesh>
+
+                    {baselineStress && (
+                        <group scale={0.95}>
+                            <mesh>
+                                <octahedronGeometry args={[1.4, 0]} />
+                                <meshBasicMaterial
+                                    color="#334155"
+                                    transparent
+                                    opacity={0.15}
+                                    wireframe
+                                />
+                            </mesh>
+                        </group>
+                    )}
 
                     <SuspendedOctahedron
                         stress={effectiveStress}
