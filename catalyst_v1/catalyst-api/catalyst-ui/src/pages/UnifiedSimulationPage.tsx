@@ -165,6 +165,20 @@ export default function UnifiedSimulationPage() {
     const dominantStress =
         getDominantStress(canonicalStress);
 
+    const avgStress =
+        (canonicalStress.people +
+            canonicalStress.cost +
+            canonicalStress.execution +
+            canonicalStress.macro) / 4;
+
+    let systemState = "ORGANIZATIONAL EQUILIBRIUM";
+
+    if (avgStress > 60) {
+        systemState = "SYSTEM OVERLOAD";
+    } else if (avgStress > 40) {
+        systemState = "STRUCTURAL TENSION";
+    }
+
     const avoidedCost = Math.round(
         BASELINE_COST * improvementPct
     );
@@ -260,7 +274,29 @@ export default function UnifiedSimulationPage() {
                     </div>
                 )}
 
-                <div style={{ marginTop: 30 }}>
+                <div style={{ marginTop: 20 }}>
+
+                    <div
+                        style={{
+                            color: "#94a3b8",
+                            fontSize: 12,
+                            letterSpacing: "1px",
+                        }}
+                    >
+                        SYSTEM STATE
+                    </div>
+
+                    <div
+                        style={{
+                            fontSize: 18,
+                            fontWeight: 600,
+                            marginBottom: 12,
+                            color: "#e2e8f0",
+                        }}
+                    >
+                        {systemState}
+                    </div>
+
                     <MagicCube
                         stress={canonicalStress}
                         rawStress={baseStress}
