@@ -230,7 +230,8 @@ export default function UnifiedSimulationPage() {
                 display: "grid",
                 gridTemplateColumns: "320px 1fr 380px",
                 gap: 24,
-                overflow: "hidden"
+                overflow: "hidden",
+                boxSizing: "border-box"
             }}
         >
             {/* LEFT PANEL */}
@@ -331,11 +332,13 @@ export default function UnifiedSimulationPage() {
             {/* RIGHT PANEL */}
             <div
                 style={{
-                    height: "calc(100vh - 40px)",
+                    height: "calc(100vh - 60px)",
                     overflowY: "auto",
                     paddingRight: 8,
                     borderLeft: "1px solid #1e293b",
-                    maskImage: "linear-gradient(to bottom, transparent, black 20px, black 90%, transparent)"
+                    maskImage: "linear-gradient(to bottom, transparent, black 20px, black 90%, transparent)",
+                    display: "flex",
+                    flexDirection: "column"
                 }}
             >
                 <RetentionSimulatorPanel resetSignal={resetCounter} />
