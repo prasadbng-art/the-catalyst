@@ -66,8 +66,6 @@ export default function RetentionSimulatorPanel({
         <div
             style={{
                 height: "100%",
-                fontSize: 24,
-                lineHeight: 1.5,
                 display: "flex",
                 flexDirection: "column",
                 gap: 16
@@ -77,20 +75,17 @@ export default function RetentionSimulatorPanel({
             {deltaPct !== null && (
                 <div
                     style={{
-                        maxHeight: "72vh",
-                        overflowY: "auto",
                         display: "flex",
                         flexDirection: "column",
-                        gap: 12,
+                        gap: 8,
                         position: "sticky",
                         top: 0,
                         zIndex: 10,
-                        marginBottom: 32,
-                        padding: "10px 12px",
+                        marginBottom: 20,
+                        padding: "12px 14px",
                         borderRadius: 10,
                         background: "#020617",
                         border: "1px solid #1e293b",
-                        boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
                     }}
                 >
                     <div
@@ -121,15 +116,14 @@ export default function RetentionSimulatorPanel({
             {/* ================= RETENTION LEVERS ================= */}
             <div
                 style={{
+                    flex: 1,
                     display: "flex",
                     flexDirection: "column",
-                    gap: 20,
-                    overflowY: "auto",
-                    maxHeight: "68vh",
-                    paddingRight: 8,
-                    fontSize: 16
-
+                    gap: 18,
+                    overflowY: "scroll",
+                    paddingRight: 10,
                 }}
+
             >
                 {people.map((entity) => (
                     <SimulationCard

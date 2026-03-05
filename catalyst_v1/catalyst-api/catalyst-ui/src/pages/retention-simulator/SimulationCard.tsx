@@ -53,7 +53,9 @@ export default function SimulationCard({
             style={{
                 background: "#fffcfcfb",
                 borderRadius: 12,
-                padding: 12,
+                padding: 18,
+                fontSize: 16,
+                lineHeight: 1.5,
                 border: "1px solid #e5e7eb",
                 boxShadow: "0 8px 20px rgba(0,0,0,0.22)",
             }}
