@@ -211,10 +211,10 @@ export default function UnifiedSimulationPage() {
         getDominantStress(aiAdjustedStress);
 
     const avgStress =
-        (canonicalStress.people +
-            canonicalStress.cost +
-            canonicalStress.execution +
-            canonicalStress.macro) / 4;
+        (aiAdjustedStress.people +
+            aiAdjustedStress.cost +
+            aiAdjustedStress.execution +
+            aiAdjustedStress.macro) / 4;
 
     let systemState = "ORGANIZATIONAL EQUILIBRIUM";
 
