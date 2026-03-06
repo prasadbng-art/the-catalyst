@@ -136,15 +136,14 @@ export default function RetentionSimulatorPanel({
             {/* Retention cards */}
             <div
                 style={{
-                    flex: 1,
+                    width: "100%",
+                    maxWidth: 420,
                     display: "flex",
                     flexDirection: "column",
                     gap: 18,
-                    overflowY: "auto",
-                    paddingRight: 10,
                 }}
             >
-                {people.map((entity) => (
+                {people.slice(0, 3).map((entity) => (
                     <SimulationCard
                         key={`${entity.id}-${resetSignal}`}
                         entity={{

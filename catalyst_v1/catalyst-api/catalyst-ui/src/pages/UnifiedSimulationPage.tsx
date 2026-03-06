@@ -312,7 +312,7 @@ export default function UnifiedSimulationPage() {
                 height: "100%",
                 background: "#020617",
                 display: "grid",
-                gridTemplateColumns: "280px minmax(0,1fr) 360px",
+                gridTemplateColumns: "280px 1 fr 420px",
                 gap: 24,
                 overflow: "hidden",
                 boxSizing: "border-box"
@@ -393,7 +393,10 @@ export default function UnifiedSimulationPage() {
                 style={{
                     display: "flex",
                     flexDirection: "column",
-                    alignItems: "stretch",
+                    alignItems: "center",
+                    width: "100%",
+                    maxWidth: 420,
+                    margin: "0 auto",
                     justifyContent: "flex-start",
                     textAlign: "center",
                     gap: 18,
@@ -629,11 +632,12 @@ export default function UnifiedSimulationPage() {
             <div
                 style={{
                     height: "100%",
-                    overflowY: "auto",
+                    overflowY: "scroll",
                     paddingLeft: 18,
-                    paddingRight: 12,
+                    paddingRight: 18,
                     borderLeft: "1px solid #1e293b",
-                    maxWidth: 300
+                    width: 420,
+                    boxSizing: "border-box"
                 }}
             >
                 <RetentionSimulatorPanel resetSignal={resetCounter} />

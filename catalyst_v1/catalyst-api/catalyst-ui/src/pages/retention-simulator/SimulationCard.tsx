@@ -118,11 +118,9 @@ export default function SimulationCard({
                     <span
                         key={driver}
                         style={{
-                            fontSize: 11,
+                            fontSize: 12,
                             padding: "4px 8px",
-                            borderRadius: 999,
                             background: "#f1f5f9",
-                            border: "1px solid #cbd5f1",
                             color: "#334155"
                         }}
                     >
