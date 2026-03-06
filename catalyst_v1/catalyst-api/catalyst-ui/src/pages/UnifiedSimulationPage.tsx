@@ -312,7 +312,7 @@ export default function UnifiedSimulationPage() {
                 height: "100%",
                 background: "#020617",
                 display: "grid",
-                gridTemplateColumns: "280px minmax(0, 1fr) 360px",
+                gridTemplateColumns: "280px minmax(0,1fr) 360px",
                 gap: 24,
                 overflow: "hidden",
                 boxSizing: "border-box"
@@ -620,23 +620,25 @@ export default function UnifiedSimulationPage() {
                             ))}
 
                         </div>
-
                     </div>
                 </div>
             </div>
+
+            {/* RIGHT PANEL */}
+
+            <div
+                style={{
+                    height: "100%",
+                    overflowY: "auto",
+                    paddingLeft: 18,
+                    paddingRight: 12,
+                    borderLeft: "1px solid #1e293b",
+                    maxWidth: 300
+                }}
+            >
+                <RetentionSimulatorPanel resetSignal={resetCounter} />
+            </div>
+
         </div>
     )
-    {/* RIGHT PANEL */ }
-    <div
-        style={{
-            height: "100%",
-            overflowY: "auto",
-            paddingLeft: 18,
-            paddingRight: 12,
-            borderLeft: "1px solid #1e293b",
-            maxWidth: 300
-        }}
-    >
-        <RetentionSimulatorPanel resetSignal={resetCounter} />
-    </div>
 }
