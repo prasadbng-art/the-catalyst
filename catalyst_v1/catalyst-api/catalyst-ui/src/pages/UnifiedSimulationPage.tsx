@@ -312,9 +312,10 @@ export default function UnifiedSimulationPage() {
                 height: "100%",
                 background: "#020617",
                 display: "grid",
-                gridTemplateColumns: "280px 1 fr 420px",
+                gridTemplateColumns: "320px 1fr 420px",
                 gap: 24,
-                overflow: "hidden",
+                maxWidth: 1560,
+                margin: "0 auto",
                 boxSizing: "border-box"
             }}
 
@@ -402,7 +403,7 @@ export default function UnifiedSimulationPage() {
                     gap: 18,
                     paddingTop: 10,
                     height: "100%",
-                    overflow: "hidden"
+
                 }}
             >
                 {/* GOVERNANCE BUTTONS */}
@@ -632,7 +633,7 @@ export default function UnifiedSimulationPage() {
             <div
                 style={{
                     height: "100%",
-                    overflowY: "scroll",
+                    overflowY: "auto",
                     paddingLeft: 18,
                     paddingRight: 18,
                     borderLeft: "1px solid #1e293b",
