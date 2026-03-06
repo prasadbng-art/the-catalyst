@@ -49,14 +49,16 @@ export default function SimulationCard({
     return (
         <div
             style={{
-                background: "#fffcfcfb",
+                background: "#ffffff",
                 borderRadius: 12,
-                padding: 18,
-                fontSize: 20,
-                lineHeight: 1.5,
-                border: "1px solid #e5e7eb",
-                boxShadow: "0 8px 20px rgba(0,0,0,0.22)",
+                padding: 22,
+                border: "1px solid #e2e8f0",
+                boxShadow: "0 6px 16px rgba(0,0,0,0.18)",
+                display: "flex",
+                flexDirection: "column",
+                gap: 12
             }}
+
         >
             {/* Header */}
             <div style={{ marginBottom: 4 }}>
@@ -71,7 +73,7 @@ export default function SimulationCard({
             {/* Risk Display */}
             <div
                 style={{
-                    fontSize: 10,
+                    fontSize: 24,
                     fontWeight: 700,
                     color: isImproved ? "#16a34a" : "#dc2626",
                     marginBottom: 4,
@@ -95,8 +97,9 @@ export default function SimulationCard({
                             fontSize: 10,
                             padding: "4px 8px",
                             borderRadius: 999,
-                            background: "#fee2e2",
-                            color: "#7f1d1d",
+                            background: "#f1f5f9",
+                            border: "1px solid #cbd5f1",
+                            color: "#334155",
                         }}
                     >
                         {driver}
@@ -117,7 +120,7 @@ export default function SimulationCard({
                 }}
                 style={{
                     width: "100%",
-                    fontSize: 10,
+                    fontSize: 13,
                     padding: "6px 8px",
                     borderRadius: 6,
                     border: "1px solid #cbd5f5",
