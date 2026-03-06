@@ -27,7 +27,7 @@ export default function AppShell() {
           style={{
             flex: 1,
             width: "100%",
-            maxWidth: 1600,
+            maxWidth: "none",
             margin: 0,
             padding: "32px 24px",
             boxSizing: "border-box",

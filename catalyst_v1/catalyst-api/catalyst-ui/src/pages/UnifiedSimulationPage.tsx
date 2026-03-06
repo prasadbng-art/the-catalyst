@@ -1,6 +1,6 @@
 import RetentionSimulatorPanel from "../components/RetentionSimulatorPanel";
 import SimulationControlsPanel from "../components/SimulationControlsPanel";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MagicCube from "../components/visuals/MagicCube";
 import {
     runCatalystSimulation,
@@ -10,6 +10,10 @@ import type { Persona } from "../types/persona";
 import { getMotionState } from "../components/visuals/motion";
 import type { StressProfile } from "../components/visuals/motion";
 import { getScenarioAttritionDelta } from "../state/scenarioState";
+type Scenario = {
+    name: string
+    stress: StressProfile
+}
 
 export default function UnifiedSimulationPage() {
     const [persona, setPersona] = useState<Persona>("CEO");
@@ -27,6 +31,9 @@ export default function UnifiedSimulationPage() {
 
     const [resetCounter, setResetCounter] = useState(0);
     const [showAiSimulation, setShowAiSimulation] = useState(false);
+
+    const [scenarios, setScenarios] = useState<Record<string, Scenario>>({});
+    const [activeScenario, setActiveScenario] = useState<string>("live");
 
     const BASELINE_ATTRITION_UNITS = 124_121;
     const COST_PER_UNIT = 375;
@@ -127,6 +134,18 @@ export default function UnifiedSimulationPage() {
             execution: 40,
             macro: 40,
         };
+
+    useEffect(() => {
+        if (!scenarios["baseline"]) {
+            setScenarios(prev => ({
+                ...prev,
+                baseline: {
+                    name: "Baseline",
+                    stress: baseStress
+                }
+            }));
+        }
+    }, [baseStress]);
 
     function applyGovernance(
         stress: StressProfile
@@ -293,7 +312,7 @@ export default function UnifiedSimulationPage() {
                 height: "100%",
                 background: "#020617",
                 display: "grid",
-                gridTemplateColumns: "320px 1fr 420px",
+                gridTemplateColumns: "280px minmax(0, 1fr) 360px",
                 gap: 24,
                 overflow: "hidden",
                 boxSizing: "border-box"
@@ -374,7 +393,7 @@ export default function UnifiedSimulationPage() {
                 style={{
                     display: "flex",
                     flexDirection: "column",
-                    alignItems: "center",
+                    alignItems: "stretch",
                     justifyContent: "flex-start",
                     textAlign: "center",
                     gap: 18,
@@ -461,7 +480,11 @@ export default function UnifiedSimulationPage() {
                     </div>
 
                     <MagicCube
-                        stress={aiAdjustedStress}
+                        stress={
+                            activeScenario === "live"
+                                ? aiAdjustedStress
+                                : scenarios[activeScenario]?.stress || aiAdjustedStress
+                        }
                         rawStress={baseStress}
                         persona={persona}
                         size={420}
@@ -498,6 +521,8 @@ export default function UnifiedSimulationPage() {
                         Expected Cost Avoided: ${avoidedCost.toLocaleString()}
                     </div>
 
+                    {/* EXECUTIVE INSIGHT */}
+
                     <div
                         style={{
                             marginTop: 24,
@@ -508,6 +533,7 @@ export default function UnifiedSimulationPage() {
                             maxWidth: 520
                         }}
                     >
+
                         <div
                             style={{
                                 fontSize: 11,
@@ -521,25 +547,96 @@ export default function UnifiedSimulationPage() {
 
                         <div style={{ fontSize: 14, lineHeight: 1.6 }}>
                             {generateExecutiveInsight()}
+                        </div>
+
+                    </div>
+
+                    {/* SCENARIO MEMORY */}
+
+                    <div
+                        style={{
+                            marginTop: 16,
+                            padding: 14,
+                            borderRadius: 10,
+                            border: "1px solid #1e293b",
+                            background: "#020617",
+                            maxWidth: 320
+                        }}
+                    >
+
+                        <div
+                            style={{
+                                fontSize: 11,
+                                opacity: 0.7,
+                                letterSpacing: "0.05em",
+                                marginBottom: 10
+                            }}
+                        >
+
+                            SCENARIO MEMORY
+                        </div>
+
+                        {/* Return to live simulation */}
+
+                        <button
+                            onClick={() => setActiveScenario("live")}
+                            style={{
+                                padding: "6px 10px",
+                                borderRadius: 6,
+                                border: "1px solid #334155",
+                                background: activeScenario === "live" ? "#1d4ed8" : "#111827",
+                                color: "#e5e7eb",
+                                marginBottom: 8,
+                                cursor: "pointer"
+                            }}
+                        >
+                            Live Simulation
+                        </button>
+
+                        {/* Scenario list */}
+
+                        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+
+                            {Object.entries(scenarios).map(([key, scenario]) => (
+
+                                <button
+                                    key={key}
+                                    onClick={() => setActiveScenario(key)}
+                                    style={{
+                                        textAlign: "left",
+                                        padding: "8px 10px",
+                                        borderRadius: 6,
+                                        border: "1px solid #334155",
+                                        background: activeScenario === key ? "#1d4ed8" : "#111827",
+                                        color: "#e5e7eb",
+                                        cursor: "pointer"
+                                    }}
+                                >
+
+                                    {scenario.name}
+
+                                </button>
+
+                            ))}
 
                         </div>
+
                     </div>
                 </div>
             </div>
-
-            {/* RIGHT PANEL */}
-            <div
-                style={{
-                    height: "100%",
-                    overflowY: "auto",
-                    paddingLeft: 18,
-                    paddingRight: 12,
-                    borderLeft: "1px solid #1e293b",
-                    maxWidth: 460,
-                }}
-            >
-                <RetentionSimulatorPanel resetSignal={resetCounter} />
-            </div>
         </div>
     )
+    {/* RIGHT PANEL */ }
+    <div
+        style={{
+            height: "100%",
+            overflowY: "auto",
+            paddingLeft: 18,
+            paddingRight: 12,
+            borderLeft: "1px solid #1e293b",
+            maxWidth: 300
+        }}
+    >
+        <RetentionSimulatorPanel resetSignal={resetCounter} />
+    </div>
 }
