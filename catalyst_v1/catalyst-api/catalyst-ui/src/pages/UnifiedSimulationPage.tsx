@@ -293,12 +293,12 @@ export default function UnifiedSimulationPage() {
                 height: "100%",
                 background: "#020617",
                 display: "grid",
-                gridTemplateColumns: "340px minmax(640px, 1fr) 560px",
+                gridTemplateColumns: "320px 1fr 420px",
                 gap: 24,
                 overflow: "hidden",
-                boxSizing: "border-box",
-
+                boxSizing: "border-box"
             }}
+
         >
             {/* LEFT PANEL */}
 
@@ -464,7 +464,7 @@ export default function UnifiedSimulationPage() {
                         stress={aiAdjustedStress}
                         rawStress={baseStress}
                         persona={persona}
-                        size={460}
+                        size={420}
                         showAnnotation={false}
                         baselineStress={baseStress}
                     />
@@ -535,7 +535,7 @@ export default function UnifiedSimulationPage() {
                     paddingLeft: 18,
                     paddingRight: 12,
                     borderLeft: "1px solid #1e293b",
-
+                    maxWidth: 460,
                 }}
             >
                 <RetentionSimulatorPanel resetSignal={resetCounter} />

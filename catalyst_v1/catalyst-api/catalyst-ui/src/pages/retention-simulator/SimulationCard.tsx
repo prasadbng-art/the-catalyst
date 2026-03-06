@@ -66,9 +66,10 @@ export default function SimulationCard({
     return (
         <div
             style={{
+                width: "100%",
                 background: "#ffffff",
                 borderRadius: 12,
-                padding: 22,
+                padding: 18,
                 border: "1px solid #e2e8f0",
                 boxShadow: "0 6px 16px rgba(0,0,0,0.18)",
                 display: "flex",
@@ -108,7 +109,8 @@ export default function SimulationCard({
             <div
                 style={{
                     display: "flex",
-                    flexWrap: "wrap",
+                    flexWrap: "nowrap",
+                    overflowX: "auto",
                     gap: 6
                 }}
             >
