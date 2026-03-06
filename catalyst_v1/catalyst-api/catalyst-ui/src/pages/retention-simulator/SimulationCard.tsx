@@ -1,5 +1,17 @@
 import { useState } from "react";
 
+type InterventionEffect = {
+    riskDelta: number
+    costDelta: number
+}
+
+const INTERVENTION_EFFECTS: Record<string, InterventionEffect> = {
+    leadership: { riskDelta: -12, costDelta: 6000 },
+    compensation: { riskDelta: -15, costDelta: 18000 },
+    mobility: { riskDelta: -10, costDelta: 3000 },
+    role_redesign: { riskDelta: -8, costDelta: 1200 },
+}
+
 type Intervention = {
     key: string;
     label: string;
@@ -17,7 +29,11 @@ type SimulationEntity = {
 type Props = {
     entity: SimulationEntity;
     interventions: Intervention[];
-    onSimulate: (id: string, simulatedRisk: number | null, intervention: string) => void;
+    onSimulate: (
+        id: string,
+        simulatedRisk: number | null,
+        costImpact: number
+    ) => void;
 };
 
 export default function SimulationCard({
@@ -28,20 +44,21 @@ export default function SimulationCard({
     const [simulatedRisk, setSimulatedRisk] = useState<number | null>(null);
     const [selectedIntervention, setSelectedIntervention] = useState("none");
 
-    const calculateRisk = (intervention: string): number | null => {
-        switch (intervention) {
-            case "leadership":
-                return Math.max(entity.currentRiskPct - 12, 0);
-            case "compensation":
-                return Math.max(entity.currentRiskPct - 15, 0);
-            case "mobility":
-                return Math.max(entity.currentRiskPct - 10, 0);
-            case "role_redesign":
-                return Math.max(entity.currentRiskPct - 8, 0);
-            default:
-                return null;
+    const calculateImpact = (intervention: string) => {
+        if (!INTERVENTION_EFFECTS[intervention]) return null
+
+        const effect = INTERVENTION_EFFECTS[intervention]
+
+        const newRisk = Math.max(
+            entity.currentRiskPct + effect.riskDelta,
+            0
+        )
+
+        return {
+            risk: newRisk,
+            cost: effect.costDelta
         }
-    };
+    }
 
     const displayedRisk = simulatedRisk ?? entity.currentRiskPct;
     const isImproved = simulatedRisk !== null && simulatedRisk < entity.currentRiskPct;
@@ -58,14 +75,14 @@ export default function SimulationCard({
                 flexDirection: "column",
                 gap: 12
             }}
-
         >
             {/* Header */}
-            <div style={{ marginBottom: 4 }}>
-                <div style={{ fontSize: 12, fontWeight: 600, color: "#020617" }}>
+            <div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: "#020617" }}>
                     {entity.name}
                 </div>
-                <div style={{ fontSize: 10, color: "#475569" }}>
+
+                <div style={{ fontSize: 12, color: "#475569" }}>
                     {entity.role} · {entity.function}
                 </div>
             </div>
@@ -75,31 +92,36 @@ export default function SimulationCard({
                 style={{
                     fontSize: 24,
                     fontWeight: 700,
-                    color: isImproved ? "#16a34a" : "#dc2626",
-                    marginBottom: 4,
+                    color: isImproved ? "#16a34a" : "#dc2626"
                 }}
             >
                 {displayedRisk}%
             </div>
 
             {simulatedRisk !== null && (
-                <div style={{ fontSize: 10, color: "#64748b", marginBottom: 8 }}>
+                <div style={{ fontSize: 12, color: "#64748b" }}>
                     Baseline: {entity.currentRiskPct}%
                 </div>
             )}
 
             {/* Drivers */}
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 12 }}>
+            <div
+                style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 6
+                }}
+            >
                 {entity.riskDrivers.map((driver) => (
                     <span
                         key={driver}
                         style={{
-                            fontSize: 10,
+                            fontSize: 11,
                             padding: "4px 8px",
                             borderRadius: 999,
                             background: "#f1f5f9",
                             border: "1px solid #cbd5f1",
-                            color: "#334155",
+                            color: "#334155"
                         }}
                     >
                         {driver}
@@ -111,21 +133,33 @@ export default function SimulationCard({
             <select
                 value={selectedIntervention}
                 onChange={(e) => {
-                    const value = e.target.value;
-                    setSelectedIntervention(value);
+                    const value = e.target.value
+                    setSelectedIntervention(value)
 
-                    const newRisk = calculateRisk(value);
-                    setSimulatedRisk(newRisk);
-                    onSimulate(entity.id, newRisk, value);
+                    const impact = calculateImpact(value)
+
+                    if (!impact) {
+                        setSimulatedRisk(null)
+                        onSimulate(entity.id, null, 0)
+                        return
+                    }
+
+                    setSimulatedRisk(impact.risk)
+
+                    onSimulate(
+                        entity.id,
+                        impact.risk,
+                        impact.cost
+                    )
                 }}
                 style={{
                     width: "100%",
                     fontSize: 13,
-                    padding: "6px 8px",
+                    padding: "8px 10px",
                     borderRadius: 6,
                     border: "1px solid #cbd5f5",
                     background: "#ffffff",
-                    color: "#020617",
+                    color: "#020617"
                 }}
             >
                 {interventions.map((i) => (
@@ -135,5 +169,5 @@ export default function SimulationCard({
                 ))}
             </select>
         </div>
-    );
+    )
 }

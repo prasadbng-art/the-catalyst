@@ -27,6 +27,9 @@ export default function RetentionSimulatorPanel({
     const [simulatedRisks, setSimulatedRisks] =
         useState<Record<string, number | null>>({});
 
+    const [costImpacts, setCostImpacts] =
+        useState<Record<string, number>>({});
+
     /* Reset simulation */
     useEffect(() => {
         setSimulatedRisks({});
@@ -53,19 +56,31 @@ export default function RetentionSimulatorPanel({
             ? Math.round((simulatedAvgRisk - baselineAvgRisk) * 10) / 10
             : null;
 
+    const totalInterventionCost =
+        Object.values(costImpacts).reduce((a, b) => a + b, 0)
+
     /* Push delta into global scenario state */
     useEffect(() => {
         if (deltaPct !== null) {
             setScenarioAttritionDelta(Math.round(deltaPct));
+            (window as any).scenarioInterventionCost = totalInterventionCost
         }
     }, [deltaPct]);
 
     /* Simulation handler */
-    const handleSimulate = (id: string, simulatedRisk: number | null) => {
+    const handleSimulate = (
+        id: string,
+        simulatedRisk: number | null,
+        costImpact: number
+    ) => {
         setSimulatedRisks((prev) => ({
             ...prev,
             [id]: simulatedRisk,
         }));
+        setCostImpacts(prev => ({
+            ...prev,
+            [id]: costImpact
+        }))
     };
 
     return (

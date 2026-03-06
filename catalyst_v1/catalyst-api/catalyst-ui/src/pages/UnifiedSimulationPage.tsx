@@ -101,6 +101,8 @@ export default function UnifiedSimulationPage() {
     // ================= STRESS PIPELINE =================
 
     const rawDelta = scenarioDeltaPct ?? 0;
+    const interventionCost =
+        (window as any).scenarioInterventionCost ?? 0
 
     const normalizedImprovement =
         Math.abs(rawDelta) > 1
@@ -158,7 +160,8 @@ export default function UnifiedSimulationPage() {
             (1 - improvementPct * 1.8),
         cost:
             governedStress.cost *
-            (1 - improvementPct * 0.8),
+            (1 - improvementPct * 0.8) +
+            Math.min(interventionCost / 500000, 15),
         execution:
             governedStress.execution *
             (1 - improvementPct * 0.9),
@@ -264,6 +267,23 @@ export default function UnifiedSimulationPage() {
                 "External pressure may increase workforce anxiety.",
         },
     };
+
+    function generateExecutiveInsight() {
+
+        if (dominantStress === "cost") {
+            return "Cost pressure is the dominant constraint. Current interventions may reduce people risk but increase financial stress."
+        }
+
+        if (dominantStress === "people") {
+            return "Workforce strain is the primary destabilizer. Retention interventions are improving stability but may require cost trade-offs."
+        }
+
+        if (dominantStress === "execution") {
+            return "Execution friction is slowing delivery. Organizational workload or structural design may require intervention."
+        }
+
+        return "External macro pressure is influencing system stability."
+    }
 
     // ================= LAYOUT =================
 
@@ -478,6 +498,32 @@ export default function UnifiedSimulationPage() {
                         Expected Cost Avoided: ${avoidedCost.toLocaleString()}
                     </div>
 
+                    <div
+                        style={{
+                            marginTop: 24,
+                            padding: 16,
+                            borderRadius: 10,
+                            border: "1px solid #1e293b",
+                            background: "#020617",
+                            maxWidth: 520
+                        }}
+                    >
+                        <div
+                            style={{
+                                fontSize: 11,
+                                opacity: 0.7,
+                                marginBottom: 6,
+                                letterSpacing: "0.05em"
+                            }}
+                        >
+                            EXECUTIVE INSIGHT
+                        </div>
+
+                        <div style={{ fontSize: 14, lineHeight: 1.6 }}>
+                            {generateExecutiveInsight()}
+
+                        </div>
+                    </div>
                 </div>
             </div>
 
