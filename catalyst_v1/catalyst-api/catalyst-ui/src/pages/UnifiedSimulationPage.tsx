@@ -94,7 +94,7 @@ export default function UnifiedSimulationPage() {
             diagnostic: answers
         };
 
-        const res = await fetch("http:://127.0.0.1:8000/catalyst/ai-disruption", {
+        const res = await fetch("http://127.0.0.1:8000/catalyst/ai-disruption", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
