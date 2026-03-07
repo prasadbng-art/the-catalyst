@@ -461,10 +461,12 @@ export default function UnifiedSimulationPage() {
 
                 <div
                     style={{
-                        padding: "28px 32px",
-                        borderRadius: 12,
+                        padding: "32px 36px",
+                        borderRadius: 14,
                         border: "1px solid #1e293b",
-                        background: "rgba(2,6,23,0.6)",
+                        background: "linear-gradient(180deg, rgba(2,6,23,0.8) 0%, rgba(2,6,23,0.6) 100%)",
+                        boxShadow: "0 0 60px rgba(37,99,235,0.08)",
+                        backdropFilter: "blur(6px)",
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",

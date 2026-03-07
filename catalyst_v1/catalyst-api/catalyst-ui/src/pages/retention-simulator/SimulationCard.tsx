@@ -67,11 +67,11 @@ export default function SimulationCard({
         <div
             style={{
                 width: "100%",
-                background: "#ffffff",
+                background: "#f0f0ec",
                 borderRadius: 12,
                 padding: 18,
-                border: "1px solid #e2e8f0",
-                boxShadow: "0 6px 16px rgba(0,0,0,0.18)",
+                border: "1px solid #1e293b",
+                boxShadow: "0 6px 16px rgba(0,0,0,0.25)",
                 display: "flex",
                 flexDirection: "column",
                 gap: 12
