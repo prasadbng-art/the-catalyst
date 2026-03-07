@@ -1,0 +1,25 @@
+{
+  "financial_services": {
+    "ai_readiness": 58,
+    "automation_exposure": 46,
+    "industry_velocity": 64
+  },
+
+  "manufacturing": {
+    "ai_readiness": 52,
+    "automation_exposure": 55,
+    "industry_velocity": 61
+  },
+
+  "retail": {
+    "ai_readiness": 44,
+    "automation_exposure": 50,
+    "industry_velocity": 57
+  },
+
+  "technology": {
+    "ai_readiness": 71,
+    "automation_exposure": 38,
+    "industry_velocity": 75
+  }
+}

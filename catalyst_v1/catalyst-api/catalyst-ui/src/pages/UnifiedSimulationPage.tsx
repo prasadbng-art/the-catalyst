@@ -328,6 +328,13 @@ export default function UnifiedSimulationPage() {
         return "External macro pressure is influencing system stability."
     }
 
+    const STRESS_COLOR = {
+        people: "#f59e0b",
+        cost: "#ef4444",
+        execution: "#3b82f6",
+        macro: "#a855f7"
+    };
+
     // ================= LAYOUT =================
     const cubeHaloStyle = `
     @keyframes cubeHalo {
@@ -496,6 +503,21 @@ export default function UnifiedSimulationPage() {
                         }}
                     >
                         SYSTEM STATE
+                    </div>
+
+                    <div
+                        style={{
+                            padding: "6px 14px",
+                            borderRadius: 999,
+                            fontSize: 12,
+                            fontWeight: 600,
+                            background: `${STRESS_COLOR[dominantStress]}22`,
+                            color: STRESS_COLOR[dominantStress],
+                            border: `1px solid ${STRESS_COLOR[dominantStress]}55`,
+                            letterSpacing: "0.05em"
+                        }}
+                    >
+                        {dominantStress.toUpperCase()} STRESS DOMINANT
                     </div>
 
                     <div
