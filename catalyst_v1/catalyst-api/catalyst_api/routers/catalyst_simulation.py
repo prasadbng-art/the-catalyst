@@ -26,12 +26,13 @@ from catalyst_api.engines.ai_disruption_engine import (
     compute_role_exposure
 )
 
+from catalyst_api.schemas.ai_disruption import AIDisruptionRequest
 
 @router.post("/catalyst/ai-disruption")
-def ai_disruption(payload: dict):
+def ai_disruption(payload: AIDisruptionRequest):
 
-    diagnostic = payload["diagnostic"]
-    roles = payload["roles"]
+    diagnostic = payload.diagnostic
+    roles = payload.roles
 
     exposure, readiness, velocity, macro = compute_ai_indices(diagnostic)
 
