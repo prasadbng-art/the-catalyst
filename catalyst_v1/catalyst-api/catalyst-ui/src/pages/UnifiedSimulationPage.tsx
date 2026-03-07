@@ -14,6 +14,7 @@ type Scenario = {
     name: string
     stress: StressProfile
 }
+import AIDiagnosticWizard from "../components/aiDiagnosticWizard";
 
 export default function UnifiedSimulationPage() {
     const [persona, setPersona] = useState<Persona>("CEO");
@@ -45,25 +46,10 @@ export default function UnifiedSimulationPage() {
     // AI disruption parameters
     const aiExposure = 0.25;
     const automationEfficiency = 0.6;
-    const transitionYears = 2;
-
     const rolesImpacted =
         WORKFORCE_SIZE * aiExposure * automationEfficiency;
-
     const rolesToReduce = Math.round(rolesImpacted);
-
-    const transitionMonths = transitionYears * 12;
-    const monthlyReduction =
-        Math.round(rolesToReduce / transitionMonths);
-
-    const averageSalary = 1200000;
-
-    const annualCostReduction =
-        rolesToReduce * averageSalary;
-
-    const annualCostReductionFormatted =
-        annualCostReduction.toLocaleString();
-
+    const [aiDiagnosticResult, setAiDiagnosticResult] = useState<any>(null);
 
     // ================= CATALYST =================
 
@@ -90,6 +76,31 @@ export default function UnifiedSimulationPage() {
         } finally {
             setCatalystLoading(false);
         }
+    }
+
+    async function runAIDiagnostic(answers: Record<string, number>) {
+
+        const payload = {
+            roles: {
+                "Customer Support": 200,
+                "Finance Ops": 120,
+                "HR Admin": 40,
+                "Sales": 150,
+                "Engineering": 180
+            },
+            diagnostic: answers
+        };
+
+        const res = await fetch("/catalyst/ai-disruption", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        setAiDiagnosticResult(data);
+
     }
 
     // ================= RETENTION =================
@@ -411,21 +422,37 @@ export default function UnifiedSimulationPage() {
                     </div>
 
                     {showAiSimulation && (
-                        <div
-                            style={{
-                                marginTop: 12,
-                                fontSize: 14,
-                                color: "#cbd5f5",
-                                lineHeight: 1.6
-                            }}
-                        >
-                            <div>Roles Impacted: <strong>{rolesToReduce}</strong></div>
-                            <div>Transition Timeline: <strong>{transitionYears} years</strong></div>
-                            <div>Monthly Adjustment: <strong>{monthlyReduction}</strong></div>
-                            <div style={{ marginTop: 6 }}>
-                                Annual Cost Reduction: <strong>${annualCostReductionFormatted}</strong>
+
+                        aiDiagnosticResult ? (
+
+                            <div style={{ marginTop: 12, fontSize: 14, lineHeight: 1.6 }}>
+
+                                <div>
+                                    Automation Potential:
+                                    <strong>
+                                        {aiDiagnosticResult.scenarios.expected.automation}%
+                                    </strong>
+                                </div>
+
+                                <div>
+                                    Roles Impacted:
+                                    <strong>
+                                        {Math.round(
+                                            WORKFORCE_SIZE *
+                                            aiDiagnosticResult.scenarios.expected.automation /
+                                            100
+                                        )}
+                                    </strong>
+                                </div>
+
                             </div>
-                        </div>
+
+                        ) : (
+
+                            <AIDiagnosticWizard onComplete={runAIDiagnostic} />
+
+                        )
+
                     )}
                 </div>
             </div>
