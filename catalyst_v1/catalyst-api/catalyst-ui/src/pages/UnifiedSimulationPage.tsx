@@ -329,7 +329,18 @@ export default function UnifiedSimulationPage() {
     }
 
     // ================= LAYOUT =================
-
+    const cubeHaloStyle = `
+    @keyframes cubeHalo {
+        0% {
+            transform: scale(0.95);
+            opacity: 0.6;
+        }
+        100% {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+    }
+    `;
     return (
         <div
             style={{
@@ -344,6 +355,7 @@ export default function UnifiedSimulationPage() {
                 boxSizing: "border-box"
             }}
         >
+            <style>{cubeHaloStyle}</style>
 
             {/* LEFT PANEL */}
 
