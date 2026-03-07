@@ -495,18 +495,43 @@ export default function UnifiedSimulationPage() {
                         {systemState}
                     </div>
 
-                    <MagicCube
-                        stress={
-                            activeScenario === "live"
-                                ? aiAdjustedStress
-                                : scenarios[activeScenario]?.stress || aiAdjustedStress
-                        }
-                        rawStress={baseStress}
-                        persona={persona}
-                        size={520}
-                        showAnnotation={false}
-                        baselineStress={baseStress}
-                    />
+                    <div
+                        style={{
+                            position: "relative",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center"
+                        }}
+                    >
+
+                        {/* Halo */}
+                        <div
+                            style={{
+                                position: "absolute",
+                                width: 420,
+                                height: 420,
+                                borderRadius: "50%",
+                                background:
+                                    "radial-gradient(circle, rgba(59,130,246,0.18) 0%, rgba(2,6,23,0) 70%)",
+                                filter: "blur(18px)",
+                                animation: "cubeHalo 8s ease-in-out infinite alternate"
+                            }}
+                        />
+
+                        <MagicCube
+                            stress={
+                                activeScenario === "live"
+                                    ? aiAdjustedStress
+                                    : scenarios[activeScenario]?.stress || aiAdjustedStress
+                            }
+                            rawStress={baseStress}
+                            persona={persona}
+                            size={520}
+                            showAnnotation={false}
+                            baselineStress={baseStress}
+                        />
+
+                    </div>
                 </div>
 
 
