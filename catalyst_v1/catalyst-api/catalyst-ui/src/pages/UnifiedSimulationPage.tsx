@@ -33,7 +33,7 @@ export default function UnifiedSimulationPage() {
     const [showAiSimulation, setShowAiSimulation] = useState(false);
 
     const [scenarios, setScenarios] = useState<Record<string, Scenario>>({});
-    const [activeScenario, setActiveScenario] = useState<string>("live");
+    const [activeScenario] = useState<string>("live");
 
     const BASELINE_ATTRITION_UNITS = 124_121;
     const COST_PER_UNIT = 375;
@@ -286,7 +286,31 @@ export default function UnifiedSimulationPage() {
                 "External pressure may increase workforce anxiety.",
         },
     };
+    <div
+        style={{
+            marginTop: 18,
+            padding: 14,
+            borderRadius: 10,
+            border: "1px solid #1e293b",
+            background: "#020617",
+            maxWidth: 520
+        }}
+    >
+        <div
+            style={{
+                fontSize: 11,
+                opacity: 0.7,
+                marginBottom: 6,
+                letterSpacing: "0.05em"
+            }}
+        >
+            EXECUTIVE INSIGHT
+        </div>
 
+        <div style={{ fontSize: 14, lineHeight: 1.6 }}>
+            {generateExecutiveInsight()}
+        </div>
+    </div>
     function generateExecutiveInsight() {
 
         if (dominantStress === "cost") {
@@ -310,20 +334,26 @@ export default function UnifiedSimulationPage() {
         <div
             style={{
                 height: "100%",
+                width: "100%",
                 background: "#020617",
                 display: "grid",
-                gridTemplateColumns: "320px 1fr 420px",
+                gridTemplateColumns: "260px minmax(760px,1fr) 420px",
                 gap: 24,
-                maxWidth: 1560,
+                maxWidth: 1800,
                 margin: "0 auto",
                 boxSizing: "border-box"
             }}
-
         >
+
             {/* LEFT PANEL */}
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 20
+                }}
+            >
                 <SimulationControlsPanel
                     persona={persona}
                     onPersonaChange={setPersona}
@@ -333,13 +363,14 @@ export default function UnifiedSimulationPage() {
                     onReset={handleResetSimulation}
                 />
 
-                {/* AI STRATEGIC REVEAL */}
+                {/* AI PANEL */}
+
                 <div
                     style={{
                         border: "1px solid #1e293b",
                         borderRadius: 8,
-                        padding: 12,
-                        background: "#020617",
+                        padding: 14,
+                        background: "#020617"
                     }}
                 >
                     <div
@@ -349,8 +380,7 @@ export default function UnifiedSimulationPage() {
                             fontSize: 13,
                             fontWeight: 600,
                             display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
+                            justifyContent: "space-between"
                         }}
                     >
                         Strategic Workforce Transition (AI)
@@ -365,54 +395,38 @@ export default function UnifiedSimulationPage() {
                                 marginTop: 12,
                                 fontSize: 14,
                                 color: "#cbd5f5",
-                                lineHeight: 1.6,
+                                lineHeight: 1.6
                             }}
                         >
-                            <div>
-                                Roles Impacted: <strong>{rolesToReduce}</strong>
-                            </div>
-
-                            <div>
-                                Transition Timeline: <strong>{transitionYears} years</strong>
-                            </div>
-
-                            <div>
-                                Monthly Workforce Adjustment: <strong>{monthlyReduction}</strong>
-                            </div>
-
+                            <div>Roles Impacted: <strong>{rolesToReduce}</strong></div>
+                            <div>Transition Timeline: <strong>{transitionYears} years</strong></div>
+                            <div>Monthly Adjustment: <strong>{monthlyReduction}</strong></div>
                             <div style={{ marginTop: 6 }}>
                                 Annual Cost Reduction: <strong>${annualCostReductionFormatted}</strong>
                             </div>
                         </div>
                     )}
                 </div>
-
             </div>
 
+
             {/* CENTER PANEL */}
+
             <div
                 style={{
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    width: "100%",
-                    maxWidth: 420,
-                    margin: "0 auto",
-                    justifyContent: "flex-start",
-                    textAlign: "center",
-                    gap: 18,
-                    paddingTop: 10,
-                    height: "100%",
-
+                    gap: 24
                 }}
             >
+
                 {/* GOVERNANCE BUTTONS */}
+
                 <div
                     style={{
                         display: "flex",
-                        gap: 18,
-                        justifyContent: "center",
-                        alignItems: "center"
+                        gap: 16
                     }}
                 >
                     {(["DEFENSIVE", "BALANCED", "AGGRESSIVE"] as const).map((mode) => (
@@ -423,46 +437,44 @@ export default function UnifiedSimulationPage() {
                                 padding: "6px 12px",
                                 borderRadius: 999,
                                 background:
-                                    governanceMode === mode
-                                        ? "#1d4ed8"
-                                        : "#111827",
+                                    governanceMode === mode ? "#1d4ed8" : "#111827",
                                 border: "1px solid #334155",
                                 color: "#e5e7eb",
-                                cursor: "pointer",
+                                cursor: "pointer"
                             }}
                         >
                             {mode}
                         </button>
                     ))}
                 </div>
-
                 {catalystLoading && (
-                    <div style={{ marginTop: 10, color: "#94a3b8" }}>
-                        Running AI transition simulation...
+                    <div style={{ color: "#94a3b8", marginTop: 10 }}>
+                        Running Catalyst simulation...
                     </div>
                 )}
 
+                {/* MAGIC CUBE CARD */}
+
                 <div
                     style={{
-                        padding: "24px 28px",
+                        padding: "28px 32px",
                         borderRadius: 12,
                         border: "1px solid #1e293b",
                         background: "rgba(2,6,23,0.6)",
-                        backdropFilter: "blur(4px)",
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
-                        gap: 16,
+                        gap: 18,
                         width: "100%",
-                        maxWidth: 520
+                        maxWidth: 540
                     }}
                 >
 
                     <div
                         style={{
-                            color: "#94a3b8",
                             fontSize: 12,
-                            letterSpacing: "1px",
+                            letterSpacing: "0.08em",
+                            color: "#94a3b8"
                         }}
                     >
                         SYSTEM STATE
@@ -471,16 +483,10 @@ export default function UnifiedSimulationPage() {
                     <div
                         style={{
                             fontSize: 18,
-                            fontWeight: 600,
-                            marginBottom: 12,
-                            color: "#e2e8f0",
+                            fontWeight: 600
                         }}
                     >
                         {systemState}
-                    </div>
-
-                    <div style={{ fontSize: 11, opacity: 0.6, letterSpacing: "0.08em" }}>
-                        ORGANIZATIONAL STRESS FIELD
                     </div>
 
                     <MagicCube
@@ -491,29 +497,33 @@ export default function UnifiedSimulationPage() {
                         }
                         rawStress={baseStress}
                         persona={persona}
-                        size={420}
+                        size={440}
                         showAnnotation={false}
                         baselineStress={baseStress}
                     />
-
                 </div>
+
+
+                {/* INSIGHT BLOCK */}
 
                 <div
                     style={{
-                        marginTop: 20,
-                        color: "#cbd5f5",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
+                        textAlign: "center",
                         maxWidth: 520,
-                        textAlign: "center"
+                        color: "#cbd5f5"
                     }}
                 >
                     <div style={{ fontSize: 12, opacity: 0.7 }}>
                         Dominant Stress Driver
                     </div>
 
-                    <div style={{ fontSize: 18, fontWeight: 600, marginTop: 4 }}>
+                    <div
+                        style={{
+                            fontSize: 18,
+                            fontWeight: 600,
+                            marginTop: 4
+                        }}
+                    >
                         {dominantStress.toUpperCase()}
                     </div>
 
@@ -521,124 +531,27 @@ export default function UnifiedSimulationPage() {
                         {DOMINANT_STRESS_NARRATIVE[persona][dominantStress]}
                     </div>
 
-                    <div style={{ marginTop: 16, color: "#22c55e" }}>
+                    <div
+                        style={{
+                            marginTop: 14,
+                            color: "#22c55e"
+                        }}
+                    >
                         Expected Cost Avoided: ${avoidedCost.toLocaleString()}
-                    </div>
-
-                    {/* EXECUTIVE INSIGHT */}
-
-                    <div
-                        style={{
-                            marginTop: 24,
-                            padding: 16,
-                            borderRadius: 10,
-                            border: "1px solid #1e293b",
-                            background: "#020617",
-                            maxWidth: 520
-                        }}
-                    >
-
-                        <div
-                            style={{
-                                fontSize: 11,
-                                opacity: 0.7,
-                                marginBottom: 6,
-                                letterSpacing: "0.05em"
-                            }}
-                        >
-                            EXECUTIVE INSIGHT
-                        </div>
-
-                        <div style={{ fontSize: 14, lineHeight: 1.6 }}>
-                            {generateExecutiveInsight()}
-                        </div>
-
-                    </div>
-
-                    {/* SCENARIO MEMORY */}
-
-                    <div
-                        style={{
-                            marginTop: 16,
-                            padding: 14,
-                            borderRadius: 10,
-                            border: "1px solid #1e293b",
-                            background: "#020617",
-                            maxWidth: 320
-                        }}
-                    >
-
-                        <div
-                            style={{
-                                fontSize: 11,
-                                opacity: 0.7,
-                                letterSpacing: "0.05em",
-                                marginBottom: 10
-                            }}
-                        >
-
-                            SCENARIO MEMORY
-                        </div>
-
-                        {/* Return to live simulation */}
-
-                        <button
-                            onClick={() => setActiveScenario("live")}
-                            style={{
-                                padding: "6px 10px",
-                                borderRadius: 6,
-                                border: "1px solid #334155",
-                                background: activeScenario === "live" ? "#1d4ed8" : "#111827",
-                                color: "#e5e7eb",
-                                marginBottom: 8,
-                                cursor: "pointer"
-                            }}
-                        >
-                            Live Simulation
-                        </button>
-
-                        {/* Scenario list */}
-
-                        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-
-                            {Object.entries(scenarios).map(([key, scenario]) => (
-
-                                <button
-                                    key={key}
-                                    onClick={() => setActiveScenario(key)}
-                                    style={{
-                                        textAlign: "left",
-                                        padding: "8px 10px",
-                                        borderRadius: 6,
-                                        border: "1px solid #334155",
-                                        background: activeScenario === key ? "#1d4ed8" : "#111827",
-                                        color: "#e5e7eb",
-                                        cursor: "pointer"
-                                    }}
-                                >
-
-                                    {scenario.name}
-
-                                </button>
-
-                            ))}
-
-                        </div>
                     </div>
                 </div>
             </div>
+
 
             {/* RIGHT PANEL */}
 
             <div
                 style={{
-                    height: "100%",
-                    overflowY: "auto",
-                    paddingLeft: 18,
-                    paddingRight: 18,
                     borderLeft: "1px solid #1e293b",
-                    width: 420,
-                    boxSizing: "border-box"
+                    paddingLeft: 20,
+                    paddingRight: 8,
+                    height: "calc(100vh - 120px)",
+                    overflowY: "auto"
                 }}
             >
                 <RetentionSimulatorPanel resetSignal={resetCounter} />
