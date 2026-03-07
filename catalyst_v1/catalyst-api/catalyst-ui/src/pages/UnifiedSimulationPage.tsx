@@ -337,7 +337,7 @@ export default function UnifiedSimulationPage() {
                 width: "100%",
                 background: "#020617",
                 display: "grid",
-                gridTemplateColumns: "260px minmax(760px,1fr) 420px",
+                gridTemplateColumns: "260px minmax(880px,1fr) 420px",
                 gap: 24,
                 maxWidth: 1800,
                 margin: "0 auto",
@@ -351,7 +351,9 @@ export default function UnifiedSimulationPage() {
                 style={{
                     display: "flex",
                     flexDirection: "column",
-                    gap: 20
+                    gap: 20,
+                    paddingLeft: 16,
+                    paddingTop: 36
                 }}
             >
                 <SimulationControlsPanel
@@ -417,7 +419,8 @@ export default function UnifiedSimulationPage() {
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    gap: 24
+                    gap: 24,
+                    paddingTop: 36
                 }}
             >
 
@@ -434,6 +437,7 @@ export default function UnifiedSimulationPage() {
                             key={mode}
                             onClick={() => runCatalyst(mode)}
                             style={{
+                                fontSize: 12,
                                 padding: "6px 12px",
                                 borderRadius: 999,
                                 background:
@@ -466,7 +470,7 @@ export default function UnifiedSimulationPage() {
                         alignItems: "center",
                         gap: 18,
                         width: "100%",
-                        maxWidth: 540
+                        maxWidth: 680
                     }}
                 >
 
@@ -497,7 +501,7 @@ export default function UnifiedSimulationPage() {
                         }
                         rawStress={baseStress}
                         persona={persona}
-                        size={440}
+                        size={520}
                         showAnnotation={false}
                         baselineStress={baseStress}
                     />
@@ -550,6 +554,7 @@ export default function UnifiedSimulationPage() {
                     borderLeft: "1px solid #1e293b",
                     paddingLeft: 20,
                     paddingRight: 8,
+                    paddingTop: 36,
                     height: "calc(100vh - 120px)",
                     overflowY: "auto"
                 }}
