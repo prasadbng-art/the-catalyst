@@ -44,6 +44,8 @@ export default function UnifiedSimulationPage() {
 
     // AI disruption parameters
     const [aiDiagnosticResult, setAiDiagnosticResult] = useState<any>(null);
+    const [aiPulse, setAiPulse] = useState(false);
+
     function restartAIDiagnostic() {
 
         setAiDiagnosticResult(null);
@@ -109,6 +111,11 @@ export default function UnifiedSimulationPage() {
         const data = await res.json();
         console.log("AI disruption result:", data);
         setAiDiagnosticResult(data);
+        setAiPulse(true);
+
+        setTimeout(() => {
+            setAiPulse(false);
+        }, 1200);
 
     }
 
@@ -229,7 +236,14 @@ export default function UnifiedSimulationPage() {
         aiAdjustedStress.cost =
             canonicalStress.cost * (1 - disruptionFactor * 0.5);
 
+        if (aiPulse) {
+
+            aiAdjustedStress.people += 8;
+            aiAdjustedStress.execution += 10;
+
+        }
     }
+
     const stressValues = Object.values(aiAdjustedStress);
     const maxStress = Math.max(...stressValues);
     const minStress = Math.min(...stressValues);
