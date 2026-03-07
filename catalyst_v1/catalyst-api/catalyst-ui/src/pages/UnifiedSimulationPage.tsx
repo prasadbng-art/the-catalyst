@@ -44,6 +44,12 @@ export default function UnifiedSimulationPage() {
 
     // AI disruption parameters
     const [aiDiagnosticResult, setAiDiagnosticResult] = useState<any>(null);
+    function restartAIDiagnostic() {
+
+        setAiDiagnosticResult(null);
+
+    }
+
     const aiAutomationPct = aiDiagnosticResult?.scenarios?.expected?.automation ?? 0;
 
     const aiRoleExposure =
@@ -479,6 +485,25 @@ export default function UnifiedSimulationPage() {
 
                                 <div style={{ marginTop: 10, fontSize: 13, opacity: 0.8 }}>
                                     {generateAIExecutiveInsight()}
+                                </div>
+
+                                <div style={{ marginTop: 12 }}>
+
+                                    <button
+                                        onClick={restartAIDiagnostic}
+                                        style={{
+                                            padding: "5px 12px",
+                                            fontSize: 11,
+                                            background: "#334155",
+                                            color: "#e2e8f0",
+                                            border: "none",
+                                            borderRadius: 4,
+                                            cursor: "pointer"
+                                        }}
+                                    >
+                                        Restart Diagnostic
+                                    </button>
+
                                 </div>
 
                             </div>
