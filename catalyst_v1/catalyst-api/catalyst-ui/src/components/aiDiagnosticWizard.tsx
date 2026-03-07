@@ -22,6 +22,7 @@ export default function AIDiagnosticWizard({
         if (step < aiDiagnosticQuestions.length - 1) {
             setStep(step + 1);
         } else {
+            console.log("Diagnostic answers:", updated);
             onComplete(updated);
         }
 
