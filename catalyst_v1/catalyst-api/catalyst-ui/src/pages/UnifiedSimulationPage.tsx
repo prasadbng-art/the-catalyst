@@ -41,15 +41,18 @@ export default function UnifiedSimulationPage() {
     const BASELINE_COST =
         BASELINE_ATTRITION_UNITS * COST_PER_UNIT;
 
-    const WORKFORCE_SIZE = 4000;
 
     // AI disruption parameters
-    const aiExposure = 0.25;
-    const automationEfficiency = 0.6;
-    const rolesImpacted =
-        WORKFORCE_SIZE * aiExposure * automationEfficiency;
-    const rolesToReduce = Math.round(rolesImpacted);
     const [aiDiagnosticResult, setAiDiagnosticResult] = useState<any>(null);
+    const aiAutomationPct = aiDiagnosticResult?.scenarios?.expected?.automation ?? 0;
+
+    const aiRoleExposure =
+        aiDiagnosticResult?.role_exposure ?? [];
+
+    const topRole =
+        aiRoleExposure.length > 0
+            ? [...aiRoleExposure].sort((a, b) => b.exposure - a.exposure)[0]
+            : null;
 
     // ================= CATALYST =================
 
@@ -200,23 +203,27 @@ export default function UnifiedSimulationPage() {
 
     let aiAdjustedStress: StressProfile = { ...canonicalStress };
 
-    if (rolesToReduce > 0) {
+    if (aiDiagnosticResult) {
+
+        const automation =
+            aiDiagnosticResult.scenarios.expected.automation / 100;
+
         const disruptionFactor =
-            Math.min(rolesToReduce / WORKFORCE_SIZE, 0.25);
+            Math.min(automation, 0.35);
 
         const transitionShock =
-            disruptionFactor * 10;
+            disruptionFactor * 18;
 
         aiAdjustedStress.people =
-            canonicalStress.people + transitionShock * 0.6;
+            canonicalStress.people + transitionShock * 0.7;
 
         aiAdjustedStress.execution =
-            canonicalStress.execution + transitionShock * 0.8;
+            canonicalStress.execution + transitionShock * 0.9;
 
         aiAdjustedStress.cost =
-            canonicalStress.cost * (1 - disruptionFactor * 0.6);
-    }
+            canonicalStress.cost * (1 - disruptionFactor * 0.5);
 
+    }
     const stressValues = Object.values(aiAdjustedStress);
     const maxStress = Math.max(...stressValues);
     const minStress = Math.min(...stressValues);
@@ -338,7 +345,27 @@ export default function UnifiedSimulationPage() {
 
         return "External macro pressure is influencing system stability."
     }
+    function generateAIExecutiveInsight() {
 
+        if (!aiDiagnosticResult) return "";
+
+        const automation =
+            aiDiagnosticResult.scenarios.expected.automation;
+
+        const roleExposure =
+            aiDiagnosticResult.role_exposure ?? [];
+
+        const topRole =
+            roleExposure.length > 0
+                ? [...roleExposure].sort((a, b) => b.exposure - a.exposure)[0]
+                : null;
+
+        const roleName =
+            topRole?.role ?? "operational support roles";
+
+        return `AI disruption forecast: approximately ${automation}% of roles may be exposed to automation over the next five years. Primary impact is expected in ${roleName}.`;
+
+    }
     const STRESS_COLOR = {
         people: "#f59e0b",
         cost: "#ef4444",
@@ -425,24 +452,33 @@ export default function UnifiedSimulationPage() {
 
                         aiDiagnosticResult ? (
 
-                            <div style={{ marginTop: 12, fontSize: 14, lineHeight: 1.6 }}>
+                            <div
+                                style={{
+                                    marginTop: 12,
+                                    fontSize: 14,
+                                    color: "#cbd5f5",
+                                    lineHeight: 1.6
+                                }}
+                            >
 
-                                <div>
-                                    Automation Potential:
-                                    <strong>
-                                        {aiDiagnosticResult.scenarios.expected.automation}%
-                                    </strong>
+                                <div style={{ marginBottom: 10 }}>
+                                    <strong>AI Disruption Forecast</strong>
                                 </div>
 
                                 <div>
-                                    Roles Impacted:
-                                    <strong>
-                                        {Math.round(
-                                            WORKFORCE_SIZE *
-                                            aiDiagnosticResult.scenarios.expected.automation /
-                                            100
-                                        )}
-                                    </strong>
+                                    Automation Exposure:
+                                    <strong> {aiAutomationPct}%</strong>
+                                </div>
+
+                                {topRole && (
+                                    <div>
+                                        Highest Exposure Role:
+                                        <strong> {topRole.role}</strong>
+                                    </div>
+                                )}
+
+                                <div style={{ marginTop: 10, fontSize: 13, opacity: 0.8 }}>
+                                    {generateAIExecutiveInsight()}
                                 </div>
 
                             </div>
