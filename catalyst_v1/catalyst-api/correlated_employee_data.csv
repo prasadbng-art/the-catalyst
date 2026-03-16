@@ -1,0 +1,2501 @@
+employee_id,location,attrition_flag,attrition_risk_score,sentiment_score,sentiment_band,engagement_score,manager_effectiveness
+EMP0001,Austin,Stayed,15,0.82,Positive,4.5,4.1
+EMP0002,Remote,Stayed,57,0.56,Neutral,2.6,2.7
+EMP0003,San Francisco,Stayed,15,0.88,Positive,4.4,5.0
+EMP0004,Remote,Stayed,43,0.66,Neutral,3.4,2.8
+EMP0005,Remote,Stayed,52,0.66,Neutral,3.4,2.9
+EMP0006,London,Left,94,0.29,Negative,1.4,1.5
+EMP0007,San Francisco,Stayed,61,0.45,Negative,2.2,2.7
+EMP0008,San Francisco,Stayed,24,0.82,Positive,4.2,3.9
+EMP0009,San Francisco,Stayed,46,0.66,Neutral,3.5,2.8
+EMP0010,Remote,Stayed,44,0.57,Neutral,3.3,3.5
+EMP0011,Austin,Stayed,22,0.8,Positive,4.2,4.4
+EMP0012,San Francisco,Stayed,11,0.83,Positive,4.3,5.0
+EMP0013,Remote,Stayed,55,0.5,Neutral,2.5,2.7
+EMP0014,London,Stayed,54,0.66,Neutral,2.8,3.2
+EMP0015,Austin,Stayed,64,0.45,Neutral,2.4,2.3
+EMP0016,London,Stayed,19,0.6,Neutral,3.3,4.2
+EMP0017,Austin,Stayed,29,0.76,Positive,4.0,3.8
+EMP0018,Remote,Stayed,2,0.98,Positive,4.9,4.6
+EMP0019,New York,Stayed,60,0.47,Neutral,2.2,2.9
+EMP0020,Austin,At-Risk,76,0.47,Neutral,2.2,1.6
+EMP0021,London,At-Risk,78,0.41,Negative,1.8,1.1
+EMP0022,Remote,Stayed,55,0.61,Neutral,2.8,2.8
+EMP0023,Austin,Stayed,54,0.53,Neutral,2.7,2.7
+EMP0024,New York,Stayed,3,1.0,Positive,4.7,4.6
+EMP0025,New York,Stayed,52,0.53,Neutral,2.7,3.1
+EMP0026,San Francisco,Stayed,49,0.57,Neutral,2.8,2.5
+EMP0027,San Francisco,Stayed,18,0.92,Positive,4.3,4.3
+EMP0028,London,At-Risk,70,0.5,Neutral,2.3,2.2
+EMP0029,Austin,Stayed,21,0.75,Positive,4.3,4.0
+EMP0030,Austin,At-Risk,74,0.44,Negative,2.2,2.2
+EMP0031,San Francisco,Stayed,40,0.74,Neutral,3.5,3.8
+EMP0032,Austin,Stayed,63,0.35,Negative,2.1,2.9
+EMP0033,Austin,At-Risk,73,0.48,Neutral,2.2,2.4
+EMP0034,New York,Stayed,16,0.96,Positive,4.7,3.7
+EMP0035,San Francisco,Stayed,61,0.54,Neutral,2.4,2.4
+EMP0036,Remote,Stayed,32,0.68,Neutral,3.6,3.6
+EMP0037,San Francisco,Stayed,41,0.7,Neutral,3.2,3.6
+EMP0038,Remote,Stayed,53,0.62,Neutral,3.0,3.1
+EMP0039,New York,Stayed,4,1.0,Positive,4.7,5.0
+EMP0040,London,Left,93,0.35,Negative,1.1,1.2
+EMP0041,Austin,Stayed,26,0.88,Positive,4.0,4.6
+EMP0042,New York,Stayed,0,1.0,Positive,4.9,4.7
+EMP0043,Austin,Stayed,29,0.85,Positive,3.7,3.7
+EMP0044,London,Stayed,30,0.79,Positive,3.8,4.1
+EMP0045,London,Left,100,0.19,Negative,1.2,1.0
+EMP0046,New York,Stayed,49,0.65,Neutral,3.3,2.9
+EMP0047,London,Left,84,0.39,Negative,1.8,1.5
+EMP0048,Remote,Stayed,21,0.88,Positive,4.2,3.9
+EMP0049,London,Stayed,27,0.73,Neutral,3.9,4.2
+EMP0050,Austin,Stayed,63,0.5,Neutral,2.8,2.0
+EMP0051,Austin,Stayed,28,0.78,Positive,4.0,3.3
+EMP0052,Austin,Stayed,51,0.55,Neutral,2.6,3.3
+EMP0053,Austin,Stayed,31,0.77,Positive,3.7,3.4
+EMP0054,Remote,Stayed,39,0.69,Neutral,3.4,3.5
+EMP0055,San Francisco,Stayed,8,0.94,Positive,4.9,4.3
+EMP0056,New York,Stayed,37,0.85,Positive,3.8,3.9
+EMP0057,Austin,Stayed,48,0.56,Neutral,3.0,2.8
+EMP0058,London,Left,93,0.33,Negative,1.3,1.0
+EMP0059,Austin,Stayed,64,0.53,Neutral,2.5,3.0
+EMP0060,London,Left,87,0.4,Negative,1.7,2.1
+EMP0061,London,Left,83,0.33,Negative,1.8,1.7
+EMP0062,Austin,Stayed,5,0.9,Positive,4.6,5.0
+EMP0063,Remote,Stayed,22,0.74,Neutral,3.7,4.4
+EMP0064,London,Stayed,48,0.49,Neutral,2.6,2.9
+EMP0065,London,Left,84,0.28,Negative,1.3,1.5
+EMP0066,Austin,Stayed,10,1.0,Positive,4.6,4.7
+EMP0067,London,Stayed,42,0.57,Neutral,3.2,3.4
+EMP0068,London,Left,99,0.21,Negative,1.2,1.1
+EMP0069,Austin,Stayed,22,0.79,Positive,4.1,4.0
+EMP0070,Austin,Stayed,28,0.72,Neutral,3.6,3.8
+EMP0071,New York,At-Risk,72,0.44,Negative,2.2,2.1
+EMP0072,Remote,Stayed,54,0.71,Neutral,3.4,3.2
+EMP0073,Remote,Stayed,37,0.69,Neutral,3.5,3.5
+EMP0074,London,Left,83,0.31,Negative,1.5,2.0
+EMP0075,Remote,Stayed,12,0.99,Positive,4.8,4.4
+EMP0076,London,Stayed,30,0.72,Neutral,3.5,3.9
+EMP0077,New York,Stayed,28,0.84,Positive,4.0,4.3
+EMP0078,Austin,Stayed,29,0.67,Neutral,3.4,3.7
+EMP0079,Austin,Stayed,45,0.73,Neutral,3.2,2.9
+EMP0080,Austin,Stayed,31,0.92,Positive,4.0,3.3
+EMP0081,Remote,Stayed,32,0.76,Positive,3.6,3.9
+EMP0082,New York,Stayed,59,0.45,Negative,2.2,2.3
+EMP0083,Remote,Stayed,39,0.74,Neutral,3.5,3.9
+EMP0084,Remote,Stayed,19,0.83,Positive,4.4,4.1
+EMP0085,New York,Stayed,43,0.68,Neutral,3.4,3.7
+EMP0086,New York,At-Risk,74,0.39,Negative,2.2,2.6
+EMP0087,New York,Stayed,12,0.9,Positive,4.4,4.3
+EMP0088,New York,Stayed,45,0.48,Neutral,2.6,2.8
+EMP0089,Austin,Stayed,59,0.54,Neutral,2.8,2.9
+EMP0090,San Francisco,Stayed,64,0.41,Negative,2.5,2.2
+EMP0091,San Francisco,Stayed,42,0.54,Neutral,3.0,3.2
+EMP0092,New York,Stayed,14,0.87,Positive,4.3,4.9
+EMP0093,San Francisco,Stayed,48,0.67,Neutral,3.6,3.6
+EMP0094,San Francisco,Stayed,64,0.58,Neutral,2.6,2.0
+EMP0095,New York,Stayed,16,0.88,Positive,4.6,4.4
+EMP0096,San Francisco,Stayed,11,0.95,Positive,4.6,3.9
+EMP0097,Remote,Stayed,0,0.88,Positive,4.6,5.0
+EMP0098,London,Left,83,0.36,Negative,1.7,2.0
+EMP0099,London,At-Risk,70,0.39,Negative,2.4,2.2
+EMP0100,New York,Stayed,4,0.97,Positive,5.0,4.4
+EMP0101,Austin,Stayed,28,0.82,Positive,4.3,4.0
+EMP0102,New York,At-Risk,66,0.46,Neutral,2.1,1.8
+EMP0103,Austin,Stayed,63,0.46,Neutral,2.2,2.2
+EMP0104,London,Stayed,62,0.42,Negative,2.4,2.4
+EMP0105,New York,Stayed,2,0.94,Positive,4.7,5.0
+EMP0106,Remote,Stayed,44,0.68,Neutral,3.6,3.3
+EMP0107,San Francisco,Stayed,43,0.75,Neutral,3.5,2.9
+EMP0108,Austin,At-Risk,70,0.53,Neutral,2.3,1.9
+EMP0109,San Francisco,Stayed,19,0.72,Neutral,4.0,4.0
+EMP0110,San Francisco,Stayed,21,0.93,Positive,4.5,4.2
+EMP0111,New York,Stayed,41,0.59,Neutral,3.1,3.0
+EMP0112,San Francisco,Stayed,12,0.85,Positive,4.3,4.1
+EMP0113,Remote,Stayed,0,0.98,Positive,4.9,5.0
+EMP0114,San Francisco,Stayed,62,0.61,Neutral,2.6,2.4
+EMP0115,New York,Stayed,33,0.66,Neutral,3.6,3.4
+EMP0116,Remote,Stayed,54,0.61,Neutral,2.9,3.1
+EMP0117,London,Stayed,41,0.62,Neutral,3.4,3.2
+EMP0118,San Francisco,Stayed,35,0.68,Neutral,3.7,3.9
+EMP0119,New York,Stayed,28,0.78,Positive,3.9,4.0
+EMP0120,London,Stayed,48,0.68,Neutral,3.4,3.5
+EMP0121,London,At-Risk,72,0.3,Negative,2.2,1.7
+EMP0122,Austin,Stayed,8,1.0,Positive,4.7,5.0
+EMP0123,Remote,Stayed,17,0.61,Neutral,3.6,4.5
+EMP0124,San Francisco,At-Risk,77,0.49,Neutral,2.5,2.5
+EMP0125,New York,Stayed,30,0.88,Positive,4.1,3.7
+EMP0126,Austin,Stayed,13,0.99,Positive,4.4,4.4
+EMP0127,Remote,Stayed,45,0.57,Neutral,3.0,3.3
+EMP0128,Austin,Stayed,11,0.84,Positive,4.6,4.3
+EMP0129,Remote,Stayed,16,1.0,Positive,4.7,4.7
+EMP0130,Remote,Stayed,57,0.61,Neutral,2.8,3.0
+EMP0131,San Francisco,Stayed,0,0.97,Positive,5.0,5.0
+EMP0132,Remote,Stayed,55,0.45,Neutral,2.4,2.7
+EMP0133,Austin,Stayed,62,0.49,Neutral,2.6,2.9
+EMP0134,Remote,At-Risk,67,0.49,Neutral,2.6,2.4
+EMP0135,San Francisco,Stayed,9,0.95,Positive,4.7,4.8
+EMP0136,San Francisco,Stayed,28,0.76,Positive,4.0,3.7
+EMP0137,Austin,Stayed,58,0.47,Neutral,2.5,2.8
+EMP0138,London,At-Risk,70,0.5,Neutral,2.3,2.8
+EMP0139,London,Stayed,60,0.5,Neutral,2.8,3.1
+EMP0140,Remote,At-Risk,73,0.43,Negative,2.3,2.1
+EMP0141,New York,Stayed,14,0.85,Positive,4.6,4.6
+EMP0142,Remote,Stayed,10,0.89,Positive,4.4,5.0
+EMP0143,Austin,Stayed,31,0.61,Neutral,3.5,3.4
+EMP0144,Austin,Stayed,0,1.0,Positive,4.9,5.0
+EMP0145,Austin,Stayed,48,0.58,Neutral,3.3,3.4
+EMP0146,Austin,Stayed,8,0.9,Positive,5.0,4.8
+EMP0147,Austin,Stayed,35,0.78,Positive,4.0,3.5
+EMP0148,San Francisco,Stayed,28,0.87,Positive,3.9,4.0
+EMP0149,London,Left,92,0.34,Negative,1.5,1.5
+EMP0150,Austin,Stayed,5,0.83,Positive,4.6,5.0
+EMP0151,New York,Stayed,49,0.59,Neutral,3.3,2.9
+EMP0152,New York,Stayed,52,0.48,Neutral,2.5,3.4
+EMP0153,New York,At-Risk,67,0.52,Neutral,2.0,2.2
+EMP0154,New York,Stayed,35,0.69,Neutral,3.7,3.8
+EMP0155,San Francisco,Stayed,44,0.67,Neutral,3.6,3.3
+EMP0156,New York,Stayed,32,0.91,Positive,4.2,4.3
+EMP0157,Austin,Stayed,7,0.94,Positive,4.7,4.9
+EMP0158,Remote,Stayed,60,0.5,Neutral,2.2,2.6
+EMP0159,New York,Stayed,22,0.8,Positive,4.2,3.8
+EMP0160,San Francisco,Stayed,54,0.51,Neutral,2.6,3.1
+EMP0161,San Francisco,Stayed,9,0.98,Positive,4.6,4.7
+EMP0162,New York,Stayed,13,0.88,Positive,4.5,4.7
+EMP0163,Remote,Stayed,37,0.78,Positive,3.6,3.5
+EMP0164,New York,Stayed,29,0.85,Positive,4.1,3.8
+EMP0165,San Francisco,Stayed,52,0.54,Neutral,2.9,3.0
+EMP0166,London,Stayed,52,0.48,Neutral,2.4,2.5
+EMP0167,Austin,Stayed,20,0.94,Positive,4.5,3.9
+EMP0168,San Francisco,Stayed,37,0.71,Neutral,3.4,3.7
+EMP0169,New York,Stayed,46,0.61,Neutral,3.1,3.5
+EMP0170,Austin,Stayed,39,0.6,Neutral,3.5,3.2
+EMP0171,New York,Stayed,18,0.81,Positive,4.5,4.1
+EMP0172,New York,Stayed,53,0.52,Neutral,3.0,2.9
+EMP0173,London,Left,86,0.28,Negative,1.5,1.5
+EMP0174,Austin,Stayed,26,0.81,Positive,4.1,4.0
+EMP0175,Austin,Stayed,13,0.82,Positive,4.5,4.5
+EMP0176,London,Left,92,0.31,Negative,1.3,1.4
+EMP0177,San Francisco,Stayed,47,0.48,Neutral,2.7,2.2
+EMP0178,New York,Stayed,63,0.42,Negative,2.4,1.9
+EMP0179,Remote,Stayed,54,0.61,Neutral,3.0,2.0
+EMP0180,New York,Stayed,38,0.72,Neutral,3.4,3.7
+EMP0181,New York,Stayed,25,0.95,Positive,4.2,4.3
+EMP0182,San Francisco,Stayed,21,0.82,Positive,4.0,4.4
+EMP0183,New York,Stayed,37,0.85,Positive,3.9,3.4
+EMP0184,London,At-Risk,76,0.35,Negative,2.1,2.1
+EMP0185,London,Stayed,36,0.81,Positive,3.5,3.6
+EMP0186,Austin,Stayed,44,0.59,Neutral,3.4,3.2
+EMP0187,Remote,Stayed,9,0.96,Positive,4.9,4.3
+EMP0188,New York,Stayed,19,0.81,Positive,3.9,4.6
+EMP0189,New York,Stayed,61,0.4,Negative,2.4,2.9
+EMP0190,San Francisco,Stayed,33,0.76,Positive,4.0,3.9
+EMP0191,London,At-Risk,75,0.34,Negative,2.0,2.2
+EMP0192,Remote,Stayed,26,0.8,Positive,4.1,3.9
+EMP0193,Austin,At-Risk,69,0.51,Neutral,2.2,1.8
+EMP0194,London,Left,86,0.31,Negative,1.5,2.3
+EMP0195,Austin,Stayed,10,0.89,Positive,4.6,3.9
+EMP0196,San Francisco,Stayed,50,0.39,Negative,2.7,2.6
+EMP0197,San Francisco,Stayed,13,0.93,Positive,4.5,4.5
+EMP0198,New York,Stayed,43,0.61,Neutral,2.8,3.5
+EMP0199,Remote,Stayed,28,0.7,Neutral,3.9,4.3
+EMP0200,Austin,Stayed,21,0.81,Positive,4.1,3.4
+EMP0201,London,At-Risk,66,0.52,Neutral,2.5,2.5
+EMP0202,San Francisco,Stayed,56,0.63,Neutral,2.9,2.9
+EMP0203,New York,Stayed,60,0.49,Neutral,2.6,2.5
+EMP0204,New York,Stayed,59,0.38,Negative,2.1,2.3
+EMP0205,Austin,Stayed,49,0.56,Neutral,2.9,2.3
+EMP0206,San Francisco,Stayed,28,0.86,Positive,4.0,3.8
+EMP0207,Remote,Stayed,1,1.0,Positive,4.8,5.0
+EMP0208,San Francisco,Stayed,10,0.92,Positive,4.6,4.9
+EMP0209,Austin,Stayed,16,0.91,Positive,4.3,4.4
+EMP0210,Austin,Stayed,16,0.75,Positive,4.4,4.2
+EMP0211,San Francisco,Stayed,13,0.84,Positive,4.0,3.9
+EMP0212,Austin,Stayed,56,0.5,Neutral,2.8,3.1
+EMP0213,San Francisco,Stayed,3,1.0,Positive,4.7,4.7
+EMP0214,London,Stayed,51,0.55,Neutral,3.0,2.6
+EMP0215,San Francisco,Stayed,32,0.69,Neutral,3.7,3.2
+EMP0216,San Francisco,Stayed,64,0.49,Neutral,2.3,1.7
+EMP0217,Austin,Stayed,43,0.7,Neutral,3.3,3.9
+EMP0218,Austin,Stayed,41,0.65,Neutral,3.4,3.7
+EMP0219,New York,Stayed,14,0.94,Positive,4.6,4.6
+EMP0220,New York,Stayed,34,0.75,Positive,3.6,3.5
+EMP0221,London,Stayed,65,0.45,Negative,2.1,1.9
+EMP0222,New York,Stayed,11,0.97,Positive,4.9,5.0
+EMP0223,San Francisco,Stayed,61,0.49,Neutral,2.3,3.1
+EMP0224,Austin,Stayed,46,0.72,Neutral,3.3,3.0
+EMP0225,New York,Stayed,65,0.36,Negative,2.1,2.6
+EMP0226,New York,Stayed,9,0.8,Positive,4.2,4.2
+EMP0227,London,Stayed,37,0.75,Positive,3.8,3.7
+EMP0228,London,At-Risk,67,0.32,Negative,1.8,2.4
+EMP0229,San Francisco,Stayed,13,0.82,Positive,4.6,4.6
+EMP0230,Austin,Stayed,55,0.63,Neutral,2.9,3.0
+EMP0231,London,Stayed,32,0.64,Neutral,3.7,3.8
+EMP0232,New York,Stayed,27,0.83,Positive,4.3,3.6
+EMP0233,Austin,Stayed,20,0.92,Positive,4.4,4.5
+EMP0234,Austin,At-Risk,71,0.42,Negative,2.1,1.8
+EMP0235,New York,Stayed,9,0.96,Positive,4.9,4.3
+EMP0236,London,Stayed,46,0.58,Neutral,3.2,3.0
+EMP0237,New York,Stayed,45,0.6,Neutral,2.9,2.7
+EMP0238,Austin,Stayed,10,0.85,Positive,4.5,4.9
+EMP0239,Remote,Stayed,64,0.58,Neutral,2.8,2.4
+EMP0240,Remote,Stayed,19,0.93,Positive,4.6,4.3
+EMP0241,San Francisco,At-Risk,74,0.48,Neutral,2.3,2.4
+EMP0242,New York,Stayed,18,0.79,Positive,4.1,3.6
+EMP0243,New York,Stayed,45,0.83,Positive,3.6,3.4
+EMP0244,San Francisco,At-Risk,75,0.48,Neutral,2.3,1.6
+EMP0245,San Francisco,Stayed,61,0.53,Neutral,2.7,3.1
+EMP0246,San Francisco,At-Risk,73,0.42,Negative,2.0,1.9
+EMP0247,Austin,Stayed,37,0.64,Neutral,3.4,3.4
+EMP0248,New York,Stayed,42,0.56,Neutral,2.9,3.3
+EMP0249,Austin,Stayed,36,0.88,Positive,3.8,3.5
+EMP0250,San Francisco,Stayed,56,0.54,Neutral,2.9,2.8
+EMP0251,New York,Stayed,51,0.58,Neutral,2.9,2.5
+EMP0252,Austin,Stayed,12,0.82,Positive,4.2,3.8
+EMP0253,Austin,At-Risk,77,0.38,Negative,2.1,1.8
+EMP0254,San Francisco,Stayed,11,0.96,Positive,4.7,4.5
+EMP0255,New York,Stayed,7,0.91,Positive,4.6,4.4
+EMP0256,San Francisco,Stayed,17,0.85,Positive,4.0,4.1
+EMP0257,New York,Stayed,37,0.8,Positive,3.8,3.4
+EMP0258,Remote,Stayed,16,0.98,Positive,4.7,4.8
+EMP0259,London,At-Risk,81,0.27,Negative,1.6,1.7
+EMP0260,London,Left,91,0.28,Negative,1.2,1.0
+EMP0261,London,Left,86,0.38,Negative,1.7,1.4
+EMP0262,San Francisco,Stayed,18,0.83,Positive,4.4,4.4
+EMP0263,Remote,At-Risk,71,0.4,Negative,2.1,2.0
+EMP0264,New York,Stayed,40,0.68,Neutral,3.7,3.8
+EMP0265,Austin,Stayed,4,1.0,Positive,5.0,5.0
+EMP0266,New York,Stayed,8,0.95,Positive,4.6,4.6
+EMP0267,Austin,Stayed,30,0.78,Positive,3.6,3.3
+EMP0268,New York,At-Risk,80,0.43,Negative,2.2,1.8
+EMP0269,Remote,Stayed,22,0.92,Positive,4.5,4.2
+EMP0270,Austin,Stayed,34,0.81,Positive,3.8,3.2
+EMP0271,San Francisco,Stayed,64,0.43,Negative,2.3,2.7
+EMP0272,New York,At-Risk,76,0.41,Negative,2.3,1.4
+EMP0273,New York,Stayed,7,0.91,Positive,4.7,4.9
+EMP0274,Austin,Stayed,23,0.78,Positive,4.0,3.7
+EMP0275,San Francisco,Stayed,9,0.85,Positive,4.5,4.3
+EMP0276,San Francisco,Stayed,16,0.89,Positive,4.6,4.3
+EMP0277,Remote,Stayed,31,0.79,Positive,3.7,4.3
+EMP0278,San Francisco,Stayed,33,0.71,Neutral,3.6,3.6
+EMP0279,San Francisco,Stayed,35,0.67,Neutral,3.3,3.6
+EMP0280,San Francisco,Stayed,51,0.56,Neutral,3.0,3.5
+EMP0281,London,Stayed,63,0.43,Negative,2.3,2.4
+EMP0282,Remote,Stayed,22,0.88,Positive,4.3,3.8
+EMP0283,New York,Stayed,30,0.77,Positive,3.8,3.7
+EMP0284,Austin,Stayed,3,0.97,Positive,4.7,4.4
+EMP0285,New York,Stayed,44,0.73,Neutral,3.3,3.1
+EMP0286,Remote,Stayed,30,0.73,Neutral,3.8,3.8
+EMP0287,Austin,Stayed,29,0.82,Positive,3.9,3.8
+EMP0288,Remote,Stayed,29,0.7,Neutral,3.8,3.9
+EMP0289,San Francisco,Stayed,30,0.93,Positive,4.1,4.3
+EMP0290,Austin,Stayed,63,0.5,Neutral,2.7,2.7
+EMP0291,San Francisco,Stayed,35,0.74,Neutral,3.5,3.7
+EMP0292,New York,At-Risk,70,0.41,Negative,2.3,2.1
+EMP0293,New York,Stayed,49,0.62,Neutral,3.2,3.7
+EMP0294,Austin,Stayed,45,0.77,Positive,3.5,3.2
+EMP0295,Austin,Stayed,15,0.75,Positive,4.0,4.4
+EMP0296,Remote,Stayed,14,1.0,Positive,4.9,4.3
+EMP0297,Remote,Stayed,37,0.76,Positive,3.8,3.6
+EMP0298,San Francisco,Stayed,28,0.89,Positive,4.2,4.1
+EMP0299,Austin,Stayed,33,0.72,Neutral,3.5,3.6
+EMP0300,New York,Stayed,21,0.8,Positive,3.9,4.2
+EMP0301,Remote,At-Risk,69,0.37,Negative,2.2,1.7
+EMP0302,Remote,Stayed,61,0.53,Neutral,2.8,2.3
+EMP0303,New York,Stayed,57,0.68,Neutral,3.1,2.5
+EMP0304,Remote,Stayed,31,0.67,Neutral,3.4,3.9
+EMP0305,San Francisco,At-Risk,69,0.43,Negative,2.1,2.3
+EMP0306,Austin,Stayed,58,0.41,Negative,2.4,2.0
+EMP0307,New York,Stayed,63,0.54,Neutral,2.8,2.7
+EMP0308,Austin,Stayed,0,1.0,Positive,4.9,5.0
+EMP0309,Remote,Stayed,53,0.53,Neutral,3.0,2.9
+EMP0310,Remote,Stayed,41,0.73,Neutral,3.4,3.3
+EMP0311,New York,Stayed,63,0.53,Neutral,2.6,2.3
+EMP0312,San Francisco,Stayed,33,0.75,Positive,3.8,3.4
+EMP0313,London,At-Risk,69,0.35,Negative,1.8,2.3
+EMP0314,New York,Stayed,51,0.5,Neutral,2.6,3.3
+EMP0315,London,At-Risk,70,0.49,Neutral,2.5,2.2
+EMP0316,London,Left,100,0.25,Negative,1.0,1.6
+EMP0317,San Francisco,At-Risk,74,0.38,Negative,2.0,1.8
+EMP0318,London,At-Risk,73,0.42,Negative,1.7,1.9
+EMP0319,London,Left,87,0.24,Negative,1.1,1.7
+EMP0320,San Francisco,At-Risk,76,0.44,Negative,2.3,2.3
+EMP0321,London,At-Risk,72,0.45,Neutral,2.0,1.9
+EMP0322,London,Stayed,36,0.71,Neutral,3.4,3.7
+EMP0323,London,At-Risk,68,0.46,Neutral,2.7,2.3
+EMP0324,New York,Stayed,29,0.66,Neutral,3.5,4.0
+EMP0325,New York,Stayed,51,0.57,Neutral,2.9,2.9
+EMP0326,New York,Stayed,11,0.88,Positive,4.8,4.6
+EMP0327,San Francisco,Stayed,56,0.74,Neutral,3.2,2.9
+EMP0328,Remote,At-Risk,70,0.49,Neutral,2.3,1.7
+EMP0329,London,Stayed,62,0.57,Neutral,2.9,2.6
+EMP0330,London,Left,91,0.25,Negative,1.3,1.2
+EMP0331,San Francisco,Stayed,48,0.58,Neutral,3.0,2.6
+EMP0332,London,Stayed,63,0.41,Negative,2.5,2.5
+EMP0333,New York,Stayed,1,0.84,Positive,4.6,4.8
+EMP0334,Remote,Stayed,41,0.79,Positive,3.5,3.4
+EMP0335,Austin,Stayed,35,0.9,Positive,4.1,4.4
+EMP0336,London,Stayed,34,0.77,Positive,4.0,3.7
+EMP0337,New York,Stayed,60,0.52,Neutral,2.4,2.8
+EMP0338,Austin,Stayed,59,0.59,Neutral,2.8,2.9
+EMP0339,Remote,Stayed,34,0.67,Neutral,3.2,3.8
+EMP0340,Austin,Stayed,29,0.58,Neutral,3.3,4.2
+EMP0341,New York,Stayed,45,0.56,Neutral,3.2,3.0
+EMP0342,Austin,Stayed,9,1.0,Positive,4.7,4.6
+EMP0343,San Francisco,Stayed,15,0.73,Neutral,4.1,4.0
+EMP0344,Austin,Stayed,25,0.76,Positive,3.8,4.1
+EMP0345,London,At-Risk,70,0.37,Negative,1.9,2.5
+EMP0346,London,Stayed,48,0.67,Neutral,3.5,3.2
+EMP0347,San Francisco,Stayed,0,0.99,Positive,4.9,5.0
+EMP0348,New York,Stayed,7,0.86,Positive,4.5,4.4
+EMP0349,London,Left,98,0.22,Negative,1.0,1.3
+EMP0350,Remote,Stayed,26,0.79,Positive,3.9,4.5
+EMP0351,London,Left,99,0.34,Negative,1.2,1.1
+EMP0352,London,Left,88,0.29,Negative,1.8,1.1
+EMP0353,New York,At-Risk,66,0.44,Negative,2.2,2.5
+EMP0354,Austin,Stayed,36,0.78,Positive,3.8,3.5
+EMP0355,London,Stayed,53,0.6,Neutral,3.1,3.0
+EMP0356,San Francisco,Stayed,61,0.4,Negative,2.3,2.7
+EMP0357,Austin,Stayed,40,0.69,Neutral,3.2,3.3
+EMP0358,Remote,Stayed,36,0.69,Neutral,3.4,3.3
+EMP0359,New York,Stayed,54,0.56,Neutral,3.1,2.9
+EMP0360,Remote,At-Risk,69,0.49,Neutral,2.4,1.2
+EMP0361,Austin,Stayed,49,0.74,Neutral,3.3,3.5
+EMP0362,Austin,Stayed,17,0.85,Positive,4.3,4.2
+EMP0363,Austin,Stayed,65,0.44,Negative,2.2,2.8
+EMP0364,Remote,At-Risk,70,0.53,Neutral,2.2,2.4
+EMP0365,Austin,Stayed,47,0.56,Neutral,3.1,2.8
+EMP0366,Remote,Stayed,0,1.0,Positive,4.8,5.0
+EMP0367,Austin,Stayed,20,0.85,Positive,4.0,4.5
+EMP0368,San Francisco,Stayed,20,0.76,Positive,4.0,3.9
+EMP0369,Austin,Stayed,37,0.58,Neutral,3.1,3.6
+EMP0370,Remote,Stayed,27,0.73,Neutral,3.8,3.6
+EMP0371,London,Left,100,0.11,Negative,1.0,1.1
+EMP0372,Austin,Stayed,26,0.79,Positive,3.9,4.1
+EMP0373,London,Stayed,24,0.7,Neutral,3.7,4.1
+EMP0374,San Francisco,Stayed,30,0.78,Positive,3.8,4.1
+EMP0375,New York,Stayed,7,0.86,Positive,4.6,4.5
+EMP0376,San Francisco,Stayed,6,0.88,Positive,4.2,4.6
+EMP0377,Austin,At-Risk,69,0.51,Neutral,2.4,2.3
+EMP0378,London,Stayed,42,0.71,Neutral,3.7,3.5
+EMP0379,London,Left,99,0.26,Negative,1.2,1.0
+EMP0380,Remote,Stayed,17,0.72,Neutral,3.6,4.4
+EMP0381,London,Left,92,0.36,Negative,1.4,1.1
+EMP0382,Remote,At-Risk,67,0.36,Negative,2.0,2.6
+EMP0383,New York,Stayed,49,0.65,Neutral,3.3,2.8
+EMP0384,Austin,Stayed,46,0.54,Neutral,2.9,3.1
+EMP0385,Remote,Stayed,35,0.69,Neutral,3.5,3.6
+EMP0386,New York,Stayed,18,0.77,Positive,3.7,4.4
+EMP0387,London,Left,99,0.19,Negative,1.1,1.0
+EMP0388,London,Left,87,0.26,Negative,1.4,1.0
+EMP0389,New York,Stayed,35,0.78,Positive,3.7,3.6
+EMP0390,London,Stayed,63,0.47,Neutral,2.0,2.7
+EMP0391,New York,Stayed,8,0.86,Positive,4.2,3.8
+EMP0392,Remote,Stayed,40,0.78,Positive,4.0,2.9
+EMP0393,Remote,Stayed,13,0.9,Positive,4.5,4.6
+EMP0394,New York,Stayed,26,0.84,Positive,4.1,4.5
+EMP0395,Remote,Stayed,36,0.67,Neutral,3.3,2.9
+EMP0396,Remote,Stayed,17,0.72,Neutral,4.0,4.4
+EMP0397,Remote,Stayed,59,0.59,Neutral,2.8,2.4
+EMP0398,San Francisco,Stayed,55,0.54,Neutral,2.9,2.9
+EMP0399,Austin,Stayed,5,0.8,Positive,4.4,4.7
+EMP0400,London,At-Risk,73,0.38,Negative,2.3,1.9
+EMP0401,San Francisco,Stayed,11,0.87,Positive,4.4,4.5
+EMP0402,Remote,Stayed,0,0.84,Positive,4.5,5.0
+EMP0403,New York,Stayed,5,0.8,Positive,4.6,4.8
+EMP0404,Remote,Stayed,11,0.93,Positive,4.7,4.5
+EMP0405,Austin,Stayed,27,0.63,Neutral,3.3,3.9
+EMP0406,Remote,Stayed,51,0.58,Neutral,3.0,3.2
+EMP0407,New York,Stayed,40,0.72,Neutral,3.7,3.0
+EMP0408,Austin,Stayed,42,0.71,Neutral,3.1,3.5
+EMP0409,Remote,Stayed,24,0.79,Positive,3.8,3.6
+EMP0410,Austin,Stayed,13,0.8,Positive,4.1,4.2
+EMP0411,London,Stayed,42,0.61,Neutral,3.1,3.5
+EMP0412,London,At-Risk,68,0.5,Neutral,2.1,1.9
+EMP0413,Remote,At-Risk,67,0.55,Neutral,2.5,1.8
+EMP0414,Austin,Stayed,41,0.59,Neutral,3.3,3.9
+EMP0415,New York,Stayed,58,0.44,Negative,2.4,2.9
+EMP0416,Remote,Stayed,7,0.89,Positive,4.7,4.6
+EMP0417,London,At-Risk,69,0.39,Negative,2.0,2.4
+EMP0418,London,Left,94,0.26,Negative,1.5,1.3
+EMP0419,Remote,At-Risk,79,0.42,Negative,2.1,2.1
+EMP0420,Austin,Stayed,29,0.82,Positive,3.9,3.9
+EMP0421,London,Stayed,54,0.63,Neutral,2.9,2.8
+EMP0422,Austin,Stayed,49,0.59,Neutral,3.0,3.2
+EMP0423,London,Left,100,0.16,Negative,1.2,1.0
+EMP0424,London,At-Risk,72,0.39,Negative,2.2,2.1
+EMP0425,San Francisco,Stayed,58,0.56,Neutral,2.9,3.1
+EMP0426,London,Stayed,39,0.54,Neutral,3.0,3.8
+EMP0427,New York,Stayed,27,0.82,Positive,3.8,3.4
+EMP0428,Remote,Stayed,42,0.56,Neutral,3.1,3.3
+EMP0429,Remote,Stayed,53,0.56,Neutral,2.7,2.9
+EMP0430,Austin,Stayed,16,0.91,Positive,5.0,4.2
+EMP0431,London,At-Risk,67,0.51,Neutral,2.4,2.5
+EMP0432,New York,Stayed,16,0.81,Positive,4.1,4.4
+EMP0433,Austin,At-Risk,66,0.56,Neutral,2.4,2.7
+EMP0434,San Francisco,Stayed,38,0.63,Neutral,3.5,3.4
+EMP0435,Austin,At-Risk,79,0.39,Negative,2.1,2.2
+EMP0436,Austin,Stayed,34,0.68,Neutral,3.5,3.6
+EMP0437,London,Stayed,26,0.77,Positive,3.9,3.2
+EMP0438,San Francisco,Stayed,44,0.61,Neutral,3.2,3.2
+EMP0439,Austin,At-Risk,71,0.41,Negative,2.1,2.0
+EMP0440,New York,At-Risk,68,0.4,Negative,2.1,1.8
+EMP0441,New York,Stayed,38,0.53,Neutral,3.2,4.2
+EMP0442,Remote,Stayed,65,0.55,Neutral,2.5,3.0
+EMP0443,San Francisco,At-Risk,72,0.56,Neutral,2.1,1.6
+EMP0444,San Francisco,Stayed,21,0.87,Positive,4.3,4.4
+EMP0445,Remote,Stayed,31,0.62,Neutral,3.4,4.0
+EMP0446,Austin,Stayed,59,0.52,Neutral,2.9,2.3
+EMP0447,San Francisco,Stayed,6,0.97,Positive,4.7,4.7
+EMP0448,New York,Stayed,65,0.49,Neutral,2.3,2.4
+EMP0449,New York,Stayed,10,0.96,Positive,4.9,4.4
+EMP0450,London,At-Risk,69,0.43,Negative,1.9,2.1
+EMP0451,San Francisco,Stayed,11,0.83,Positive,4.7,5.0
+EMP0452,Austin,Stayed,26,0.8,Positive,3.8,4.4
+EMP0453,Remote,Stayed,18,0.91,Positive,4.5,4.4
+EMP0454,Remote,Stayed,0,0.94,Positive,5.0,5.0
+EMP0455,Austin,Stayed,56,0.5,Neutral,2.9,2.0
+EMP0456,London,Stayed,32,0.78,Positive,3.9,4.0
+EMP0457,Remote,Stayed,45,0.7,Neutral,3.2,2.6
+EMP0458,San Francisco,Stayed,46,0.62,Neutral,3.2,3.2
+EMP0459,London,At-Risk,81,0.36,Negative,2.0,1.8
+EMP0460,San Francisco,Stayed,31,0.73,Neutral,3.6,3.8
+EMP0461,New York,At-Risk,69,0.58,Neutral,2.5,2.4
+EMP0462,London,Stayed,60,0.55,Neutral,2.7,2.3
+EMP0463,Remote,Stayed,31,0.75,Positive,3.6,3.3
+EMP0464,London,Stayed,36,0.72,Neutral,3.3,4.1
+EMP0465,London,Stayed,36,0.72,Neutral,3.5,3.7
+EMP0466,London,Left,87,0.43,Negative,2.3,1.6
+EMP0467,London,At-Risk,70,0.29,Negative,1.9,2.1
+EMP0468,San Francisco,Stayed,55,0.51,Neutral,2.8,2.7
+EMP0469,New York,Stayed,56,0.46,Neutral,2.6,2.6
+EMP0470,Austin,At-Risk,66,0.47,Neutral,2.2,2.5
+EMP0471,London,At-Risk,68,0.45,Negative,2.0,2.5
+EMP0472,Remote,Stayed,53,0.57,Neutral,2.8,2.5
+EMP0473,London,Stayed,29,0.72,Neutral,3.9,3.9
+EMP0474,Remote,Stayed,34,0.82,Positive,3.7,3.5
+EMP0475,San Francisco,Stayed,53,0.59,Neutral,3.0,3.3
+EMP0476,Remote,Stayed,29,0.78,Positive,3.7,3.6
+EMP0477,Austin,At-Risk,73,0.49,Neutral,2.4,2.4
+EMP0478,New York,Stayed,44,0.68,Neutral,3.3,3.2
+EMP0479,Remote,Stayed,34,0.8,Positive,3.9,3.8
+EMP0480,Remote,Stayed,32,0.66,Neutral,3.5,4.1
+EMP0481,New York,Stayed,31,0.71,Neutral,3.2,4.2
+EMP0482,Austin,Stayed,0,0.92,Positive,5.0,5.0
+EMP0483,London,Stayed,27,0.68,Neutral,3.6,3.6
+EMP0484,Remote,Stayed,34,0.84,Positive,3.9,3.2
+EMP0485,New York,Stayed,36,0.77,Positive,3.7,3.4
+EMP0486,San Francisco,Stayed,29,0.9,Positive,3.9,3.8
+EMP0487,New York,At-Risk,69,0.52,Neutral,2.6,2.3
+EMP0488,San Francisco,Stayed,47,0.72,Neutral,3.2,2.9
+EMP0489,Austin,Stayed,56,0.33,Negative,2.1,2.7
+EMP0490,London,At-Risk,81,0.41,Negative,2.4,2.4
+EMP0491,New York,Stayed,30,0.77,Positive,3.6,3.7
+EMP0492,Remote,Stayed,65,0.45,Negative,2.7,2.4
+EMP0493,Austin,Stayed,0,0.97,Positive,4.9,5.0
+EMP0494,New York,Stayed,8,1.0,Positive,4.7,4.6
+EMP0495,Remote,Stayed,18,0.86,Positive,4.2,4.0
+EMP0496,New York,Stayed,27,0.72,Neutral,3.6,3.0
+EMP0497,San Francisco,Stayed,8,0.9,Positive,4.6,4.6
+EMP0498,New York,At-Risk,67,0.49,Neutral,2.4,2.2
+EMP0499,New York,Stayed,8,0.9,Positive,4.4,5.0
+EMP0500,New York,Stayed,59,0.44,Negative,2.4,3.1
+EMP0501,Austin,Stayed,19,0.9,Positive,4.4,3.9
+EMP0502,New York,Stayed,59,0.62,Neutral,2.8,2.4
+EMP0503,Remote,Stayed,11,0.92,Positive,4.6,4.5
+EMP0504,San Francisco,Stayed,7,0.97,Positive,4.8,4.5
+EMP0505,San Francisco,Stayed,62,0.51,Neutral,2.4,2.5
+EMP0506,New York,Stayed,37,0.71,Neutral,3.4,3.3
+EMP0507,Austin,Stayed,3,1.0,Positive,4.9,5.0
+EMP0508,Austin,Stayed,33,0.64,Neutral,3.5,3.9
+EMP0509,Remote,Stayed,12,0.89,Positive,4.6,4.2
+EMP0510,New York,Stayed,29,0.73,Neutral,3.8,4.2
+EMP0511,San Francisco,Stayed,50,0.58,Neutral,3.1,2.8
+EMP0512,Austin,Stayed,41,0.48,Neutral,2.9,3.7
+EMP0513,New York,Stayed,59,0.36,Negative,2.6,3.3
+EMP0514,Austin,Stayed,12,0.92,Positive,4.3,4.2
+EMP0515,Austin,Stayed,44,0.55,Neutral,3.2,2.8
+EMP0516,San Francisco,Stayed,44,0.79,Positive,3.5,3.1
+EMP0517,London,At-Risk,68,0.53,Neutral,2.5,2.8
+EMP0518,Remote,Stayed,28,0.73,Neutral,3.7,3.7
+EMP0519,Remote,Stayed,8,0.95,Positive,4.6,5.0
+EMP0520,San Francisco,Stayed,0,1.0,Positive,4.9,5.0
+EMP0521,Austin,Stayed,42,0.59,Neutral,3.2,2.9
+EMP0522,New York,Stayed,23,0.9,Positive,4.5,4.0
+EMP0523,Austin,Stayed,18,0.81,Positive,4.3,4.4
+EMP0524,San Francisco,Stayed,33,0.78,Positive,3.7,4.2
+EMP0525,Remote,Stayed,12,0.94,Positive,4.9,4.5
+EMP0526,Austin,Stayed,49,0.52,Neutral,2.6,2.6
+EMP0527,Remote,Stayed,55,0.46,Neutral,2.3,2.9
+EMP0528,New York,Stayed,18,0.92,Positive,4.6,3.9
+EMP0529,Remote,Stayed,32,0.75,Neutral,3.3,3.4
+EMP0530,Remote,Stayed,8,0.9,Positive,4.5,4.3
+EMP0531,London,Stayed,39,0.8,Positive,3.7,3.7
+EMP0532,London,Left,89,0.26,Negative,1.2,1.5
+EMP0533,London,Stayed,36,0.8,Positive,3.7,3.7
+EMP0534,Remote,Stayed,45,0.65,Neutral,3.3,2.9
+EMP0535,San Francisco,Stayed,35,0.74,Neutral,3.5,3.3
+EMP0536,Remote,Stayed,13,0.77,Positive,3.9,4.5
+EMP0537,San Francisco,Stayed,5,0.81,Positive,4.8,4.9
+EMP0538,San Francisco,At-Risk,77,0.36,Negative,2.1,2.4
+EMP0539,London,Stayed,59,0.52,Neutral,2.4,2.5
+EMP0540,Austin,Stayed,20,0.84,Positive,4.1,4.4
+EMP0541,New York,Stayed,14,0.77,Positive,4.2,4.0
+EMP0542,London,Stayed,47,0.63,Neutral,3.1,2.8
+EMP0543,London,Left,88,0.31,Negative,1.4,1.7
+EMP0544,Austin,Stayed,51,0.58,Neutral,2.9,3.3
+EMP0545,New York,Stayed,54,0.65,Neutral,3.1,2.7
+EMP0546,Remote,Stayed,6,0.91,Positive,4.4,4.2
+EMP0547,Remote,Stayed,52,0.57,Neutral,2.8,2.8
+EMP0548,London,At-Risk,72,0.3,Negative,1.6,2.3
+EMP0549,New York,Stayed,0,1.0,Positive,4.9,5.0
+EMP0550,London,Left,99,0.23,Negative,1.0,1.0
+EMP0551,San Francisco,Stayed,5,0.93,Positive,5.0,5.0
+EMP0552,London,Stayed,51,0.62,Neutral,3.0,2.9
+EMP0553,London,Stayed,49,0.64,Neutral,3.5,3.0
+EMP0554,Remote,Stayed,49,0.53,Neutral,2.9,2.8
+EMP0555,Remote,At-Risk,68,0.38,Negative,2.0,1.9
+EMP0556,Remote,Stayed,28,0.84,Positive,4.2,4.1
+EMP0557,San Francisco,Stayed,16,0.92,Positive,4.5,4.3
+EMP0558,Remote,Stayed,9,0.82,Positive,4.2,4.8
+EMP0559,New York,At-Risk,67,0.47,Neutral,2.4,2.3
+EMP0560,Austin,Stayed,22,0.83,Positive,4.3,4.3
+EMP0561,New York,Stayed,18,0.91,Positive,4.3,4.3
+EMP0562,New York,Stayed,23,0.65,Neutral,4.0,3.8
+EMP0563,Remote,Stayed,15,0.84,Positive,4.3,4.3
+EMP0564,Austin,Stayed,12,0.98,Positive,4.5,4.6
+EMP0565,Austin,Stayed,29,0.79,Positive,3.8,3.9
+EMP0566,Austin,At-Risk,77,0.52,Neutral,2.3,1.9
+EMP0567,San Francisco,Stayed,37,0.59,Neutral,3.5,3.4
+EMP0568,Remote,Stayed,61,0.38,Negative,2.2,2.5
+EMP0569,Austin,Stayed,58,0.67,Neutral,3.2,3.2
+EMP0570,San Francisco,Stayed,44,0.72,Neutral,3.2,3.3
+EMP0571,London,Left,98,0.18,Negative,1.2,1.3
+EMP0572,London,At-Risk,74,0.39,Negative,2.0,2.2
+EMP0573,San Francisco,Stayed,65,0.49,Neutral,2.3,2.6
+EMP0574,San Francisco,Stayed,13,0.81,Positive,4.4,4.4
+EMP0575,Remote,Stayed,0,0.99,Positive,4.8,4.5
+EMP0576,Remote,At-Risk,69,0.31,Negative,2.2,1.7
+EMP0577,London,Stayed,25,0.8,Positive,3.9,4.3
+EMP0578,Austin,Stayed,19,0.66,Neutral,3.6,3.9
+EMP0579,London,At-Risk,75,0.36,Negative,1.9,2.2
+EMP0580,Austin,At-Risk,69,0.48,Neutral,2.2,2.6
+EMP0581,Austin,Stayed,42,0.72,Neutral,3.5,3.4
+EMP0582,Remote,Stayed,20,0.88,Positive,4.4,4.1
+EMP0583,New York,Stayed,30,0.87,Positive,4.1,3.7
+EMP0584,New York,Left,83,0.35,Negative,2.2,1.7
+EMP0585,San Francisco,At-Risk,70,0.45,Neutral,2.2,2.7
+EMP0586,Remote,Stayed,47,0.6,Neutral,3.2,3.0
+EMP0587,Austin,Stayed,47,0.62,Neutral,2.9,3.3
+EMP0588,New York,Stayed,58,0.57,Neutral,2.7,2.6
+EMP0589,Austin,Stayed,55,0.6,Neutral,2.8,2.6
+EMP0590,New York,Stayed,24,0.96,Positive,4.4,4.0
+EMP0591,New York,Stayed,10,1.0,Positive,4.8,4.6
+EMP0592,New York,Stayed,37,0.64,Neutral,3.2,3.8
+EMP0593,Remote,Stayed,17,0.94,Positive,4.7,4.3
+EMP0594,London,Stayed,65,0.42,Negative,2.0,2.8
+EMP0595,Austin,Stayed,37,0.69,Neutral,3.4,3.1
+EMP0596,Remote,Stayed,54,0.57,Neutral,2.7,3.0
+EMP0597,Remote,Stayed,23,0.67,Neutral,3.9,3.9
+EMP0598,Remote,Stayed,7,1.0,Positive,4.9,4.8
+EMP0599,Remote,Stayed,30,0.77,Positive,3.8,3.3
+EMP0600,Remote,Stayed,47,0.53,Neutral,3.1,3.0
+EMP0601,San Francisco,Stayed,35,0.74,Neutral,3.9,3.5
+EMP0602,Austin,At-Risk,68,0.37,Negative,2.4,1.7
+EMP0603,Remote,Stayed,9,0.88,Positive,4.7,4.7
+EMP0604,Austin,Stayed,34,0.69,Neutral,3.5,3.3
+EMP0605,San Francisco,Stayed,35,0.75,Neutral,3.3,4.0
+EMP0606,San Francisco,Stayed,29,0.77,Positive,3.8,4.2
+EMP0607,Austin,Stayed,21,0.79,Positive,3.9,4.6
+EMP0608,New York,At-Risk,72,0.39,Negative,2.2,1.9
+EMP0609,London,Stayed,50,0.57,Neutral,3.0,3.1
+EMP0610,New York,Stayed,65,0.51,Neutral,2.7,1.7
+EMP0611,New York,Stayed,27,0.79,Positive,4.1,4.0
+EMP0612,New York,Stayed,19,0.88,Positive,4.5,4.5
+EMP0613,Remote,Stayed,9,0.87,Positive,4.4,4.5
+EMP0614,San Francisco,Stayed,42,0.71,Neutral,3.7,3.6
+EMP0615,New York,Stayed,34,0.68,Neutral,3.6,3.6
+EMP0616,San Francisco,Left,85,0.49,Neutral,2.4,1.3
+EMP0617,Austin,Stayed,14,0.85,Positive,4.3,4.4
+EMP0618,London,At-Risk,81,0.28,Negative,1.8,2.0
+EMP0619,Austin,Stayed,35,0.7,Neutral,3.5,4.0
+EMP0620,Austin,Stayed,50,0.56,Neutral,2.9,3.0
+EMP0621,Remote,Stayed,65,0.4,Negative,2.4,2.3
+EMP0622,London,Stayed,55,0.55,Neutral,2.9,3.3
+EMP0623,Austin,At-Risk,78,0.46,Neutral,2.2,1.2
+EMP0624,Austin,Stayed,18,0.79,Positive,4.2,4.0
+EMP0625,London,At-Risk,73,0.33,Negative,2.0,1.6
+EMP0626,London,Left,100,0.18,Negative,1.0,1.0
+EMP0627,Austin,Stayed,43,0.74,Neutral,3.5,2.7
+EMP0628,London,Left,97,0.32,Negative,1.1,1.7
+EMP0629,Austin,Stayed,52,0.6,Neutral,2.8,2.7
+EMP0630,Austin,Stayed,26,0.88,Positive,4.1,4.2
+EMP0631,Remote,At-Risk,73,0.45,Neutral,2.2,2.3
+EMP0632,New York,Stayed,6,0.87,Positive,4.5,5.0
+EMP0633,Austin,At-Risk,78,0.43,Negative,2.0,1.3
+EMP0634,San Francisco,Stayed,52,0.54,Neutral,2.7,2.8
+EMP0635,New York,Stayed,11,0.86,Positive,4.2,4.7
+EMP0636,New York,Stayed,56,0.54,Neutral,2.9,2.9
+EMP0637,New York,At-Risk,71,0.48,Neutral,2.3,1.9
+EMP0638,Remote,Stayed,44,0.61,Neutral,3.1,2.8
+EMP0639,Austin,Stayed,55,0.57,Neutral,2.8,2.7
+EMP0640,Remote,Stayed,14,0.9,Positive,4.5,4.2
+EMP0641,Austin,Stayed,41,0.57,Neutral,2.9,2.9
+EMP0642,Remote,Stayed,8,0.9,Positive,4.4,5.0
+EMP0643,Remote,Stayed,14,0.91,Positive,4.7,4.4
+EMP0644,San Francisco,Stayed,43,0.58,Neutral,3.3,3.1
+EMP0645,Remote,Stayed,6,0.85,Positive,4.7,4.9
+EMP0646,London,At-Risk,74,0.44,Negative,2.1,2.1
+EMP0647,San Francisco,Stayed,6,0.96,Positive,4.9,4.4
+EMP0648,Remote,At-Risk,72,0.37,Negative,2.3,2.2
+EMP0649,New York,Stayed,31,0.82,Positive,4.1,4.0
+EMP0650,London,Stayed,51,0.49,Neutral,2.5,2.9
+EMP0651,London,At-Risk,73,0.41,Negative,2.2,1.8
+EMP0652,London,Stayed,60,0.59,Neutral,2.9,3.3
+EMP0653,San Francisco,Stayed,23,0.89,Positive,4.1,4.1
+EMP0654,Remote,At-Risk,78,0.47,Neutral,2.0,1.6
+EMP0655,Remote,At-Risk,66,0.51,Neutral,2.5,2.0
+EMP0656,New York,Stayed,20,0.82,Positive,4.1,4.9
+EMP0657,New York,Stayed,20,0.81,Positive,4.0,3.9
+EMP0658,London,Stayed,28,0.8,Positive,3.9,4.3
+EMP0659,New York,Stayed,23,0.84,Positive,4.3,3.6
+EMP0660,San Francisco,Stayed,0,0.98,Positive,4.9,5.0
+EMP0661,Remote,Stayed,17,0.74,Neutral,4.1,4.5
+EMP0662,London,At-Risk,78,0.38,Negative,1.9,1.8
+EMP0663,New York,Stayed,65,0.49,Neutral,2.3,2.2
+EMP0664,San Francisco,Stayed,18,0.84,Positive,4.3,4.6
+EMP0665,San Francisco,Stayed,20,0.78,Positive,3.9,4.2
+EMP0666,New York,At-Risk,71,0.37,Negative,2.1,2.2
+EMP0667,Remote,Stayed,50,0.55,Neutral,3.1,3.1
+EMP0668,New York,Stayed,2,0.98,Positive,4.9,5.0
+EMP0669,London,At-Risk,73,0.46,Neutral,2.5,1.8
+EMP0670,New York,Stayed,41,0.57,Neutral,3.3,3.1
+EMP0671,San Francisco,Stayed,50,0.62,Neutral,3.4,2.7
+EMP0672,New York,Stayed,60,0.48,Neutral,2.6,2.9
+EMP0673,Remote,Stayed,54,0.66,Neutral,3.1,2.8
+EMP0674,Austin,Stayed,44,0.63,Neutral,3.1,2.5
+EMP0675,New York,At-Risk,76,0.39,Negative,2.2,1.8
+EMP0676,Remote,Stayed,21,0.83,Positive,4.3,4.4
+EMP0677,Remote,Stayed,42,0.72,Neutral,3.2,3.2
+EMP0678,San Francisco,Stayed,15,0.94,Positive,4.5,4.0
+EMP0679,Remote,Stayed,14,0.85,Positive,4.6,3.9
+EMP0680,Remote,Stayed,53,0.59,Neutral,2.6,2.7
+EMP0681,Remote,Stayed,31,0.79,Positive,4.0,3.7
+EMP0682,Remote,Stayed,52,0.72,Neutral,3.4,3.3
+EMP0683,London,Stayed,31,0.72,Neutral,3.6,3.6
+EMP0684,London,At-Risk,79,0.39,Negative,1.6,1.8
+EMP0685,San Francisco,Stayed,20,0.75,Neutral,4.0,4.4
+EMP0686,New York,Stayed,20,0.75,Positive,3.8,3.9
+EMP0687,Remote,Stayed,50,0.64,Neutral,2.9,2.8
+EMP0688,New York,Stayed,64,0.36,Negative,2.4,2.4
+EMP0689,New York,Stayed,23,0.79,Positive,4.0,3.8
+EMP0690,San Francisco,Stayed,32,0.82,Positive,4.2,3.6
+EMP0691,Remote,Stayed,40,0.62,Neutral,2.9,3.4
+EMP0692,Remote,Stayed,27,0.84,Positive,3.9,4.3
+EMP0693,Austin,Stayed,44,0.67,Neutral,3.2,4.0
+EMP0694,New York,Stayed,14,0.84,Positive,4.1,5.0
+EMP0695,New York,Stayed,64,0.52,Neutral,2.6,2.1
+EMP0696,London,Stayed,35,0.72,Neutral,3.7,3.5
+EMP0697,Austin,Stayed,41,0.58,Neutral,2.9,3.9
+EMP0698,London,Stayed,62,0.49,Neutral,2.1,2.1
+EMP0699,London,Left,89,0.19,Negative,1.2,1.3
+EMP0700,London,Left,94,0.25,Negative,1.3,1.0
+EMP0701,San Francisco,Stayed,31,0.71,Neutral,3.5,3.6
+EMP0702,San Francisco,Stayed,45,0.61,Neutral,2.8,3.6
+EMP0703,London,Stayed,34,0.71,Neutral,3.5,4.0
+EMP0704,Austin,At-Risk,77,0.46,Neutral,2.0,1.8
+EMP0705,New York,Stayed,53,0.68,Neutral,3.1,3.0
+EMP0706,Austin,Stayed,55,0.63,Neutral,3.0,2.6
+EMP0707,Remote,At-Risk,78,0.36,Negative,2.1,1.7
+EMP0708,San Francisco,At-Risk,69,0.56,Neutral,2.4,1.6
+EMP0709,New York,Stayed,37,0.72,Neutral,3.2,3.2
+EMP0710,New York,Stayed,29,0.7,Neutral,3.5,4.1
+EMP0711,Remote,Stayed,39,0.57,Neutral,3.2,3.4
+EMP0712,Remote,Stayed,28,0.64,Neutral,3.6,4.1
+EMP0713,London,Stayed,45,0.57,Neutral,2.8,3.2
+EMP0714,San Francisco,At-Risk,80,0.37,Negative,2.0,1.8
+EMP0715,San Francisco,Stayed,39,0.59,Neutral,3.4,3.1
+EMP0716,Austin,Stayed,3,0.9,Positive,4.9,4.6
+EMP0717,London,At-Risk,67,0.49,Neutral,2.6,1.9
+EMP0718,London,Stayed,54,0.62,Neutral,3.0,3.0
+EMP0719,London,Left,94,0.46,Neutral,1.9,1.0
+EMP0720,London,Stayed,48,0.69,Neutral,3.3,3.6
+EMP0721,San Francisco,Stayed,10,0.84,Positive,4.3,4.3
+EMP0722,San Francisco,Stayed,32,0.73,Neutral,3.6,3.8
+EMP0723,London,Stayed,19,0.8,Positive,3.9,4.4
+EMP0724,Austin,At-Risk,66,0.51,Neutral,2.4,2.5
+EMP0725,New York,At-Risk,68,0.41,Negative,2.1,2.7
+EMP0726,New York,Stayed,11,0.91,Positive,4.3,4.6
+EMP0727,Austin,Stayed,14,0.93,Positive,4.4,4.1
+EMP0728,London,Left,86,0.28,Negative,1.4,1.3
+EMP0729,San Francisco,Stayed,50,0.55,Neutral,2.8,1.9
+EMP0730,New York,At-Risk,70,0.46,Neutral,2.1,1.7
+EMP0731,Remote,Stayed,58,0.54,Neutral,2.9,2.7
+EMP0732,Remote,Stayed,22,0.79,Positive,4.3,4.5
+EMP0733,Austin,Stayed,45,0.64,Neutral,3.6,3.3
+EMP0734,London,Left,83,0.37,Negative,2.0,1.5
+EMP0735,New York,Stayed,49,0.66,Neutral,3.1,2.4
+EMP0736,London,Left,94,0.18,Negative,1.0,1.0
+EMP0737,New York,Stayed,35,0.59,Neutral,2.9,3.7
+EMP0738,Austin,Stayed,22,0.76,Positive,3.9,4.0
+EMP0739,Austin,Stayed,1,0.96,Positive,4.9,5.0
+EMP0740,Remote,Stayed,10,0.86,Positive,4.5,4.2
+EMP0741,London,Left,100,0.21,Negative,1.1,1.0
+EMP0742,Remote,Stayed,15,0.93,Positive,4.7,4.2
+EMP0743,London,Stayed,39,0.69,Neutral,3.3,3.3
+EMP0744,Remote,Stayed,17,0.88,Positive,4.3,3.5
+EMP0745,San Francisco,Stayed,51,0.66,Neutral,3.4,3.0
+EMP0746,San Francisco,Stayed,47,0.56,Neutral,3.2,3.0
+EMP0747,San Francisco,At-Risk,67,0.64,Neutral,2.9,2.4
+EMP0748,San Francisco,At-Risk,79,0.44,Negative,2.2,1.3
+EMP0749,New York,Stayed,57,0.54,Neutral,2.7,2.8
+EMP0750,San Francisco,Stayed,51,0.63,Neutral,2.7,2.8
+EMP0751,Austin,Stayed,33,0.74,Neutral,3.5,3.8
+EMP0752,Austin,Stayed,15,0.87,Positive,4.2,3.8
+EMP0753,New York,Stayed,29,0.68,Neutral,3.4,3.7
+EMP0754,San Francisco,At-Risk,68,0.43,Negative,2.2,2.8
+EMP0755,San Francisco,Stayed,0,0.99,Positive,4.9,5.0
+EMP0756,San Francisco,Stayed,4,0.99,Positive,4.8,4.6
+EMP0757,Remote,Stayed,11,0.96,Positive,4.4,4.4
+EMP0758,London,Stayed,26,0.92,Positive,4.0,3.7
+EMP0759,Remote,Stayed,43,0.74,Neutral,3.6,3.3
+EMP0760,London,Stayed,25,0.67,Neutral,3.9,4.2
+EMP0761,San Francisco,Stayed,63,0.4,Negative,2.2,2.2
+EMP0762,San Francisco,Stayed,47,0.71,Neutral,3.1,3.6
+EMP0763,Remote,At-Risk,68,0.57,Neutral,2.7,2.5
+EMP0764,Remote,Stayed,64,0.54,Neutral,2.6,2.5
+EMP0765,London,Left,96,0.28,Negative,1.4,1.2
+EMP0766,Austin,Stayed,38,0.71,Neutral,3.9,3.4
+EMP0767,London,Stayed,29,0.75,Positive,3.3,3.7
+EMP0768,Remote,Stayed,32,0.71,Neutral,3.7,4.6
+EMP0769,Remote,At-Risk,71,0.52,Neutral,2.4,2.3
+EMP0770,New York,Stayed,19,0.82,Positive,4.4,4.2
+EMP0771,Remote,Stayed,29,0.77,Positive,3.9,3.6
+EMP0772,New York,Stayed,41,0.68,Neutral,3.2,2.9
+EMP0773,Austin,Stayed,16,0.79,Positive,4.0,4.7
+EMP0774,London,Left,85,0.34,Negative,1.8,1.5
+EMP0775,London,At-Risk,70,0.41,Negative,2.0,1.8
+EMP0776,New York,Stayed,10,0.88,Positive,4.8,4.3
+EMP0777,London,At-Risk,71,0.3,Negative,1.9,2.0
+EMP0778,Remote,Stayed,38,0.72,Neutral,3.4,3.4
+EMP0779,San Francisco,Stayed,6,0.91,Positive,4.7,4.2
+EMP0780,New York,Stayed,18,0.86,Positive,4.1,3.8
+EMP0781,London,Left,90,0.29,Negative,1.2,1.8
+EMP0782,New York,Stayed,60,0.55,Neutral,2.4,2.5
+EMP0783,New York,At-Risk,71,0.32,Negative,2.0,2.1
+EMP0784,San Francisco,Stayed,24,0.74,Neutral,3.9,3.9
+EMP0785,Remote,Stayed,49,0.7,Neutral,3.3,3.9
+EMP0786,New York,At-Risk,72,0.51,Neutral,2.4,2.0
+EMP0787,London,Stayed,33,0.89,Positive,3.9,3.7
+EMP0788,Austin,Stayed,32,0.67,Neutral,3.6,3.5
+EMP0789,New York,At-Risk,66,0.6,Neutral,2.7,2.0
+EMP0790,New York,Stayed,39,0.72,Neutral,3.5,3.1
+EMP0791,San Francisco,Stayed,15,0.73,Neutral,4.0,4.5
+EMP0792,Remote,At-Risk,75,0.42,Negative,2.2,2.5
+EMP0793,Austin,Stayed,53,0.58,Neutral,2.8,3.2
+EMP0794,London,Stayed,44,0.6,Neutral,3.4,3.2
+EMP0795,Austin,Stayed,37,0.57,Neutral,3.4,3.2
+EMP0796,London,Stayed,59,0.44,Negative,2.6,1.9
+EMP0797,Remote,Stayed,38,0.67,Neutral,3.3,3.7
+EMP0798,London,Left,89,0.2,Negative,1.1,1.6
+EMP0799,San Francisco,Stayed,61,0.47,Neutral,2.5,2.9
+EMP0800,San Francisco,Stayed,38,0.64,Neutral,3.3,4.0
+EMP0801,San Francisco,Stayed,57,0.45,Neutral,2.6,2.8
+EMP0802,San Francisco,At-Risk,69,0.41,Negative,2.1,2.8
+EMP0803,Austin,Stayed,13,0.82,Positive,4.5,4.5
+EMP0804,Remote,Stayed,4,1.0,Positive,4.9,4.2
+EMP0805,London,Stayed,36,0.76,Positive,3.4,3.7
+EMP0806,London,Stayed,43,0.6,Neutral,3.6,2.8
+EMP0807,San Francisco,Stayed,60,0.52,Neutral,2.7,2.8
+EMP0808,San Francisco,Stayed,2,0.96,Positive,4.9,5.0
+EMP0809,New York,Stayed,56,0.51,Neutral,2.6,2.7
+EMP0810,Remote,Stayed,7,1.0,Positive,4.9,5.0
+EMP0811,Austin,Stayed,10,0.97,Positive,5.0,4.2
+EMP0812,London,Stayed,54,0.62,Neutral,3.1,3.1
+EMP0813,New York,Stayed,1,1.0,Positive,4.9,5.0
+EMP0814,New York,Stayed,32,0.74,Neutral,3.7,3.2
+EMP0815,London,Left,91,0.44,Negative,1.8,1.3
+EMP0816,Austin,Stayed,42,0.69,Neutral,3.3,3.0
+EMP0817,New York,Stayed,36,0.73,Neutral,3.8,3.3
+EMP0818,New York,At-Risk,70,0.41,Negative,2.2,2.2
+EMP0819,Remote,Stayed,30,0.77,Positive,3.9,3.6
+EMP0820,Austin,Stayed,0,0.93,Positive,4.9,5.0
+EMP0821,New York,Stayed,49,0.47,Neutral,2.6,2.8
+EMP0822,Austin,Stayed,8,0.85,Positive,4.4,4.6
+EMP0823,London,Stayed,39,0.76,Positive,3.7,3.6
+EMP0824,San Francisco,Stayed,5,1.0,Positive,4.8,4.9
+EMP0825,New York,Stayed,11,0.95,Positive,4.9,5.0
+EMP0826,Remote,Stayed,28,0.74,Neutral,3.6,3.7
+EMP0827,London,Stayed,19,0.7,Neutral,3.9,4.7
+EMP0828,Austin,Stayed,20,0.91,Positive,4.3,4.7
+EMP0829,London,At-Risk,78,0.21,Negative,1.5,2.2
+EMP0830,New York,Stayed,46,0.73,Neutral,3.4,2.4
+EMP0831,Austin,Stayed,19,0.83,Positive,4.2,4.2
+EMP0832,San Francisco,Stayed,55,0.54,Neutral,2.7,2.6
+EMP0833,London,Stayed,55,0.57,Neutral,2.9,2.9
+EMP0834,New York,Stayed,19,0.73,Neutral,4.0,3.7
+EMP0835,Remote,At-Risk,69,0.44,Negative,2.5,2.6
+EMP0836,Austin,Stayed,35,0.78,Positive,3.7,3.0
+EMP0837,London,Stayed,29,0.66,Neutral,3.3,3.5
+EMP0838,London,Stayed,65,0.48,Neutral,2.5,2.2
+EMP0839,San Francisco,At-Risk,74,0.43,Negative,2.0,1.8
+EMP0840,San Francisco,At-Risk,71,0.41,Negative,2.0,2.2
+EMP0841,Remote,Stayed,49,0.57,Neutral,3.1,3.1
+EMP0842,Remote,Stayed,6,1.0,Positive,4.8,5.0
+EMP0843,New York,At-Risk,70,0.57,Neutral,2.7,2.3
+EMP0844,New York,Stayed,24,0.79,Positive,3.9,3.9
+EMP0845,Remote,Stayed,58,0.51,Neutral,2.7,3.0
+EMP0846,Remote,Stayed,52,0.64,Neutral,3.0,3.1
+EMP0847,Austin,Stayed,0,0.87,Positive,4.5,4.7
+EMP0848,San Francisco,Stayed,11,0.79,Positive,4.2,4.6
+EMP0849,New York,Stayed,63,0.54,Neutral,2.3,2.1
+EMP0850,San Francisco,Stayed,47,0.66,Neutral,3.3,3.0
+EMP0851,San Francisco,At-Risk,72,0.38,Negative,2.1,2.3
+EMP0852,Remote,Stayed,41,0.69,Neutral,3.4,3.4
+EMP0853,Austin,Stayed,19,0.84,Positive,4.0,4.4
+EMP0854,London,Left,88,0.3,Negative,1.4,1.5
+EMP0855,Austin,Stayed,55,0.62,Neutral,2.9,2.6
+EMP0856,Austin,Stayed,41,0.58,Neutral,3.2,3.3
+EMP0857,San Francisco,Stayed,13,1.0,Positive,4.8,4.4
+EMP0858,Austin,Stayed,0,0.99,Positive,5.0,5.0
+EMP0859,New York,At-Risk,73,0.43,Negative,2.1,1.6
+EMP0860,San Francisco,Stayed,13,0.92,Positive,4.3,4.8
+EMP0861,New York,Stayed,43,0.66,Neutral,3.1,3.2
+EMP0862,London,Stayed,65,0.45,Neutral,2.2,2.1
+EMP0863,San Francisco,Stayed,18,0.75,Positive,4.3,4.6
+EMP0864,London,Stayed,26,0.75,Neutral,3.8,4.0
+EMP0865,San Francisco,Stayed,0,0.93,Positive,4.9,5.0
+EMP0866,Remote,Stayed,25,0.78,Positive,3.7,4.3
+EMP0867,Austin,Stayed,42,0.66,Neutral,3.1,3.2
+EMP0868,Remote,Stayed,19,0.86,Positive,4.4,4.0
+EMP0869,London,At-Risk,81,0.32,Negative,1.8,1.5
+EMP0870,Austin,Stayed,30,0.82,Positive,3.7,3.7
+EMP0871,San Francisco,Stayed,41,0.58,Neutral,3.1,3.5
+EMP0872,Austin,Stayed,32,0.73,Neutral,4.0,3.8
+EMP0873,New York,Stayed,60,0.5,Neutral,2.7,2.6
+EMP0874,Austin,Stayed,44,0.49,Neutral,2.6,3.3
+EMP0875,New York,Stayed,10,0.91,Positive,4.8,4.7
+EMP0876,Austin,At-Risk,72,0.5,Neutral,2.3,2.1
+EMP0877,New York,Stayed,36,0.59,Neutral,3.5,3.8
+EMP0878,London,Left,88,0.29,Negative,1.7,1.6
+EMP0879,Remote,At-Risk,77,0.42,Negative,2.1,1.6
+EMP0880,San Francisco,At-Risk,71,0.43,Negative,2.1,2.5
+EMP0881,Austin,Stayed,62,0.59,Neutral,2.5,2.2
+EMP0882,Remote,Stayed,14,1.0,Positive,4.6,4.6
+EMP0883,San Francisco,Stayed,55,0.49,Neutral,2.8,2.8
+EMP0884,San Francisco,Stayed,0,0.87,Positive,4.9,4.9
+EMP0885,New York,Stayed,45,0.75,Positive,3.7,2.9
+EMP0886,London,At-Risk,67,0.43,Negative,2.3,2.2
+EMP0887,London,Stayed,50,0.49,Neutral,2.7,3.2
+EMP0888,Remote,Stayed,28,0.71,Neutral,3.6,4.1
+EMP0889,London,Stayed,45,0.67,Neutral,3.3,2.9
+EMP0890,Austin,Stayed,51,0.53,Neutral,2.8,3.2
+EMP0891,London,At-Risk,71,0.38,Negative,2.1,1.8
+EMP0892,Remote,Stayed,1,0.9,Positive,4.7,4.5
+EMP0893,London,Stayed,24,0.75,Neutral,3.8,3.7
+EMP0894,Austin,Stayed,9,0.96,Positive,4.7,4.7
+EMP0895,New York,Stayed,38,0.6,Neutral,3.3,3.7
+EMP0896,Remote,Stayed,20,0.84,Positive,4.3,4.4
+EMP0897,New York,Stayed,39,0.67,Neutral,3.4,3.4
+EMP0898,New York,Stayed,38,0.7,Neutral,3.5,3.9
+EMP0899,New York,Stayed,59,0.54,Neutral,2.6,2.3
+EMP0900,San Francisco,Stayed,28,0.86,Positive,3.8,3.7
+EMP0901,San Francisco,Stayed,57,0.54,Neutral,2.6,3.0
+EMP0902,New York,Stayed,47,0.63,Neutral,3.0,3.2
+EMP0903,Remote,Stayed,11,0.9,Positive,4.6,4.4
+EMP0904,Austin,Stayed,61,0.48,Neutral,2.6,2.0
+EMP0905,Austin,Stayed,60,0.42,Negative,2.2,2.3
+EMP0906,London,Left,100,0.21,Negative,1.2,1.0
+EMP0907,Remote,Stayed,7,0.98,Positive,4.8,4.7
+EMP0908,San Francisco,Stayed,29,0.62,Neutral,3.5,4.0
+EMP0909,New York,Stayed,43,0.68,Neutral,3.2,3.5
+EMP0910,London,Stayed,46,0.68,Neutral,3.4,2.6
+EMP0911,Austin,Stayed,17,0.94,Positive,4.5,4.6
+EMP0912,San Francisco,Stayed,44,0.56,Neutral,3.0,2.9
+EMP0913,San Francisco,Stayed,27,0.77,Positive,4.1,3.6
+EMP0914,New York,Stayed,14,0.84,Positive,4.3,4.4
+EMP0915,Austin,Stayed,28,0.77,Positive,4.0,3.8
+EMP0916,Remote,At-Risk,73,0.53,Neutral,2.5,2.3
+EMP0917,San Francisco,Stayed,8,0.97,Positive,4.6,4.7
+EMP0918,New York,Stayed,40,0.82,Positive,3.6,3.4
+EMP0919,Remote,Stayed,52,0.54,Neutral,2.8,2.9
+EMP0920,Austin,Stayed,50,0.49,Neutral,3.3,3.0
+EMP0921,San Francisco,At-Risk,78,0.4,Negative,2.1,1.9
+EMP0922,Remote,Stayed,59,0.49,Neutral,2.4,2.8
+EMP0923,Remote,Stayed,11,0.9,Positive,4.3,4.7
+EMP0924,Remote,Left,84,0.42,Negative,2.0,1.3
+EMP0925,San Francisco,Stayed,37,0.63,Neutral,3.2,3.5
+EMP0926,San Francisco,Stayed,31,0.8,Positive,3.6,4.1
+EMP0927,London,Left,87,0.18,Negative,1.2,1.8
+EMP0928,Austin,Stayed,3,0.97,Positive,4.9,5.0
+EMP0929,New York,Stayed,61,0.48,Neutral,2.7,2.3
+EMP0930,Remote,Stayed,46,0.58,Neutral,2.9,3.2
+EMP0931,London,Left,86,0.46,Neutral,1.9,1.6
+EMP0932,New York,Stayed,60,0.53,Neutral,2.7,2.6
+EMP0933,London,Left,98,0.19,Negative,1.0,1.2
+EMP0934,San Francisco,Stayed,25,0.75,Positive,4.2,3.9
+EMP0935,Remote,Stayed,0,0.97,Positive,4.9,4.4
+EMP0936,New York,At-Risk,66,0.59,Neutral,2.7,2.9
+EMP0937,New York,Stayed,17,0.79,Positive,4.0,4.7
+EMP0938,New York,Stayed,4,0.83,Positive,4.2,4.7
+EMP0939,New York,Stayed,14,0.96,Positive,4.5,4.8
+EMP0940,New York,Stayed,35,0.64,Neutral,3.3,3.7
+EMP0941,London,At-Risk,79,0.45,Negative,1.9,2.2
+EMP0942,Remote,Stayed,49,0.53,Neutral,3.0,3.2
+EMP0943,San Francisco,Stayed,10,0.86,Positive,4.1,4.5
+EMP0944,San Francisco,Stayed,20,0.97,Positive,4.5,3.9
+EMP0945,San Francisco,Stayed,61,0.56,Neutral,2.5,2.6
+EMP0946,San Francisco,Stayed,53,0.53,Neutral,3.1,3.1
+EMP0947,London,Stayed,34,0.71,Neutral,3.7,3.7
+EMP0948,Austin,Stayed,10,0.87,Positive,4.4,4.2
+EMP0949,Remote,Stayed,5,1.0,Positive,5.0,5.0
+EMP0950,New York,Stayed,19,0.79,Positive,4.3,3.9
+EMP0951,Austin,Stayed,56,0.58,Neutral,3.2,3.0
+EMP0952,San Francisco,Stayed,31,0.67,Neutral,3.8,3.5
+EMP0953,Austin,Stayed,20,0.76,Positive,4.0,4.3
+EMP0954,Remote,Stayed,65,0.38,Negative,2.2,2.2
+EMP0955,New York,Stayed,33,0.81,Positive,3.6,3.4
+EMP0956,New York,Stayed,19,0.79,Positive,4.1,4.0
+EMP0957,Remote,At-Risk,68,0.53,Neutral,2.5,2.5
+EMP0958,Remote,Stayed,3,0.87,Positive,4.3,5.0
+EMP0959,San Francisco,Stayed,40,0.75,Positive,3.8,3.3
+EMP0960,New York,Stayed,6,0.94,Positive,4.9,5.0
+EMP0961,Austin,At-Risk,76,0.46,Neutral,2.1,2.3
+EMP0962,London,Left,83,0.37,Negative,1.8,1.4
+EMP0963,London,Stayed,43,0.57,Neutral,2.8,3.4
+EMP0964,Remote,Stayed,49,0.55,Neutral,2.9,3.1
+EMP0965,San Francisco,Stayed,26,0.81,Positive,4.1,3.9
+EMP0966,London,Stayed,50,0.68,Neutral,3.3,2.5
+EMP0967,New York,At-Risk,68,0.47,Neutral,2.3,2.4
+EMP0968,Remote,Stayed,43,0.71,Neutral,3.5,3.5
+EMP0969,Austin,Stayed,43,0.67,Neutral,3.5,3.1
+EMP0970,Remote,Stayed,52,0.72,Neutral,3.1,2.7
+EMP0971,Austin,Stayed,0,0.94,Positive,4.8,5.0
+EMP0972,Remote,Stayed,16,0.89,Positive,4.5,3.7
+EMP0973,Remote,Stayed,19,0.81,Positive,4.1,4.2
+EMP0974,Remote,Stayed,12,0.93,Positive,4.1,4.1
+EMP0975,Austin,Stayed,32,0.66,Neutral,3.4,3.6
+EMP0976,Austin,Stayed,5,0.93,Positive,4.8,4.6
+EMP0977,Remote,Stayed,21,0.82,Positive,4.1,4.2
+EMP0978,London,Stayed,50,0.6,Neutral,3.2,2.9
+EMP0979,San Francisco,Stayed,9,0.92,Positive,4.6,4.6
+EMP0980,San Francisco,Stayed,53,0.68,Neutral,2.8,3.0
+EMP0981,San Francisco,Stayed,11,0.9,Positive,4.4,4.5
+EMP0982,Austin,Stayed,59,0.53,Neutral,2.6,2.7
+EMP0983,Austin,Stayed,55,0.57,Neutral,3.0,2.7
+EMP0984,London,Left,84,0.49,Neutral,2.0,1.8
+EMP0985,San Francisco,Stayed,1,1.0,Positive,4.9,4.7
+EMP0986,San Francisco,Stayed,12,0.96,Positive,4.6,4.5
+EMP0987,Remote,Stayed,21,0.85,Positive,4.1,4.6
+EMP0988,Austin,Stayed,14,0.82,Positive,4.2,4.0
+EMP0989,San Francisco,Stayed,47,0.76,Positive,3.7,3.2
+EMP0990,London,Stayed,32,0.73,Neutral,3.8,4.1
+EMP0991,London,Stayed,48,0.44,Negative,2.5,3.0
+EMP0992,San Francisco,Stayed,53,0.55,Neutral,3.1,2.6
+EMP0993,Austin,Stayed,52,0.52,Neutral,2.5,3.3
+EMP0994,London,Stayed,37,0.6,Neutral,3.4,3.5
+EMP0995,Remote,Stayed,17,0.82,Positive,4.2,4.6
+EMP0996,London,At-Risk,70,0.43,Negative,2.2,2.7
+EMP0997,New York,At-Risk,66,0.46,Neutral,2.1,2.5
+EMP0998,New York,Stayed,10,0.87,Positive,4.5,4.5
+EMP0999,Austin,At-Risk,71,0.46,Neutral,2.0,2.5
+EMP1000,San Francisco,Stayed,24,0.87,Positive,4.1,4.2
+EMP1001,Austin,Stayed,0,0.93,Positive,4.9,5.0
+EMP1002,Austin,Stayed,45,0.72,Neutral,3.3,3.8
+EMP1003,Austin,Stayed,58,0.53,Neutral,2.7,2.3
+EMP1004,Austin,Stayed,23,0.8,Positive,4.1,4.4
+EMP1005,Remote,Stayed,16,0.88,Positive,4.5,4.4
+EMP1006,Remote,Stayed,36,0.73,Neutral,3.6,3.7
+EMP1007,London,Stayed,23,0.76,Positive,3.9,4.0
+EMP1008,New York,Stayed,62,0.39,Negative,2.2,2.2
+EMP1009,Austin,Stayed,30,0.67,Neutral,3.5,4.1
+EMP1010,London,Stayed,51,0.64,Neutral,3.2,2.6
+EMP1011,New York,Stayed,12,0.91,Positive,4.6,3.9
+EMP1012,San Francisco,At-Risk,73,0.53,Neutral,2.5,1.8
+EMP1013,Remote,Stayed,10,0.88,Positive,4.4,4.8
+EMP1014,New York,Stayed,32,0.74,Neutral,3.7,3.3
+EMP1015,San Francisco,Stayed,47,0.67,Neutral,3.2,3.2
+EMP1016,New York,At-Risk,68,0.55,Neutral,2.4,2.3
+EMP1017,Remote,Stayed,10,0.99,Positive,4.6,4.2
+EMP1018,Remote,Stayed,65,0.56,Neutral,2.5,2.8
+EMP1019,London,Left,88,0.43,Negative,1.9,1.9
+EMP1020,Austin,Stayed,48,0.68,Neutral,2.9,2.8
+EMP1021,New York,Stayed,7,0.94,Positive,4.6,4.7
+EMP1022,New York,Stayed,23,0.82,Positive,4.0,4.3
+EMP1023,San Francisco,Stayed,30,0.99,Positive,4.4,4.0
+EMP1024,Remote,Stayed,49,0.41,Negative,2.8,3.1
+EMP1025,New York,Stayed,17,0.76,Positive,3.9,4.5
+EMP1026,Remote,Stayed,33,0.81,Positive,3.7,3.1
+EMP1027,New York,Stayed,17,0.95,Positive,4.5,4.6
+EMP1028,London,Stayed,29,0.87,Positive,3.7,3.6
+EMP1029,Austin,At-Risk,67,0.41,Negative,2.0,2.3
+EMP1030,New York,Stayed,30,0.78,Positive,4.0,3.5
+EMP1031,Remote,At-Risk,66,0.41,Negative,2.2,2.8
+EMP1032,London,At-Risk,70,0.55,Neutral,2.6,2.0
+EMP1033,New York,Stayed,54,0.65,Neutral,2.9,2.8
+EMP1034,San Francisco,Stayed,51,0.67,Neutral,2.9,3.1
+EMP1035,Austin,Stayed,50,0.61,Neutral,3.1,2.8
+EMP1036,New York,Stayed,25,0.79,Positive,3.9,3.5
+EMP1037,London,At-Risk,73,0.37,Negative,2.0,2.1
+EMP1038,San Francisco,Stayed,20,0.81,Positive,4.2,4.2
+EMP1039,London,At-Risk,67,0.5,Neutral,2.2,2.2
+EMP1040,London,Left,83,0.32,Negative,1.2,1.5
+EMP1041,San Francisco,Stayed,12,0.84,Positive,4.4,4.2
+EMP1042,London,At-Risk,77,0.38,Negative,1.9,2.0
+EMP1043,San Francisco,Stayed,49,0.65,Neutral,3.3,3.1
+EMP1044,New York,Stayed,35,0.85,Positive,4.1,3.7
+EMP1045,San Francisco,Stayed,50,0.58,Neutral,3.0,2.9
+EMP1046,San Francisco,At-Risk,69,0.34,Negative,2.2,2.0
+EMP1047,Austin,Stayed,46,0.67,Neutral,3.1,2.9
+EMP1048,San Francisco,Stayed,0,0.95,Positive,4.8,5.0
+EMP1049,San Francisco,Stayed,31,0.78,Positive,3.9,3.8
+EMP1050,New York,Stayed,37,0.82,Positive,4.0,3.7
+EMP1051,Austin,Stayed,24,0.8,Positive,3.9,3.9
+EMP1052,Remote,Stayed,53,0.54,Neutral,2.6,2.6
+EMP1053,New York,Stayed,53,0.57,Neutral,3.3,2.8
+EMP1054,New York,Stayed,21,0.88,Positive,4.3,4.1
+EMP1055,Remote,At-Risk,70,0.37,Negative,2.3,2.2
+EMP1056,San Francisco,Stayed,62,0.61,Neutral,2.8,2.8
+EMP1057,London,At-Risk,69,0.42,Negative,1.8,2.1
+EMP1058,Austin,Stayed,35,0.59,Neutral,3.3,3.4
+EMP1059,London,Stayed,20,0.8,Positive,3.9,4.4
+EMP1060,Remote,At-Risk,70,0.49,Neutral,2.2,2.2
+EMP1061,New York,Stayed,27,0.69,Neutral,3.6,4.3
+EMP1062,New York,At-Risk,75,0.54,Neutral,2.5,2.4
+EMP1063,Austin,Stayed,3,0.84,Positive,4.9,4.6
+EMP1064,New York,Stayed,61,0.52,Neutral,2.3,2.6
+EMP1065,New York,Stayed,39,0.64,Neutral,3.2,3.8
+EMP1066,Austin,Stayed,30,0.83,Positive,4.2,3.7
+EMP1067,Austin,Stayed,19,0.87,Positive,4.1,4.0
+EMP1068,Remote,Stayed,45,0.74,Neutral,3.3,3.0
+EMP1069,New York,Stayed,53,0.63,Neutral,3.0,3.1
+EMP1070,New York,Stayed,50,0.72,Neutral,3.2,3.2
+EMP1071,Remote,Stayed,50,0.48,Neutral,2.8,3.3
+EMP1072,San Francisco,At-Risk,72,0.56,Neutral,2.6,2.6
+EMP1073,San Francisco,Stayed,43,0.68,Neutral,3.4,4.0
+EMP1074,San Francisco,Stayed,49,0.52,Neutral,2.8,2.7
+EMP1075,Remote,Stayed,41,0.48,Neutral,2.9,3.2
+EMP1076,New York,Stayed,28,0.82,Positive,4.0,4.1
+EMP1077,Remote,Stayed,8,1.0,Positive,4.9,5.0
+EMP1078,Remote,Stayed,34,0.83,Positive,3.8,3.2
+EMP1079,San Francisco,At-Risk,71,0.51,Neutral,2.2,1.8
+EMP1080,London,At-Risk,82,0.21,Negative,1.2,2.0
+EMP1081,New York,Stayed,0,1.0,Positive,4.9,4.6
+EMP1082,San Francisco,Stayed,61,0.65,Neutral,2.9,2.6
+EMP1083,London,Left,93,0.24,Negative,1.3,1.0
+EMP1084,London,Stayed,51,0.56,Neutral,2.8,3.3
+EMP1085,Austin,Stayed,24,0.73,Neutral,3.9,3.4
+EMP1086,New York,Stayed,31,0.86,Positive,3.9,4.0
+EMP1087,London,Left,83,0.28,Negative,1.8,1.7
+EMP1088,San Francisco,Stayed,62,0.44,Negative,2.0,2.5
+EMP1089,Austin,Stayed,6,0.95,Positive,4.9,4.7
+EMP1090,New York,Stayed,54,0.5,Neutral,2.8,2.9
+EMP1091,Remote,Stayed,26,0.71,Neutral,4.0,3.6
+EMP1092,San Francisco,Stayed,0,0.81,Positive,4.1,5.0
+EMP1093,London,Stayed,51,0.5,Neutral,2.8,2.7
+EMP1094,London,At-Risk,78,0.39,Negative,1.9,1.9
+EMP1095,San Francisco,Stayed,45,0.65,Neutral,2.8,3.5
+EMP1096,London,Stayed,56,0.57,Neutral,2.8,2.6
+EMP1097,Austin,Stayed,13,1.0,Positive,4.6,5.0
+EMP1098,New York,Stayed,5,0.92,Positive,4.8,4.7
+EMP1099,Austin,Stayed,53,0.4,Negative,2.3,2.6
+EMP1100,London,Left,89,0.24,Negative,1.5,1.2
+EMP1101,Remote,Stayed,10,0.96,Positive,4.8,4.3
+EMP1102,New York,Stayed,13,0.98,Positive,4.2,4.4
+EMP1103,New York,Stayed,9,0.85,Positive,4.6,4.9
+EMP1104,San Francisco,Stayed,57,0.55,Neutral,2.6,2.1
+EMP1105,San Francisco,Stayed,31,0.72,Neutral,3.8,3.6
+EMP1106,Remote,Stayed,10,0.81,Positive,4.1,4.6
+EMP1107,New York,Stayed,20,0.75,Neutral,4.0,4.3
+EMP1108,Remote,Stayed,49,0.69,Neutral,3.2,3.1
+EMP1109,San Francisco,At-Risk,75,0.41,Negative,2.0,1.8
+EMP1110,San Francisco,Stayed,22,0.8,Positive,3.7,4.5
+EMP1111,New York,Stayed,61,0.56,Neutral,2.8,2.2
+EMP1112,Austin,Stayed,41,0.57,Neutral,3.4,3.3
+EMP1113,London,Stayed,37,0.83,Positive,3.9,3.3
+EMP1114,San Francisco,Stayed,43,0.54,Neutral,3.2,3.7
+EMP1115,San Francisco,Stayed,19,0.81,Positive,4.5,4.5
+EMP1116,Austin,Stayed,60,0.47,Neutral,2.6,2.6
+EMP1117,Austin,Stayed,6,0.76,Positive,4.0,5.0
+EMP1118,Remote,Stayed,8,1.0,Positive,4.9,4.7
+EMP1119,Remote,At-Risk,67,0.45,Neutral,2.3,3.0
+EMP1120,London,Left,100,0.27,Negative,1.0,1.0
+EMP1121,London,At-Risk,75,0.43,Negative,2.3,2.2
+EMP1122,New York,Stayed,55,0.47,Neutral,2.3,3.3
+EMP1123,Remote,Stayed,20,0.87,Positive,4.2,4.2
+EMP1124,San Francisco,Stayed,10,0.98,Positive,4.7,4.2
+EMP1125,Remote,Stayed,39,0.64,Neutral,3.3,3.4
+EMP1126,San Francisco,Stayed,55,0.54,Neutral,2.8,2.7
+EMP1127,Austin,Stayed,47,0.65,Neutral,3.3,3.5
+EMP1128,Remote,Stayed,13,0.75,Positive,4.2,4.1
+EMP1129,Austin,Stayed,60,0.4,Negative,2.0,2.9
+EMP1130,London,Stayed,59,0.53,Neutral,2.8,3.0
+EMP1131,London,Stayed,65,0.6,Neutral,2.8,2.4
+EMP1132,New York,Stayed,23,0.79,Positive,3.9,4.0
+EMP1133,Remote,At-Risk,68,0.61,Neutral,2.7,2.4
+EMP1134,Austin,Stayed,27,0.83,Positive,4.1,4.0
+EMP1135,San Francisco,At-Risk,70,0.43,Negative,2.3,1.9
+EMP1136,London,Stayed,64,0.32,Negative,1.6,2.4
+EMP1137,London,Stayed,28,0.76,Positive,3.6,3.4
+EMP1138,San Francisco,Stayed,13,0.75,Positive,4.2,4.5
+EMP1139,Austin,At-Risk,79,0.37,Negative,2.0,1.9
+EMP1140,Austin,Stayed,64,0.51,Neutral,2.7,2.3
+EMP1141,Remote,Stayed,55,0.55,Neutral,2.6,2.7
+EMP1142,Remote,Stayed,51,0.59,Neutral,2.8,3.0
+EMP1143,New York,Stayed,54,0.55,Neutral,2.7,3.0
+EMP1144,London,Left,96,0.11,Negative,1.2,1.0
+EMP1145,Remote,Stayed,46,0.59,Neutral,3.4,2.9
+EMP1146,Austin,Stayed,16,0.83,Positive,4.2,4.6
+EMP1147,San Francisco,Stayed,24,0.74,Neutral,3.8,3.5
+EMP1148,Austin,Stayed,22,0.8,Positive,4.0,4.1
+EMP1149,London,Left,96,0.23,Negative,1.2,1.0
+EMP1150,Austin,Stayed,7,1.0,Positive,4.9,5.0
+EMP1151,New York,Stayed,4,0.79,Positive,4.5,4.9
+EMP1152,London,Stayed,37,0.7,Neutral,3.4,3.7
+EMP1153,San Francisco,Stayed,11,0.94,Positive,4.5,4.9
+EMP1154,New York,Stayed,2,0.99,Positive,4.8,5.0
+EMP1155,London,Stayed,55,0.57,Neutral,2.6,2.2
+EMP1156,San Francisco,At-Risk,68,0.57,Neutral,2.6,2.3
+EMP1157,New York,Stayed,28,0.74,Neutral,3.9,4.2
+EMP1158,New York,Stayed,15,0.79,Positive,4.2,4.7
+EMP1159,London,Stayed,47,0.54,Neutral,3.2,2.9
+EMP1160,Remote,Stayed,29,0.69,Neutral,3.6,3.3
+EMP1161,New York,At-Risk,76,0.4,Negative,2.2,1.9
+EMP1162,New York,Stayed,61,0.68,Neutral,3.1,2.5
+EMP1163,San Francisco,Stayed,5,0.94,Positive,4.8,4.3
+EMP1164,Austin,Stayed,42,0.7,Neutral,3.8,3.3
+EMP1165,London,At-Risk,66,0.46,Neutral,2.6,2.5
+EMP1166,London,At-Risk,73,0.46,Neutral,1.8,1.9
+EMP1167,Remote,Stayed,43,0.62,Neutral,3.1,3.3
+EMP1168,Remote,Stayed,2,0.9,Positive,4.7,4.5
+EMP1169,London,Stayed,51,0.61,Neutral,3.0,2.8
+EMP1170,Remote,Stayed,17,0.97,Positive,4.4,4.4
+EMP1171,San Francisco,Stayed,40,0.65,Neutral,3.4,2.8
+EMP1172,London,Stayed,50,0.61,Neutral,2.9,3.3
+EMP1173,Remote,Stayed,54,0.61,Neutral,2.7,3.3
+EMP1174,London,Stayed,52,0.53,Neutral,3.1,2.9
+EMP1175,Austin,Stayed,46,0.62,Neutral,3.3,3.1
+EMP1176,New York,Stayed,30,0.72,Neutral,3.3,3.8
+EMP1177,London,Stayed,51,0.55,Neutral,2.9,2.9
+EMP1178,New York,Stayed,4,0.98,Positive,4.8,5.0
+EMP1179,Remote,At-Risk,77,0.4,Negative,2.2,2.2
+EMP1180,New York,Stayed,7,0.87,Positive,4.5,5.0
+EMP1181,London,At-Risk,78,0.35,Negative,1.9,2.1
+EMP1182,Austin,Stayed,34,0.7,Neutral,3.3,3.6
+EMP1183,Remote,Stayed,65,0.42,Negative,2.1,2.3
+EMP1184,London,At-Risk,73,0.39,Negative,1.9,1.7
+EMP1185,Remote,Stayed,37,0.83,Positive,3.5,3.3
+EMP1186,San Francisco,At-Risk,78,0.52,Neutral,2.2,2.5
+EMP1187,New York,Stayed,35,0.6,Neutral,3.5,3.5
+EMP1188,San Francisco,Stayed,12,0.93,Positive,4.8,4.3
+EMP1189,London,Left,87,0.38,Negative,1.3,2.1
+EMP1190,Austin,Stayed,8,0.83,Positive,4.3,4.7
+EMP1191,Remote,Stayed,41,0.75,Positive,3.2,3.2
+EMP1192,New York,Stayed,30,0.77,Positive,4.0,3.9
+EMP1193,Remote,Stayed,56,0.54,Neutral,2.8,2.9
+EMP1194,London,At-Risk,75,0.34,Negative,1.5,1.7
+EMP1195,Remote,At-Risk,74,0.49,Neutral,2.5,1.7
+EMP1196,New York,Stayed,58,0.47,Neutral,2.2,3.1
+EMP1197,London,Left,86,0.39,Negative,1.6,1.2
+EMP1198,Remote,Stayed,27,0.84,Positive,4.0,4.0
+EMP1199,Austin,Stayed,16,0.94,Positive,4.6,4.7
+EMP1200,London,Stayed,29,0.77,Positive,3.4,4.2
+EMP1201,London,Stayed,54,0.65,Neutral,3.1,3.0
+EMP1202,Austin,Stayed,53,0.43,Negative,2.3,3.0
+EMP1203,San Francisco,Stayed,52,0.67,Neutral,2.9,3.0
+EMP1204,New York,Stayed,52,0.62,Neutral,2.9,2.5
+EMP1205,San Francisco,Stayed,57,0.54,Neutral,2.7,2.8
+EMP1206,Remote,Stayed,35,0.61,Neutral,3.5,3.5
+EMP1207,Austin,Stayed,32,0.65,Neutral,3.6,3.2
+EMP1208,San Francisco,Stayed,42,0.7,Neutral,3.1,3.2
+EMP1209,London,Stayed,65,0.5,Neutral,2.1,2.1
+EMP1210,Remote,Stayed,4,0.9,Positive,4.5,4.7
+EMP1211,Remote,Stayed,17,0.79,Positive,4.4,4.4
+EMP1212,San Francisco,Stayed,53,0.53,Neutral,2.9,2.7
+EMP1213,San Francisco,Stayed,5,0.87,Positive,4.7,5.0
+EMP1214,Austin,Stayed,15,0.89,Positive,4.9,4.6
+EMP1215,New York,Stayed,61,0.7,Neutral,3.0,1.7
+EMP1216,San Francisco,Stayed,51,0.72,Neutral,3.1,3.1
+EMP1217,San Francisco,Stayed,39,0.65,Neutral,3.5,3.3
+EMP1218,London,Stayed,41,0.76,Positive,3.8,4.0
+EMP1219,Remote,Stayed,0,0.86,Positive,4.6,5.0
+EMP1220,New York,Stayed,55,0.46,Neutral,2.3,3.1
+EMP1221,London,At-Risk,74,0.52,Neutral,2.2,2.1
+EMP1222,Austin,Stayed,33,0.79,Positive,3.7,3.3
+EMP1223,Austin,Stayed,37,0.74,Neutral,3.5,3.7
+EMP1224,San Francisco,Stayed,61,0.51,Neutral,2.6,2.4
+EMP1225,San Francisco,Stayed,13,0.98,Positive,4.6,4.7
+EMP1226,Austin,Stayed,21,0.84,Positive,4.0,3.8
+EMP1227,San Francisco,Stayed,12,0.92,Positive,4.5,4.6
+EMP1228,New York,Stayed,16,0.91,Positive,4.6,4.3
+EMP1229,San Francisco,Stayed,14,0.86,Positive,4.2,4.7
+EMP1230,Remote,Stayed,45,0.68,Neutral,3.3,3.1
+EMP1231,San Francisco,Stayed,32,0.74,Neutral,3.8,4.1
+EMP1232,London,Left,84,0.26,Negative,1.5,1.0
+EMP1233,New York,Stayed,21,0.75,Positive,4.0,4.3
+EMP1234,London,Left,84,0.26,Negative,1.5,1.2
+EMP1235,London,Stayed,50,0.61,Neutral,3.1,3.2
+EMP1236,Remote,Stayed,49,0.52,Neutral,2.7,3.1
+EMP1237,New York,Stayed,54,0.44,Negative,2.4,2.3
+EMP1238,New York,At-Risk,70,0.46,Neutral,2.5,2.1
+EMP1239,New York,At-Risk,71,0.42,Negative,2.0,2.2
+EMP1240,New York,Stayed,26,0.9,Positive,4.2,3.8
+EMP1241,New York,Stayed,28,0.84,Positive,4.2,4.0
+EMP1242,Remote,Stayed,37,0.71,Neutral,3.5,3.7
+EMP1243,San Francisco,Stayed,58,0.45,Neutral,2.5,3.0
+EMP1244,London,Left,93,0.24,Negative,1.3,1.3
+EMP1245,New York,At-Risk,67,0.47,Neutral,2.1,2.1
+EMP1246,San Francisco,Stayed,58,0.55,Neutral,2.5,2.8
+EMP1247,San Francisco,Stayed,17,0.98,Positive,4.7,4.7
+EMP1248,London,At-Risk,77,0.39,Negative,1.7,2.0
+EMP1249,Remote,Stayed,43,0.63,Neutral,3.1,3.5
+EMP1250,Austin,At-Risk,74,0.48,Neutral,2.3,2.2
+EMP1251,Austin,Stayed,63,0.55,Neutral,2.7,1.4
+EMP1252,San Francisco,Stayed,42,0.69,Neutral,3.6,3.2
+EMP1253,London,Stayed,41,0.57,Neutral,2.8,3.3
+EMP1254,Austin,Stayed,58,0.56,Neutral,2.7,2.7
+EMP1255,San Francisco,At-Risk,71,0.47,Neutral,2.2,2.0
+EMP1256,Remote,Stayed,44,0.64,Neutral,3.2,3.6
+EMP1257,Austin,Stayed,52,0.65,Neutral,2.7,2.7
+EMP1258,San Francisco,Stayed,64,0.47,Neutral,2.7,1.8
+EMP1259,San Francisco,Stayed,12,1.0,Positive,4.9,4.3
+EMP1260,New York,Stayed,24,0.77,Positive,3.8,4.0
+EMP1261,Remote,Stayed,37,0.73,Neutral,3.7,3.6
+EMP1262,New York,Stayed,39,0.61,Neutral,3.2,3.8
+EMP1263,London,At-Risk,68,0.51,Neutral,2.3,2.0
+EMP1264,New York,Stayed,34,0.76,Positive,3.6,3.5
+EMP1265,New York,Stayed,26,0.86,Positive,4.1,3.7
+EMP1266,Austin,Stayed,23,0.83,Positive,4.1,3.9
+EMP1267,San Francisco,At-Risk,73,0.49,Neutral,2.5,1.8
+EMP1268,Remote,Stayed,37,0.7,Neutral,3.5,3.3
+EMP1269,New York,Stayed,41,0.67,Neutral,3.2,3.2
+EMP1270,Remote,Stayed,14,0.82,Positive,4.6,4.6
+EMP1271,New York,Stayed,16,0.82,Positive,3.9,4.8
+EMP1272,London,Stayed,50,0.64,Neutral,2.6,3.3
+EMP1273,New York,Stayed,56,0.49,Neutral,2.3,2.0
+EMP1274,Austin,Stayed,32,0.75,Neutral,3.8,3.0
+EMP1275,San Francisco,Stayed,62,0.46,Neutral,2.4,2.3
+EMP1276,London,At-Risk,70,0.44,Negative,2.0,2.2
+EMP1277,New York,Stayed,64,0.47,Neutral,2.4,2.1
+EMP1278,Remote,Stayed,31,0.86,Positive,4.1,3.8
+EMP1279,London,At-Risk,74,0.32,Negative,1.6,2.3
+EMP1280,London,At-Risk,68,0.52,Neutral,2.2,2.1
+EMP1281,New York,Stayed,5,1.0,Positive,4.7,5.0
+EMP1282,London,At-Risk,82,0.31,Negative,1.6,1.2
+EMP1283,Remote,Stayed,44,0.7,Neutral,3.5,3.5
+EMP1284,London,At-Risk,73,0.45,Neutral,2.3,2.1
+EMP1285,Remote,At-Risk,70,0.41,Negative,2.1,1.8
+EMP1286,New York,Stayed,15,0.83,Positive,4.4,4.8
+EMP1287,San Francisco,At-Risk,81,0.39,Negative,2.2,1.7
+EMP1288,London,Stayed,57,0.55,Neutral,2.4,2.5
+EMP1289,San Francisco,Stayed,28,0.79,Positive,3.7,3.5
+EMP1290,Remote,Stayed,23,0.83,Positive,3.9,4.1
+EMP1291,London,Stayed,42,0.61,Neutral,3.1,2.9
+EMP1292,Austin,Stayed,48,0.65,Neutral,2.8,3.1
+EMP1293,San Francisco,At-Risk,76,0.4,Negative,2.0,1.7
+EMP1294,London,Stayed,43,0.68,Neutral,3.2,3.6
+EMP1295,San Francisco,Stayed,35,0.65,Neutral,3.6,3.6
+EMP1296,London,Stayed,41,0.69,Neutral,3.5,3.0
+EMP1297,New York,Stayed,8,0.89,Positive,4.5,4.7
+EMP1298,San Francisco,Stayed,6,0.9,Positive,4.5,4.5
+EMP1299,Austin,Stayed,48,0.62,Neutral,3.5,2.8
+EMP1300,Austin,Stayed,51,0.64,Neutral,3.0,3.1
+EMP1301,Remote,Stayed,8,0.93,Positive,4.4,4.8
+EMP1302,London,Stayed,55,0.43,Negative,2.4,2.9
+EMP1303,San Francisco,At-Risk,70,0.45,Neutral,2.6,2.4
+EMP1304,Remote,Stayed,11,0.87,Positive,4.6,4.6
+EMP1305,San Francisco,Stayed,10,0.95,Positive,4.6,4.7
+EMP1306,London,Stayed,61,0.45,Negative,2.4,3.0
+EMP1307,Austin,At-Risk,66,0.44,Negative,2.2,1.9
+EMP1308,New York,Stayed,55,0.58,Neutral,3.2,3.0
+EMP1309,Austin,Stayed,16,0.98,Positive,4.4,4.1
+EMP1310,Remote,Stayed,17,0.94,Positive,4.7,4.1
+EMP1311,New York,At-Risk,66,0.58,Neutral,2.6,2.7
+EMP1312,Remote,Stayed,63,0.46,Neutral,2.2,2.8
+EMP1313,London,Stayed,29,0.72,Neutral,3.6,3.6
+EMP1314,New York,Stayed,36,0.63,Neutral,3.2,2.8
+EMP1315,Remote,Stayed,33,0.69,Neutral,3.6,3.7
+EMP1316,London,Stayed,26,0.76,Positive,3.9,4.1
+EMP1317,Austin,At-Risk,67,0.39,Negative,2.2,2.1
+EMP1318,London,Stayed,46,0.53,Neutral,2.9,3.5
+EMP1319,San Francisco,At-Risk,74,0.55,Neutral,2.2,1.9
+EMP1320,London,At-Risk,77,0.44,Negative,2.1,2.0
+EMP1321,London,Stayed,37,0.76,Positive,3.4,3.5
+EMP1322,San Francisco,Stayed,40,0.62,Neutral,3.3,3.5
+EMP1323,Remote,Stayed,0,0.94,Positive,5.0,5.0
+EMP1324,Remote,Stayed,38,0.69,Neutral,3.7,3.2
+EMP1325,London,Stayed,63,0.37,Negative,2.0,2.9
+EMP1326,San Francisco,Stayed,56,0.53,Neutral,2.7,2.6
+EMP1327,San Francisco,Stayed,45,0.6,Neutral,3.1,3.1
+EMP1328,Austin,Stayed,45,0.58,Neutral,3.1,3.4
+EMP1329,Remote,At-Risk,68,0.45,Negative,2.2,2.0
+EMP1330,New York,Stayed,44,0.63,Neutral,3.1,3.1
+EMP1331,Remote,Stayed,51,0.71,Neutral,3.4,3.1
+EMP1332,Remote,Stayed,23,0.91,Positive,4.2,4.3
+EMP1333,Austin,Stayed,22,0.78,Positive,4.0,3.9
+EMP1334,New York,Stayed,25,0.89,Positive,4.1,4.2
+EMP1335,Austin,At-Risk,81,0.41,Negative,2.0,1.6
+EMP1336,New York,Stayed,61,0.45,Neutral,2.7,2.3
+EMP1337,London,Stayed,52,0.69,Neutral,3.0,2.4
+EMP1338,New York,Stayed,37,0.8,Positive,3.5,3.2
+EMP1339,Austin,Left,85,0.43,Negative,2.0,1.0
+EMP1340,Remote,Stayed,11,0.89,Positive,4.4,4.3
+EMP1341,New York,Stayed,24,0.85,Positive,4.3,4.1
+EMP1342,New York,Stayed,40,0.71,Neutral,3.6,3.7
+EMP1343,San Francisco,At-Risk,69,0.5,Neutral,2.2,2.2
+EMP1344,Remote,Stayed,18,0.86,Positive,4.3,4.8
+EMP1345,London,Stayed,43,0.63,Neutral,2.8,3.8
+EMP1346,Austin,Stayed,8,0.87,Positive,4.3,4.8
+EMP1347,London,Stayed,50,0.63,Neutral,3.3,3.1
+EMP1348,Remote,Stayed,24,0.85,Positive,4.4,4.2
+EMP1349,New York,Stayed,42,0.67,Neutral,3.6,3.9
+EMP1350,New York,At-Risk,72,0.51,Neutral,2.4,1.7
+EMP1351,Remote,Stayed,30,0.74,Neutral,4.0,3.9
+EMP1352,New York,Stayed,30,0.73,Neutral,3.9,3.8
+EMP1353,New York,Stayed,24,0.91,Positive,4.2,4.5
+EMP1354,New York,Stayed,61,0.45,Neutral,2.5,2.8
+EMP1355,Austin,At-Risk,67,0.56,Neutral,2.6,2.3
+EMP1356,Austin,Stayed,4,0.83,Positive,4.7,4.5
+EMP1357,San Francisco,Stayed,15,0.92,Positive,4.2,4.4
+EMP1358,London,Stayed,39,0.68,Neutral,3.7,3.4
+EMP1359,Remote,Stayed,16,0.81,Positive,4.3,4.8
+EMP1360,Remote,Stayed,32,0.79,Positive,3.8,4.0
+EMP1361,Remote,Stayed,25,0.81,Positive,4.0,4.0
+EMP1362,San Francisco,Stayed,3,0.98,Positive,4.7,4.8
+EMP1363,Austin,Stayed,33,0.68,Neutral,3.7,3.5
+EMP1364,San Francisco,Stayed,30,0.77,Positive,3.9,3.6
+EMP1365,Remote,At-Risk,66,0.46,Neutral,2.5,2.3
+EMP1366,London,Stayed,57,0.43,Negative,2.4,2.6
+EMP1367,New York,Stayed,19,0.86,Positive,4.1,4.2
+EMP1368,Austin,Stayed,55,0.61,Neutral,2.8,2.6
+EMP1369,Austin,Stayed,45,0.5,Neutral,2.6,2.9
+EMP1370,San Francisco,Stayed,56,0.66,Neutral,2.9,2.9
+EMP1371,Austin,Stayed,60,0.51,Neutral,2.7,2.4
+EMP1372,Remote,Stayed,59,0.6,Neutral,2.6,2.7
+EMP1373,Remote,Stayed,44,0.68,Neutral,3.3,2.9
+EMP1374,San Francisco,Stayed,16,0.88,Positive,4.7,4.0
+EMP1375,Remote,Stayed,32,0.8,Positive,3.5,3.5
+EMP1376,London,Left,85,0.29,Negative,1.6,1.3
+EMP1377,San Francisco,At-Risk,73,0.51,Neutral,2.2,2.1
+EMP1378,London,Stayed,53,0.62,Neutral,3.1,2.7
+EMP1379,New York,Stayed,35,0.65,Neutral,3.1,3.6
+EMP1380,London,Stayed,48,0.74,Neutral,3.5,3.2
+EMP1381,New York,Stayed,23,0.84,Positive,4.0,3.8
+EMP1382,New York,Stayed,13,0.86,Positive,4.4,4.5
+EMP1383,London,Left,93,0.39,Negative,1.8,1.3
+EMP1384,San Francisco,Stayed,18,0.84,Positive,4.1,3.5
+EMP1385,Remote,Stayed,45,0.57,Neutral,2.8,2.9
+EMP1386,Remote,Stayed,8,0.95,Positive,4.8,4.6
+EMP1387,New York,Stayed,18,0.79,Positive,3.9,3.5
+EMP1388,New York,Stayed,38,0.69,Neutral,3.0,3.2
+EMP1389,San Francisco,Stayed,63,0.55,Neutral,2.8,2.5
+EMP1390,Austin,Stayed,59,0.57,Neutral,2.6,2.5
+EMP1391,London,Stayed,62,0.59,Neutral,3.1,2.7
+EMP1392,New York,Stayed,52,0.49,Neutral,2.7,2.8
+EMP1393,Remote,Stayed,23,0.92,Positive,3.8,4.3
+EMP1394,San Francisco,Stayed,65,0.59,Neutral,2.8,2.0
+EMP1395,London,Stayed,52,0.63,Neutral,3.0,3.0
+EMP1396,San Francisco,Stayed,9,0.92,Positive,4.4,4.8
+EMP1397,London,Stayed,40,0.74,Neutral,3.3,3.2
+EMP1398,London,Stayed,48,0.68,Neutral,3.3,2.8
+EMP1399,New York,At-Risk,66,0.55,Neutral,2.6,2.7
+EMP1400,San Francisco,At-Risk,68,0.4,Negative,2.3,2.7
+EMP1401,San Francisco,Stayed,15,0.87,Positive,4.1,4.5
+EMP1402,Remote,Stayed,40,0.61,Neutral,3.1,3.3
+EMP1403,Remote,Stayed,38,0.69,Neutral,3.3,3.3
+EMP1404,New York,At-Risk,69,0.33,Negative,2.1,1.7
+EMP1405,New York,Stayed,52,0.59,Neutral,2.8,3.1
+EMP1406,Austin,At-Risk,73,0.31,Negative,2.1,2.4
+EMP1407,Remote,Stayed,13,0.91,Positive,4.6,4.2
+EMP1408,London,Left,88,0.26,Negative,1.7,1.9
+EMP1409,San Francisco,Stayed,39,0.77,Positive,3.7,3.9
+EMP1410,New York,At-Risk,70,0.43,Negative,2.1,2.5
+EMP1411,San Francisco,Stayed,28,0.76,Positive,4.0,4.0
+EMP1412,San Francisco,Stayed,49,0.67,Neutral,3.0,2.6
+EMP1413,Austin,Stayed,7,0.89,Positive,4.7,4.5
+EMP1414,Remote,Stayed,18,0.78,Positive,4.7,4.3
+EMP1415,New York,Stayed,47,0.62,Neutral,3.0,3.0
+EMP1416,San Francisco,Stayed,15,0.85,Positive,4.7,4.6
+EMP1417,New York,Stayed,5,0.95,Positive,5.0,5.0
+EMP1418,London,Stayed,38,0.67,Neutral,3.5,3.8
+EMP1419,Austin,Stayed,1,0.84,Positive,4.5,4.9
+EMP1420,London,At-Risk,77,0.32,Negative,1.7,1.9
+EMP1421,New York,Stayed,36,0.68,Neutral,3.7,3.6
+EMP1422,New York,At-Risk,66,0.45,Negative,2.2,2.1
+EMP1423,Remote,At-Risk,67,0.4,Negative,2.3,2.2
+EMP1424,San Francisco,Stayed,3,1.0,Positive,5.0,5.0
+EMP1425,San Francisco,Stayed,46,0.65,Neutral,3.0,3.1
+EMP1426,London,Stayed,39,0.69,Neutral,3.2,3.2
+EMP1427,Austin,Stayed,6,0.88,Positive,4.4,4.3
+EMP1428,San Francisco,Stayed,11,0.87,Positive,4.6,4.3
+EMP1429,Remote,Stayed,9,1.0,Positive,5.0,4.4
+EMP1430,London,At-Risk,72,0.31,Negative,1.7,2.2
+EMP1431,London,Left,88,0.23,Negative,1.1,2.0
+EMP1432,Remote,Stayed,38,0.56,Neutral,3.2,3.7
+EMP1433,Austin,At-Risk,66,0.52,Neutral,2.4,1.9
+EMP1434,Remote,At-Risk,74,0.42,Negative,2.1,2.4
+EMP1435,Austin,Stayed,52,0.73,Neutral,3.1,3.5
+EMP1436,Remote,Stayed,22,0.94,Positive,4.4,4.2
+EMP1437,Remote,Stayed,27,0.77,Positive,3.7,3.9
+EMP1438,New York,Stayed,63,0.58,Neutral,2.9,2.8
+EMP1439,London,Stayed,49,0.56,Neutral,3.0,3.6
+EMP1440,Remote,Stayed,53,0.59,Neutral,2.7,2.8
+EMP1441,Remote,At-Risk,73,0.4,Negative,2.0,1.7
+EMP1442,San Francisco,Stayed,20,0.92,Positive,4.3,4.6
+EMP1443,London,Stayed,49,0.59,Neutral,2.9,3.3
+EMP1444,San Francisco,Stayed,12,0.88,Positive,4.3,4.4
+EMP1445,London,Left,94,0.25,Negative,1.1,1.3
+EMP1446,San Francisco,Stayed,10,0.86,Positive,4.5,4.5
+EMP1447,Remote,Stayed,28,0.72,Neutral,3.9,3.4
+EMP1448,Remote,Stayed,38,0.69,Neutral,3.7,3.6
+EMP1449,New York,Stayed,29,0.83,Positive,3.9,4.1
+EMP1450,San Francisco,Stayed,14,0.87,Positive,4.6,4.5
+EMP1451,Austin,Stayed,31,0.71,Neutral,3.8,4.1
+EMP1452,New York,Stayed,28,0.78,Positive,3.7,3.6
+EMP1453,San Francisco,Stayed,0,0.98,Positive,5.0,4.8
+EMP1454,San Francisco,Stayed,22,0.84,Positive,4.3,4.6
+EMP1455,New York,Stayed,41,0.64,Neutral,3.3,3.4
+EMP1456,Remote,Stayed,16,0.71,Neutral,4.1,4.0
+EMP1457,San Francisco,Stayed,42,0.59,Neutral,3.2,3.6
+EMP1458,Remote,Stayed,63,0.6,Neutral,2.7,2.4
+EMP1459,New York,Stayed,35,0.73,Neutral,3.8,3.5
+EMP1460,Remote,Stayed,12,0.86,Positive,4.8,3.7
+EMP1461,London,Stayed,41,0.71,Neutral,3.8,3.6
+EMP1462,Austin,Stayed,36,0.62,Neutral,3.0,3.5
+EMP1463,San Francisco,Stayed,44,0.73,Neutral,3.6,2.8
+EMP1464,Austin,At-Risk,71,0.51,Neutral,2.6,2.3
+EMP1465,Remote,Stayed,3,0.96,Positive,5.0,5.0
+EMP1466,San Francisco,Stayed,14,0.92,Positive,4.9,4.0
+EMP1467,Remote,Stayed,23,0.81,Positive,3.9,3.7
+EMP1468,London,Stayed,36,0.72,Neutral,3.4,3.9
+EMP1469,New York,Stayed,13,0.89,Positive,4.1,5.0
+EMP1470,San Francisco,Stayed,23,0.7,Neutral,3.8,3.9
+EMP1471,London,Left,100,0.3,Negative,1.2,1.0
+EMP1472,London,Stayed,65,0.47,Neutral,2.4,2.0
+EMP1473,San Francisco,Stayed,20,0.81,Positive,4.0,4.1
+EMP1474,Remote,Stayed,25,0.85,Positive,4.0,4.1
+EMP1475,London,Stayed,63,0.4,Negative,2.1,2.9
+EMP1476,Austin,Stayed,3,0.86,Positive,4.8,5.0
+EMP1477,London,Left,86,0.34,Negative,1.5,1.5
+EMP1478,Remote,Stayed,45,0.72,Neutral,3.5,3.4
+EMP1479,Remote,Stayed,9,0.8,Positive,4.1,5.0
+EMP1480,Austin,Stayed,17,0.85,Positive,4.1,4.3
+EMP1481,London,Stayed,56,0.63,Neutral,2.9,2.7
+EMP1482,Remote,Stayed,50,0.49,Neutral,2.8,2.7
+EMP1483,San Francisco,Stayed,61,0.49,Neutral,2.5,2.1
+EMP1484,New York,Stayed,37,0.67,Neutral,3.9,2.9
+EMP1485,New York,Stayed,33,0.75,Positive,3.8,3.9
+EMP1486,New York,Stayed,59,0.49,Neutral,2.5,3.3
+EMP1487,London,Stayed,54,0.65,Neutral,3.1,2.5
+EMP1488,Austin,Stayed,37,0.62,Neutral,3.4,3.4
+EMP1489,Remote,Stayed,29,0.78,Positive,4.0,3.7
+EMP1490,San Francisco,Stayed,12,0.74,Neutral,4.5,4.7
+EMP1491,San Francisco,Stayed,64,0.53,Neutral,2.5,2.4
+EMP1492,London,Left,100,0.21,Negative,1.1,1.0
+EMP1493,New York,Stayed,15,0.87,Positive,4.3,3.9
+EMP1494,London,Stayed,54,0.49,Neutral,2.8,2.5
+EMP1495,Austin,Stayed,22,0.84,Positive,4.1,4.6
+EMP1496,Austin,Stayed,0,0.99,Positive,4.5,5.0
+EMP1497,Remote,Stayed,13,0.87,Positive,4.4,4.3
+EMP1498,Remote,Stayed,0,1.0,Positive,4.9,5.0
+EMP1499,Austin,Stayed,27,0.68,Neutral,3.6,3.5
+EMP1500,Austin,Stayed,38,0.69,Neutral,3.5,3.3
+EMP1501,Austin,Stayed,48,0.56,Neutral,3.2,3.2
+EMP1502,London,Left,88,0.33,Negative,1.5,1.6
+EMP1503,Austin,Stayed,38,0.75,Positive,3.7,3.5
+EMP1504,San Francisco,Stayed,60,0.51,Neutral,2.8,2.8
+EMP1505,New York,Stayed,1,0.91,Positive,4.8,5.0
+EMP1506,Austin,Stayed,43,0.75,Positive,3.7,3.8
+EMP1507,New York,Stayed,28,0.8,Positive,3.8,3.8
+EMP1508,London,At-Risk,70,0.49,Neutral,2.1,2.3
+EMP1509,New York,Stayed,64,0.42,Negative,2.2,2.4
+EMP1510,London,Left,100,0.15,Negative,1.1,1.1
+EMP1511,San Francisco,Stayed,43,0.67,Neutral,3.3,3.1
+EMP1512,London,Left,92,0.34,Negative,1.3,1.3
+EMP1513,London,Stayed,59,0.48,Neutral,2.8,2.2
+EMP1514,Remote,Stayed,8,0.88,Positive,4.6,4.6
+EMP1515,Austin,Stayed,19,0.96,Positive,4.6,3.7
+EMP1516,Austin,Stayed,30,0.8,Positive,4.0,3.3
+EMP1517,San Francisco,Stayed,64,0.5,Neutral,2.6,1.9
+EMP1518,San Francisco,Stayed,11,0.93,Positive,4.6,5.0
+EMP1519,Austin,Stayed,7,0.98,Positive,4.7,4.7
+EMP1520,Remote,At-Risk,67,0.51,Neutral,2.6,2.1
+EMP1521,Austin,Stayed,13,0.83,Positive,4.2,4.4
+EMP1522,Remote,Stayed,47,0.6,Neutral,2.9,3.3
+EMP1523,San Francisco,Stayed,6,0.87,Positive,4.4,4.6
+EMP1524,New York,Stayed,10,1.0,Positive,5.0,4.9
+EMP1525,San Francisco,At-Risk,78,0.52,Neutral,2.1,2.2
+EMP1526,San Francisco,Stayed,7,0.89,Positive,4.7,5.0
+EMP1527,London,Stayed,65,0.51,Neutral,2.9,2.7
+EMP1528,London,Stayed,30,0.8,Positive,3.9,3.9
+EMP1529,London,Stayed,65,0.41,Negative,2.4,2.3
+EMP1530,London,Stayed,44,0.64,Neutral,3.5,2.9
+EMP1531,Remote,At-Risk,73,0.33,Negative,2.2,2.6
+EMP1532,Austin,Stayed,37,0.58,Neutral,3.0,3.8
+EMP1533,New York,At-Risk,67,0.44,Negative,2.2,1.9
+EMP1534,San Francisco,Stayed,3,0.96,Positive,4.9,5.0
+EMP1535,Remote,Stayed,14,0.96,Positive,4.5,4.1
+EMP1536,New York,Stayed,0,0.98,Positive,4.6,4.6
+EMP1537,Remote,Stayed,0,1.0,Positive,4.8,5.0
+EMP1538,Remote,At-Risk,69,0.45,Neutral,2.3,2.0
+EMP1539,San Francisco,Stayed,46,0.69,Neutral,3.2,3.2
+EMP1540,Austin,At-Risk,77,0.46,Neutral,2.2,1.5
+EMP1541,London,Left,96,0.34,Negative,1.6,1.4
+EMP1542,Austin,Stayed,64,0.51,Neutral,2.7,1.9
+EMP1543,San Francisco,Stayed,39,0.57,Neutral,3.4,3.6
+EMP1544,San Francisco,Stayed,43,0.59,Neutral,2.8,3.1
+EMP1545,San Francisco,At-Risk,68,0.52,Neutral,2.3,2.2
+EMP1546,New York,Stayed,62,0.42,Negative,2.5,2.6
+EMP1547,Austin,Stayed,58,0.49,Neutral,2.4,2.3
+EMP1548,Austin,Stayed,0,1.0,Positive,4.9,5.0
+EMP1549,Remote,Stayed,19,0.84,Positive,4.3,4.3
+EMP1550,Remote,Stayed,7,1.0,Positive,4.9,4.1
+EMP1551,Remote,Stayed,37,0.66,Neutral,3.3,3.7
+EMP1552,San Francisco,Stayed,58,0.54,Neutral,2.8,2.7
+EMP1553,Austin,Stayed,30,0.94,Positive,4.4,3.9
+EMP1554,San Francisco,Stayed,51,0.55,Neutral,3.0,2.8
+EMP1555,New York,At-Risk,69,0.54,Neutral,2.9,2.1
+EMP1556,Remote,Stayed,52,0.49,Neutral,2.7,2.2
+EMP1557,San Francisco,Stayed,65,0.42,Negative,2.4,2.4
+EMP1558,San Francisco,Stayed,53,0.56,Neutral,2.8,2.9
+EMP1559,New York,Stayed,44,0.59,Neutral,3.1,3.2
+EMP1560,London,Stayed,52,0.63,Neutral,3.0,3.0
+EMP1561,Austin,At-Risk,72,0.35,Negative,2.2,1.9
+EMP1562,London,At-Risk,74,0.27,Negative,1.6,1.6
+EMP1563,Remote,Stayed,8,0.89,Positive,4.4,4.3
+EMP1564,San Francisco,At-Risk,74,0.56,Neutral,2.4,1.8
+EMP1565,New York,Stayed,44,0.62,Neutral,3.0,2.7
+EMP1566,New York,Stayed,10,0.89,Positive,4.6,4.9
+EMP1567,Austin,Stayed,57,0.42,Negative,2.5,3.1
+EMP1568,London,Left,90,0.22,Negative,1.2,1.5
+EMP1569,Austin,Stayed,32,0.69,Neutral,3.5,4.1
+EMP1570,San Francisco,Stayed,54,0.46,Neutral,2.9,2.9
+EMP1571,Austin,Stayed,19,0.68,Neutral,3.7,4.4
+EMP1572,New York,Stayed,9,0.85,Positive,4.4,5.0
+EMP1573,New York,Stayed,65,0.47,Neutral,2.4,1.7
+EMP1574,Remote,Stayed,31,0.75,Neutral,3.7,3.8
+EMP1575,Remote,Stayed,39,0.67,Neutral,3.5,3.6
+EMP1576,San Francisco,At-Risk,66,0.51,Neutral,2.4,2.3
+EMP1577,London,Stayed,54,0.58,Neutral,2.9,3.1
+EMP1578,Austin,Stayed,50,0.55,Neutral,2.8,2.8
+EMP1579,San Francisco,Stayed,41,0.72,Neutral,3.5,3.2
+EMP1580,Remote,At-Risk,67,0.48,Neutral,2.2,2.2
+EMP1581,Austin,Stayed,34,0.6,Neutral,3.4,3.9
+EMP1582,Remote,Stayed,47,0.58,Neutral,2.9,3.0
+EMP1583,Austin,Stayed,8,0.94,Positive,4.5,4.7
+EMP1584,London,Left,91,0.29,Negative,1.2,1.1
+EMP1585,San Francisco,Stayed,33,0.67,Neutral,3.3,3.4
+EMP1586,Austin,Stayed,41,0.66,Neutral,3.4,2.9
+EMP1587,New York,Stayed,25,0.86,Positive,4.2,4.0
+EMP1588,New York,Stayed,33,0.78,Positive,3.7,3.7
+EMP1589,Austin,Stayed,23,0.81,Positive,4.0,3.5
+EMP1590,Austin,Stayed,18,0.88,Positive,4.3,4.0
+EMP1591,Austin,Stayed,12,0.9,Positive,4.6,4.7
+EMP1592,New York,Stayed,48,0.52,Neutral,2.9,3.0
+EMP1593,New York,Stayed,24,0.71,Neutral,3.6,3.9
+EMP1594,Austin,Stayed,25,0.87,Positive,4.5,4.3
+EMP1595,Remote,Stayed,0,0.96,Positive,5.0,5.0
+EMP1596,Remote,Stayed,5,1.0,Positive,4.7,4.4
+EMP1597,London,At-Risk,70,0.47,Neutral,2.1,2.4
+EMP1598,San Francisco,Stayed,55,0.43,Negative,2.6,3.1
+EMP1599,Remote,Stayed,28,0.64,Neutral,3.5,3.7
+EMP1600,New York,Stayed,15,0.83,Positive,4.2,4.6
+EMP1601,Remote,Stayed,42,0.66,Neutral,3.5,3.5
+EMP1602,London,Stayed,59,0.51,Neutral,2.4,2.8
+EMP1603,London,Stayed,26,0.64,Neutral,3.5,3.5
+EMP1604,San Francisco,Stayed,53,0.66,Neutral,3.1,2.7
+EMP1605,Remote,Stayed,12,0.91,Positive,4.6,4.7
+EMP1606,New York,Stayed,45,0.63,Neutral,3.2,2.8
+EMP1607,New York,Stayed,38,0.6,Neutral,3.0,3.9
+EMP1608,Austin,Stayed,53,0.65,Neutral,3.4,3.2
+EMP1609,New York,Stayed,11,0.76,Positive,4.3,4.5
+EMP1610,San Francisco,Stayed,59,0.48,Neutral,2.4,2.4
+EMP1611,San Francisco,Stayed,65,0.5,Neutral,2.6,2.1
+EMP1612,New York,Stayed,14,0.92,Positive,4.9,4.1
+EMP1613,New York,Stayed,61,0.56,Neutral,2.5,2.8
+EMP1614,Austin,Stayed,13,0.77,Positive,3.7,4.3
+EMP1615,New York,Stayed,31,0.87,Positive,3.7,3.4
+EMP1616,Austin,Stayed,50,0.74,Neutral,3.5,2.8
+EMP1617,Austin,Stayed,29,0.75,Positive,3.9,3.8
+EMP1618,New York,Stayed,55,0.49,Neutral,2.7,2.3
+EMP1619,London,At-Risk,67,0.51,Neutral,2.7,2.4
+EMP1620,London,At-Risk,74,0.39,Negative,2.1,2.4
+EMP1621,Austin,Stayed,24,0.8,Positive,4.0,4.0
+EMP1622,New York,At-Risk,72,0.41,Negative,2.4,2.1
+EMP1623,London,Stayed,64,0.57,Neutral,2.7,2.9
+EMP1624,New York,Stayed,53,0.52,Neutral,2.6,2.8
+EMP1625,New York,Stayed,58,0.59,Neutral,2.8,2.7
+EMP1626,New York,At-Risk,67,0.47,Neutral,2.7,2.7
+EMP1627,Remote,Stayed,62,0.52,Neutral,2.5,2.8
+EMP1628,New York,Stayed,7,0.96,Positive,4.5,4.6
+EMP1629,Remote,Stayed,54,0.53,Neutral,2.9,2.9
+EMP1630,Austin,Stayed,10,0.91,Positive,4.8,5.0
+EMP1631,London,Stayed,19,0.82,Positive,3.9,4.1
+EMP1632,London,Stayed,58,0.49,Neutral,2.7,2.5
+EMP1633,London,Left,89,0.27,Negative,1.4,1.3
+EMP1634,London,At-Risk,70,0.5,Neutral,2.1,1.9
+EMP1635,London,Stayed,38,0.63,Neutral,3.4,3.6
+EMP1636,London,At-Risk,74,0.5,Neutral,2.1,1.9
+EMP1637,London,Left,98,0.24,Negative,1.3,1.1
+EMP1638,Austin,Stayed,34,0.68,Neutral,3.7,4.1
+EMP1639,New York,Stayed,4,0.94,Positive,4.5,4.6
+EMP1640,San Francisco,Stayed,10,0.88,Positive,4.4,4.9
+EMP1641,Remote,Stayed,58,0.51,Neutral,2.5,2.8
+EMP1642,San Francisco,Stayed,30,0.77,Positive,4.0,3.5
+EMP1643,San Francisco,Stayed,58,0.54,Neutral,2.7,2.6
+EMP1644,New York,Stayed,49,0.43,Negative,2.7,3.1
+EMP1645,New York,Stayed,21,0.94,Positive,4.6,4.1
+EMP1646,New York,Stayed,63,0.61,Neutral,2.7,2.9
+EMP1647,London,Left,83,0.27,Negative,1.8,1.8
+EMP1648,Austin,Left,84,0.38,Negative,2.0,1.3
+EMP1649,London,Stayed,34,0.68,Neutral,3.6,3.7
+EMP1650,Austin,Stayed,23,0.8,Positive,4.4,4.0
+EMP1651,Austin,Stayed,20,0.67,Neutral,3.9,3.4
+EMP1652,San Francisco,Stayed,18,0.79,Positive,4.3,4.3
+EMP1653,San Francisco,At-Risk,68,0.48,Neutral,2.5,1.7
+EMP1654,Austin,Stayed,44,0.73,Neutral,3.4,3.1
+EMP1655,Austin,Stayed,43,0.53,Neutral,3.1,4.1
+EMP1656,London,Left,90,0.27,Negative,1.3,1.5
+EMP1657,London,Stayed,65,0.5,Neutral,2.5,2.1
+EMP1658,San Francisco,Stayed,0,1.0,Positive,4.8,5.0
+EMP1659,New York,At-Risk,75,0.45,Neutral,2.1,1.7
+EMP1660,Austin,Stayed,58,0.61,Neutral,2.9,2.7
+EMP1661,London,Left,84,0.36,Negative,1.6,1.2
+EMP1662,San Francisco,Stayed,46,0.5,Neutral,2.7,2.8
+EMP1663,London,Stayed,37,0.72,Neutral,3.7,4.3
+EMP1664,Austin,Stayed,45,0.74,Neutral,3.4,3.0
+EMP1665,Austin,Stayed,47,0.58,Neutral,3.4,2.6
+EMP1666,Remote,Stayed,20,0.82,Positive,4.3,4.7
+EMP1667,New York,Stayed,57,0.43,Negative,2.5,3.1
+EMP1668,Remote,Stayed,53,0.7,Neutral,3.5,2.7
+EMP1669,San Francisco,Stayed,47,0.64,Neutral,3.3,3.5
+EMP1670,London,Stayed,47,0.59,Neutral,2.8,2.9
+EMP1671,San Francisco,Stayed,5,0.99,Positive,5.0,4.7
+EMP1672,Austin,Stayed,31,0.78,Positive,4.3,3.8
+EMP1673,Remote,Stayed,36,0.56,Neutral,3.2,3.6
+EMP1674,Remote,Stayed,7,0.9,Positive,4.5,4.6
+EMP1675,Remote,Stayed,57,0.46,Neutral,2.5,2.6
+EMP1676,San Francisco,At-Risk,79,0.39,Negative,2.1,1.8
+EMP1677,Austin,Stayed,64,0.57,Neutral,2.6,2.3
+EMP1678,London,At-Risk,74,0.44,Negative,2.0,1.0
+EMP1679,London,Stayed,64,0.6,Neutral,2.5,2.4
+EMP1680,San Francisco,Stayed,21,0.75,Positive,3.8,4.4
+EMP1681,Remote,Stayed,9,0.91,Positive,4.7,4.4
+EMP1682,New York,Stayed,38,0.73,Neutral,3.5,2.9
+EMP1683,San Francisco,Stayed,37,0.67,Neutral,3.5,3.7
+EMP1684,San Francisco,At-Risk,74,0.4,Negative,2.2,2.4
+EMP1685,Austin,At-Risk,71,0.41,Negative,2.1,1.9
+EMP1686,London,Stayed,51,0.61,Neutral,2.7,2.5
+EMP1687,San Francisco,Stayed,39,0.7,Neutral,3.3,3.4
+EMP1688,San Francisco,Stayed,16,0.94,Positive,4.5,4.5
+EMP1689,Remote,Stayed,56,0.58,Neutral,2.5,2.9
+EMP1690,Remote,Stayed,55,0.46,Neutral,2.1,3.0
+EMP1691,New York,Stayed,51,0.61,Neutral,3.3,2.7
+EMP1692,Austin,Stayed,59,0.59,Neutral,2.7,3.2
+EMP1693,New York,At-Risk,70,0.48,Neutral,2.1,2.2
+EMP1694,Remote,Stayed,7,0.87,Positive,4.2,4.7
+EMP1695,London,Left,87,0.26,Negative,1.3,1.6
+EMP1696,Remote,Stayed,29,0.79,Positive,3.8,3.8
+EMP1697,Austin,Stayed,46,0.57,Neutral,2.8,3.1
+EMP1698,Remote,At-Risk,66,0.46,Neutral,2.5,2.4
+EMP1699,Austin,Stayed,45,0.59,Neutral,3.1,2.8
+EMP1700,Austin,Stayed,11,0.92,Positive,4.4,4.7
+EMP1701,Austin,Stayed,47,0.59,Neutral,3.2,2.8
+EMP1702,Austin,Stayed,19,0.81,Positive,4.3,4.5
+EMP1703,Austin,Stayed,65,0.51,Neutral,2.4,2.4
+EMP1704,London,Stayed,50,0.67,Neutral,3.3,2.4
+EMP1705,New York,Stayed,55,0.57,Neutral,2.7,2.5
+EMP1706,San Francisco,Stayed,23,0.74,Neutral,4.0,4.2
+EMP1707,New York,Stayed,32,0.77,Positive,3.7,3.5
+EMP1708,Austin,Stayed,11,0.92,Positive,4.8,3.8
+EMP1709,London,At-Risk,66,0.38,Negative,2.2,2.7
+EMP1710,Remote,At-Risk,71,0.41,Negative,2.2,2.3
+EMP1711,London,Left,95,0.28,Negative,1.1,1.2
+EMP1712,Austin,Stayed,19,0.88,Positive,4.5,4.3
+EMP1713,London,Stayed,59,0.62,Neutral,2.6,2.8
+EMP1714,London,Stayed,28,0.56,Neutral,3.3,4.1
+EMP1715,Austin,At-Risk,67,0.46,Neutral,2.7,2.4
+EMP1716,London,At-Risk,71,0.47,Neutral,2.0,2.7
+EMP1717,San Francisco,At-Risk,76,0.5,Neutral,2.1,2.2
+EMP1718,San Francisco,Stayed,8,0.93,Positive,4.9,4.5
+EMP1719,London,Stayed,29,0.6,Neutral,3.0,3.9
+EMP1720,Remote,Stayed,8,1.0,Positive,4.8,5.0
+EMP1721,Austin,Stayed,52,0.55,Neutral,2.8,3.1
+EMP1722,San Francisco,Stayed,31,0.77,Positive,3.8,3.7
+EMP1723,Remote,Stayed,29,0.81,Positive,4.0,3.7
+EMP1724,London,Left,85,0.32,Negative,2.0,2.0
+EMP1725,Remote,Stayed,4,0.89,Positive,4.5,5.0
+EMP1726,New York,Stayed,2,0.97,Positive,4.8,4.7
+EMP1727,San Francisco,Stayed,4,0.94,Positive,4.7,4.6
+EMP1728,London,Stayed,33,0.56,Neutral,3.2,3.8
+EMP1729,Austin,Stayed,50,0.6,Neutral,2.8,2.7
+EMP1730,London,At-Risk,67,0.38,Negative,1.8,2.0
+EMP1731,Austin,Stayed,3,0.93,Positive,4.9,5.0
+EMP1732,London,Left,100,0.3,Negative,1.0,1.0
+EMP1733,Remote,Stayed,30,0.81,Positive,4.1,4.3
+EMP1734,Remote,Stayed,15,0.81,Positive,4.1,4.4
+EMP1735,Remote,Stayed,28,0.81,Positive,3.9,3.7
+EMP1736,New York,Stayed,6,1.0,Positive,5.0,5.0
+EMP1737,Austin,Stayed,55,0.62,Neutral,2.9,2.7
+EMP1738,Remote,Stayed,52,0.65,Neutral,3.0,2.7
+EMP1739,New York,At-Risk,73,0.4,Negative,2.2,1.6
+EMP1740,Austin,Stayed,49,0.67,Neutral,3.3,3.1
+EMP1741,London,At-Risk,78,0.33,Negative,1.8,1.5
+EMP1742,New York,Stayed,53,0.64,Neutral,3.0,2.9
+EMP1743,San Francisco,Stayed,11,0.94,Positive,4.5,4.7
+EMP1744,New York,Stayed,11,1.0,Positive,4.8,4.1
+EMP1745,New York,At-Risk,72,0.4,Negative,2.6,1.8
+EMP1746,Austin,Stayed,50,0.59,Neutral,3.1,2.8
+EMP1747,London,Stayed,25,0.82,Positive,3.8,4.0
+EMP1748,San Francisco,At-Risk,69,0.37,Negative,2.2,2.3
+EMP1749,Remote,Stayed,63,0.5,Neutral,2.3,2.0
+EMP1750,Remote,Stayed,61,0.55,Neutral,2.5,3.0
+EMP1751,New York,Stayed,37,0.76,Positive,3.8,3.5
+EMP1752,Austin,Stayed,58,0.42,Negative,2.5,2.6
+EMP1753,Austin,Stayed,0,0.97,Positive,4.9,4.8
+EMP1754,Remote,Stayed,41,0.74,Neutral,3.3,3.0
+EMP1755,San Francisco,Stayed,39,0.78,Positive,3.5,3.3
+EMP1756,London,At-Risk,79,0.36,Negative,1.7,2.0
+EMP1757,San Francisco,Stayed,46,0.63,Neutral,3.4,3.6
+EMP1758,London,Stayed,53,0.68,Neutral,3.0,3.4
+EMP1759,Remote,Stayed,21,0.89,Positive,4.3,4.4
+EMP1760,London,Stayed,50,0.61,Neutral,3.3,2.6
+EMP1761,Austin,Stayed,18,0.76,Positive,3.7,4.6
+EMP1762,New York,Stayed,14,0.96,Positive,4.7,4.9
+EMP1763,New York,Stayed,10,0.86,Positive,4.5,4.7
+EMP1764,Remote,Stayed,21,0.87,Positive,4.3,4.1
+EMP1765,Austin,At-Risk,69,0.49,Neutral,2.2,2.6
+EMP1766,San Francisco,At-Risk,79,0.39,Negative,2.0,1.6
+EMP1767,Austin,Stayed,62,0.59,Neutral,2.6,2.9
+EMP1768,New York,Stayed,35,0.71,Neutral,4.0,3.2
+EMP1769,New York,Stayed,46,0.76,Positive,3.2,3.5
+EMP1770,Austin,Stayed,51,0.64,Neutral,3.2,2.8
+EMP1771,Austin,Stayed,7,0.98,Positive,4.7,4.8
+EMP1772,New York,Stayed,5,0.95,Positive,4.7,5.0
+EMP1773,San Francisco,Stayed,3,0.9,Positive,4.7,5.0
+EMP1774,Remote,Stayed,40,0.59,Neutral,2.9,3.4
+EMP1775,Remote,Stayed,13,0.72,Neutral,4.1,4.5
+EMP1776,Austin,Stayed,60,0.6,Neutral,2.8,2.6
+EMP1777,Remote,Stayed,52,0.52,Neutral,2.6,2.8
+EMP1778,New York,At-Risk,66,0.5,Neutral,2.6,1.9
+EMP1779,New York,Stayed,46,0.64,Neutral,3.0,2.8
+EMP1780,Austin,Stayed,34,0.66,Neutral,3.3,3.8
+EMP1781,Austin,Stayed,13,0.93,Positive,4.5,4.3
+EMP1782,Austin,At-Risk,71,0.52,Neutral,2.4,1.6
+EMP1783,San Francisco,Stayed,4,0.81,Positive,4.2,5.0
+EMP1784,Remote,Stayed,31,0.68,Neutral,3.6,3.8
+EMP1785,Austin,Stayed,45,0.49,Neutral,2.9,3.2
+EMP1786,London,Stayed,63,0.5,Neutral,2.5,2.1
+EMP1787,London,At-Risk,80,0.4,Negative,1.9,2.0
+EMP1788,New York,Stayed,34,0.69,Neutral,3.8,3.9
+EMP1789,Remote,Stayed,39,0.73,Neutral,3.3,3.0
+EMP1790,Austin,At-Risk,71,0.46,Neutral,2.5,2.4
+EMP1791,London,Left,92,0.16,Negative,1.3,1.0
+EMP1792,Remote,Stayed,32,0.8,Positive,3.6,3.5
+EMP1793,New York,Stayed,0,0.84,Positive,4.7,5.0
+EMP1794,San Francisco,Stayed,52,0.65,Neutral,3.0,2.7
+EMP1795,Remote,Stayed,22,0.88,Positive,4.2,5.0
+EMP1796,Remote,Stayed,23,0.81,Positive,4.0,3.4
+EMP1797,San Francisco,Stayed,0,0.93,Positive,4.8,4.7
+EMP1798,Remote,Stayed,17,0.92,Positive,4.5,4.2
+EMP1799,New York,Stayed,36,0.79,Positive,3.7,3.6
+EMP1800,New York,Stayed,20,0.74,Neutral,4.0,4.5
+EMP1801,San Francisco,Stayed,14,0.99,Positive,4.7,4.3
+EMP1802,Austin,Stayed,41,0.69,Neutral,3.2,3.0
+EMP1803,London,At-Risk,68,0.41,Negative,2.0,2.2
+EMP1804,Austin,At-Risk,74,0.38,Negative,2.0,2.1
+EMP1805,Remote,Stayed,21,0.94,Positive,4.5,4.5
+EMP1806,London,Stayed,46,0.71,Neutral,3.4,3.0
+EMP1807,San Francisco,At-Risk,70,0.41,Negative,2.3,2.3
+EMP1808,San Francisco,Stayed,21,0.73,Neutral,3.7,4.2
+EMP1809,London,At-Risk,73,0.52,Neutral,2.4,1.7
+EMP1810,New York,Stayed,62,0.48,Neutral,2.4,2.1
+EMP1811,London,Stayed,42,0.84,Positive,3.9,3.2
+EMP1812,Remote,Stayed,51,0.51,Neutral,2.6,2.9
+EMP1813,New York,Stayed,61,0.39,Negative,2.2,2.7
+EMP1814,San Francisco,Stayed,23,0.87,Positive,3.8,3.7
+EMP1815,London,Stayed,49,0.56,Neutral,3.2,2.8
+EMP1816,Austin,At-Risk,76,0.39,Negative,2.1,1.7
+EMP1817,Austin,Stayed,34,0.81,Positive,4.0,3.9
+EMP1818,Remote,Stayed,40,0.77,Positive,3.6,3.5
+EMP1819,Austin,Stayed,59,0.49,Neutral,2.3,2.7
+EMP1820,London,Left,94,0.42,Negative,1.5,1.3
+EMP1821,London,Stayed,49,0.53,Neutral,2.7,2.9
+EMP1822,Austin,Stayed,50,0.53,Neutral,2.9,2.8
+EMP1823,London,Stayed,33,0.75,Positive,3.8,3.5
+EMP1824,Remote,Stayed,9,0.88,Positive,4.5,4.3
+EMP1825,New York,Stayed,6,0.99,Positive,5.0,5.0
+EMP1826,Remote,Stayed,63,0.51,Neutral,2.8,3.1
+EMP1827,Remote,Stayed,1,1.0,Positive,4.9,4.8
+EMP1828,London,At-Risk,69,0.48,Neutral,2.3,1.8
+EMP1829,New York,Stayed,44,0.55,Neutral,3.0,3.4
+EMP1830,London,Left,94,0.28,Negative,1.2,1.0
+EMP1831,San Francisco,At-Risk,71,0.39,Negative,2.2,2.3
+EMP1832,London,Stayed,41,0.56,Neutral,3.1,3.1
+EMP1833,London,At-Risk,67,0.48,Neutral,2.4,2.3
+EMP1834,London,Left,94,0.25,Negative,1.7,1.5
+EMP1835,New York,Stayed,16,0.8,Positive,3.8,4.1
+EMP1836,London,At-Risk,82,0.21,Negative,1.8,1.0
+EMP1837,New York,Stayed,24,0.7,Neutral,3.7,4.2
+EMP1838,Austin,Stayed,54,0.69,Neutral,3.1,2.7
+EMP1839,San Francisco,Stayed,16,0.86,Positive,4.5,4.6
+EMP1840,New York,Stayed,16,0.87,Positive,4.5,4.6
+EMP1841,Austin,Stayed,25,0.75,Positive,3.4,3.9
+EMP1842,New York,Stayed,44,0.57,Neutral,3.1,3.1
+EMP1843,New York,Stayed,46,0.66,Neutral,3.1,2.8
+EMP1844,San Francisco,Stayed,20,0.94,Positive,4.4,3.8
+EMP1845,Remote,Stayed,51,0.62,Neutral,3.0,2.8
+EMP1846,Remote,Stayed,60,0.45,Neutral,2.6,1.8
+EMP1847,New York,At-Risk,68,0.42,Negative,2.3,2.0
+EMP1848,London,At-Risk,69,0.62,Neutral,2.4,2.3
+EMP1849,Austin,Stayed,38,0.66,Neutral,3.4,3.2
+EMP1850,London,Stayed,35,0.85,Positive,3.5,3.5
+EMP1851,London,Left,92,0.42,Negative,1.7,1.6
+EMP1852,New York,Stayed,57,0.65,Neutral,3.1,3.0
+EMP1853,New York,Stayed,13,0.9,Positive,4.4,3.5
+EMP1854,New York,Stayed,18,0.87,Positive,4.5,4.0
+EMP1855,New York,Stayed,58,0.63,Neutral,3.2,3.4
+EMP1856,Remote,Stayed,39,0.64,Neutral,3.4,3.7
+EMP1857,New York,Stayed,59,0.58,Neutral,2.9,2.2
+EMP1858,Remote,Stayed,14,0.89,Positive,4.8,4.5
+EMP1859,Remote,Stayed,62,0.4,Negative,2.4,2.8
+EMP1860,New York,Stayed,11,1.0,Positive,4.8,4.5
+EMP1861,San Francisco,Stayed,23,0.73,Neutral,4.1,4.0
+EMP1862,Austin,Stayed,30,0.76,Positive,3.6,4.2
+EMP1863,London,Left,100,0.12,Negative,1.1,1.0
+EMP1864,Remote,Stayed,45,0.72,Neutral,3.4,3.2
+EMP1865,Austin,Stayed,42,0.63,Neutral,3.2,3.2
+EMP1866,San Francisco,Stayed,53,0.56,Neutral,2.5,3.2
+EMP1867,London,Stayed,39,0.58,Neutral,3.0,3.1
+EMP1868,London,Stayed,25,0.68,Neutral,3.9,3.9
+EMP1869,Remote,Stayed,39,0.73,Neutral,3.7,3.5
+EMP1870,New York,Stayed,21,0.84,Positive,4.1,4.4
+EMP1871,San Francisco,Stayed,62,0.43,Negative,2.2,2.5
+EMP1872,Remote,Stayed,38,0.68,Neutral,3.3,2.8
+EMP1873,San Francisco,Stayed,62,0.44,Negative,2.3,2.6
+EMP1874,New York,Stayed,34,0.7,Neutral,3.8,3.8
+EMP1875,New York,Stayed,2,0.91,Positive,4.8,4.8
+EMP1876,Remote,Stayed,21,0.77,Positive,4.0,3.6
+EMP1877,New York,At-Risk,67,0.42,Negative,2.2,2.1
+EMP1878,Austin,Stayed,54,0.73,Neutral,3.1,2.7
+EMP1879,London,At-Risk,69,0.59,Neutral,2.7,2.2
+EMP1880,Remote,Stayed,41,0.68,Neutral,3.2,3.4
+EMP1881,San Francisco,Stayed,19,0.92,Positive,4.5,4.4
+EMP1882,Austin,Stayed,23,0.9,Positive,4.4,3.9
+EMP1883,Remote,Stayed,14,0.78,Positive,3.8,4.7
+EMP1884,New York,Stayed,57,0.63,Neutral,3.1,2.7
+EMP1885,New York,Stayed,52,0.56,Neutral,2.8,3.2
+EMP1886,New York,At-Risk,66,0.36,Negative,2.3,1.7
+EMP1887,New York,Stayed,55,0.59,Neutral,3.1,3.2
+EMP1888,San Francisco,Stayed,44,0.64,Neutral,3.2,3.1
+EMP1889,Austin,Stayed,17,0.77,Positive,4.0,3.8
+EMP1890,London,Stayed,46,0.57,Neutral,3.0,3.1
+EMP1891,San Francisco,Stayed,64,0.46,Neutral,2.2,2.2
+EMP1892,San Francisco,Stayed,45,0.68,Neutral,3.2,2.9
+EMP1893,London,Left,87,0.32,Negative,1.5,1.2
+EMP1894,London,Left,91,0.33,Negative,1.5,1.0
+EMP1895,New York,Stayed,10,0.93,Positive,4.5,4.6
+EMP1896,San Francisco,At-Risk,76,0.41,Negative,2.1,1.6
+EMP1897,Remote,Stayed,46,0.68,Neutral,3.3,3.3
+EMP1898,London,At-Risk,81,0.21,Negative,1.5,1.7
+EMP1899,London,Stayed,39,0.71,Neutral,3.6,3.7
+EMP1900,Austin,Stayed,29,0.71,Neutral,3.7,3.4
+EMP1901,Remote,Stayed,57,0.62,Neutral,2.7,3.1
+EMP1902,Remote,Stayed,47,0.72,Neutral,3.5,3.3
+EMP1903,London,Stayed,49,0.57,Neutral,3.2,2.7
+EMP1904,New York,Stayed,5,1.0,Positive,4.9,4.8
+EMP1905,Austin,Stayed,51,0.58,Neutral,2.7,2.9
+EMP1906,Remote,Stayed,8,0.93,Positive,4.7,4.4
+EMP1907,London,Stayed,34,0.8,Positive,3.8,4.2
+EMP1908,Remote,Stayed,13,0.83,Positive,4.7,4.4
+EMP1909,Austin,Stayed,31,0.65,Neutral,3.9,3.7
+EMP1910,Austin,Stayed,22,0.72,Neutral,3.9,3.5
+EMP1911,San Francisco,Stayed,38,0.65,Neutral,3.2,3.5
+EMP1912,London,Stayed,52,0.73,Neutral,3.3,3.2
+EMP1913,Austin,Stayed,41,0.66,Neutral,3.6,3.2
+EMP1914,San Francisco,Stayed,28,0.76,Positive,4.0,3.9
+EMP1915,San Francisco,Stayed,56,0.66,Neutral,3.3,2.1
+EMP1916,Remote,Stayed,13,0.81,Positive,4.2,4.5
+EMP1917,Remote,Stayed,15,0.87,Positive,4.5,4.4
+EMP1918,San Francisco,Stayed,65,0.47,Neutral,2.4,1.5
+EMP1919,Remote,Stayed,10,0.97,Positive,4.5,3.9
+EMP1920,Austin,Stayed,32,0.78,Positive,3.6,3.5
+EMP1921,New York,Stayed,17,0.91,Positive,4.5,4.0
+EMP1922,Austin,Stayed,31,0.74,Neutral,3.3,3.6
+EMP1923,San Francisco,Stayed,45,0.65,Neutral,3.1,3.3
+EMP1924,San Francisco,Stayed,0,1.0,Positive,4.7,4.9
+EMP1925,Austin,Stayed,62,0.51,Neutral,2.8,1.7
+EMP1926,Remote,Stayed,20,0.87,Positive,4.5,4.3
+EMP1927,Remote,Stayed,41,0.66,Neutral,3.5,3.2
+EMP1928,San Francisco,Stayed,35,0.7,Neutral,3.5,3.2
+EMP1929,London,At-Risk,79,0.39,Negative,1.9,1.8
+EMP1930,Remote,Stayed,29,0.76,Positive,3.7,3.3
+EMP1931,Austin,Stayed,51,0.69,Neutral,3.0,3.1
+EMP1932,Remote,At-Risk,74,0.46,Neutral,2.1,2.4
+EMP1933,Austin,Stayed,55,0.54,Neutral,2.8,3.1
+EMP1934,San Francisco,Left,85,0.4,Negative,2.0,2.0
+EMP1935,Remote,Stayed,0,1.0,Positive,4.9,5.0
+EMP1936,Austin,Stayed,2,1.0,Positive,4.9,5.0
+EMP1937,San Francisco,Stayed,39,0.71,Neutral,3.2,3.1
+EMP1938,London,Stayed,46,0.61,Neutral,3.2,3.0
+EMP1939,Austin,Stayed,43,0.57,Neutral,3.0,3.6
+EMP1940,London,Stayed,57,0.57,Neutral,3.0,3.4
+EMP1941,London,Stayed,44,0.66,Neutral,3.4,2.9
+EMP1942,New York,Stayed,2,0.91,Positive,4.8,5.0
+EMP1943,Remote,Stayed,50,0.65,Neutral,3.2,3.1
+EMP1944,Austin,Stayed,19,0.89,Positive,4.3,4.0
+EMP1945,London,Left,97,0.43,Negative,1.8,1.0
+EMP1946,New York,Stayed,5,0.91,Positive,5.0,4.9
+EMP1947,San Francisco,At-Risk,77,0.37,Negative,2.1,2.1
+EMP1948,Austin,Stayed,14,0.8,Positive,3.8,4.4
+EMP1949,London,Stayed,56,0.6,Neutral,3.0,3.4
+EMP1950,Remote,Stayed,22,0.82,Positive,4.1,3.8
+EMP1951,New York,Stayed,64,0.54,Neutral,2.4,2.5
+EMP1952,London,Stayed,23,0.71,Neutral,3.8,4.1
+EMP1953,Remote,Stayed,55,0.47,Neutral,2.5,2.6
+EMP1954,London,Stayed,49,0.53,Neutral,2.9,2.6
+EMP1955,Austin,Stayed,60,0.43,Negative,2.7,2.5
+EMP1956,Austin,Stayed,40,0.59,Neutral,2.9,3.1
+EMP1957,Austin,Stayed,31,0.7,Neutral,3.6,3.8
+EMP1958,New York,Stayed,50,0.61,Neutral,3.3,3.1
+EMP1959,Austin,At-Risk,76,0.45,Neutral,2.5,1.4
+EMP1960,Remote,At-Risk,69,0.5,Neutral,2.5,2.0
+EMP1961,London,Stayed,61,0.41,Negative,2.3,2.5
+EMP1962,San Francisco,Stayed,18,0.87,Positive,4.3,3.4
+EMP1963,Remote,Stayed,9,0.96,Positive,4.7,5.0
+EMP1964,Remote,Stayed,62,0.44,Negative,2.3,2.7
+EMP1965,Austin,Stayed,44,0.62,Neutral,3.2,3.2
+EMP1966,New York,Stayed,64,0.47,Neutral,2.3,2.5
+EMP1967,London,Left,100,0.21,Negative,1.0,1.3
+EMP1968,New York,Stayed,35,0.86,Positive,4.0,3.9
+EMP1969,London,At-Risk,67,0.58,Neutral,2.8,2.3
+EMP1970,London,At-Risk,72,0.35,Negative,1.5,1.9
+EMP1971,New York,Stayed,50,0.57,Neutral,2.7,3.3
+EMP1972,Remote,At-Risk,71,0.35,Negative,2.1,1.6
+EMP1973,London,Stayed,47,0.67,Neutral,3.5,2.9
+EMP1974,New York,Stayed,2,0.98,Positive,4.9,4.9
+EMP1975,London,Left,95,0.32,Negative,1.4,1.2
+EMP1976,San Francisco,Stayed,55,0.64,Neutral,2.7,2.8
+EMP1977,Remote,Stayed,0,0.9,Positive,4.6,5.0
+EMP1978,Austin,Stayed,10,0.96,Positive,4.8,3.9
+EMP1979,London,Stayed,54,0.49,Neutral,2.3,2.9
+EMP1980,San Francisco,At-Risk,66,0.43,Negative,2.2,2.0
+EMP1981,Austin,Stayed,62,0.51,Neutral,2.1,2.3
+EMP1982,Austin,Stayed,24,0.68,Neutral,3.7,4.0
+EMP1983,London,Stayed,62,0.47,Neutral,2.2,2.5
+EMP1984,New York,At-Risk,74,0.45,Neutral,2.1,2.1
+EMP1985,London,Stayed,56,0.61,Neutral,2.7,2.9
+EMP1986,San Francisco,At-Risk,74,0.41,Negative,2.0,2.1
+EMP1987,Austin,Stayed,24,0.92,Positive,4.4,4.1
+EMP1988,London,Left,83,0.37,Negative,1.9,1.2
+EMP1989,New York,At-Risk,72,0.38,Negative,2.1,1.6
+EMP1990,London,At-Risk,67,0.51,Neutral,2.8,2.7
+EMP1991,Remote,Stayed,52,0.57,Neutral,3.2,2.9
+EMP1992,New York,Stayed,5,0.96,Positive,4.9,4.6
+EMP1993,San Francisco,Stayed,27,0.74,Neutral,3.6,4.4
+EMP1994,Austin,Stayed,52,0.55,Neutral,2.8,3.2
+EMP1995,London,Stayed,46,0.64,Neutral,3.1,3.0
+EMP1996,New York,Stayed,52,0.62,Neutral,2.8,3.1
+EMP1997,Remote,Stayed,11,0.92,Positive,4.7,4.5
+EMP1998,New York,Stayed,42,0.74,Neutral,3.1,3.2
+EMP1999,Remote,Stayed,23,0.77,Positive,3.6,3.8
+EMP2000,San Francisco,Stayed,62,0.42,Negative,2.2,2.0
+EMP2001,Austin,Stayed,50,0.64,Neutral,3.3,3.0
+EMP2002,San Francisco,Stayed,0,0.85,Positive,4.5,5.0
+EMP2003,London,Stayed,39,0.68,Neutral,3.4,3.7
+EMP2004,New York,Stayed,61,0.43,Negative,2.7,1.8
+EMP2005,Remote,Stayed,55,0.6,Neutral,2.7,2.4
+EMP2006,Remote,Stayed,13,0.75,Neutral,4.5,4.1
+EMP2007,New York,Stayed,8,0.96,Positive,4.8,4.5
+EMP2008,New York,Stayed,57,0.4,Negative,2.3,2.6
+EMP2009,London,Stayed,63,0.43,Negative,2.4,2.4
+EMP2010,San Francisco,Stayed,55,0.57,Neutral,3.0,2.5
+EMP2011,Remote,Stayed,5,1.0,Positive,4.6,4.5
+EMP2012,London,Left,98,0.19,Negative,1.3,1.5
+EMP2013,San Francisco,Stayed,51,0.57,Neutral,2.6,2.5
+EMP2014,London,Stayed,45,0.71,Neutral,3.3,3.0
+EMP2015,Remote,At-Risk,76,0.31,Negative,2.2,2.3
+EMP2016,New York,Stayed,24,0.66,Neutral,3.5,4.1
+EMP2017,New York,Stayed,39,0.74,Neutral,3.3,3.5
+EMP2018,San Francisco,Stayed,45,0.53,Neutral,3.0,3.5
+EMP2019,Austin,Stayed,43,0.7,Neutral,3.2,3.0
+EMP2020,San Francisco,Stayed,34,0.72,Neutral,3.6,3.6
+EMP2021,Austin,Stayed,65,0.49,Neutral,2.5,2.5
+EMP2022,London,Stayed,54,0.55,Neutral,2.7,2.8
+EMP2023,London,Stayed,41,0.7,Neutral,3.4,3.6
+EMP2024,Remote,Stayed,23,0.81,Positive,4.3,3.9
+EMP2025,Austin,Stayed,57,0.48,Neutral,2.5,2.7
+EMP2026,Remote,At-Risk,75,0.51,Neutral,2.4,1.8
+EMP2027,New York,Stayed,56,0.57,Neutral,2.8,2.3
+EMP2028,Austin,Stayed,43,0.63,Neutral,3.1,3.9
+EMP2029,San Francisco,Stayed,42,0.61,Neutral,3.2,3.0
+EMP2030,New York,Stayed,19,0.84,Positive,4.0,4.3
+EMP2031,New York,Stayed,63,0.44,Negative,2.2,2.8
+EMP2032,San Francisco,Left,83,0.34,Negative,2.1,1.2
+EMP2033,New York,Stayed,29,0.61,Neutral,3.2,3.6
+EMP2034,Austin,Stayed,22,0.77,Positive,4.1,4.4
+EMP2035,Remote,Stayed,53,0.47,Neutral,2.6,3.2
+EMP2036,New York,Stayed,33,0.76,Positive,3.9,3.5
+EMP2037,Austin,Stayed,52,0.59,Neutral,2.8,3.4
+EMP2038,London,Stayed,38,0.7,Neutral,3.7,3.4
+EMP2039,Austin,Stayed,0,0.95,Positive,4.7,5.0
+EMP2040,Remote,Stayed,47,0.58,Neutral,2.9,2.9
+EMP2041,Austin,Stayed,56,0.5,Neutral,2.7,3.0
+EMP2042,San Francisco,Stayed,44,0.63,Neutral,3.2,3.3
+EMP2043,Remote,Stayed,60,0.59,Neutral,2.7,2.0
+EMP2044,London,Stayed,65,0.61,Neutral,3.0,1.8
+EMP2045,San Francisco,Stayed,10,0.92,Positive,4.5,4.6
+EMP2046,Austin,Stayed,30,0.87,Positive,4.0,3.9
+EMP2047,Remote,Stayed,17,0.92,Positive,4.5,4.6
+EMP2048,London,At-Risk,72,0.34,Negative,2.2,2.1
+EMP2049,San Francisco,Stayed,57,0.51,Neutral,2.5,3.3
+EMP2050,London,Stayed,40,0.61,Neutral,3.2,3.3
+EMP2051,Austin,Stayed,54,0.71,Neutral,3.1,2.9
+EMP2052,London,Stayed,49,0.62,Neutral,3.0,3.1
+EMP2053,New York,Stayed,54,0.53,Neutral,2.8,2.6
+EMP2054,San Francisco,Stayed,62,0.48,Neutral,2.2,2.3
+EMP2055,London,Stayed,27,0.8,Positive,4.0,3.5
+EMP2056,Austin,Stayed,57,0.41,Negative,2.5,2.5
+EMP2057,Austin,Stayed,6,1.0,Positive,5.0,4.8
+EMP2058,London,Stayed,37,0.77,Positive,3.9,3.5
+EMP2059,Austin,Stayed,13,0.95,Positive,4.4,5.0
+EMP2060,Remote,Stayed,42,0.79,Positive,4.0,3.5
+EMP2061,Remote,Stayed,29,0.82,Positive,3.7,3.7
+EMP2062,Remote,Stayed,16,0.94,Positive,4.6,4.3
+EMP2063,New York,Stayed,46,0.62,Neutral,2.9,3.0
+EMP2064,London,At-Risk,69,0.46,Neutral,2.4,1.9
+EMP2065,New York,Stayed,17,0.79,Positive,3.9,4.2
+EMP2066,Austin,Stayed,38,0.56,Neutral,3.2,4.0
+EMP2067,New York,Stayed,44,0.65,Neutral,3.3,2.9
+EMP2068,Austin,Stayed,35,0.52,Neutral,3.0,3.5
+EMP2069,Austin,Stayed,30,0.68,Neutral,3.7,3.5
+EMP2070,San Francisco,Stayed,15,0.87,Positive,4.6,5.0
+EMP2071,Remote,Stayed,53,0.55,Neutral,2.6,3.5
+EMP2072,Austin,Stayed,9,0.95,Positive,4.8,4.7
+EMP2073,San Francisco,Stayed,30,0.82,Positive,4.1,3.5
+EMP2074,Remote,Stayed,8,0.89,Positive,4.5,4.8
+EMP2075,Austin,Stayed,32,0.79,Positive,3.7,3.8
+EMP2076,Austin,Stayed,15,0.87,Positive,4.3,4.5
+EMP2077,New York,At-Risk,69,0.42,Negative,2.0,1.9
+EMP2078,New York,Stayed,20,0.86,Positive,4.5,4.1
+EMP2079,Remote,At-Risk,72,0.48,Neutral,2.1,2.6
+EMP2080,Austin,Stayed,5,1.0,Positive,4.7,4.8
+EMP2081,London,Stayed,28,0.79,Positive,4.0,3.4
+EMP2082,New York,Stayed,46,0.55,Neutral,2.9,3.2
+EMP2083,Remote,At-Risk,66,0.45,Negative,2.6,2.8
+EMP2084,Austin,Stayed,16,0.82,Positive,4.3,4.2
+EMP2085,Austin,Stayed,52,0.44,Negative,2.8,3.4
+EMP2086,London,Stayed,36,0.67,Neutral,3.6,3.3
+EMP2087,Remote,At-Risk,66,0.48,Neutral,2.3,2.2
+EMP2088,Austin,Stayed,58,0.47,Neutral,2.4,2.7
+EMP2089,New York,Stayed,0,1.0,Positive,4.9,5.0
+EMP2090,London,Stayed,58,0.59,Neutral,3.0,2.5
+EMP2091,Remote,Stayed,5,0.89,Positive,4.5,4.6
+EMP2092,London,At-Risk,79,0.45,Negative,2.0,1.8
+EMP2093,New York,Stayed,21,0.71,Neutral,4.0,4.4
+EMP2094,Remote,Stayed,33,0.68,Neutral,3.8,3.8
+EMP2095,London,Stayed,51,0.6,Neutral,2.8,2.8
+EMP2096,San Francisco,Stayed,33,0.8,Positive,4.0,3.6
+EMP2097,New York,Stayed,32,0.74,Neutral,3.7,3.6
+EMP2098,New York,Stayed,51,0.61,Neutral,3.3,3.7
+EMP2099,New York,Stayed,49,0.58,Neutral,2.8,2.5
+EMP2100,San Francisco,Stayed,29,0.82,Positive,4.3,4.3
+EMP2101,San Francisco,Stayed,61,0.54,Neutral,2.7,2.3
+EMP2102,Austin,Stayed,28,0.76,Positive,4.1,3.6
+EMP2103,London,At-Risk,79,0.33,Negative,1.7,1.7
+EMP2104,Austin,Stayed,19,0.88,Positive,3.9,3.9
+EMP2105,London,Stayed,33,0.63,Neutral,3.2,4.0
+EMP2106,San Francisco,Stayed,58,0.52,Neutral,2.7,2.5
+EMP2107,San Francisco,At-Risk,71,0.43,Negative,2.2,2.2
+EMP2108,Austin,At-Risk,75,0.49,Neutral,2.4,1.9
+EMP2109,Remote,Stayed,28,0.79,Positive,3.8,4.1
+EMP2110,Austin,Stayed,10,0.92,Positive,4.5,4.7
+EMP2111,London,Left,92,0.24,Negative,1.1,1.7
+EMP2112,Austin,Stayed,6,0.83,Positive,4.2,4.6
+EMP2113,New York,Stayed,39,0.61,Neutral,3.0,3.2
+EMP2114,London,Stayed,58,0.48,Neutral,2.4,2.2
+EMP2115,London,Stayed,27,0.67,Neutral,3.8,3.9
+EMP2116,Remote,Stayed,41,0.73,Neutral,3.0,3.0
+EMP2117,San Francisco,Stayed,32,0.72,Neutral,3.4,3.8
+EMP2118,London,Left,88,0.16,Negative,1.0,1.4
+EMP2119,San Francisco,At-Risk,72,0.46,Neutral,2.2,2.1
+EMP2120,Austin,Stayed,63,0.49,Neutral,2.8,2.2
+EMP2121,New York,At-Risk,66,0.39,Negative,2.1,2.6
+EMP2122,Remote,Stayed,15,0.7,Neutral,3.9,4.1
+EMP2123,San Francisco,Stayed,43,0.65,Neutral,3.3,3.2
+EMP2124,London,Stayed,58,0.45,Negative,2.6,2.9
+EMP2125,San Francisco,Stayed,65,0.52,Neutral,2.5,2.6
+EMP2126,London,At-Risk,81,0.41,Negative,1.9,2.4
+EMP2127,San Francisco,Stayed,38,0.76,Positive,4.0,3.2
+EMP2128,London,Stayed,30,0.79,Positive,3.9,3.7
+EMP2129,Austin,Stayed,63,0.39,Negative,2.2,2.8
+EMP2130,London,Stayed,27,0.76,Positive,3.7,3.9
+EMP2131,London,Stayed,56,0.51,Neutral,2.7,3.4
+EMP2132,New York,Stayed,38,0.78,Positive,3.7,3.2
+EMP2133,London,Stayed,61,0.41,Negative,2.5,2.9
+EMP2134,New York,Stayed,62,0.39,Negative,2.2,2.6
+EMP2135,Remote,At-Risk,68,0.4,Negative,2.3,1.6
+EMP2136,New York,Stayed,29,0.77,Positive,3.8,3.7
+EMP2137,Austin,Stayed,48,0.63,Neutral,3.0,3.0
+EMP2138,New York,Stayed,13,0.96,Positive,4.8,4.1
+EMP2139,Remote,Stayed,41,0.62,Neutral,3.2,3.1
+EMP2140,Austin,Stayed,60,0.35,Negative,2.4,2.8
+EMP2141,San Francisco,Stayed,28,0.83,Positive,4.1,4.0
+EMP2142,San Francisco,Stayed,43,0.62,Neutral,2.9,3.0
+EMP2143,New York,Stayed,24,0.85,Positive,3.6,3.7
+EMP2144,New York,Stayed,28,0.8,Positive,4.1,4.1
+EMP2145,Remote,Stayed,2,0.91,Positive,4.7,4.4
+EMP2146,Remote,Stayed,11,0.89,Positive,4.4,4.6
+EMP2147,London,Stayed,58,0.59,Neutral,3.0,2.4
+EMP2148,Remote,Stayed,23,0.87,Positive,4.0,4.0
+EMP2149,London,Stayed,23,0.73,Neutral,3.8,4.4
+EMP2150,Austin,Stayed,54,0.57,Neutral,2.9,2.7
+EMP2151,New York,Left,90,0.44,Negative,2.0,1.7
+EMP2152,Austin,Stayed,60,0.58,Neutral,2.8,3.1
+EMP2153,Remote,Stayed,54,0.59,Neutral,2.7,2.7
+EMP2154,Austin,Stayed,27,0.78,Positive,4.0,4.3
+EMP2155,Austin,Stayed,29,0.84,Positive,3.9,3.9
+EMP2156,Austin,Stayed,39,0.67,Neutral,3.8,2.8
+EMP2157,Remote,Stayed,64,0.33,Negative,2.0,2.5
+EMP2158,Austin,Stayed,14,0.9,Positive,4.2,5.0
+EMP2159,London,At-Risk,69,0.39,Negative,2.0,2.5
+EMP2160,Remote,Stayed,37,0.85,Positive,4.0,2.6
+EMP2161,Austin,Stayed,27,0.74,Neutral,3.7,3.9
+EMP2162,Remote,Stayed,56,0.61,Neutral,3.0,2.8
+EMP2163,San Francisco,Stayed,65,0.41,Negative,2.4,2.0
+EMP2164,London,Left,88,0.26,Negative,1.3,1.3
+EMP2165,Austin,Stayed,17,0.97,Positive,4.5,4.4
+EMP2166,San Francisco,Stayed,3,0.95,Positive,4.8,5.0
+EMP2167,San Francisco,Stayed,25,0.82,Positive,3.9,4.0
+EMP2168,Remote,At-Risk,76,0.49,Neutral,2.3,1.9
+EMP2169,San Francisco,Stayed,53,0.59,Neutral,3.2,3.0
+EMP2170,London,Stayed,37,0.68,Neutral,3.2,2.9
+EMP2171,London,Stayed,47,0.65,Neutral,3.3,2.7
+EMP2172,New York,Stayed,64,0.46,Neutral,2.4,1.8
+EMP2173,London,Left,98,0.3,Negative,1.0,1.0
+EMP2174,San Francisco,Stayed,15,0.86,Positive,4.1,4.7
+EMP2175,London,At-Risk,73,0.38,Negative,2.1,1.9
+EMP2176,Remote,Stayed,53,0.56,Neutral,2.8,2.5
+EMP2177,New York,At-Risk,73,0.41,Negative,2.0,1.6
+EMP2178,San Francisco,Stayed,37,0.81,Positive,3.6,3.6
+EMP2179,New York,Stayed,14,0.91,Positive,4.6,5.0
+EMP2180,San Francisco,Stayed,0,1.0,Positive,4.9,5.0
+EMP2181,Remote,Stayed,29,0.67,Neutral,3.7,3.8
+EMP2182,New York,Stayed,39,0.71,Neutral,3.5,3.6
+EMP2183,Austin,At-Risk,70,0.41,Negative,2.3,2.0
+EMP2184,San Francisco,Stayed,29,0.7,Neutral,3.6,3.5
+EMP2185,Austin,Stayed,41,0.6,Neutral,3.1,3.4
+EMP2186,New York,Stayed,32,0.73,Neutral,3.8,3.7
+EMP2187,Austin,Stayed,44,0.72,Neutral,3.2,3.1
+EMP2188,Austin,Stayed,56,0.62,Neutral,2.7,2.7
+EMP2189,New York,At-Risk,70,0.48,Neutral,2.3,2.0
+EMP2190,Remote,Stayed,49,0.57,Neutral,2.9,2.9
+EMP2191,Austin,At-Risk,79,0.42,Negative,2.3,1.5
+EMP2192,Austin,Stayed,57,0.54,Neutral,2.5,2.8
+EMP2193,Remote,Stayed,0,1.0,Positive,5.0,5.0
+EMP2194,Austin,Stayed,55,0.66,Neutral,3.3,3.1
+EMP2195,Austin,Stayed,33,0.75,Neutral,3.6,3.7
+EMP2196,Austin,Stayed,0,0.97,Positive,4.6,5.0
+EMP2197,London,Stayed,26,0.79,Positive,4.0,4.5
+EMP2198,Remote,Stayed,38,0.71,Neutral,3.7,3.6
+EMP2199,Austin,Stayed,23,0.82,Positive,4.4,3.7
+EMP2200,Remote,Stayed,52,0.61,Neutral,3.0,3.1
+EMP2201,San Francisco,Stayed,62,0.69,Neutral,2.9,3.0
+EMP2202,San Francisco,Stayed,41,0.59,Neutral,3.2,3.1
+EMP2203,Austin,Stayed,25,0.86,Positive,4.0,4.0
+EMP2204,Remote,Stayed,33,0.78,Positive,4.0,4.1
+EMP2205,Remote,Stayed,60,0.57,Neutral,2.9,3.1
+EMP2206,Remote,Stayed,61,0.53,Neutral,2.4,2.5
+EMP2207,London,Stayed,63,0.57,Neutral,2.9,2.8
+EMP2208,San Francisco,At-Risk,67,0.49,Neutral,2.4,2.5
+EMP2209,Remote,Stayed,40,0.76,Positive,3.7,3.6
+EMP2210,Remote,Stayed,24,0.78,Positive,4.1,4.3
+EMP2211,London,Stayed,51,0.67,Neutral,3.1,2.9
+EMP2212,London,Stayed,54,0.65,Neutral,3.3,3.3
+EMP2213,Remote,Stayed,13,0.85,Positive,4.6,4.0
+EMP2214,New York,Stayed,48,0.66,Neutral,3.5,3.4
+EMP2215,Remote,Stayed,28,0.68,Neutral,4.2,4.4
+EMP2216,Remote,Stayed,39,0.77,Positive,3.9,3.4
+EMP2217,London,Left,86,0.38,Negative,1.6,1.4
+EMP2218,London,Left,100,0.16,Negative,1.1,1.0
+EMP2219,Remote,Stayed,52,0.6,Neutral,2.9,2.3
+EMP2220,Remote,Stayed,43,0.69,Neutral,3.3,2.9
+EMP2221,Remote,Stayed,31,0.73,Neutral,3.9,3.9
+EMP2222,London,Stayed,27,0.79,Positive,3.5,3.7
+EMP2223,Remote,Stayed,59,0.5,Neutral,2.6,2.6
+EMP2224,Remote,At-Risk,76,0.58,Neutral,2.4,2.2
+EMP2225,Austin,Stayed,3,0.9,Positive,4.9,4.7
+EMP2226,New York,At-Risk,69,0.45,Neutral,2.3,2.6
+EMP2227,San Francisco,Stayed,41,0.68,Neutral,3.4,3.5
+EMP2228,New York,Stayed,30,0.75,Neutral,3.8,3.6
+EMP2229,Austin,Stayed,28,0.76,Positive,3.6,4.1
+EMP2230,San Francisco,Stayed,61,0.62,Neutral,2.3,3.0
+EMP2231,Remote,Stayed,65,0.46,Neutral,2.2,1.7
+EMP2232,Austin,At-Risk,69,0.46,Neutral,2.3,2.5
+EMP2233,Remote,Stayed,18,0.7,Neutral,3.8,5.0
+EMP2234,London,Stayed,62,0.43,Negative,2.6,2.7
+EMP2235,Austin,Stayed,58,0.6,Neutral,2.7,2.7
+EMP2236,London,Stayed,51,0.56,Neutral,2.9,2.9
+EMP2237,Austin,Stayed,12,1.0,Positive,4.5,4.7
+EMP2238,Austin,At-Risk,69,0.47,Neutral,2.1,2.4
+EMP2239,London,At-Risk,75,0.52,Neutral,2.5,2.0
+EMP2240,San Francisco,Stayed,23,0.83,Positive,4.1,4.1
+EMP2241,New York,At-Risk,66,0.57,Neutral,2.8,1.8
+EMP2242,Remote,Stayed,46,0.55,Neutral,2.9,2.8
+EMP2243,Austin,Stayed,32,0.68,Neutral,3.8,3.5
+EMP2244,Remote,Stayed,13,0.91,Positive,4.7,4.8
+EMP2245,London,Stayed,48,0.69,Neutral,3.4,2.8
+EMP2246,Remote,Stayed,27,0.72,Neutral,3.7,3.5
+EMP2247,London,Stayed,36,0.57,Neutral,3.2,3.6
+EMP2248,Remote,Stayed,46,0.58,Neutral,3.1,2.8
+EMP2249,New York,Stayed,39,0.84,Positive,3.9,3.2
+EMP2250,New York,Stayed,43,0.72,Neutral,3.4,3.5
+EMP2251,New York,Stayed,45,0.52,Neutral,2.6,2.3
+EMP2252,New York,Stayed,22,0.85,Positive,4.1,4.0
+EMP2253,New York,Stayed,36,0.68,Neutral,3.7,3.4
+EMP2254,New York,Stayed,35,0.58,Neutral,3.1,3.9
+EMP2255,London,Stayed,35,0.76,Positive,3.7,3.1
+EMP2256,Austin,At-Risk,68,0.36,Negative,2.1,3.2
+EMP2257,Remote,Stayed,54,0.59,Neutral,2.9,2.8
+EMP2258,New York,At-Risk,67,0.37,Negative,2.2,2.2
+EMP2259,London,Stayed,43,0.58,Neutral,3.3,3.1
+EMP2260,London,Stayed,48,0.66,Neutral,3.1,2.9
+EMP2261,London,At-Risk,79,0.45,Neutral,2.0,1.7
+EMP2262,Austin,Stayed,14,0.77,Positive,4.0,4.3
+EMP2263,Remote,Stayed,47,0.56,Neutral,3.2,2.6
+EMP2264,Austin,Stayed,22,0.74,Neutral,4.3,4.4
+EMP2265,San Francisco,Stayed,49,0.76,Positive,3.4,2.5
+EMP2266,London,Stayed,63,0.45,Neutral,2.2,2.3
+EMP2267,San Francisco,Stayed,0,0.93,Positive,4.8,5.0
+EMP2268,New York,Stayed,64,0.53,Neutral,2.8,2.2
+EMP2269,New York,Stayed,60,0.38,Negative,2.4,2.6
+EMP2270,Austin,Stayed,33,0.78,Positive,3.8,3.8
+EMP2271,Remote,Stayed,0,1.0,Positive,4.9,5.0
+EMP2272,San Francisco,Stayed,44,0.59,Neutral,3.1,2.8
+EMP2273,Remote,Stayed,60,0.56,Neutral,2.2,3.3
+EMP2274,Austin,Stayed,58,0.6,Neutral,3.0,2.1
+EMP2275,New York,Stayed,41,0.79,Positive,3.5,3.4
+EMP2276,Remote,At-Risk,74,0.51,Neutral,2.5,1.8
+EMP2277,Remote,Stayed,16,0.81,Positive,4.0,4.7
+EMP2278,New York,Stayed,2,1.0,Positive,5.0,4.9
+EMP2279,San Francisco,Stayed,39,0.71,Neutral,3.4,3.3
+EMP2280,New York,Stayed,49,0.63,Neutral,3.1,3.2
+EMP2281,Remote,Stayed,46,0.54,Neutral,3.2,3.2
+EMP2282,San Francisco,Stayed,65,0.39,Negative,2.3,2.1
+EMP2283,San Francisco,Stayed,10,0.95,Positive,4.6,4.1
+EMP2284,New York,Stayed,44,0.72,Neutral,3.2,3.3
+EMP2285,Remote,Stayed,50,0.64,Neutral,3.2,3.3
+EMP2286,Austin,Stayed,27,0.77,Positive,4.0,4.3
+EMP2287,Remote,Stayed,29,0.57,Neutral,3.3,4.1
+EMP2288,London,Stayed,55,0.55,Neutral,2.9,2.1
+EMP2289,Austin,At-Risk,67,0.44,Negative,2.2,2.2
+EMP2290,San Francisco,Stayed,6,0.85,Positive,4.4,4.9
+EMP2291,Austin,Stayed,0,0.92,Positive,4.8,4.8
+EMP2292,San Francisco,Stayed,39,0.79,Positive,3.9,3.0
+EMP2293,San Francisco,Stayed,6,1.0,Positive,4.9,4.3
+EMP2294,Austin,Stayed,64,0.53,Neutral,2.5,2.6
+EMP2295,San Francisco,Stayed,36,0.7,Neutral,3.4,3.5
+EMP2296,San Francisco,Stayed,27,0.77,Positive,3.8,4.1
+EMP2297,London,Stayed,56,0.58,Neutral,2.7,2.4
+EMP2298,Remote,Stayed,43,0.64,Neutral,3.2,3.3
+EMP2299,Remote,Stayed,49,0.58,Neutral,3.0,2.6
+EMP2300,London,Left,89,0.31,Negative,1.4,1.5
+EMP2301,Austin,Stayed,52,0.62,Neutral,3.2,3.2
+EMP2302,New York,At-Risk,68,0.44,Negative,2.5,2.2
+EMP2303,New York,Stayed,15,0.91,Positive,4.2,4.8
+EMP2304,New York,Stayed,59,0.43,Negative,2.6,1.9
+EMP2305,London,Left,99,0.31,Negative,1.2,1.1
+EMP2306,London,Stayed,65,0.56,Neutral,2.7,2.3
+EMP2307,San Francisco,Stayed,24,0.71,Neutral,3.8,4.5
+EMP2308,New York,Stayed,8,0.92,Positive,4.6,4.9
+EMP2309,Austin,Stayed,33,0.72,Neutral,3.7,3.5
+EMP2310,Austin,Stayed,53,0.65,Neutral,3.0,2.9
+EMP2311,New York,Stayed,15,0.92,Positive,4.4,5.0
+EMP2312,New York,Stayed,39,0.75,Neutral,3.6,3.2
+EMP2313,New York,At-Risk,71,0.48,Neutral,2.2,1.5
+EMP2314,London,Stayed,51,0.53,Neutral,2.7,2.8
+EMP2315,London,Stayed,34,0.83,Positive,3.7,3.8
+EMP2316,London,Stayed,62,0.5,Neutral,2.2,2.5
+EMP2317,Remote,Stayed,51,0.55,Neutral,2.9,3.2
+EMP2318,Austin,Stayed,55,0.53,Neutral,2.4,3.1
+EMP2319,Austin,Stayed,65,0.53,Neutral,2.5,1.8
+EMP2320,San Francisco,Stayed,51,0.65,Neutral,3.3,2.8
+EMP2321,London,Stayed,56,0.54,Neutral,2.8,3.1
+EMP2322,Remote,At-Risk,66,0.51,Neutral,2.2,1.8
+EMP2323,Remote,Stayed,12,0.96,Positive,4.8,4.2
+EMP2324,Austin,Stayed,12,0.87,Positive,4.3,5.0
+EMP2325,London,At-Risk,66,0.62,Neutral,2.8,2.1
+EMP2326,San Francisco,Stayed,15,1.0,Positive,4.5,4.3
+EMP2327,London,Left,100,0.22,Negative,1.2,1.2
+EMP2328,New York,Stayed,33,0.68,Neutral,3.4,4.0
+EMP2329,London,Stayed,58,0.58,Neutral,2.9,2.1
+EMP2330,New York,Stayed,6,0.9,Positive,4.5,4.7
+EMP2331,New York,Stayed,15,0.89,Positive,4.4,4.0
+EMP2332,San Francisco,Stayed,46,0.54,Neutral,2.8,3.1
+EMP2333,Austin,Stayed,9,0.9,Positive,4.8,4.5
+EMP2334,London,Left,83,0.36,Negative,1.4,2.0
+EMP2335,New York,Stayed,14,0.96,Positive,4.6,4.3
+EMP2336,London,Stayed,30,0.76,Positive,3.9,2.9
+EMP2337,Austin,Stayed,60,0.53,Neutral,2.5,2.2
+EMP2338,Austin,Stayed,17,0.92,Positive,4.2,4.1
+EMP2339,Remote,At-Risk,78,0.38,Negative,2.1,2.6
+EMP2340,Austin,Stayed,48,0.65,Neutral,3.2,2.7
+EMP2341,San Francisco,Stayed,40,0.64,Neutral,3.5,3.1
+EMP2342,New York,Stayed,27,0.74,Neutral,3.7,4.1
+EMP2343,Remote,Stayed,18,0.99,Positive,4.8,4.3
+EMP2344,San Francisco,Stayed,17,0.75,Neutral,4.0,3.9
+EMP2345,London,Stayed,64,0.48,Neutral,2.4,2.4
+EMP2346,New York,Stayed,5,0.93,Positive,4.4,4.5
+EMP2347,Austin,Stayed,0,1.0,Positive,4.9,4.6
+EMP2348,New York,At-Risk,73,0.36,Negative,2.1,1.7
+EMP2349,London,Stayed,27,0.81,Positive,3.9,4.1
+EMP2350,Remote,At-Risk,68,0.48,Neutral,2.3,1.9
+EMP2351,Remote,Stayed,21,0.89,Positive,4.4,3.9
+EMP2352,Remote,Stayed,49,0.62,Neutral,2.8,3.3
+EMP2353,Austin,Stayed,62,0.45,Negative,2.4,2.6
+EMP2354,San Francisco,Stayed,41,0.68,Neutral,3.3,4.0
+EMP2355,San Francisco,Stayed,20,0.73,Neutral,3.9,4.2
+EMP2356,New York,Stayed,53,0.55,Neutral,3.1,2.6
+EMP2357,Austin,Stayed,61,0.47,Neutral,2.2,2.2
+EMP2358,Remote,Stayed,34,0.76,Positive,3.8,3.4
+EMP2359,Remote,Stayed,12,0.92,Positive,4.7,4.0
+EMP2360,London,At-Risk,67,0.38,Negative,2.1,2.0
+EMP2361,London,At-Risk,81,0.37,Negative,1.6,2.0
+EMP2362,Remote,Stayed,37,0.59,Neutral,3.3,3.4
+EMP2363,Remote,Left,85,0.48,Neutral,2.1,1.6
+EMP2364,Austin,Stayed,3,0.91,Positive,4.5,4.3
+EMP2365,San Francisco,Stayed,14,0.82,Positive,4.5,4.4
+EMP2366,London,Stayed,62,0.56,Neutral,2.8,2.1
+EMP2367,San Francisco,Stayed,44,0.74,Neutral,3.1,3.3
+EMP2368,Austin,Stayed,13,0.94,Positive,4.4,4.3
+EMP2369,Remote,Stayed,39,0.69,Neutral,3.7,3.1
+EMP2370,San Francisco,Stayed,24,0.93,Positive,4.5,3.9
+EMP2371,Remote,Stayed,14,0.71,Neutral,3.9,4.3
+EMP2372,Remote,Stayed,13,0.8,Positive,4.4,4.2
+EMP2373,New York,Stayed,20,0.76,Positive,3.8,4.3
+EMP2374,San Francisco,Stayed,32,0.68,Neutral,3.2,3.9
+EMP2375,San Francisco,Stayed,3,1.0,Positive,4.9,5.0
+EMP2376,Remote,Stayed,39,0.77,Positive,3.6,3.4
+EMP2377,Austin,Stayed,44,0.79,Positive,3.8,2.8
+EMP2378,New York,Stayed,60,0.45,Neutral,2.7,2.8
+EMP2379,Remote,Stayed,23,0.77,Positive,3.9,4.7
+EMP2380,London,Stayed,50,0.59,Neutral,2.7,2.7
+EMP2381,London,Left,99,0.33,Negative,1.6,1.0
+EMP2382,New York,At-Risk,72,0.44,Negative,2.2,1.9
+EMP2383,Austin,Stayed,35,0.78,Positive,3.8,3.7
+EMP2384,Remote,Stayed,15,0.87,Positive,4.3,3.9
+EMP2385,San Francisco,Stayed,44,0.62,Neutral,3.6,2.5
+EMP2386,New York,Stayed,63,0.59,Neutral,2.7,2.6
+EMP2387,Austin,Stayed,28,0.79,Positive,4.0,3.7
+EMP2388,San Francisco,Stayed,58,0.48,Neutral,2.2,2.9
+EMP2389,London,At-Risk,73,0.35,Negative,2.3,2.4
+EMP2390,London,At-Risk,80,0.38,Negative,1.5,1.7
+EMP2391,San Francisco,Stayed,61,0.45,Neutral,2.6,2.5
+EMP2392,New York,Stayed,62,0.65,Neutral,2.6,2.6
+EMP2393,London,Left,88,0.54,Neutral,2.2,1.5
+EMP2394,Remote,At-Risk,73,0.36,Negative,2.2,1.7
+EMP2395,San Francisco,Stayed,39,0.68,Neutral,3.2,3.6
+EMP2396,San Francisco,Stayed,33,0.66,Neutral,3.5,3.6
+EMP2397,London,At-Risk,66,0.46,Neutral,2.4,2.3
+EMP2398,New York,Stayed,47,0.6,Neutral,3.1,3.3
+EMP2399,Remote,Stayed,15,0.93,Positive,4.5,4.7
+EMP2400,New York,Stayed,59,0.5,Neutral,2.4,3.2
+EMP2401,Austin,Stayed,33,0.64,Neutral,3.5,3.6
+EMP2402,Austin,At-Risk,78,0.46,Neutral,2.2,1.8
+EMP2403,London,Left,95,0.23,Negative,1.2,1.2
+EMP2404,London,Stayed,58,0.45,Neutral,2.7,3.0
+EMP2405,London,Stayed,57,0.52,Neutral,2.7,3.1
+EMP2406,Austin,Stayed,23,1.0,Positive,4.6,4.0
+EMP2407,New York,Stayed,30,0.71,Neutral,3.7,3.8
+EMP2408,New York,Stayed,3,0.88,Positive,4.9,4.5
+EMP2409,London,Left,100,0.27,Negative,1.1,1.0
+EMP2410,Remote,At-Risk,70,0.41,Negative,2.3,2.6
+EMP2411,New York,At-Risk,69,0.44,Negative,2.1,2.4
+EMP2412,Austin,At-Risk,70,0.5,Neutral,2.6,2.3
+EMP2413,San Francisco,Stayed,38,0.81,Positive,3.6,3.6
+EMP2414,San Francisco,Stayed,27,0.78,Positive,3.9,3.7
+EMP2415,San Francisco,Stayed,62,0.37,Negative,2.1,3.3
+EMP2416,Remote,Stayed,0,0.94,Positive,4.8,4.9
+EMP2417,London,Stayed,41,0.64,Neutral,3.5,3.2
+EMP2418,Austin,Stayed,42,0.57,Neutral,2.9,3.4
+EMP2419,Remote,Stayed,63,0.53,Neutral,2.2,2.8
+EMP2420,Austin,Stayed,60,0.56,Neutral,2.5,3.2
+EMP2421,Austin,Stayed,60,0.58,Neutral,2.4,3.2
+EMP2422,London,Left,91,0.3,Negative,1.4,1.7
+EMP2423,San Francisco,Stayed,38,0.72,Neutral,3.6,3.4
+EMP2424,London,Left,83,0.3,Negative,1.7,1.7
+EMP2425,Remote,Stayed,42,0.63,Neutral,3.1,3.0
+EMP2426,Remote,Stayed,1,0.99,Positive,5.0,4.8
+EMP2427,Remote,Stayed,19,0.85,Positive,4.1,4.5
+EMP2428,London,Stayed,23,0.71,Neutral,3.8,3.8
+EMP2429,Austin,Stayed,51,0.49,Neutral,2.4,2.8
+EMP2430,Austin,Stayed,49,0.55,Neutral,3.1,3.4
+EMP2431,New York,Stayed,38,0.75,Neutral,3.7,3.2
+EMP2432,Remote,At-Risk,77,0.48,Neutral,2.2,1.5
+EMP2433,Austin,At-Risk,82,0.32,Negative,2.0,1.5
+EMP2434,New York,Stayed,21,0.74,Neutral,4.0,3.8
+EMP2435,Austin,Stayed,24,0.72,Neutral,3.9,4.0
+EMP2436,Remote,Stayed,54,0.64,Neutral,3.2,3.0
+EMP2437,San Francisco,Stayed,33,0.62,Neutral,3.5,3.8
+EMP2438,Remote,Stayed,44,0.72,Neutral,3.2,3.0
+EMP2439,London,Left,93,0.24,Negative,1.1,1.2
+EMP2440,Austin,Stayed,45,0.63,Neutral,3.0,3.1
+EMP2441,Austin,Stayed,60,0.43,Negative,2.5,3.2
+EMP2442,London,Left,83,0.32,Negative,1.3,1.0
+EMP2443,London,Stayed,17,0.81,Positive,3.9,4.8
+EMP2444,San Francisco,Stayed,33,0.73,Neutral,3.8,3.6
+EMP2445,Austin,Stayed,34,0.76,Positive,4.2,3.6
+EMP2446,Austin,Stayed,46,0.59,Neutral,2.9,2.9
+EMP2447,San Francisco,Stayed,26,0.61,Neutral,3.2,4.5
+EMP2448,New York,Stayed,49,0.52,Neutral,2.7,3.1
+EMP2449,San Francisco,At-Risk,68,0.42,Negative,2.3,2.5
+EMP2450,Remote,Stayed,59,0.54,Neutral,2.5,2.9
+EMP2451,Austin,Stayed,11,0.75,Neutral,4.4,4.1
+EMP2452,London,Stayed,48,0.68,Neutral,3.0,3.2
+EMP2453,Remote,Stayed,41,0.78,Positive,3.6,3.6
+EMP2454,Austin,Stayed,33,0.7,Neutral,3.4,4.1
+EMP2455,San Francisco,Stayed,7,0.95,Positive,4.8,4.7
+EMP2456,Remote,At-Risk,72,0.5,Neutral,2.2,2.1
+EMP2457,Austin,Stayed,60,0.57,Neutral,2.8,2.4
+EMP2458,New York,Stayed,41,0.6,Neutral,3.0,3.1
+EMP2459,New York,Stayed,13,0.93,Positive,4.3,4.5
+EMP2460,London,Stayed,29,0.9,Positive,4.0,3.5
+EMP2461,Austin,Stayed,52,0.5,Neutral,2.7,2.9
+EMP2462,New York,Stayed,11,0.95,Positive,4.6,4.7
+EMP2463,San Francisco,Stayed,5,0.84,Positive,4.5,4.9
+EMP2464,Austin,Stayed,51,0.56,Neutral,2.7,3.2
+EMP2465,San Francisco,Stayed,38,0.6,Neutral,3.2,3.2
+EMP2466,San Francisco,Stayed,50,0.71,Neutral,3.2,2.8
+EMP2467,New York,Stayed,9,0.98,Positive,4.9,4.6
+EMP2468,Austin,Stayed,52,0.51,Neutral,2.5,3.2
+EMP2469,Remote,Stayed,18,0.96,Positive,4.4,4.5
+EMP2470,New York,Stayed,42,0.56,Neutral,3.0,3.7
+EMP2471,New York,Stayed,5,0.87,Positive,4.2,4.4
+EMP2472,Austin,Stayed,40,0.62,Neutral,3.3,3.6
+EMP2473,Austin,Stayed,26,0.81,Positive,3.7,4.1
+EMP2474,San Francisco,Stayed,17,0.99,Positive,4.5,4.0
+EMP2475,Austin,Stayed,14,0.87,Positive,4.4,4.5
+EMP2476,San Francisco,Stayed,11,0.81,Positive,4.6,4.1
+EMP2477,New York,At-Risk,79,0.4,Negative,2.2,2.1
+EMP2478,London,Stayed,45,0.74,Neutral,3.1,3.3
+EMP2479,Remote,At-Risk,67,0.45,Neutral,2.4,2.0
+EMP2480,New York,Stayed,45,0.74,Neutral,3.2,3.5
+EMP2481,Austin,Stayed,39,0.7,Neutral,3.6,3.0
+EMP2482,Remote,Stayed,53,0.61,Neutral,3.2,3.7
+EMP2483,London,Stayed,62,0.55,Neutral,2.6,2.3
+EMP2484,London,Stayed,31,0.83,Positive,4.0,3.6
+EMP2485,San Francisco,At-Risk,66,0.52,Neutral,2.4,1.8
+EMP2486,Remote,Stayed,31,0.81,Positive,4.0,3.8
+EMP2487,San Francisco,Stayed,54,0.69,Neutral,3.2,2.4
+EMP2488,New York,Stayed,65,0.53,Neutral,2.4,2.2
+EMP2489,Remote,Stayed,54,0.55,Neutral,2.5,2.9
+EMP2490,New York,Stayed,0,0.94,Positive,4.8,4.8
+EMP2491,San Francisco,Stayed,15,0.98,Positive,4.6,4.2
+EMP2492,Remote,Stayed,0,0.92,Positive,4.7,4.8
+EMP2493,San Francisco,Stayed,6,0.99,Positive,5.0,5.0
+EMP2494,Remote,Stayed,45,0.52,Neutral,2.6,3.4
+EMP2495,San Francisco,Stayed,44,0.56,Neutral,3.1,3.4
+EMP2496,London,Stayed,44,0.51,Neutral,3.0,3.1
+EMP2497,San Francisco,Stayed,35,0.75,Positive,3.5,3.8
+EMP2498,London,At-Risk,69,0.42,Negative,2.3,2.2
+EMP2499,San Francisco,Stayed,50,0.6,Neutral,3.1,3.0
+EMP2500,Remote,Stayed,16,0.72,Neutral,3.8,4.4
